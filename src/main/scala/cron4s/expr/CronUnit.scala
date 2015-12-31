@@ -44,8 +44,10 @@ object CronUnitOps {
     def step(v: Int, amount: Int): Option[(Int, Int)] = {
       if (v < min || v > max) None
       else {
-        val newValue = Math.abs(v + amount)
-        Some(newValue % size, newValue / size)
+        val cursor = (v - min) + amount
+        val newIdx = cursor % size
+        val newValue = if (newIdx < 0) (max + min) + newIdx else min + newIdx
+        Some(newValue, cursor / size)
       }
     }
 
@@ -76,8 +78,10 @@ object CronUnitOps {
       if (!values.contains(v)) None
       else {
         val idx = values.indexOf(v)
-        val cursor = Math.abs(idx + amount)
-        Some(values(cursor % values.size), cursor / values.size)
+        val cursor = idx + amount
+        val newIdx = cursor % values.size
+        val newValue = if (newIdx < 0) values(size + newIdx) else values(newIdx)
+        Some(newValue, cursor / values.size)
       }
     }
 
