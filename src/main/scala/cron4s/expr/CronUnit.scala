@@ -1,12 +1,11 @@
 package cron4s.expr
 
-import cron4s.core.Sequential
+import cron4s.core.{Indexed, Bound, Sequential}
 
 /**
   * Created by alonsodomin on 07/11/2015.
   */
 sealed trait CronUnit
-
 object CronUnit {
 
   case object Minute extends CronUnit
@@ -17,33 +16,63 @@ object CronUnit {
 
 }
 
-sealed abstract class CronUnitOps[T: Value, U <: CronUnit] extends Sequential[T] {
+sealed abstract class CronUnitOps[T: Value, U <: CronUnit] extends Sequential[T] with Bound[T] with Indexed[T] with PartialOrdering[T] {
+  def apply(index: Int): Option[T] = {
+    if (index < 0 || index >= size) None
+    else Some(values(index))
+  }
+
   def unit: U
+  def size: Int
+
+  def lteq(lhs: T, rhs: T): Boolean =
+    tryCompare(lhs, rhs).exists(_ <= 0)
+
+  val values: IndexedSeq[T]
 }
 
 object CronUnitOps {
   import CronUnit._
 
-  private abstract class NumericCronUnitOps[U <: CronUnit](val min: Int, val max: Int, val unit: U) extends CronUnitOps[Int, U] {
+  private[expr] abstract class NumericCronUnitOps[U <: CronUnit](val min: Int, val max: Int, val unit: U) extends CronUnitOps[Int, U] {
 
-    private[this] def totalUnits: Int = (max - min) + 1
+    def tryCompare(lhs: Int, rhs: Int): Option[Int] = {
+      if ((lhs < min || lhs > max) || (rhs < min || rhs > max)) None
+      else Some(lhs compare rhs)
+    }
 
-    def forward(v: Int, amount: Int): Option[(Int, Int)] = {
+    def step(v: Int, amount: Int): Option[(Int, Int)] = {
       if (v < min || v > max) None
       else {
-        val advanced = Math.abs(v + amount)
-        Some(advanced % totalUnits, advanced / totalUnits)
+        val newValue = Math.abs(v + amount)
+        Some(newValue % size, newValue / size)
       }
     }
 
+    def indexOf(v: Int): Option[Int] = {
+      if (v < min || v > max) None
+      else Some(v - min)
+    }
+
+    def size: Int = (max - min) + 1
+
+    val values: IndexedSeq[Int] = min to max
+
   }
 
-  private abstract class TextCronUnitOps[U <: CronUnit](val unit: CronUnit) extends CronUnitOps[String, U] {
+  private[expr] abstract class TextCronUnitOps[U <: CronUnit](val unit: U) extends CronUnitOps[String, U] {
 
     lazy val min = values(0)
     lazy val max = values(values.size - 1)
 
-    def forward(v: String, amount: Int): Option[(String, Int)] = {
+    def tryCompare(lhs: String, rhs: String): Option[Int] = {
+      (indexOf(lhs), indexOf(rhs)) match {
+        case (Some(lhsIdx), Some(rhsIdx)) => Some(lhsIdx compare rhsIdx)
+        case _ => None
+      }
+    }
+
+    def step(v: String, amount: Int): Option[(String, Int)] = {
       if (!values.contains(v)) None
       else {
         val idx = values.indexOf(v)
@@ -52,7 +81,12 @@ object CronUnitOps {
       }
     }
 
-    val values: IndexedSeq[String]
+    def indexOf(v: String): Option[Int] = {
+      if (!values.contains(v)) None
+      else Some(values.indexOf(v))
+    }
+
+    def size: Int = values.size
 
   }
 
