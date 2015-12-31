@@ -10,12 +10,17 @@ scalacOptions ++= Seq(
   "-feature",
   "-unchecked",
   "-deprecation",
-  "-Ywarn-dead-code"
+  "-Xfuture",
+  "-Ywarn-dead-code",
+  "-language:implicitConversions"
 )
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0-M5" cross CrossVersion.full)
 
 libraryDependencies ++= Seq(
-  "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4",
-  "org.scalacheck"         %% "scalacheck"               % "1.12.5" % Test
+  "com.github.mpilquist"   %%% "simulacrum"              % "0.5.0",
+  "org.parboiled"          %%% "parboiled"               % "2.1.0",
+  "org.scalacheck"         %%% "scalacheck"              % "1.12.5" % Test
 )
 
-initialCommands in console := "import cron4s.expr._"
+//enablePlugins(ScalaJSPlugin)
