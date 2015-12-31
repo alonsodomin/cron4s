@@ -25,4 +25,4 @@ libraryDependencies ++= Seq(
 
 //enablePlugins(ScalaJSPlugin)
 
-initialCommands in console := "import cron4s.expr._"
+initialCommands in console := "import cron4s.core._;import cron4s.expr._;import CronUnit._"
