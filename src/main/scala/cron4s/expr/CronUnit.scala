@@ -1,16 +1,20 @@
 package cron4s.expr
 
 import cron4s.core.{Indexed, Bound, Sequential}
+import cron4s.matcher.Matcher
 
 /**
   * Created by alonsodomin on 02/01/2016.
   */
-sealed abstract class CronUnit[T: Value, F <: CronField] extends Sequential[T] with Bound[T] with Indexed[T] with PartialOrdering[T] {
+sealed abstract class CronUnit[T: Value, F <: CronField]
+    extends Sequential[T] with Bound[T] with Indexed[T] with PartialOrdering[T] { self =>
 
   def apply(index: Int): Option[T] = {
     if (index < 0 || index >= size) None
     else Some(values(index))
   }
+
+  def matcherOn[V: Value](x: T)(implicit ev: CronUnit[V, F]): Matcher[V] = Matcher { v => same(x, v) }
 
   def same[V: Value](x: T, y: V)(implicit ev: CronUnit[V, F]): Boolean = x == y
 

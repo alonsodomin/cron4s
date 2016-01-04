@@ -32,11 +32,24 @@ trait ASTParsers extends PartParsers {
   val hours = new DefaultParserFactory[Int, Hour.type].build(hour)
   val dayOfMonths = new DefaultParserFactory[Int, DayOfMonth.type].build(dayOfMonth)
 
+  val numericMonths = new DefaultParserFactory[Int, Month.type].build(numericMonth)
+  val textMonths = new DefaultParserFactory[String, Month.type].build(textMonth)
   val months = new DefaultParserFactory[Int, Month.type].build(month) | new DefaultParserFactory[String, Month.type].build(month)
 
   val daysOfWeek = new DefaultParserFactory[Int, DayOfWeek.type].build(dayOfWeek) | new DefaultParserFactory[String, DayOfWeek.type].build(dayOfWeek)
 
-  def cron: Parser[CronExpr] =
-    minutes ~ hours ~ dayOfMonths ~ months ~ daysOfWeek ^^ { case m ~ h ~ dm ~ mm ~ dw => CronExpr(m, h, dm, mm, dw) }
+  def cron: Parser[CronExpr] = minutes ~ hours ~ dayOfMonths ~ months ~ daysOfWeek ^^ {
+    case m ~ h ~ dm ~ mm ~ dw =>
+      import Segment._
+      val monthSegment = mm match {
+        case p: Part[Int, Month.type] => new NumericMonths(p)
+        case p: Part[String, Month.type] => new TextMonths(p)
+      }
+      val dayOfWeekSegment = dw match {
+        case p: Part[Int, DayOfWeek.type] => new NumericDaysOfWeek(p)
+        case p: Part[String, DayOfWeek.type] => new TextDaysOfWeek(p)
+      }
+      CronExpr(m, h, dm, monthSegment, dayOfWeekSegment)
+  }
 
 }

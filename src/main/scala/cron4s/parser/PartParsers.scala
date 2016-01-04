@@ -20,10 +20,10 @@ trait PartParsers extends RegexParsers {
   def dayOfMonth: Parser[Scalar[Int, DayOfMonth.type]] =
     """3[01]|[012]?\d""".r ^^ { value => Scalar(DayOfMonth, value.toInt) }
 
-  private[this] def numericMonth: Parser[Scalar[Int, Month.type]] =
+  def numericMonth: Parser[Scalar[Int, Month.type]] =
     """1[0-2]|[1-9]""".r ^^ { value => Scalar(Month, value.toInt) }
 
-  private[this] def textMonth: Parser[Scalar[String, Month.type]] =
+  def textMonth: Parser[Scalar[String, Month.type]] =
     TextMonths.values.mkString("|").r ^^ { value => Scalar(Month, value) }
 
   def month[V: Value]: Parser[Scalar[V, Month.type]] =

@@ -1,6 +1,11 @@
 package cron4s.expr
 
+import cats.{Apply, Functor}
+import cats.functor.Contravariant
 import cron4s.core.{Indexed, Bound, Sequential}
+import cats.syntax.functor._
+import cron4s.core.Isomorphism.<=>
+import cron4s.matcher.Matcher
 
 /**
   * Created by alonsodomin on 07/11/2015.
@@ -9,6 +14,8 @@ sealed trait Part[V, F <: CronField] extends Bound[V] with Sequential[V] {
 
   def matcher: Matcher[V]
 
+  def unit: CronUnit[V, F]
+
 }
 
 sealed trait EnumerablePart[V, F <: CronField] extends Part[V, F]
@@ -16,20 +23,22 @@ sealed trait DivisiblePart[V, F <: CronField] extends Part[V, F]
 
 sealed trait SpecialChar
 
-case class Always[V: Value, F <: CronField](implicit unit: CronUnit[V, F]) extends DivisiblePart[V, F] with SpecialChar {
+case class Always[V: Value, F <: CronField](implicit val unit: CronUnit[V, F])
+    extends DivisiblePart[V, F] with SpecialChar { self =>
 
   def min: V = unit.min
 
   def max: V = unit.max
 
-  def matcher: Matcher[V] = Matcher { x => true }
+  def matcher: Matcher[V] = Matcher { v => unit.matcherOn(v).apply(v) }
 
   def step(from: V, step: Int): Option[(V, Int)] = unit.step(from, step)
 
 }
+
 case object Last extends SpecialChar
 
-case class Scalar[V: Value, F <: CronField](field: F, value: V)(implicit unit: CronUnit[V, F])
+case class Scalar[V: Value, F <: CronField](field: F, value: V)(implicit val unit: CronUnit[V, F])
     extends EnumerablePart[V, F] with Ordered[Scalar[V, F]] {
 
   require(unit.indexOf(value).nonEmpty, s"Value $value is out of bounds for field: ${unit.field}")
@@ -44,9 +53,7 @@ case class Scalar[V: Value, F <: CronField](field: F, value: V)(implicit unit: C
     else 0
   }
 
-  def matcher: Matcher[V] = Matcher {
-    x => unit.same(x, value)
-  }
+  def matcher: Matcher[V] = unit.matcherOn(value)
 
   def step(from: V, step: Int): Option[(V, Int)] =
     if (matcher(from)) Some((from, step)) else None
@@ -55,7 +62,7 @@ case class Scalar[V: Value, F <: CronField](field: F, value: V)(implicit unit: C
     unit.same(value, y.value)
 
 }
-case class Between[V: Value, F <: CronField](begin: Scalar[V, F], end: Scalar[V, F])(implicit unit: CronUnit[V, F])
+case class Between[V: Value, F <: CronField](begin: Scalar[V, F], end: Scalar[V, F])(implicit val unit: CronUnit[V, F])
     extends EnumerablePart[V, F] with DivisiblePart[V, F] {
 
   require(begin < end, s"$begin should be less than $end")
@@ -74,8 +81,8 @@ case class Between[V: Value, F <: CronField](begin: Scalar[V, F], end: Scalar[V,
   }
 
 }
-case class Several[V: Value, F <: CronField](values: IndexedSeq[EnumerablePart[V, F]])(implicit unit: CronUnit[V, F])
-    extends DivisiblePart[V, F] with Bound[V] with Indexed[V] {
+case class Several[V: Value, F <: CronField](values: IndexedSeq[EnumerablePart[V, F]])(implicit val unit: CronUnit[V, F])
+    extends DivisiblePart[V, F] with Indexed[V] {
 
   def apply(index: Int): Option[V] = {
     if (index < 0 || index >= values.size) None
@@ -100,8 +107,8 @@ case class Several[V: Value, F <: CronField](values: IndexedSeq[EnumerablePart[V
   }
 
 }
-case class Every[V: Value, F <: CronField](value: DivisiblePart[V, F], freq: Int)(implicit unit: CronUnit[V, F])
-    extends Part[V, F] with Sequential[V] {
+case class Every[V: Value, F <: CronField](value: DivisiblePart[V, F], freq: Int)(implicit val unit: CronUnit[V, F])
+    extends Part[V, F] {
 
   def min: V = value.min
 
