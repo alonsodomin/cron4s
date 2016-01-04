@@ -91,7 +91,7 @@ object CronUnit {
     }
 
     def focus(min: String, max: String): CronUnit[String, F] = new TextCronUnit[F](field) {
-      override val values: IndexedSeq[String] = {
+      override lazy val values: IndexedSeq[String] = {
         val minIdx = self.values.indexOf(min)
         val maxIdx = self.values.indexOf(max)
         self.values.slice(minIdx, maxIdx + 1)
