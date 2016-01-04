@@ -31,9 +31,9 @@ object JdkTimeMatchers {
   implicit class CronExprMatcher(cronExpr: CronExpr) {
 
     def matcher: Matcher[LocalDateTime] = Matcher { dt =>
-      cronExpr.minutes.matcherFor[LocalDateTime].apply(dt) &&
-        cronExpr.hours.matcherFor[LocalDateTime].apply(dt) &&
-        cronExpr.daysOfMonth.matcherFor[LocalDateTime].apply(dt) //&&
+      cronExpr.minutes.matcherFor[LocalDateTime].matches(dt) &&
+        cronExpr.hours.matcherFor[LocalDateTime].matches(dt) &&
+        cronExpr.daysOfMonth.matcherFor[LocalDateTime].matches(dt) //&&
         //cronExpr.month.matcherFor[LocalDateTime].apply(dt) &&
         //cronExpr.daysOfWeek.matcherFor[LocalDateTime].apply(dt)
     }

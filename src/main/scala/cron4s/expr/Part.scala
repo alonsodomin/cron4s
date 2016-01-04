@@ -31,7 +31,7 @@ case class Always[V: Value, F <: CronField](implicit val unit: CronUnit[V, F])
 
   def max: V = unit.max
 
-  def matcher: Matcher[V] = Matcher { v => unit.matcherOn(v).apply(v) }
+  def matcher: Matcher[V] = Matcher { v => unit.matcherOn(v).matches(v) }
 
   def step(from: V, step: Int): Option[(V, Int)] = unit.step(from, step)
 
@@ -57,7 +57,7 @@ case class Scalar[V: Value, F <: CronField](field: F, value: V)(implicit val uni
   def matcher: Matcher[V] = unit.matcherOn(value)
 
   def step(from: V, step: Int): Option[(V, Int)] =
-    if (matcher(from)) Some((from, step)) else None
+    if (matcher.matches(from)) Some((from, step)) else None
 
   def ~=[Y: Value](y: Scalar[Y, F])(implicit ev: CronUnit[Y, F]): Boolean =
     unit.same(value, y.value)
@@ -73,7 +73,7 @@ case class Between[V: Value, F <: CronField](begin: Scalar[V, F], end: Scalar[V,
   def max = end.value
 
   def step(from: V, step: Int): Option[(V, Int)] = {
-    if (matcher(from)) unit.focus(min, max).step(from, step)
+    if (matcher.matches(from)) unit.focus(min, max).step(from, step)
     else None
   }
 
@@ -95,16 +95,16 @@ case class Several[V: Value, F <: CronField](values: IndexedSeq[EnumerablePart[V
   def max: V = values.reverse.head.max
 
   def indexOf(item: V): Option[Int] =
-    Some(values.indexWhere(_.matcher(item))).filter(_ >= 0)
+    Some(values.indexWhere(_.matcher.matches(item))).filter(_ >= 0)
 
   def step(from: V, step: Int): Option[(V, Int)] = {
-    if (matcher(from)) {
+    if (matcher.matches(from)) {
       indexOf(from).map(values(_)).flatMap(_.step(from, step))
     } else None
   }
 
   def matcher: Matcher[V] = Matcher { x =>
-    values.exists(_.matcher(x))
+    values.exists(_.matcher.matches(x))
   }
 
 }
@@ -116,7 +116,7 @@ case class Every[V: Value, F <: CronField](value: DivisiblePart[V, F], freq: Int
   def max: V = value.max
 
   def matcher: Matcher[V] = Matcher { x =>
-    if (value.matcher(x)) true
+    if (value.matcher.matches(x)) true
     else {
       var v = min
       var matched = false
