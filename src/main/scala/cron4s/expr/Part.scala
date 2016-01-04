@@ -3,9 +3,8 @@ package cron4s.expr
 import cats.{Apply, Functor}
 import cats.functor.Contravariant
 import cron4s.core.{Indexed, Bound, Sequential}
-import cats.syntax.functor._
-import cron4s.core.Isomorphism.<=>
-import cron4s.matcher.Matcher
+import cats.syntax.contravariant._
+import cron4s.matcher._
 
 /**
   * Created by alonsodomin on 07/11/2015.
@@ -13,6 +12,8 @@ import cron4s.matcher.Matcher
 sealed trait Part[V, F <: CronField] extends Bound[V] with Sequential[V] {
 
   def matcher: Matcher[V]
+
+  def matcherFor[X](implicit conv: (F, X) => V): Matcher[X] = this.matcher.contramap(conv.curried(unit.field))
 
   def unit: CronUnit[V, F]
 

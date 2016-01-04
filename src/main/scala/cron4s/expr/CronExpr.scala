@@ -6,16 +6,22 @@ import java.time.temporal.ChronoField
 import CronField._
 import cats.syntax.contravariant._
 import cron4s.expr.Segment.{DaysOfMonth, Hours, Minutes}
-import cron4s.matcher.Matcher
+import cron4s.matcher._
 
 /**
   * Created by alonsodomin on 02/01/2016.
   */
-case class CronExpr(minutes: Minutes, hours: Hours, daysOfMonth: DaysOfMonth, month: Segment.Months[_],
-                    daysOfWeek: Segment.DaysOfWeeks[_]) {
+case class CronExpr(minutes: MinutesPart, hours: HoursPart, daysOfMonth: DaysOfMonthPart, month: MonthsPart,
+                    daysOfWeek: DaysOfWeekPart) {
 
-  def matcher: Matcher[LocalDateTime] = Matcher { dt =>
-    minutes.matcher(dt) && hours.matcher(dt) && daysOfMonth.matcher(dt) && month.matcher(dt) && daysOfWeek.matcher(dt)
+  import JdkTimeMatchers._
+
+  def matcherFor: Matcher[LocalDateTime] = Matcher { dt =>
+    minutes.matcherFor[LocalDateTime].apply(dt) &&
+    hours.matcherFor[LocalDateTime].apply(dt) &&
+    daysOfMonth.matcherFor[LocalDateTime].apply(dt) &&
+    month.matcherFor[LocalDateTime].apply(dt) &&
+    daysOfWeek.matcherFor[LocalDateTime].apply(dt)
   }
 
 }
