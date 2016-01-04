@@ -22,20 +22,14 @@ object JdkTimeMatchers {
   implicit def temporalAccessor(field: CronField, accessor: LocalDateTime): Int =
     accessor.get(cronField2TemporalField(field))
 
-  implicit def temporalAccessor(field: Month.type, accessor: LocalDateTime): String =
-    accessor.get(cronField2TemporalField(field)).toString
-
-  implicit def temporalAccessor(field: DayOfWeek.type, accessor: LocalDateTime): String =
-    accessor.get(cronField2TemporalField(field)).toString
-
   implicit class CronExprMatcher(cronExpr: CronExpr) {
 
     def matcher: Matcher[LocalDateTime] = Matcher { dt =>
       cronExpr.minutes.matcherFor[LocalDateTime].matches(dt) &&
         cronExpr.hours.matcherFor[LocalDateTime].matches(dt) &&
-        cronExpr.daysOfMonth.matcherFor[LocalDateTime].matches(dt) //&&
-        //cronExpr.month.matcherFor[LocalDateTime].apply(dt) &&
-        //cronExpr.daysOfWeek.matcherFor[LocalDateTime].apply(dt)
+        cronExpr.daysOfMonth.matcherFor[LocalDateTime].matches(dt) &&
+        cronExpr.month.matcherFor[LocalDateTime].matches(dt) &&
+        cronExpr.daysOfWeek.matcherFor[LocalDateTime].matches(dt)
     }
 
   }

@@ -11,43 +11,47 @@ trait PartParsers extends RegexParsers {
   import CronField._
   import CronUnit._
 
-  def minute: Parser[Scalar[Int, Minute.type]] =
+  def minute: Parser[Scalar[Minute.type]] =
     """[0-5]?\d""".r ^^ { value => Scalar(Minute, value.toInt) }
 
-  def hour: Parser[Scalar[Int, Hour.type]] =
+  def hour: Parser[Scalar[Hour.type]] =
     """2[0-3]|[01]?[0-9]""".r ^^ { value => Scalar(Hour, value.toInt) }
 
-  def dayOfMonth: Parser[Scalar[Int, DayOfMonth.type]] =
+  def dayOfMonth: Parser[Scalar[DayOfMonth.type]] =
     """3[01]|[012]?\d""".r ^^ { value => Scalar(DayOfMonth, value.toInt) }
 
-  def numericMonth: Parser[Scalar[Int, Month.type]] =
+  private[this] def numericMonth: Parser[Scalar[Month.type]] =
     """1[0-2]|[1-9]""".r ^^ { value => Scalar(Month, value.toInt) }
 
-  def textMonth: Parser[Scalar[String, Month.type]] =
-    TextMonths.values.mkString("|").r ^^ { value => Scalar(Month, value) }
+  private[this] def textMonth: Parser[Scalar[Month.type]] =
+    MonthsUnit.namedValues.mkString("|").r ^^ { v =>
+      val value = MonthsUnit.namedValues.indexOf(v) + 1
+      Scalar(Month, value, Some(v)) 
+    }
 
-  def month[V: Value]: Parser[Scalar[V, Month.type]] =
-    numericMonth.asInstanceOf[Parser[Scalar[V, Month.type]]] | textMonth.asInstanceOf[Parser[Scalar[V, Month.type]]]
+  def month: Parser[Scalar[Month.type]] = numericMonth | textMonth
 
-  private[this] def numberDayOfWeek: Parser[Scalar[Int, DayOfWeek.type]] =
+  private[this] def numberDayOfWeek: Parser[Scalar[DayOfWeek.type]] =
     """[0-6]""".r ^^ { value => Scalar(DayOfWeek, value.toInt) }
 
-  private[this] def textDayOfWeek: Parser[Scalar[String, DayOfWeek.type]] =
-    TextDaysOfWeek.values.mkString("|").r ^^ { value => Scalar(DayOfWeek, value) }
+  private[this] def textDayOfWeek: Parser[Scalar[DayOfWeek.type]] =
+    DaysOfWeekUnit.namedValues.mkString("|").r ^^ { v =>
+      val value = DaysOfWeekUnit.namedValues.indexOf(v)
+      Scalar(DayOfWeek, value, Some(v)) 
+    }
 
-  def dayOfWeek[V: Value]: Parser[Scalar[V, DayOfWeek.type]] =
-    numberDayOfWeek.asInstanceOf[Parser[Scalar[V, DayOfWeek.type]]] | textDayOfWeek.asInstanceOf[Parser[Scalar[V, DayOfWeek.type]]]
+  def dayOfWeek: Parser[Scalar[DayOfWeek.type]] = numberDayOfWeek | textDayOfWeek
 
-  def always[V: Value, U <: CronField](implicit unitOps: CronUnit[V, U]): Parser[Always[V, U]] =
-    """\*""".r ^^ { _ => Always[V, U]() }
+  def always[F <: CronField](implicit unit: CronUnit[F]): Parser[Always[F]] =
+    """\*""".r ^^ { _ => Always[F]() }
 
-  def between[V: Value, U <: CronField](p: Parser[Scalar[V, U]])(implicit unitOps: CronUnit[V, U]): Parser[Between[V, U]] =
+  def between[F <: CronField](p: Parser[Scalar[F]])(implicit unit: CronUnit[F]): Parser[Between[F]] =
     p ~ ("-" ~> p) ^^ { case min ~ max => Between(min, max) }
 
-  def several[V: Value, U <: CronField](p: Parser[EnumerablePart[V, U]])(implicit unitOps: CronUnit[V, U]): Parser[Several[V, U]] =
+  def several[F <: CronField](p: Parser[EnumerablePart[F]])(implicit unit: CronUnit[F]): Parser[Several[F]] =
     p ~ (("," ~> p)+) ^^ { case head ~ tail => Several((head :: tail).to[Vector]) }
 
-  def every[V: Value, U <: CronField](p: Parser[DivisiblePart[V, U]])(implicit unitOps: CronUnit[V, U]): Parser[Every[V, U]] =
+  def every[F <: CronField](p: Parser[DivisiblePart[F]])(implicit unit: CronUnit[F]): Parser[Every[F]] =
     p ~ """\/\d+""".r ^^ { case base ~ step => Every(base, step.substring(1).toInt) }
 
 }
