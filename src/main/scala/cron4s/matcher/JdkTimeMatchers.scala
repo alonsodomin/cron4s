@@ -1,7 +1,7 @@
 package cron4s.matcher
 
 import java.time.LocalDateTime
-import java.time.temporal.{ChronoField, TemporalField, TemporalAccessor}
+import java.time.temporal.{ChronoField, TemporalField}
 
 import cron4s.expr._
 
@@ -19,8 +19,10 @@ object JdkTimeMatchers {
     case DayOfWeek  => ChronoField.DAY_OF_WEEK
   }
 
-  implicit def temporalAccessor(field: CronField, accessor: LocalDateTime): Int =
-    accessor.get(cronField2TemporalField(field))
+  implicit def temporalAccessor(field: CronField, accessor: LocalDateTime): Int = {
+    val offset = if (field == DayOfWeek) -1 else 0
+    accessor.get(cronField2TemporalField(field)) + offset
+  }
 
   implicit class CronExprMatcher(cronExpr: CronExpr) {
 
