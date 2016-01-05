@@ -11,19 +11,21 @@ import scala.util.parsing.combinator.RegexParsers
 trait ASTParsers extends PartParsers {
   import CronField._
 
-  private[this] abstract class ParserFactory[U <: CronField] {
-    def build(p: Parser[Scalar[U]])(implicit unit: CronUnit[U]): Parser[Part[U]]
+  private[this] abstract class ParserFactory[F <: CronField] {
+    def build(p: Parser[Scalar[F]])(implicit unit: CronUnit[F]): Parser[Part[F]]
   }
 
-  private[this] class DefaultParserFactory[U <: CronField] extends ParserFactory[U] {
+  private[this] class DefaultParserFactory[F <: CronField] extends ParserFactory[F] {
 
-    private[this] def everyAST(p: Parser[Scalar[U]])(implicit unit: CronUnit[U]): Parser[Every[U]] =
+    private[this] def everyAST(p: Parser[Scalar[F]])
+        (implicit unit: CronUnit[F]): Parser[Every[F]] =
       every(several(between(p) | p) | between(p) | always)
 
-    private[this] def severalAST(p: Parser[Scalar[U]])(implicit unit: CronUnit[U]): Parser[Several[U]] =
+    private[this] def severalAST(p: Parser[Scalar[F]])
+        (implicit unit: CronUnit[F]): Parser[Several[F]] =
       several(between(p) | p)
 
-    def build(p: Parser[Scalar[U]])(implicit unit: CronUnit[U]): Parser[Part[U]] =
+    def build(p: Parser[Scalar[F]])(implicit unit: CronUnit[F]): Parser[Part[F]] =
       everyAST(p) | severalAST(p) | between(p) | p | always
 
   }

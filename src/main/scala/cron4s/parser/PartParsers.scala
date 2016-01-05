@@ -11,6 +11,8 @@ trait PartParsers extends RegexParsers {
   import CronField._
   import CronUnit._
 
+  // Unit parsers
+
   def minute: Parser[Scalar[Minute.type]] =
     """[0-5]?\d""".r ^^ { value => Scalar(Minute, value.toInt) }
 
@@ -42,16 +44,21 @@ trait PartParsers extends RegexParsers {
 
   def dayOfWeek: Parser[Scalar[DayOfWeek.type]] = numberDayOfWeek | textDayOfWeek
 
+  // Part parsers
+
   def always[F <: CronField](implicit unit: CronUnit[F]): Parser[Always[F]] =
     """\*""".r ^^ { _ => Always[F]() }
 
-  def between[F <: CronField](p: Parser[Scalar[F]])(implicit unit: CronUnit[F]): Parser[Between[F]] =
+  def between[F <: CronField](p: Parser[Scalar[F]])
+      (implicit unit: CronUnit[F]): Parser[Between[F]] =
     p ~ ("-" ~> p) ^^ { case min ~ max => Between(min, max) }
 
-  def several[F <: CronField](p: Parser[EnumerablePart[F]])(implicit unit: CronUnit[F]): Parser[Several[F]] =
+  def several[F <: CronField](p: Parser[EnumerablePart[F]])
+      (implicit unit: CronUnit[F]): Parser[Several[F]] =
     p ~ (("," ~> p)+) ^^ { case head ~ tail => Several((head :: tail).to[Vector]) }
 
-  def every[F <: CronField](p: Parser[DivisiblePart[F]])(implicit unit: CronUnit[F]): Parser[Every[F]] =
+  def every[F <: CronField](p: Parser[DivisiblePart[F]])
+      (implicit unit: CronUnit[F]): Parser[Every[F]] =
     p ~ """\/\d+""".r ^^ { case base ~ step => Every(base, step.substring(1).toInt) }
 
 }

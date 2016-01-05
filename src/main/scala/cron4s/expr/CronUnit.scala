@@ -3,10 +3,13 @@ package cron4s.expr
 import cron4s.core.{Indexed, Bound, Sequential}
 import cron4s.matcher.Matcher
 
+import scala.annotation.implicitNotFound
+
 /**
   * Created by alonsodomin on 02/01/2016.
   */
-sealed abstract class CronUnit[F <: CronField]
+@implicitNotFound("Field ${F} is not supported on Cron expressions")
+sealed trait CronUnit[F <: CronField]
     extends Sequential[Int] with Bound[Int] with Indexed[Int] with PartialOrdering[Int] { self =>
 
   def apply(index: Int): Option[Int] = {
