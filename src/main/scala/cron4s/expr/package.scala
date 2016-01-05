@@ -7,8 +7,6 @@ import cats.data.Xor
   */
 package object expr {
 
-  type CronVal         = Int Xor String
-
   type MinutesPart     = Part[CronField.Minute.type]
   type HoursPart       = Part[CronField.Hour.type]
   type DaysOfMonthPart = Part[CronField.DayOfMonth.type]
