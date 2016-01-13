@@ -6,6 +6,8 @@ import simulacrum.typeclass
 
 import scala.annotation.implicitNotFound
 
+import algebra.std.int._
+
 /**
   * Created by alonsodomin on 02/01/2016.
   */
@@ -18,7 +20,7 @@ sealed trait CronUnit[F <: CronField]
     else Some(values(index))
   }
 
-  def matcherOn(x: Int)(implicit ev: CronUnit[F]): Matcher[Int] = Matcher { v => v == x }
+  def `match`(x: Int)(implicit ev: CronUnit[F]): Matcher[Int] = Matcher.equal(x)
 
   def field: F
   def size: Int

@@ -1,7 +1,5 @@
 package cron4s
 
-import cats.data.Xor
-
 /**
   * Created by alonsodomin on 04/01/2016.
   */

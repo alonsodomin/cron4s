@@ -3,6 +3,7 @@ package cron4s.expr
 import cats.{Apply, Functor}
 import cats.functor.Contravariant
 import cron4s.core.{Indexed, Bound, Sequential}
+import cats.std.vector._
 import cats.syntax.contravariant._
 import cron4s.matcher._
 
@@ -32,7 +33,7 @@ final case class Always[F <: CronField](implicit val unit: CronUnit[F])
 
   def max: Int = unit.max
 
-  def matcher: Matcher[Int] = Matcher { v => true }
+  def matcher: Matcher[Int] = Matcher.disjunction.monoid.empty
 
   def step(from: Int, step: Int): Option[(Int, Int)] =
     unit.step(from, step)
@@ -51,7 +52,7 @@ final case class Scalar[F <: CronField](field: F, value: Int, textValue: Option[
 
   def max: Int = value
 
-  def matcher: Matcher[Int] = unit.matcherOn(value)
+  def matcher: Matcher[Int] = unit.`match`(value)
 
   def step(from: Int, step: Int): Option[(Int, Int)] = {
     if (matcher.matches(from)) Some((from, step))
@@ -83,7 +84,7 @@ final case class Between[F <: CronField](begin: Scalar[F], end: Scalar[F])
 
 }
 
-final case class Several[F <: CronField](values: IndexedSeq[EnumerablePart[F]])
+final case class Several[F <: CronField](values: Vector[EnumerablePart[F]])
       (implicit val unit: CronUnit[F])
     extends Part[F] with DivisiblePart[F] {
 
@@ -91,9 +92,7 @@ final case class Several[F <: CronField](values: IndexedSeq[EnumerablePart[F]])
 
   def max: Int = values.last.max
 
-  def matcher: Matcher[Int] = Matcher { x =>
-    values.exists(_.matcher.matches(x))
-  }
+  def matcher: Matcher[Int] = Matcher.exists(values.map(_.matcher))
 
   def step(from: Int, step: Int): Option[(Int, Int)] = {
     if (matcher.matches(from)) {
@@ -105,7 +104,7 @@ final case class Several[F <: CronField](values: IndexedSeq[EnumerablePart[F]])
 
 }
 
-case class Every[F <: CronField](value: DivisiblePart[F], freq: Int)
+final case class Every[F <: CronField](value: DivisiblePart[F], freq: Int)
       (implicit val unit: CronUnit[F])
     extends Part[F] {
 

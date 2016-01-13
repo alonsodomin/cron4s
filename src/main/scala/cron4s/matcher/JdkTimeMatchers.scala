@@ -3,6 +3,7 @@ package cron4s.matcher
 import java.time.LocalDateTime
 import java.time.temporal.{ChronoField, TemporalField}
 
+import cats.std.list._
 import cron4s.expr._
 
 /**
@@ -26,12 +27,17 @@ object JdkTimeMatchers {
 
   implicit class CronExprMatcher(cronExpr: CronExpr) {
 
-    def matcher: Matcher[LocalDateTime] = Matcher { dt =>
-      cronExpr.minutes.matcherFor[LocalDateTime].matches(dt) &&
-        cronExpr.hours.matcherFor[LocalDateTime].matches(dt) &&
-        cronExpr.daysOfMonth.matcherFor[LocalDateTime].matches(dt) &&
-        cronExpr.month.matcherFor[LocalDateTime].matches(dt) &&
-        cronExpr.daysOfWeek.matcherFor[LocalDateTime].matches(dt)
+    def matcher: Matcher[LocalDateTime] = {
+      import Matcher._
+      val parts = List(
+        cronExpr.minutes.matcherFor[LocalDateTime],
+        cronExpr.hours.matcherFor[LocalDateTime],
+        cronExpr.daysOfMonth.matcherFor[LocalDateTime],
+        cronExpr.month.matcherFor[LocalDateTime],
+        cronExpr.daysOfWeek.matcherFor[LocalDateTime]
+      )
+
+      not (forall(parts))
     }
 
   }
