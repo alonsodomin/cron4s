@@ -19,7 +19,7 @@ trait ASTParsers extends PartParsers {
 
     private[this] def everyAST(p: Parser[Scalar[F]])
         (implicit unit: CronUnit[F]): Parser[Every[F]] =
-      every(several(between(p) | p) | between(p) | always)
+      every(severalAST(p) | between(p) | always)
 
     private[this] def severalAST(p: Parser[Scalar[F]])
         (implicit unit: CronUnit[F]): Parser[Several[F]] =

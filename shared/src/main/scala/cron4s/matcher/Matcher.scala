@@ -1,6 +1,6 @@
 package cron4s.matcher
 
-import algebra.{Eq, Monoid}
+import cats.{Eq, Monoid}
 import cats.{Applicative, Foldable}
 import cats.functor.Contravariant
 

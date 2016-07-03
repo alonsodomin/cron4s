@@ -1,34 +1,46 @@
-name := "cron4s"
-organization := "com.github.alonsodomin"
 
-scalaVersion := "2.11.7"
+scalaVersion in ThisBuild := "2.11.8"
 
-version := "0.1.0-SNAPSHOT"
+version in ThisBuild := "0.1.0-SNAPSHOT"
 
-scalacOptions ++= Seq(
-  "-language:postfixOps",
-  "-feature",
-  "-unchecked",
-  "-deprecation",
-  "-Xfuture",
-  "-Ywarn-dead-code",
-  "-language:implicitConversions",
-  "-language:higherKinds",
-  "-language:existentials"
+val globalSettings = Seq(
+  name := "cron4s",
+  organization := "com.github.alonsodomin",
+  scalacOptions ++= Seq(
+    "-language:postfixOps",
+    "-feature",
+    "-unchecked",
+    "-deprecation",
+    "-Xfuture",
+    "-Ywarn-dead-code",
+    "-language:implicitConversions",
+    "-language:higherKinds",
+    "-language:existentials"
+  )
 )
 
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0-M5" cross CrossVersion.full)
-addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.6.3")
+lazy val cron4s = (crossProject in file(".")).
+  settings(globalSettings: _*).
+  settings(
+    libraryDependencies ++= Seq(
+      compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full),
+      compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
 
-libraryDependencies ++= Seq(
-  "com.github.mpilquist"   %%% "simulacrum"              % "0.5.0",
-  "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4",
-  "org.parboiled"          %%% "parboiled"               % "2.1.0",
-  "org.spire-math"         %%% "cats"                    % "0.3.0",
-  "org.scalamacros"        %% "resetallattrs"            % "1.0.0-M1",
-  "org.scalacheck"         %%% "scalacheck"              % "1.12.5" % Test
-)
+      "com.github.mpilquist" %%% "simulacrum" % "0.7.0",
+      "org.typelevel"        %%% "cats"       % "0.6.0",
+      "org.scalacheck"       %%% "scalacheck" % "1.12.5" % Test
+    )
+  ).jsSettings(
+    libraryDependencies ++= Seq(
+      "org.scala-js" %%% "scala-parser-combinators" % "1.0.2"
+    )
+  ).jvmSettings(
+    libraryDependencies ++= Seq(
+      "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.2"
+    )
+  )
 
-//enablePlugins(ScalaJSPlugin)
+lazy val cron4sJS = cron4s.js
+lazy val cron4sJVM = cron4s.jvm
 
 initialCommands in console := "import cron4s.core._, cron4s.expr._, cron4s.matcher._, CronField._, cron4s._"

@@ -6,7 +6,7 @@ import simulacrum.typeclass
 
 import scala.annotation.implicitNotFound
 
-import algebra.std.int._
+import cats.implicits._
 
 /**
   * Created by alonsodomin on 02/01/2016.
@@ -81,4 +81,3 @@ object CronUnit {
   }
 
 }
-
