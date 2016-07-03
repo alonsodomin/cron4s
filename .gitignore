@@ -85,3 +85,8 @@ build
 ###################
 .history
 !activator-launch-*.jar
+
+# Ensime #
+##########
+.ensime
+.ensime_cache
