@@ -47,14 +47,14 @@ object Expr {
       unit.step(from, step)
 
   }
-  object AlwaysExpr {
+  /*object AlwaysExpr {
     implicit def apply[F <: CronField : CronUnit] = new Matchable[AlwaysExpr[F], Int] {
       def matches(e: AlwaysExpr[F])(b: Int): Boolean = {
         val matcher = Matcher.disjunction.monoid.empty[Int]
         matcher.matches(b)
       }
     }
-  }
+  }*/
 
   case object Last extends SpecialChar
 
@@ -76,13 +76,13 @@ object Expr {
     }
 
   }
-  object ConstExpr {
+  /*object ConstExpr {
     implicit def apply[F <: CronField : CronUnit] = new Matchable[ConstExpr[F], Int] {
       def matches(e: ConstExpr[F])(b: Int): Boolean = {
         e.matcher.matches(b)
       }
     }
-  }
+  }*/
 
   final case class BetweenExpr[F <: CronField](begin: ConstExpr[F], end: ConstExpr[F])
                                               (implicit val unit: CronUnit[F])
@@ -106,12 +106,12 @@ object Expr {
     }
 
   }
-  object BetweenExpr {
+  /*object BetweenExpr {
     implicit def apply[F <: CronField : CronUnit] = new Matchable[BetweenExpr[F], Int] {
       def matches(e: BetweenExpr[F])(b: Int): Boolean =
         e.matcher.matches(b)
     }
-  }
+  }*/
 
   final case class SeveralExpr[F <: CronField](values: Vector[EnumerableExpr[F]])
                                               (implicit val unit: CronUnit[F])
@@ -134,12 +134,12 @@ object Expr {
     }
 
   }
-  object SeveralExpr {
+  /*object SeveralExpr {
     implicit def apply[F <: CronField : CronUnit] = new Matchable[SeveralExpr[F], Int] {
       def matches(e: SeveralExpr[F])(b: Int): Boolean =
         e.matcher.matches(b)
     }
-  }
+  }*/
 
   final case class EveryExpr[F <: CronField](value: DivisibleExpr[F], freq: Int)
                                             (implicit val unit: CronUnit[F])
@@ -170,11 +170,11 @@ object Expr {
     def step(from: Int, step: Int): Option[(Int, Int)] = value.step(from, step)
 
   }
-  object EveryExpr {
+  /*object EveryExpr {
     implicit def apply[F <: CronField : CronUnit] = new Matchable[EveryExpr[F], Int] {
       def matches(e: EveryExpr[F])(b: Int): Boolean =
         e.matcher.matches(b)
     }
-  }
+  }*/
 
 }

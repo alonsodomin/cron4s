@@ -5,8 +5,8 @@ import simulacrum.typeclass
 /**
   * Created by domingueza on 04/07/2016.
   */
-@typeclass trait Matchable[E, B] {
+@typeclass trait Matchable[A] {
 
-  def matches(e: E)(b: B): Boolean
+  def matches[B](a: A)(b: B): Boolean
 
 }

@@ -19,18 +19,26 @@ object jdk {
     else Some(accessor.get(cronField2TemporalField(field)) + offset)
   }
 
-  implicit class CronExprMatcher(cronExpr: CronExpr) {
+  implicit class CronExprMatcher(expr: CronExpr) {
+
+    private[this] def matchers[T <: TemporalAccessor] = List(
+      expr.minutes.matcherFor[T],
+      expr.hours.matcherFor[T],
+      expr.daysOfMonth.matcherFor[T],
+      expr.month.matcherFor[T],
+      expr.daysOfWeek.matcherFor[T]
+    )
 
     def matcherFor[T <: TemporalAccessor]: Matcher[T] = {
       import Matcher._
       import conjunction._
 
       forall(List(
-        cronExpr.minutes.matcherFor[T],
-        cronExpr.hours.matcherFor[T],
-        cronExpr.daysOfMonth.matcherFor[T],
-        cronExpr.month.matcherFor[T],
-        cronExpr.daysOfWeek.matcherFor[T]
+        expr.minutes.matcherFor[T],
+        expr.hours.matcherFor[T],
+        expr.daysOfMonth.matcherFor[T],
+        expr.month.matcherFor[T],
+        expr.daysOfWeek.matcherFor[T]
       ))
     }
 
