@@ -11,18 +11,19 @@ import cron4s.expr._
 object jdk {
   import CronField._
 
-  implicit def temporalAccessor[T <: TemporalAccessor](field: CronField, accessor: T): Int = {
+  implicit def temporalAccessor[T <: TemporalAccessor](field: CronField, accessor: T): Option[Int] = {
     val offset = if (field == DayOfWeek) -1 else 0
     val temporalField = cronField2TemporalField(field)
 
-    if (!accessor.isSupported(temporalField)) -1
-    else accessor.get(cronField2TemporalField(field)) + offset
+    if (!accessor.isSupported(temporalField)) None
+    else Some(accessor.get(cronField2TemporalField(field)) + offset)
   }
 
   implicit class CronExprMatcher(cronExpr: CronExpr) {
 
     def matcherFor[T <: TemporalAccessor]: Matcher[T] = {
       import Matcher._
+      import conjunction._
 
       forall(List(
         cronExpr.minutes.matcherFor[T],

@@ -1,7 +1,6 @@
 package cron4s.matcher
 
-import cats.{Eq, Monoid}
-import cats.Foldable
+import cats.{Eq, Foldable, MonoidK}
 import cats.functor.Contravariant
 
 /**
@@ -49,21 +48,20 @@ object Matcher {
 
   object disjunction {
 
-    implicit def monoid[A] = new Monoid[Matcher[A]] {
-      def empty: Matcher[A] = Matcher { _ => true }
+    implicit val monoid = new MonoidK[Matcher] {
+      def empty[A]: Matcher[A] = Matcher { _ => true }
 
-      def combine(x: Matcher[A], y: Matcher[A]): Matcher[A] = x && y
-
+      def combineK[A](x: Matcher[A], y: Matcher[A]): Matcher[A] = x && y
     }
 
   }
 
   object conjunction {
 
-    implicit def monoid[A] = new Monoid[Matcher[A]] {
-      def empty: Matcher[A] = Matcher { _ => false }
+    implicit val monoid = new MonoidK[Matcher] {
+      def empty[A]: Matcher[A] = Matcher { _ => false }
 
-      def combine(x: Matcher[A], y: Matcher[A]): Matcher[A] = x || y
+      def combineK[A](x: Matcher[A], y: Matcher[A]): Matcher[A] = x || y
     }
 
   }
