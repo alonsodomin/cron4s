@@ -5,10 +5,10 @@ package cron4s
   */
 package object expr {
 
-  type MinutesPart     = Part[CronField.Minute.type]
-  type HoursPart       = Part[CronField.Hour.type]
-  type DaysOfMonthPart = Part[CronField.DayOfMonth.type]
-  type MonthsPart      = Part[CronField.Month.type]
-  type DaysOfWeekPart  = Part[CronField.DayOfWeek.type]
+  type MinutesExpr     = Expr[CronField.Minute.type]
+  type HoursExpr       = Expr[CronField.Hour.type]
+  type DaysOfMonthExpr = Expr[CronField.DayOfMonth.type]
+  type MonthsExpr      = Expr[CronField.Month.type]
+  type DaysOfWeekExpr  = Expr[CronField.DayOfWeek.type]
 
 }

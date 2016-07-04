@@ -6,11 +6,12 @@ import org.scalacheck._
 /**
   * Created by alonsodomin on 13/01/2016.
   */
-object PartParsersSpec extends Properties("PartParsers") with PartParsers with PartGenerators {
+object ExprParsersSpec extends Properties("ExprParsers") with ExprParsers with ExprGenerators {
   import CronUnit._
+  import Expr._
   import Prop._
 
-  def verifyParsed[F <: CronField, P <: Part[F]](parser: Parser[P], input: String)(verify: P => Boolean): Boolean = {
+  def verifyParsed[F <: CronField, P <: Expr[F]](parser: Parser[P], input: String)(verify: P => Boolean): Boolean = {
     parseAll(parser, input) match {
       case Success(parsed, _) => verify(parsed)
       case NoSuccess(msg, _) =>
@@ -20,8 +21,8 @@ object PartParsersSpec extends Properties("PartParsers") with PartParsers with P
   }
 
   /** Utility method to help with type inference */
-  def verifyScalar[F <: CronField](parser: Parser[Scalar[F]], input: String)(verify: Scalar[F] => Boolean): Boolean =
-    verifyParsed[F, Scalar[F]](parser, input)(verify)
+  def verifyScalar[F <: CronField](parser: Parser[ConstExpr[F]], input: String)(verify: ConstExpr[F] => Boolean): Boolean =
+    verifyParsed[F, ConstExpr[F]](parser, input)(verify)
 
   property("Should be able to parse minutes") = forAll(Gen.choose(0, 59)) {
     x => verifyScalar(minute, x.toString) { expr => expr.value == x }

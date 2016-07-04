@@ -1,7 +1,7 @@
 package cron4s.matcher
 
 import cats.{Eq, Monoid}
-import cats.{Applicative, Foldable}
+import cats.Foldable
 import cats.functor.Contravariant
 
 /**

@@ -1,6 +1,5 @@
 package cron4s
 
-import cats.data.Xor
 import cron4s.expr._
 import cron4s.parser.ASTParsers
 
@@ -12,10 +11,10 @@ object Cron {
   private object parser extends ASTParsers
   import parser._
 
-  def apply(expr: String): String Xor CronExpr = {
+  def apply(expr: String): Either[String, CronExpr] = {
     parser.parseAll(parser.cron, expr) match {
-      case Success(e, _) => Xor.Right(e)
-      case NoSuccess(msg, _) => Xor.Left(msg)
+      case Success(e, _)     => Right(e)
+      case NoSuccess(msg, _) => Left(msg)
     }
   }
 
