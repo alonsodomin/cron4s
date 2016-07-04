@@ -1,0 +1,49 @@
+package cron4s.matcher
+
+import java.time.temporal.{ChronoField, TemporalAccessor, TemporalField}
+
+import cats.std.list._
+import cron4s.expr._
+
+/**
+  * Created by alonsodomin on 04/01/2016.
+  */
+object jdk {
+  import CronField._
+
+  implicit def temporalAccessor[T <: TemporalAccessor](field: CronField, accessor: T): Int = {
+    val offset = if (field == DayOfWeek) -1 else 0
+    val temporalField = cronField2TemporalField(field)
+
+    if (!accessor.isSupported(temporalField)) -1
+    else accessor.get(cronField2TemporalField(field)) + offset
+  }
+
+  implicit class CronExprMatcher(cronExpr: CronExpr) {
+
+    def matcherFor[T <: TemporalAccessor]: Matcher[T] = {
+      import Matcher._
+
+      forall(List(
+        cronExpr.minutes.matcherFor[T],
+        cronExpr.hours.matcherFor[T],
+        cronExpr.daysOfMonth.matcherFor[T],
+        cronExpr.month.matcherFor[T],
+        cronExpr.daysOfWeek.matcherFor[T]
+      ))
+    }
+
+    def matches[T <: TemporalAccessor](t: T): Boolean =
+      matcherFor[T].matches(t)
+
+  }
+
+  private[this] def cronField2TemporalField(field: CronField): TemporalField = field match {
+    case Minute     => ChronoField.MINUTE_OF_HOUR
+    case Hour       => ChronoField.HOUR_OF_DAY
+    case DayOfMonth => ChronoField.DAY_OF_MONTH
+    case Month      => ChronoField.MONTH_OF_YEAR
+    case DayOfWeek  => ChronoField.DAY_OF_WEEK
+  }
+
+}

@@ -17,6 +17,9 @@ sealed trait Part[F <: CronField] extends Sequential[Int] {
   def matcherFor[X](implicit conv: (F, X) => Int): Matcher[X] =
     matcher.contramap(conv.curried(unit.field))
 
+  def matches[X](x: X)(implicit conv: (F, X) => Int): Boolean =
+    matcherFor[X].matches(x)
+
   def unit: CronUnit[F]
 
 }
