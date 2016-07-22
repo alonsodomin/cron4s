@@ -21,7 +21,7 @@ object jdk {
 
   implicit class CronExprMatcher(expr: CronExpr) {
 
-    private[this] def matchers[T <: TemporalAccessor] = List(
+    /*private[this] def matchers[T <: TemporalAccessor] = List(
       expr.minutes.matcherFor[T],
       expr.hours.matcherFor[T],
       expr.daysOfMonth.matcherFor[T],
@@ -43,7 +43,7 @@ object jdk {
     }
 
     def matches[T <: TemporalAccessor](t: T): Boolean =
-      matcherFor[T].matches(t)
+      matcherFor[T].matches(t)*/
 
   }
 
