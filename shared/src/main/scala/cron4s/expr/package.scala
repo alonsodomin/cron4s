@@ -1,5 +1,7 @@
 package cron4s
 
+import shapeless._
+
 /**
   * Created by alonsodomin on 04/01/2016.
   */
@@ -10,5 +12,7 @@ package object expr {
   type DaysOfMonthExpr = Expr[CronField.DayOfMonth.type]
   type MonthsExpr      = Expr[CronField.Month.type]
   type DaysOfWeekExpr  = Expr[CronField.DayOfWeek.type]
+
+  type CronExpr = MinutesExpr :: HoursExpr :: DaysOfMonthExpr :: MonthsExpr :: DaysOfWeekExpr :: HNil
 
 }

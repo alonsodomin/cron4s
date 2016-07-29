@@ -31,6 +31,7 @@ lazy val cron4s = (crossProject in file(".")).
 
       "com.github.mpilquist" %%% "simulacrum" % "0.7.0",
       "org.typelevel"        %%% "cats"       % "0.6.0",
+      "com.chuusai"          %%% "shapeless"  % "2.3.1",
       "org.scalacheck"       %%% "scalacheck" % "1.12.5" % Test
     )
   ).jsSettings(
