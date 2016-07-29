@@ -76,7 +76,7 @@ object Expr {
 
     def step(from: Int, step: Int): Option[(Int, Int)] = {
       if (matcher.matches(from))
-        unit.focus(min, max).step(from, step)
+        unit.narrow(min, max).step(from, step)
       else
         None
     }

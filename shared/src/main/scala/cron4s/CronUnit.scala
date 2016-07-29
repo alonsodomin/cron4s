@@ -22,7 +22,7 @@ sealed trait CronUnit[F <: CronField]
   def lteq(lhs: Int, rhs: Int): Boolean =
     tryCompare(lhs, rhs).exists(_ <= 0)
 
-  def focus(min: Int, max: Int): CronUnit[F]
+  def narrow(min: Int, max: Int): CronUnit[F]
 
   val values: IndexedSeq[Int]
 }
@@ -30,7 +30,7 @@ sealed trait CronUnit[F <: CronField]
 object CronUnit {
   import CronField._
 
-  private[expr] abstract class BaseCronUnit[F <: CronField](val min: Int, val max: Int, val field: F) extends CronUnit[F] {
+  private[cron4s] abstract class BaseCronUnit[F <: CronField](val min: Int, val max: Int, val field: F) extends CronUnit[F] {
 
     def tryCompare(lhs: Int, rhs: Int): Option[Int] = {
       if ((lhs < min || lhs > max) || (rhs < min || rhs > max)) None
@@ -42,7 +42,10 @@ object CronUnit {
       else {
         val cursor = (v - min) + amount
         val newIdx = cursor % size
-        val newValue = if (newIdx < 0) (max + min) + newIdx else min + newIdx
+        val newValue = {
+          if (newIdx < 0) (max + min) + newIdx
+          else min + newIdx
+        }
         Some(newValue, cursor / size)
       }
     }
@@ -54,7 +57,7 @@ object CronUnit {
 
     def size: Int = (max - min) + 1
 
-    def focus(min: Int, max: Int): CronUnit[F] = new BaseCronUnit[F](min, max, field) {}
+    def narrow(min: Int, max: Int): CronUnit[F] = new BaseCronUnit[F](min, max, field) {}
 
     val values: IndexedSeq[Int] = min to max
 
