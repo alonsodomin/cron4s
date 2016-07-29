@@ -23,7 +23,7 @@ val globalSettings = Seq(
 lazy val commonJsSettings = Seq(
   persistLauncher in Compile := true,
   persistLauncher in Test := false,
-  scalaJSStage in Test := FastOptStage,
+  //scalaJSStage in Test := FastOptStage,
   scalaJSUseRhino in Global := false
 )
 
@@ -63,8 +63,8 @@ lazy val core = (crossProject in file("core")).
   ).
   settings(globalSettings: _*).
   settings(Dependencies.core: _*).
-  jsSettings(Dependencies.coreJS: _*).
   jvmSettings(Dependencies.coreJVM: _*).
+  jsSettings(Dependencies.coreJS: _*).
   dependsOn(types)
 
 lazy val coreJS = core.js

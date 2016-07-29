@@ -24,12 +24,13 @@ object Dependencies {
     )
   }
 
-  lazy val coreJS = Def.settings {
+  lazy val coreJS = Def.settings(
     libraryDependencies ++= Seq(
       "io.github.widok" %%% "scala-js-momentjs"        % version.momentjs % Optional,
       "org.scala-js"    %%% "scala-parser-combinators" % version.parserComb
-    )
-  }
+    ),
+    jsDependencies += RuntimeDOM % Test
+  )
 
   lazy val coreJVM = Def.settings {
     libraryDependencies ++= Seq(
