@@ -1,5 +1,6 @@
 package cron4s.parser
 
+import cron4s.CronField
 import cron4s.expr._
 import org.scalacheck._
 
@@ -7,7 +8,7 @@ import org.scalacheck._
   * Created by alonsodomin on 13/01/2016.
   */
 object ExprParsersSpec extends Properties("ExprParsers") with ExprParsers with ExprGenerators {
-  import CronUnit._
+  import cron4s.CronUnit._
   import Expr._
   import Prop._
 

@@ -2,7 +2,7 @@ package cron4s.expr
 
 import cats._
 import cats.implicits._
-
+import cron4s.{CronField, CronUnit}
 import cron4s.core.Sequential
 import cron4s.matcher._
 

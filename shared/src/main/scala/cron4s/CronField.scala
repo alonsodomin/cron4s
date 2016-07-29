@@ -1,4 +1,4 @@
-package cron4s.expr
+package cron4s
 
 /**
   * Created by alonsodomin on 07/11/2015.

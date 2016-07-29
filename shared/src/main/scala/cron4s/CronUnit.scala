@@ -1,12 +1,8 @@
-package cron4s.expr
+package cron4s
 
-import cron4s.core.{Indexed, Bound, Sequential}
-import cron4s.matcher.Matcher
-import simulacrum.typeclass
+import cron4s.core.{Bound, Indexed, Sequential}
 
 import scala.annotation.implicitNotFound
-
-import cats.implicits._
 
 /**
   * Created by alonsodomin on 02/01/2016.

@@ -1,5 +1,6 @@
 package cron4s.parser
 
+import cron4s.{CronField, CronUnit}
 import cron4s.expr._
 
 import scala.util.parsing.combinator.RegexParsers

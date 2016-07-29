@@ -1,7 +1,7 @@
 package cron4s.parser
 
+import cron4s.{CronField, CronUnit}
 import cron4s.expr._
-
 import shapeless._
 
 /**

@@ -1,7 +1,7 @@
 package cron4s.matcher
 
 import cats.MonoidK
-
+import cron4s.CronField
 import cron4s.expr._
 import shapeless._
 

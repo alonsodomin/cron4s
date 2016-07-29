@@ -1,7 +1,5 @@
 package cron4s
 
-import cron4s.expr.CronField
-
 /**
   * Created by domingueza on 29/07/2016.
   */
