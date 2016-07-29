@@ -11,7 +11,7 @@ object jdk {
   import CronField._
 
   implicit def fieldExtractor[T <: TemporalAccessor](field: CronField, accessor: T): Option[Int] = {
-    def cronField2TemporalField(field: CronField): TemporalField = field match {
+    val temporalField: TemporalField = field match {
       case Minute     => ChronoField.MINUTE_OF_HOUR
       case Hour       => ChronoField.HOUR_OF_DAY
       case DayOfMonth => ChronoField.DAY_OF_MONTH
@@ -20,10 +20,8 @@ object jdk {
     }
 
     val offset = if (field == DayOfWeek) -1 else 0
-    val temporalField = cronField2TemporalField(field)
-
     if (!accessor.isSupported(temporalField)) None
-    else Some(accessor.get(cronField2TemporalField(field)) + offset)
+    else Some(accessor.get(temporalField) + offset)
   }
 
   implicit class RichCronExpr(expr: CronExpr) extends RichCronExprBase[TemporalAccessor](expr)

@@ -41,6 +41,7 @@ lazy val cron4s = (crossProject in file(".")).
     )
   ).jvmSettings(
     libraryDependencies ++= Seq(
+      "joda-time"               % "joda-time"                % "2.9.4" % Optional,
       "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.2"
     )
   )
