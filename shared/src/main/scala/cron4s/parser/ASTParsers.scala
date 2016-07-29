@@ -29,7 +29,7 @@ trait ASTParsers extends ExprParsers {
   val daysOfWeek = expr[DayOfWeek.type](dayOfWeek)
 
   def cron: Parser[CronExpr] = minutes ~ hours ~ dayOfMonths ~ months ~ daysOfWeek ^^ {
-    case m ~ h ~ dm ~ mm ~ dw => m :: h :: dm :: mm :: dw :: HNil
+    case m ~ h ~ dm ~ mm ~ dw => CronExpr(m :: h :: dm :: mm :: dw :: HNil)
   }
 
 }

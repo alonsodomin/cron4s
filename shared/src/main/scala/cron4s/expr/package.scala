@@ -13,6 +13,6 @@ package object expr {
   type MonthsExpr      = Expr[CronField.Month.type]
   type DaysOfWeekExpr  = Expr[CronField.DayOfWeek.type]
 
-  type CronExpr = MinutesExpr :: HoursExpr :: DaysOfMonthExpr :: MonthsExpr :: DaysOfWeekExpr :: HNil
+  type CronExprList = MinutesExpr :: HoursExpr :: DaysOfMonthExpr :: MonthsExpr :: DaysOfWeekExpr :: HNil
 
 }

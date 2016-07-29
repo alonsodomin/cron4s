@@ -20,8 +20,6 @@ sealed trait CronUnit[F <: CronField]
     else Some(values(index))
   }
 
-  def `match`(x: Int)(implicit ev: CronUnit[F]): Matcher[Int] = Matcher.equal(x)
-
   def field: F
   def size: Int
 

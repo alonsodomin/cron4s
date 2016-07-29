@@ -1,10 +1,9 @@
 package cron4s.expr
 
-import cats.{Apply, Functor, Monoid, MonoidK}
-import cats.functor.Contravariant
+import cats._
+import cats.implicits._
+
 import cron4s.core.{Bound, Indexed, Sequential}
-import cats.std.vector._
-import cats.syntax.contravariant._
 import cron4s.matcher._
 
 /**
@@ -13,14 +12,6 @@ import cron4s.matcher._
 sealed trait Expr[F <: CronField] extends Sequential[Int] {
 
   def matcher: Matcher[Int]
-
-  def matcherFor[A](implicit f: (F, A) => Option[Int], M: MonoidK[Matcher]): Matcher[A] = {
-    val curriedF = f.curried(unit.field)
-    Matcher { a =>
-      curriedF(a).map(x => matcher.matches(x)).
-        getOrElse(M.empty[A].matches(a))
-    }
-  }
 
   def unit: CronUnit[F]
 
@@ -68,7 +59,7 @@ object Expr {
 
     def max: Int = value
 
-    def matcher: Matcher[Int] = unit.`match`(value)
+    def matcher: Matcher[Int] = Matcher.equal(value)
 
     def step(from: Int, step: Int): Option[(Int, Int)] = {
       if (matcher.matches(from)) Some((from, step))

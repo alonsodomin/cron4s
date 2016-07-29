@@ -36,7 +36,8 @@ lazy val cron4s = (crossProject in file(".")).
     )
   ).jsSettings(
     libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scala-parser-combinators" % "1.0.2"
+      "io.github.widok" %%% "scala-js-momentjs"        % "0.1.5",
+      "org.scala-js"    %%% "scala-parser-combinators" % "1.0.2"
     )
   ).jvmSettings(
     libraryDependencies ++= Seq(
