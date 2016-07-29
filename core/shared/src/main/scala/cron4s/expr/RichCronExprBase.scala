@@ -1,7 +1,6 @@
 package cron4s.expr
 
-import cats.MonoidK
-
+import cron4s.types.MonoidK
 import cron4s.matcher._
 
 /**

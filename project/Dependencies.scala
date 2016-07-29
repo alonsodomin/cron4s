@@ -19,8 +19,6 @@ object Dependencies {
       compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full),
       compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
 
-      "com.github.mpilquist" %%% "simulacrum" % version.simulacrum,
-      "org.typelevel"        %%% "cats"       % version.cats,
       "com.chuusai"          %%% "shapeless"  % version.shapeless,
       "org.scalacheck"       %%% "scalacheck" % version.scalacheck % Test
     )
@@ -37,6 +35,16 @@ object Dependencies {
     libraryDependencies ++= Seq(
       "joda-time"               % "joda-time"                % version.jodaTime % Optional,
       "org.scala-lang.modules" %% "scala-parser-combinators" % version.parserComb
+    )
+  }
+
+  lazy val cats = Def.settings {
+    libraryDependencies ++= Seq(
+      compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full),
+      compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
+
+      "com.github.mpilquist" %%% "simulacrum" % version.simulacrum,
+      "org.typelevel"        %%% "cats"       % version.cats
     )
   }
 

@@ -1,8 +1,9 @@
 package cron4s.matcher
 
-import cats.MonoidK
 import cron4s.CronField
 import cron4s.expr._
+import cron4s.types.MonoidK
+
 import shapeless._
 
 /**
@@ -11,7 +12,7 @@ import shapeless._
 class MatcherPolyFuns[A](implicit M: MonoidK[Matcher], extract: FieldExtractor[A]) {
 
   private[this] def buildMatcher[F <: CronField](field: F, expr: Expr[F]): Matcher[A] = Matcher { a =>
-    extract(field, a).map(expr.matcher.matches).getOrElse(M.empty[A].matches(a))
+    extract(field, a).map(expr.matches(_)).getOrElse(M.empty[A](a))
   }
 
   object exprToMatcher extends Poly1 {

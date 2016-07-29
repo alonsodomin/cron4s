@@ -42,7 +42,7 @@ object ExprParsersSpec extends Properties("ExprParsers") with ExprParsers with E
   }
   property("Should be able to parse named months") = forAll(Gen.oneOf(MonthsUnit.namedValues)) {
     x => verifyScalar(month, x) { expr =>
-      expr.textValue.contains(x) && expr.matcher.matches(MonthsUnit.namedValues.indexOf(x) + 1)
+      expr.textValue.contains(x) && expr.matches.matches(MonthsUnit.namedValues.indexOf(x) + 1)
     }
   }
 

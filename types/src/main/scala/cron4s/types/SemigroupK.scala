@@ -3,7 +3,7 @@ package cron4s.types
 /**
   * Created by alonsodomin on 29/07/2016.
   */
-trait SemigroupK[F[_]] extends Serializable {
+trait SemigroupK[F[_]] extends Any with Serializable {
 
   def combineK[A](x: F[A], y: F[A]): F[A]
 

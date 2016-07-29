@@ -1,8 +1,7 @@
 package cron4s.expr
 
-import cats._
-import cats.implicits._
 import cron4s.{CronField, CronUnit}
+import cron4s.types.std.all._
 import cron4s.core.Sequential
 import cron4s.matcher._
 
@@ -11,7 +10,7 @@ import cron4s.matcher._
   */
 sealed trait Expr[F <: CronField] extends Sequential[Int] {
 
-  def matcher: Matcher[Int]
+  def matches: Matcher[Int]
 
   def unit: CronUnit[F]
 
@@ -32,7 +31,7 @@ object Expr {
 
     def max: Int = unit.max
 
-    def matcher: Matcher[Int] = Matcher.disjunction.monoid.empty
+    def matches: Matcher[Int] = Matcher.disjunction.monoid.empty
 
     def step(from: Int, step: Int): Option[(Int, Int)] =
       unit.step(from, step)
@@ -51,10 +50,10 @@ object Expr {
 
     def max: Int = value
 
-    def matcher: Matcher[Int] = Matcher.equal(value)
+    def matches: Matcher[Int] = equal(value)
 
     def step(from: Int, step: Int): Option[(Int, Int)] = {
-      if (matcher.matches(from)) Some((from, step))
+      if (matches(from)) Some((from, step))
       else None
     }
 
@@ -70,12 +69,12 @@ object Expr {
 
     def max: Int = end.value
 
-    def matcher: Matcher[Int] = Matcher { x =>
+    def matches: Matcher[Int] = Matcher { x =>
       unit.gteq(x, begin.value) && unit.lteq(x, end.value)
     }
 
     def step(from: Int, step: Int): Option[(Int, Int)] = {
-      if (matcher.matches(from))
+      if (matches(from))
         unit.narrow(min, max).step(from, step)
       else
         None
@@ -91,10 +90,10 @@ object Expr {
 
     def max: Int = values.last.max
 
-    def matcher: Matcher[Int] = Matcher.exists(values.map(_.matcher))
+    def matches: Matcher[Int] = exists(values.map(_.matches))
 
     def step(from: Int, step: Int): Option[(Int, Int)] = {
-      if (matcher.matches(from)) {
+      if (matches(from)) {
         val range = min to max
         Option(range.indexOf(from)).filter(_ >= 0).map(values).
           flatMap {
@@ -113,8 +112,8 @@ object Expr {
 
     def max: Int = value.max
 
-    def matcher: Matcher[Int] = Matcher { x =>
-      if (value.matcher.matches(x)) true
+    def matches: Matcher[Int] = Matcher { x =>
+      if (value.matches(x)) true
       else {
         /*var v = min
       var matched = false
