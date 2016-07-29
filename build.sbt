@@ -20,31 +20,66 @@ val globalSettings = Seq(
   )
 )
 
-lazy val cron4s = (crossProject in file(".")).
-  settings(globalSettings: _*).
+lazy val commonJsSettings = Seq(
+  persistLauncher in Compile := true,
+  persistLauncher in Test := false,
+  //scalaJSStage in Test := FastOptStage,
+  scalaJSUseRhino in Global := false
+)
+
+lazy val noPublishSettings = Seq(
+  publish := (),
+  publishLocal := (),
+  publishArtifact := false
+)
+
+lazy val cron4s = (project in file(".")).
+  settings(noPublishSettings).
+  aggregate(cron4sJS, cron4sJVM)
+
+lazy val cron4sJS = (project in file("js")).
+  settings(noPublishSettings).
+  aggregate(typesJS, coreJS, catsJS)
+
+lazy val cron4sJVM = (project in file("jvm")).
+  settings(noPublishSettings).
+  aggregate(typesJVM, coreJVM, catsJVM)
+
+lazy val types = (crossProject.crossType(CrossType.Pure) in file("types")).
   settings(
-    libraryDependencies ++= Seq(
-      compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full),
-      compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
+    name := "types",
+    moduleName := "cron4s-types"
+  ).
+  settings(globalSettings: _*).
+  settings(commonJsSettings: _*)
 
-      "com.github.mpilquist" %%% "simulacrum" % "0.7.0",
-      "org.typelevel"        %%% "cats"       % "0.6.0",
-      "com.chuusai"          %%% "shapeless"  % "2.3.1",
-      "org.scalacheck"       %%% "scalacheck" % "1.12.5" % Test
-    )
-  ).jsSettings(
-    libraryDependencies ++= Seq(
-      "io.github.widok" %%% "scala-js-momentjs"        % "0.1.5",
-      "org.scala-js"    %%% "scala-parser-combinators" % "1.0.2"
-    )
-  ).jvmSettings(
-    libraryDependencies ++= Seq(
-      "joda-time"               % "joda-time"                % "2.9.4" % Optional,
-      "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.2"
-    )
-  )
+lazy val typesJS = types.js
+lazy val typesJVM = types.jvm
 
-lazy val cron4sJS = cron4s.js
-lazy val cron4sJVM = cron4s.jvm
+lazy val core = (crossProject in file("core")).
+  settings(
+    name := "core",
+    moduleName := "cron4s-core"
+  ).
+  settings(globalSettings: _*).
+  settings(Dependencies.core: _*).
+  jvmSettings(Dependencies.coreJVM: _*).
+  jsSettings(Dependencies.coreJS: _*).
+  dependsOn(types)
+
+lazy val coreJS = core.js
+lazy val coreJVM = core.jvm
+
+lazy val cats = (crossProject.crossType(CrossType.Pure) in file("cats")).
+  settings(
+    name := "cats",
+    moduleName := "cron4s-cats"
+  ).
+  settings(globalSettings: _*).
+  settings(Dependencies.cats: _*).
+  dependsOn(types)
+
+lazy val catsJS = cats.js
+lazy val catsJVM = cats.jvm
 
 initialCommands in console := "import cron4s.core._, cron4s.expr._, cron4s.matcher._, CronField._, cron4s._"
