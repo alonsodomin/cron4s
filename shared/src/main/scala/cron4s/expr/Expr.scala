@@ -3,7 +3,7 @@ package cron4s.expr
 import cats._
 import cats.implicits._
 
-import cron4s.core.{Bound, Indexed, Sequential}
+import cron4s.core.Sequential
 import cron4s.matcher._
 
 /**
