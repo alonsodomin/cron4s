@@ -31,7 +31,7 @@ object Expr {
 
     def max: Int = unit.max
 
-    def matches: Matcher[Int] = Matcher.disjunction.monoid.empty
+    def matches: Matcher[Int] = always(true)
 
     def step(from: Int, step: Int): Option[(Int, Int)] =
       unit.step(from, step)
@@ -112,18 +112,12 @@ object Expr {
 
     def max: Int = value.max
 
-    def matches: Matcher[Int] = Matcher { x =>
-      if (value.matches(x)) true
-      else {
-        /*var v = min
-      var matched = false
-      while ((v != max) && !matched) {
-        matched = x == v
-        v = step(v, freq).get._1
-      }
-      matched*/
-        false
-      }
+    def matches: Matcher[Int] = {
+      val valuesToMatch = Stream.iterate[Option[(Int, Int)]](Some((min, 0))) {
+        prev => prev.flatMap { case (v, _) => value.step(v, freq) }
+      }.takeWhile(_.isDefined).flatten.takeWhile(_._2 < 1).map(_._1)
+
+      value.matches || exists(valuesToMatch.toVector.map(x => equal(x)))
     }
 
     override def next(from: Int): Option[Int] = value.step(from, freq).map(_._1)

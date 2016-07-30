@@ -7,6 +7,8 @@ import cron4s.types._
   */
 trait MatcherDsl {
 
+  def always[A](value: => Boolean): Matcher[A] = Matcher { _ => value }
+
   def not[A](m: Matcher[A]): Matcher[A] = Matcher { a => !m(a) }
 
   def equal[A: Equal](a: A): Matcher[A] = Matcher { b => implicitly[Equal[A]].eqv(a, b) }

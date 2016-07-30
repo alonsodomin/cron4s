@@ -8,17 +8,17 @@ import cron4s.matcher._
   */
 abstract class RichCronExprBase[DateTime : FieldExtractor](expr: CronExpr) {
 
-  def matcher(implicit M: MonoidK[Matcher]): Matcher[DateTime] = {
+  def matches(implicit M: MonoidK[Matcher]): Matcher[DateTime] = {
     val functions = new MatcherPolyFuns[DateTime]
     import functions._
 
-    expr.repr.map(exprToMatcher).foldLeft(M.empty[DateTime])(combine)
+    expr.repr.map(exprToMatcher).foldRight(M.empty[DateTime])(combine)
   }
 
-  def forAll: Matcher[DateTime] =
-    matcher(Matcher.disjunction.monoid)
+  def forall: Matcher[DateTime] =
+    matches(Matcher.conjunction)
 
   def exists: Matcher[DateTime] =
-    matcher(Matcher.conjunction.monoid)
+    matches(Matcher.disjunction)
 
 }

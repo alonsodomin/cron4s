@@ -32,24 +32,16 @@ object Matcher {
 
   }
 
-  object disjunction {
+  object conjunction extends MonoidK[Matcher] {
+    def empty[A]: Matcher[A] = always(true)
 
-    implicit val monoid = new MonoidK[Matcher] {
-      def empty[A]: Matcher[A] = Matcher { _ => true }
-
-      def combineK[A](x: Matcher[A], y: Matcher[A]): Matcher[A] = x && y
-    }
-
+    def combineK[A](x: Matcher[A], y: Matcher[A]): Matcher[A] = x && y
   }
 
-  object conjunction {
+  object disjunction extends MonoidK[Matcher] {
+    def empty[A]: Matcher[A] = always(false)
 
-    implicit val monoid = new MonoidK[Matcher] {
-      def empty[A]: Matcher[A] = Matcher { _ => false }
-
-      def combineK[A](x: Matcher[A], y: Matcher[A]): Matcher[A] = x || y
-    }
-
+    def combineK[A](x: Matcher[A], y: Matcher[A]): Matcher[A] = x || y
   }
 
 }

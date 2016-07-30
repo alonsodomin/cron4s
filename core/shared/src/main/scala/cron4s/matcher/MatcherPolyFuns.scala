@@ -12,7 +12,7 @@ import shapeless._
 class MatcherPolyFuns[A](implicit M: MonoidK[Matcher], extract: FieldExtractor[A]) {
 
   private[this] def buildMatcher[F <: CronField](field: F, expr: Expr[F]): Matcher[A] = Matcher { a =>
-    extract(field, a).map(expr.matches(_)).getOrElse(M.empty[A](a))
+    extract(field, a).map(expr.matches(_)).getOrElse(!M.empty[A](a))
   }
 
   object exprToMatcher extends Poly1 {
