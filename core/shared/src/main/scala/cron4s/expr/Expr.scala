@@ -117,7 +117,7 @@ object Expr {
         prev => prev.flatMap { case (v, _) => value.step(v, freq) }
       }.takeWhile(_.isDefined).flatten.takeWhile(_._2 < 1).map(_._1)
 
-      value.matches || exists(valuesToMatch.toVector.map(x => equal(x)))
+      exists(valuesToMatch.toVector.map(x => equal(x)))
     }
 
     override def next(from: Int): Option[Int] = value.step(from, freq).map(_._1)
