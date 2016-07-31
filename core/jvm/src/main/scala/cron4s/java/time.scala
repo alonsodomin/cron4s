@@ -12,7 +12,7 @@ import cron4s.ext._
 object time {
   import CronField._
 
-  implicit object Adapter extends DateTimeAdapter[Temporal] {
+  implicit def adapter[DT <: Temporal]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
 
     private[this] def mapField(field: CronField): TemporalField = field match {
       case Minute     => ChronoField.MINUTE_OF_HOUR
@@ -22,7 +22,7 @@ object time {
       case DayOfWeek  => ChronoField.DAY_OF_WEEK
     }
 
-    override def extract[F <: CronField](dateTime: Temporal, field: F): Option[Int] = {
+    override def get[F <: CronField](dateTime: DT, field: F): Option[Int] = {
       val temporalField = mapField(field)
 
       val offset = if (field == DayOfWeek) -1 else 0
@@ -30,15 +30,15 @@ object time {
       else Some(dateTime.get(temporalField) + offset)
     }
 
-    override def adjust[F <: CronField](dateTime: Temporal, field: F, value: Int): Option[Temporal] = {
+    override def set[F <: CronField](dateTime: DT, field: F, value: Int): Option[DT] = {
       val temporalField = mapField(field)
       if (!dateTime.isSupported(temporalField)) None
-      else Some(dateTime.`with`(temporalField, value.toLong))
+      else Some(dateTime.`with`(temporalField, value.toLong).asInstanceOf[DT])
     }
 
   }
 
-  implicit class Java8Expr[F <: CronField](expr: Expr[F]) extends ExtendedExpr[F, Temporal](expr)
-  implicit class Java8CronExpr(expr: CronExpr) extends ExtendedCronExpr[Temporal](expr)
+  implicit class Java8Expr[F <: CronField, DT <: Temporal](expr: Expr[F]) extends ExtendedExpr[F, DT](expr)
+  implicit class Java8CronExpr[DT <: Temporal](expr: CronExpr) extends ExtendedCronExpr[DT](expr)
 
 }

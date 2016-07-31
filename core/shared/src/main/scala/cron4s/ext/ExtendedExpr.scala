@@ -11,7 +11,7 @@ abstract class ExtendedExpr[F <: CronField, DateTime: DateTimeAdapter](expr: Exp
 
   def matches: Matcher[DateTime] = Matcher { dt =>
     val adapter = implicitly[DateTimeAdapter[DateTime]]
-    val current = adapter.extract(dt, expr.unit.field)
+    val current = adapter.get(dt, expr.unit.field)
     current.map(expr.matches).getOrElse(false)
   }
 
@@ -24,9 +24,9 @@ abstract class ExtendedExpr[F <: CronField, DateTime: DateTimeAdapter](expr: Exp
   def step(dateTime: DateTime, step: Int): Option[DateTime] = {
     val adapter = implicitly[DateTimeAdapter[DateTime]]
     for {
-      current  <- adapter.extract(dateTime, expr.unit.field)
+      current  <- adapter.get(dateTime, expr.unit.field)
       newValue <- expr.step(current, step).map(_._1)
-      adjusted <- adapter.adjust(dateTime, expr.unit.field, newValue)
+      adjusted <- adapter.set(dateTime, expr.unit.field, newValue)
     } yield adjusted
   }
 

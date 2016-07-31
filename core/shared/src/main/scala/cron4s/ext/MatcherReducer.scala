@@ -13,7 +13,7 @@ import shapeless._
 private[ext] final class MatcherReducer[A](implicit M: MonoidK[Matcher], adapter: DateTimeAdapter[A]) {
 
   private[this] def buildMatcher[F <: CronField](field: F, expr: Expr[F]): Matcher[A] = Matcher { a =>
-    adapter.extract(a, field).map(expr.matches(_)).getOrElse(!M.empty[A](a))
+    adapter.get(a, field).map(expr.matches(_)).getOrElse(!M.empty[A](a))
   }
 
   object exprToMatcher extends Poly1 {

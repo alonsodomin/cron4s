@@ -13,7 +13,8 @@ object calendar {
   import CronField._
 
   implicit object Adapter extends DateTimeAdapter[Calendar] {
-    override def extract[F <: CronField](dateTime: Calendar, field: F): Option[Int] = Some(field match {
+
+    override def get[F <: CronField](dateTime: Calendar, field: F): Option[Int] = Some(field match {
       case Minute     => dateTime.get(Calendar.MINUTE)
       case Hour       => dateTime.get(Calendar.HOUR_OF_DAY)
       case DayOfMonth => dateTime.get(Calendar.DAY_OF_MONTH)
@@ -21,7 +22,7 @@ object calendar {
       case DayOfWeek  => dateTime.get(Calendar.DAY_OF_WEEK)
     })
 
-    override def adjust[F <: CronField](dateTime: Calendar, field: F, value: Int): Option[Calendar] = {
+    override def set[F <: CronField](dateTime: Calendar, field: F, value: Int): Option[Calendar] = {
       def setter(set: Calendar => Unit): Calendar = {
         set(dateTime)
         dateTime

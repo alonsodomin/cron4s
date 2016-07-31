@@ -9,14 +9,14 @@ private[ext] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
   import CronField._
 
   private[this] def stepField[F <: CronField](expr: Expr[F], step: Int) =
-    adapter.extract(from, expr.unit.field).flatMap(v => expr.step(v, step))
+    adapter.get(from, expr.unit.field).flatMap(v => expr.step(v, step))
 
   object folding extends Poly {
     private[this] def stepAndAdjust[F <: CronField](expr: Expr[F], dateTimeAndStep: Option[(DateTime, Int)]): Option[(DateTime, Int)] = {
       for {
         (dateTime, step)  <- dateTimeAndStep
         (value, nextStep) <- stepField(expr, step)
-        newDateTime       <- adapter.adjust(dateTime, expr.unit.field, value)
+        newDateTime       <- adapter.set(dateTime, expr.unit.field, value)
       } yield (newDateTime, nextStep)
     }
 

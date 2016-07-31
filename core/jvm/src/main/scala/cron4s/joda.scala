@@ -14,7 +14,7 @@ import scala.util.Try
 object joda {
   import CronField._
 
-  implicit object Adapter extends DateTimeAdapter[AbstractInstant] {
+  implicit def adapter[DT <: AbstractInstant]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
 
     private[this] def mapField[F <: CronField](field: F): DateTimeFieldType = field match {
       case Minute     => DateTimeFieldType.minuteOfHour()
@@ -24,19 +24,19 @@ object joda {
       case DayOfWeek  => DateTimeFieldType.dayOfWeek()
     }
 
-    override def extract[F <: CronField](dateTime: AbstractInstant, field: F): Option[Int] =
+    override def get[F <: CronField](dateTime: DT, field: F): Option[Int] =
       Try(dateTime.get(mapField(field))).toOption
 
-    override def adjust[F <: CronField](dateTime: AbstractInstant, field: F, value: Int): Option[AbstractInstant] = {
+    override def set[F <: CronField](dateTime: DT, field: F, value: Int): Option[DT] = {
       Try {
         val mutableDate = dateTime.toMutableDateTime
         mutableDate.set(mapField(field), value)
-        mutableDate
+        mutableDate.asInstanceOf[DT]
       } toOption
     }
   }
 
-  implicit class JodaCronExpr(expr: CronExpr) extends ExtendedCronExpr[AbstractInstant](expr)
-  implicit class JodaExpr[F <: CronField](expr: Expr[F]) extends ExtendedExpr[F, AbstractInstant](expr)
+  implicit class JodaCronExpr[DT <: AbstractInstant](expr: CronExpr) extends ExtendedCronExpr[DT](expr)
+  implicit class JodaExpr[F <: CronField, DT <: AbstractInstant](expr: Expr[F]) extends ExtendedExpr[F, DT](expr)
 
 }

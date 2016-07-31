@@ -12,7 +12,8 @@ object momentjs {
   import CronField._
 
   implicit object Adapter extends DateTimeAdapter[Date] {
-    override def extract[F <: CronField](dateTime: Date, field: F): Option[Int] = field match {
+
+    override def get[F <: CronField](dateTime: Date, field: F): Option[Int] = field match {
       case Minute => Some(dateTime.minute())
       case Hour => Some(dateTime.hour())
       case DayOfMonth => Some(dateTime.day())
@@ -20,7 +21,7 @@ object momentjs {
       case DayOfWeek => Some(dateTime.isoWeekday())
     }
 
-    override def adjust[F <: CronField](dateTime: Date, field: F, value: Int): Option[Date] = ???
+    override def set[F <: CronField](dateTime: Date, field: F, value: Int): Option[Date] = ???
   }
 
   implicit class MomentJSCronExpr(expr: CronExpr) extends ExtendedCronExpr[Date](expr)

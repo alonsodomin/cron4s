@@ -12,7 +12,7 @@ object js {
   import CronField._
 
   implicit object Adapter extends DateTimeAdapter[Date] {
-    override def extract[F <: CronField](dateTime: Date, field: F): Option[Int] = field match {
+    override def get[F <: CronField](dateTime: Date, field: F): Option[Int] = field match {
       case Minute     => Some(dateTime.getMinutes())
       case Hour       => Some(dateTime.getHours())
       case DayOfMonth => Some(dateTime.getDate())
@@ -20,7 +20,7 @@ object js {
       case DayOfWeek  => Some(dateTime.getDay())
     }
 
-    override def adjust[F <: CronField](dateTime: Date, field: F, value: Int): Option[Date] = {
+    override def set[F <: CronField](dateTime: Date, field: F, value: Int): Option[Date] = {
       def setter(setter: Date => Unit): Date = {
         setter(dateTime)
         dateTime

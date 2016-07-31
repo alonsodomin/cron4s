@@ -7,8 +7,8 @@ import cron4s.CronField
   */
 trait DateTimeAdapter[DateTime] {
 
-  def extract[F <: CronField](dateTime: DateTime, field: F): Option[Int]
+  def get[F <: CronField](dateTime: DateTime, field: F): Option[Int]
 
-  def adjust[F <: CronField](dateTime: DateTime, field: F, value: Int): Option[DateTime]
+  def set[F <: CronField](dateTime: DateTime, field: F, value: Int): Option[DateTime]
 
 }
