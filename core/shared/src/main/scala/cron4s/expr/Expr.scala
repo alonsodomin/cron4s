@@ -55,8 +55,10 @@ object Expr {
     def matches: Matcher[Int] = equal(value)
 
     def step(from: Int, step: Int): Option[(Int, Int)] = {
-      if (value >= from) Some((value, 0))
-      else Some((value, step))
+      if (unit.values.contains(from)) {
+        if (value >= from && step != 0) Some((value, step - 1))
+        else Some((value, step))
+      } else None
     }
 
   }

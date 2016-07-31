@@ -7,7 +7,7 @@ import org.scalacheck._
 /**
   * Created by alonsodomin on 13/01/2016.
   */
-object ExprParsersSpec extends Properties("ExprParsers") with ExprParsers with ExprGenerators {
+object ExprParsersSpec extends Properties("ExprParsers") with ExprParsers with InputGenerators {
   import cron4s.CronUnit._
   import Expr._
   import Prop._
@@ -40,9 +40,9 @@ object ExprParsersSpec extends Properties("ExprParsers") with ExprParsers with E
   property("Should be able to parse numeric months") = forAll(Gen.choose(1, 12)) {
     x => verifyConst(month, x.toString) { expr => expr.value == x && expr.textValue.isEmpty }
   }
-  property("Should be able to parse named months") = forAll(Gen.oneOf(MonthsUnit.textValues)) {
+  property("Should be able to parse named months") = forAll(Gen.oneOf(Months.textValues)) {
     x => verifyConst(month, x) { expr =>
-      expr.textValue.contains(x) && expr.matches(MonthsUnit.textValues.indexOf(x) + 1)
+      expr.textValue.contains(x) && expr.matches(Months.textValues.indexOf(x) + 1)
     }
   }
 

@@ -3,6 +3,7 @@ package cron4s
 import cron4s.core.{Bound, Indexed, Sequential}
 
 import scala.annotation.implicitNotFound
+import scala.reflect.ClassTag
 
 /**
   * Created by alonsodomin on 02/01/2016.
@@ -30,7 +31,7 @@ sealed trait CronUnit[F <: CronField]
 object CronUnit {
   import CronField._
 
-  @inline def apply[F <: CronField](implicit ev: CronUnit[F]): CronUnit[F] = ev
+  @inline def apply[F <: CronField](implicit unit: CronUnit[F]): CronUnit[F] = unit
 
   private[cron4s] abstract class BaseCronUnit[F <: CronField](val min: Int, val max: Int, val field: F) extends CronUnit[F] {
 
@@ -65,15 +66,15 @@ object CronUnit {
 
   }
 
-  implicit object MinutesUnit extends BaseCronUnit[Minute.type](0, 59, Minute)
-  implicit object HoursUnit extends BaseCronUnit[Hour.type](0, 23, Hour)
-  implicit object DaysOfMonthUnit extends BaseCronUnit[DayOfMonth.type](1, 31, DayOfMonth)
-  implicit object MonthsUnit extends BaseCronUnit[Month.type](1, 12, Month) {
+  implicit object Minutes extends BaseCronUnit[Minute.type](0, 59, Minute)
+  implicit object Hours extends BaseCronUnit[Hour.type](0, 23, Hour)
+  implicit object DaysOfMonth extends BaseCronUnit[DayOfMonth.type](1, 31, DayOfMonth)
+  implicit object Months extends BaseCronUnit[Month.type](1, 12, Month) {
     val textValues = IndexedSeq("jan", "feb", "mar",
       "apr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dec"
     )
   }
-  implicit object DaysOfWeekUnit extends BaseCronUnit[DayOfWeek.type](0, 6, DayOfWeek) {
+  implicit object DaysOfWeek extends BaseCronUnit[DayOfWeek.type](0, 6, DayOfWeek) {
     val textValues = IndexedSeq("mon", "tue", "wed", "thu", "fri", "sat", "sun")
   }
 

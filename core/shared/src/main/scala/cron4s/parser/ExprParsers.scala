@@ -28,8 +28,8 @@ trait ExprParsers extends RegexParsers {
     """1[0-2]|[1-9]""".r ^^ { value => ConstExpr(Month, value.toInt) }
 
   private[this] def textMonth: Parser[ConstExpr[Month.type]] =
-    MonthsUnit.textValues.mkString("|").r ^^ { v =>
-      val value = MonthsUnit.textValues.indexOf(v) + 1
+    Months.textValues.mkString("|").r ^^ { v =>
+      val value = Months.textValues.indexOf(v) + 1
       ConstExpr(Month, value, Some(v))
     }
 
@@ -39,8 +39,8 @@ trait ExprParsers extends RegexParsers {
     """[0-6]""".r ^^ { value => ConstExpr(DayOfWeek, value.toInt) }
 
   private[this] def textDayOfWeek: Parser[ConstExpr[DayOfWeek.type]] =
-    DaysOfWeekUnit.textValues.mkString("|").r ^^ { v =>
-      val value = DaysOfWeekUnit.textValues.indexOf(v)
+    DaysOfWeek.textValues.mkString("|").r ^^ { v =>
+      val value = DaysOfWeek.textValues.indexOf(v)
       ConstExpr(DayOfWeek, value, Some(v))
     }
 
