@@ -21,9 +21,7 @@ val globalSettings = Seq(
 )
 
 lazy val commonJsSettings = Seq(
-  persistLauncher in Compile := true,
-  persistLauncher in Test := false,
-  //scalaJSStage in Test := FastOptStage,
+  scalaJSStage in Test := FastOptStage,
   scalaJSUseRhino in Global := false
 )
 
@@ -82,4 +80,3 @@ lazy val cats = (crossProject.crossType(CrossType.Pure) in file("cats")).
 lazy val catsJS = cats.js
 lazy val catsJVM = cats.jvm
 
-initialCommands in console := "import cron4s.core._, cron4s.expr._, cron4s.matcher._, CronField._, cron4s._"

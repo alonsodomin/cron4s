@@ -1,6 +1,7 @@
 package cron4s
 
 import cron4s.expr._
+import cron4s.ext._
 
 import org.widok.moment.Date
 
@@ -10,14 +11,19 @@ import org.widok.moment.Date
 object momentjs {
   import CronField._
 
-  implicit def fieldExtractor(field: CronField, date: Date): Option[Int] = field match {
-    case Minute     => Some(date.minute())
-    case Hour       => Some(date.hour())
-    case DayOfMonth => Some(date.day())
-    case Month      => Some(date.month())
-    case DayOfWeek  => Some(date.isoWeekday())
+  implicit object Adapter extends DateTimeAdapter[Date] {
+    override def extract[F <: CronField](dateTime: Date, field: F): Option[Int] = field match {
+      case Minute => Some(dateTime.minute())
+      case Hour => Some(dateTime.hour())
+      case DayOfMonth => Some(dateTime.day())
+      case Month => Some(dateTime.month())
+      case DayOfWeek => Some(dateTime.isoWeekday())
+    }
+
+    override def adjust[F <: CronField](dateTime: Date, field: F, value: Int): Option[Date] = ???
   }
 
-  implicit class RichCronExpr(expr: CronExpr) extends RichCronExprBase[Date](expr)
+  implicit class MomentJSCronExpr(expr: CronExpr) extends ExtendedCronExpr[Date](expr)
+  implicit class MomentJSExpr[F <: CronField](expr: Expr[F]) extends ExtendedExpr[F, Date](expr)
 
 }

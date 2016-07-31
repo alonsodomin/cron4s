@@ -1,7 +1,10 @@
 package cron4s
 
-import org.joda.time.{DateTimeFieldType, ReadableInstant}
 import cron4s.expr._
+import cron4s.ext._
+
+import org.joda.time.DateTimeFieldType
+import org.joda.time.base.AbstractInstant
 
 import scala.util.Try
 
@@ -11,8 +14,9 @@ import scala.util.Try
 object joda {
   import CronField._
 
-  implicit def fieldExtractor[A <: ReadableInstant](field: CronField, instant: A): Option[Int] = {
-    val instantField = field match {
+  implicit object Adapter extends DateTimeAdapter[AbstractInstant] {
+
+    private[this] def mapField[F <: CronField](field: F): DateTimeFieldType = field match {
       case Minute     => DateTimeFieldType.minuteOfHour()
       case Hour       => DateTimeFieldType.hourOfDay()
       case DayOfMonth => DateTimeFieldType.dayOfMonth()
@@ -20,9 +24,19 @@ object joda {
       case DayOfWeek  => DateTimeFieldType.dayOfWeek()
     }
 
-    Try(instant.get(instantField)).toOption
+    override def extract[F <: CronField](dateTime: AbstractInstant, field: F): Option[Int] =
+      Try(dateTime.get(mapField(field))).toOption
+
+    override def adjust[F <: CronField](dateTime: AbstractInstant, field: F, value: Int): Option[AbstractInstant] = {
+      Try {
+        val mutableDate = dateTime.toMutableDateTime
+        mutableDate.set(mapField(field), value)
+        mutableDate
+      } toOption
+    }
   }
 
-  implicit class RichCronExpr(expr: CronExpr) extends RichCronExprBase[ReadableInstant](expr)
+  implicit class JodaCronExpr(expr: CronExpr) extends ExtendedCronExpr[AbstractInstant](expr)
+  implicit class JodaExpr[F <: CronField](expr: Expr[F]) extends ExtendedExpr[F, AbstractInstant](expr)
 
 }

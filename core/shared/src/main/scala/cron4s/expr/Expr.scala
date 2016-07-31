@@ -53,8 +53,7 @@ object Expr {
     def matches: Matcher[Int] = equal(value)
 
     def step(from: Int, step: Int): Option[(Int, Int)] = {
-      if (matches(from)) Some((from, step))
-      else None
+      Some((value, step))
     }
 
   }

@@ -1,18 +1,19 @@
-package cron4s.matcher
+package cron4s.ext
 
-import cron4s.CronField
+import cron4s._
 import cron4s.expr._
 import cron4s.types.MonoidK
+import cron4s.matcher.Matcher
 
 import shapeless._
 
 /**
   * Created by domingueza on 29/07/2016.
   */
-class MatcherPolyFuns[A](implicit M: MonoidK[Matcher], extract: FieldExtractor[A]) {
+private[ext] final class MatcherReducer[A](implicit M: MonoidK[Matcher], adapter: DateTimeAdapter[A]) {
 
   private[this] def buildMatcher[F <: CronField](field: F, expr: Expr[F]): Matcher[A] = Matcher { a =>
-    extract(field, a).map(expr.matches(_)).getOrElse(!M.empty[A](a))
+    adapter.extract(a, field).map(expr.matches(_)).getOrElse(!M.empty[A](a))
   }
 
   object exprToMatcher extends Poly1 {
@@ -28,4 +29,7 @@ class MatcherPolyFuns[A](implicit M: MonoidK[Matcher], extract: FieldExtractor[A
   object combine extends Poly {
     implicit def caseAny = use(M.combineK[A] _)
   }
+
+  def run(expr: CronExpr) = expr.repr.map(exprToMatcher).foldLeft(M.empty[A])(combine)
+
 }
