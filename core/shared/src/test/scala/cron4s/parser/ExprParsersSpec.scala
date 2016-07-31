@@ -40,9 +40,9 @@ object ExprParsersSpec extends Properties("ExprParsers") with ExprParsers with E
   property("Should be able to parse numeric months") = forAll(Gen.choose(1, 12)) {
     x => verifyConst(month, x.toString) { expr => expr.value == x && expr.textValue.isEmpty }
   }
-  property("Should be able to parse named months") = forAll(Gen.oneOf(MonthsUnit.namedValues)) {
+  property("Should be able to parse named months") = forAll(Gen.oneOf(MonthsUnit.textValues)) {
     x => verifyConst(month, x) { expr =>
-      expr.textValue.contains(x) && expr.matches(MonthsUnit.namedValues.indexOf(x) + 1)
+      expr.textValue.contains(x) && expr.matches(MonthsUnit.textValues.indexOf(x) + 1)
     }
   }
 

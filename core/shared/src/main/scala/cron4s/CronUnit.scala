@@ -9,7 +9,7 @@ import scala.annotation.implicitNotFound
   */
 @implicitNotFound("Field ${F} is not supported on Cron expressions")
 sealed trait CronUnit[F <: CronField]
-    extends Sequential[Int] with Bound[Int] with Indexed[Int] with PartialOrdering[Int] { self =>
+    extends Sequential[Int] with Bound[Int] with Indexed[Int] with PartialOrdering[Int] {
 
   def apply(index: Int): Option[Int] = {
     if (index < 0 || index >= size) None
@@ -29,6 +29,8 @@ sealed trait CronUnit[F <: CronField]
 
 object CronUnit {
   import CronField._
+
+  @inline def apply[F <: CronField](implicit ev: CronUnit[F]): CronUnit[F] = ev
 
   private[cron4s] abstract class BaseCronUnit[F <: CronField](val min: Int, val max: Int, val field: F) extends CronUnit[F] {
 
@@ -66,15 +68,13 @@ object CronUnit {
   implicit object MinutesUnit extends BaseCronUnit[Minute.type](0, 59, Minute)
   implicit object HoursUnit extends BaseCronUnit[Hour.type](0, 23, Hour)
   implicit object DaysOfMonthUnit extends BaseCronUnit[DayOfMonth.type](1, 31, DayOfMonth)
-
   implicit object MonthsUnit extends BaseCronUnit[Month.type](1, 12, Month) {
-
-    val namedValues = IndexedSeq("jan", "feb", "mar", "apr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dec")
-
+    val textValues = IndexedSeq("jan", "feb", "mar",
+      "apr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dec"
+    )
   }
-
   implicit object DaysOfWeekUnit extends BaseCronUnit[DayOfWeek.type](0, 6, DayOfWeek) {
-    val namedValues = IndexedSeq("mon", "tue", "wed", "thu", "fri", "sat", "sun")
+    val textValues = IndexedSeq("mon", "tue", "wed", "thu", "fri", "sat", "sun")
   }
 
 }

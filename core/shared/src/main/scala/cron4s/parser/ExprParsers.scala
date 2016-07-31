@@ -28,8 +28,8 @@ trait ExprParsers extends RegexParsers {
     """1[0-2]|[1-9]""".r ^^ { value => ConstExpr(Month, value.toInt) }
 
   private[this] def textMonth: Parser[ConstExpr[Month.type]] =
-    MonthsUnit.namedValues.mkString("|").r ^^ { v =>
-      val value = MonthsUnit.namedValues.indexOf(v) + 1
+    MonthsUnit.textValues.mkString("|").r ^^ { v =>
+      val value = MonthsUnit.textValues.indexOf(v) + 1
       ConstExpr(Month, value, Some(v))
     }
 
@@ -39,8 +39,8 @@ trait ExprParsers extends RegexParsers {
     """[0-6]""".r ^^ { value => ConstExpr(DayOfWeek, value.toInt) }
 
   private[this] def textDayOfWeek: Parser[ConstExpr[DayOfWeek.type]] =
-    DaysOfWeekUnit.namedValues.mkString("|").r ^^ { v =>
-      val value = DaysOfWeekUnit.namedValues.indexOf(v)
+    DaysOfWeekUnit.textValues.mkString("|").r ^^ { v =>
+      val value = DaysOfWeekUnit.textValues.indexOf(v)
       ConstExpr(DayOfWeek, value, Some(v))
     }
 
@@ -48,8 +48,8 @@ trait ExprParsers extends RegexParsers {
 
   // Part parsers
 
-  def always[F <: CronField](implicit unit: CronUnit[F]): Parser[AlwaysExpr[F]] =
-    """\*""".r ^^ { _ => AlwaysExpr[F]() }
+  def any[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyExpr[F]] =
+    """\*""".r ^^ { _ => AnyExpr[F]() }
 
   def between[F <: CronField](p: Parser[ConstExpr[F]])
       (implicit unit: CronUnit[F]): Parser[BetweenExpr[F]] =

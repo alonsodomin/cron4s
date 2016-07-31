@@ -24,14 +24,17 @@ object Expr {
 
   sealed trait SpecialChar
 
-  final case class AlwaysExpr[F <: CronField](implicit val unit: CronUnit[F])
+  final case class AnyExpr[F <: CronField](implicit val unit: CronUnit[F])
     extends DivisibleExpr[F] with SpecialChar {
 
     def min: Int = unit.min
 
     def max: Int = unit.max
 
-    def matches: Matcher[Int] = always(true)
+    def matches: Matcher[Int] = Matcher { x =>
+      if (unit.values.contains(x)) true
+      else false
+    }
 
     def step(from: Int, step: Int): Option[(Int, Int)] = unit.step(from, step)
 
