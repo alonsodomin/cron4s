@@ -33,8 +33,7 @@ object Expr {
 
     def matches: Matcher[Int] = always(true)
 
-    def step(from: Int, step: Int): Option[(Int, Int)] =
-      unit.step(from, step)
+    def step(from: Int, step: Int): Option[(Int, Int)] = unit.step(from, step)
 
   }
 
@@ -53,7 +52,8 @@ object Expr {
     def matches: Matcher[Int] = equal(value)
 
     def step(from: Int, step: Int): Option[(Int, Int)] = {
-      Some((value, step))
+      if (value >= from) Some((value, 0))
+      else Some((value, step))
     }
 
   }
@@ -123,7 +123,7 @@ object Expr {
 
     override def previous(from: Int): Option[Int] = value.step(from, -freq).map(_._1)
 
-    def step(from: Int, step: Int): Option[(Int, Int)] = value.step(from, step)
+    def step(from: Int, step: Int): Option[(Int, Int)] = value.step(from, step * freq)
 
   }
 

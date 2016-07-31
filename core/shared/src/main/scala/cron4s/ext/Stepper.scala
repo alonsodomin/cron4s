@@ -12,7 +12,7 @@ private[ext] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
     adapter.get(from, expr.unit.field).flatMap(v => expr.step(v, step))
 
   object folding extends Poly {
-    private[this] def stepAndAdjust[F <: CronField](expr: Expr[F], dateTimeAndStep: Option[(DateTime, Int)]): Option[(DateTime, Int)] = {
+    private[this] def stepAndAdjust[F <: CronField](dateTimeAndStep: Option[(DateTime, Int)], expr: Expr[F]): Option[(DateTime, Int)] = {
       for {
         (dateTime, step)  <- dateTimeAndStep
         (value, nextStep) <- stepField(expr, step)
@@ -29,7 +29,7 @@ private[ext] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
   def run(expr: CronExpr): Option[DateTime] = {
     val subExpr = expr.repr.take(4)
     val initial: Option[(DateTime, Int)] = Some((from, initialStep))
-    val adjusted = subExpr.foldRight(initial)(folding)
+    val adjusted = subExpr.foldLeft(initial)(folding)
 
     // TODO need to adjust weekdays
     adjusted.map(_._1)
