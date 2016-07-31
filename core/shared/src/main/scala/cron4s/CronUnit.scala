@@ -3,7 +3,6 @@ package cron4s
 import cron4s.core.{Bound, Indexed, Sequential}
 
 import scala.annotation.implicitNotFound
-import scala.reflect.ClassTag
 
 /**
   * Created by alonsodomin on 02/01/2016.
@@ -70,8 +69,11 @@ object CronUnit {
   implicit object Hours extends BaseCronUnit[Hour.type](0, 23, Hour)
   implicit object DaysOfMonth extends BaseCronUnit[DayOfMonth.type](1, 31, DayOfMonth)
   implicit object Months extends BaseCronUnit[Month.type](1, 12, Month) {
-    val textValues = IndexedSeq("jan", "feb", "mar",
-      "apr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dec"
+    val textValues = IndexedSeq(
+      "jan", "feb", "mar",
+      "apr", "may", "jun",
+      "jul", "ago", "sep",
+      "oct", "nov", "dec"
     )
   }
   implicit object DaysOfWeek extends BaseCronUnit[DayOfWeek.type](0, 6, DayOfWeek) {
