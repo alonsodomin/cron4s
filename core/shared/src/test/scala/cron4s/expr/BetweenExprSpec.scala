@@ -1,6 +1,7 @@
 package cron4s.expr
 
 import cron4s.BaseFunctions
+import org.scalacheck.Prop._
 import org.scalacheck._
 
 /**
@@ -38,7 +39,7 @@ object BetweenExprSpec extends Properties("BetweenExpr") with ExprGenerators wit
 
   val stepsFromOutsideRange = for {
     expr      <- betweenExpressions
-    fromValue <- arbitrary[Int] if fromValue < expr.min || fromValue > expr.max
+    fromValue <- arbitrary[Int] if fromValue < expr.unit.min || fromValue > expr.unit.max
     stepSize  <- arbitrary[Int]
   } yield (expr, fromValue, stepSize)
 
@@ -58,14 +59,23 @@ object BetweenExprSpec extends Properties("BetweenExpr") with ExprGenerators wit
 
   val stepsIntoInsideRange = for {
     expr      <- betweenExpressions
-    fromValue <- Gen.choose(expr.min, expr.max)
+    fromValue <- Gen.choose(expr.unit.min, expr.unit.max)
     stepSize  <- arbitrary[Int]
   } yield (expr, fromValue, stepSize)
 
+  property("stepping forward from before the lower limit returns lower limit") = forAll(stepsIntoInsideRange) {
+    case (expr, fromValue, stepSize) =>
+      (fromValue < expr.min && stepSize > 0) ==> expr.step(fromValue, stepSize).contains((expr.min, stepSize - 1))
+  }
+
+  property("stepping backwards from before the lower limit returns upper limit") = forAll(stepsIntoInsideRange) {
+    case (expr, fromValue, stepSize) =>
+      (fromValue > expr.max && stepSize < 0) ==> expr.step(fromValue, stepSize).contains((expr.max, stepSize + 1))
+  }
+
   property("stepping from inside the range is the same as narrowing the unit") = forAll(stepsIntoInsideRange) {
     case (expr, fromValue, stepSize) =>
-      val unitStep = expr.unit.narrow(expr.min, expr.max).step(fromValue, stepSize)
-      expr.step(fromValue, stepSize) == unitStep
+      expr.matches(fromValue) ==> (expr.step(fromValue, stepSize) == expr.unit.narrow(expr.min, expr.max).step(fromValue, stepSize))
   }
 
 }

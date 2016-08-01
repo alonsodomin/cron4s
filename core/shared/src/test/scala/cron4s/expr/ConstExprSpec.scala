@@ -1,6 +1,7 @@
 package cron4s.expr
 
 import cron4s._
+import org.scalacheck.Prop._
 import org.scalacheck._
 
 /**

@@ -78,17 +78,26 @@ object Expr {
     }
 
     def step(from: Int, step: Int): Option[(Int, Int)] = {
-      if (matches(from))
-        unit.narrow(min, max).step(from, step)
-      else
-        None
+      if (from < unit.min || from > unit.max) None
+      else if (step == 0) Some((from, 0))
+      else {
+        if (matches(from)) unit.narrow(min, max).step(from, step)
+        else if (from < min) {
+          if (step > 0) Some((min, step - 1))
+          else Some((max, step))
+        } else {
+          if (step > 0) Some((min, step))
+          else Some((max, step + 1))
+        }
+      }
     }
-
   }
 
   final case class SeveralExpr[F <: CronField](values: Vector[EnumerableExpr[F]])
                                               (implicit val unit: CronUnit[F])
     extends Expr[F] with DivisibleExpr[F] {
+
+    require(values.size > 1, "Expression should contain more than one element")
 
     def min: Int = values.head.min
 
