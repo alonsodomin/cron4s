@@ -9,7 +9,6 @@ import org.scalacheck._
   */
 trait ExprGenerators extends BaseGenerators {
   import Expr._
-  import Arbitrary.arbitrary
 
   private[this] def createConst[U](unit: U, value: Int)(implicit isUnit: IsCronUnit[U]): ConstExpr[isUnit.F] =
     ConstExpr[isUnit.F](isUnit(unit).field, value)(isUnit(unit))
@@ -20,6 +19,11 @@ trait ExprGenerators extends BaseGenerators {
   private[this] def createSeveral[U](unit: U, elems: Vector[EnumerableExpr[_]])(implicit isUnit: IsCronUnit[U]): SeveralExpr[isUnit.F] = {
     val mappedElems = elems.map(_.asInstanceOf[EnumerableExpr[isUnit.F]])
     SeveralExpr[isUnit.F](mappedElems)(isUnit(unit))
+  }
+
+  private[this] def createEvery[U](unit: U, base: DivisibleExpr[_], freq: Int)(implicit isUnit: IsCronUnit[U]): EveryExpr[isUnit.F] = {
+    val mappedBase = base.asInstanceOf[DivisibleExpr[isUnit.F]]
+    EveryExpr[isUnit.F](mappedBase, freq)(isUnit(unit))
   }
 
   def constExpr[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[ConstExpr[isCronUnit.F]] = {
@@ -58,5 +62,22 @@ trait ExprGenerators extends BaseGenerators {
     size  <- Gen.posNum[Int] if size > 1
     elems <- Gen.containerOfN[Vector, EnumerableExpr[_ <: CronField]](size, enumerableExpressions(unit))
   } yield createSeveral(unit, elems)
+
+  def severalExpr[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[SeveralExpr[isCronUnit.F]] = {
+    val resolved = isCronUnit(unit)
+    for {
+      size  <- Gen.posNum[Int] if size > 1
+      elems <- Gen.containerOfN[Vector, EnumerableExpr[_ <: CronField]](size, enumerableExpressions(resolved))
+    } yield createSeveral(resolved, elems)
+  }
+
+  def divisibleExpressions[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[DivisibleExpr[isCronUnit.F]] =
+    Gen.oneOf[DivisibleExpr[isCronUnit.F]](betweenExpr(unit), severalExpr(unit))
+
+  val everyExpressions = for {
+    unit <- cronUnits
+    base <- divisibleExpressions(unit)
+    freq <- Gen.posNum[Int] if freq > 0
+  } yield createEvery(unit, base, freq)
 
 }

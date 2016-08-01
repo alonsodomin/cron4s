@@ -38,13 +38,13 @@ object SeveralExprSpec extends Properties("SeveralExpr") with ExprGenerators {
     case (expr, value) => expr.matches(value)
   }
 
-  val stepsFromOutsideRange = for {
+  val stepsFromOutsideUnitRange = for {
     expr      <- severalExpressions
-    fromValue <- arbitrary[Int] if !expr.matches(fromValue)
+    fromValue <- arbitrary[Int] if fromValue < expr.unit.min || fromValue > expr.unit.max
     stepSize  <- arbitrary[Int]
   } yield (expr, fromValue, stepSize)
 
-  property("stepping from outside the range returns none") = forAll(stepsFromOutsideRange) {
+  property("stepping from outside the unit's range returns none") = forAll(stepsFromOutsideUnitRange) {
     case (expr, fromValue, stepSize) =>
       expr.step(fromValue, stepSize).isEmpty
   }

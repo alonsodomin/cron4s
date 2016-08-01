@@ -18,7 +18,7 @@ sealed trait Expr[F <: CronField] extends Sequential[Int] {
 
 object Expr {
 
-  sealed trait EnumerableExpr[F <: CronField] extends Expr[F]
+  sealed trait EnumerableExpr[F <: CronField] extends Expr[F] with Ordered[EnumerableExpr[F]]
 
   sealed trait DivisibleExpr[F <: CronField] extends Expr[F]
 
@@ -61,6 +61,11 @@ object Expr {
       } else None
     }
 
+    override def compare(that: EnumerableExpr[F]): Int = {
+      if (value < that.min) -1
+      else if (value > that.max) 1
+      else 0
+    }
   }
 
   final case class BetweenExpr[F <: CronField](begin: ConstExpr[F], end: ConstExpr[F])
@@ -74,7 +79,7 @@ object Expr {
     def max: Int = end.value
 
     def matches: Matcher[Int] = Matcher { x =>
-      unit.gteq(x, begin.value) && unit.lteq(x, end.value)
+      x >= begin.value && x <= end.value
     }
 
     def step(from: Int, step: Int): Option[(Int, Int)] = {
@@ -90,6 +95,12 @@ object Expr {
           else Some((max, step + 1))
         }
       }
+    }
+
+    override def compare(that: EnumerableExpr[F]): Int = {
+      if (min > that.max) 1
+      else if (max < that.min) -1
+      else 0
     }
   }
 

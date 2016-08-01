@@ -9,7 +9,7 @@ import scala.annotation.implicitNotFound
   */
 @implicitNotFound("Field ${F} is not supported on Cron expressions")
 sealed trait CronUnit[F <: CronField]
-    extends Sequential[Int] with Bound[Int] with Indexed[Int] with PartialOrdering[Int] {
+    extends Sequential[Int] with Bound[Int] with Indexed[Int] {
 
   def apply(index: Int): Option[Int] = {
     if (index < 0 || index >= size) None
@@ -18,9 +18,6 @@ sealed trait CronUnit[F <: CronField]
 
   def field: F
   def size: Int
-
-  def lteq(lhs: Int, rhs: Int): Boolean =
-    tryCompare(lhs, rhs).exists(_ <= 0)
 
   def narrow(min: Int, max: Int): CronUnit[F]
 
@@ -33,11 +30,6 @@ object CronUnit {
   @inline def apply[F <: CronField](implicit unit: CronUnit[F]): CronUnit[F] = unit
 
   private[cron4s] abstract class BaseCronUnit[F <: CronField](val min: Int, val max: Int, val field: F) extends CronUnit[F] {
-
-    def tryCompare(lhs: Int, rhs: Int): Option[Int] = {
-      if ((lhs < min || lhs > max) || (rhs < min || rhs > max)) None
-      else Some(lhs compare rhs)
-    }
 
     def step(v: Int, amount: Int): Option[(Int, Int)] = {
       if (v < min || v > max) None
