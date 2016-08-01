@@ -11,7 +11,6 @@ import scala.util.parsing.combinator.RegexParsers
 trait ExprParsers extends RegexParsers {
   import CronField._
   import CronUnit._
-  import Expr._
 
   // Unit parsers
 
@@ -57,7 +56,7 @@ trait ExprParsers extends RegexParsers {
 
   def several[F <: CronField](p: Parser[EnumerableExpr[F]])
       (implicit unit: CronUnit[F]): Parser[SeveralExpr[F]] =
-    p ~ (("," ~> p)+) ^^ { case head ~ tail => SeveralExpr((head :: tail).to[Vector]) }
+    p ~ (("," ~> p)+) ^^ { case head ~ tail => SeveralExpr(head, tail) }
 
   def every[F <: CronField](p: Parser[DivisibleExpr[F]])
       (implicit unit: CronUnit[F]): Parser[EveryExpr[F]] =

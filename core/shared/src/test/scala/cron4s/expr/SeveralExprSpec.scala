@@ -20,14 +20,18 @@ object SeveralExprSpec extends Properties("SeveralExpr") with ExprGenerators {
     expr => expr.max == expr.values.last.max
   }
 
+  property("range must be sum of the ranges of its elements") = forAll(severalExpressions) {
+    expr => expr.range == expr.values.toIndexedSeq.flatMap(_.range)
+  }
+
   val valuesOutsideRange = for {
     expr <- severalExpressions
-    value <- arbitrary[Int] if !matcher.exists(expr.values.map(_.matches)).apply(value)
+    value <- arbitrary[Int] if !matcher.exists(expr.values.toVector.map(_.matches)).apply(value)
   } yield (expr, value)
 
   val valuesInsideRange = for {
     expr <- severalExpressions
-    value <- Gen.choose(expr.min, expr.max) if matcher.exists(expr.values.map(_.matches)).apply(value)
+    value <- Gen.choose(expr.min, expr.max) if matcher.exists(expr.values.toVector.map(_.matches)).apply(value)
   } yield (expr, value)
 
   property("should not match values outside the range of its elements") = forAll(valuesOutsideRange) {
@@ -51,7 +55,7 @@ object SeveralExprSpec extends Properties("SeveralExpr") with ExprGenerators {
 
   val stepsFromInsideRange = for {
     expr      <- severalExpressions
-    fromValue <- Gen.choose(expr.min, expr.max) if expr.matches(fromValue)
+    fromValue <- Gen.oneOf(expr.range)
     stepSize  <- arbitrary[Int]
   } yield (expr, fromValue, stepSize)
 

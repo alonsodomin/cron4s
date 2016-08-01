@@ -13,7 +13,7 @@ sealed trait CronUnit[F <: CronField]
 
   def apply(index: Int): Option[Int] = {
     if (index < 0 || index >= size) None
-    else Some(values(index))
+    else Some(range(index))
   }
 
   def field: F
@@ -21,7 +21,7 @@ sealed trait CronUnit[F <: CronField]
 
   def narrow(min: Int, max: Int): CronUnit[F]
 
-  val values: IndexedSeq[Int]
+  val range: IndexedSeq[Int]
 }
 
 object CronUnit {
@@ -53,7 +53,7 @@ object CronUnit {
 
     def narrow(min: Int, max: Int): CronUnit[F] = new BaseCronUnit[F](min, max, field) {}
 
-    val values: IndexedSeq[Int] = min to max
+    val range: IndexedSeq[Int] = min to max
 
   }
 

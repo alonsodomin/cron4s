@@ -10,7 +10,6 @@ import shapeless._
 
 trait ASTParsers extends ExprParsers {
   import CronField._
-  import Expr._
 
   private[this] def expr[F <: CronField : CronUnit](p: Parser[ConstExpr[F]]): Parser[Expr[F]] = {
     def everyAST(p: Parser[ConstExpr[F]]): Parser[EveryExpr[F]] =

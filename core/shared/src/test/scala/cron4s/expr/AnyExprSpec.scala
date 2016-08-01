@@ -1,22 +1,24 @@
 package cron4s.expr
 
-import cron4s.BaseGenerators
 import org.scalacheck._
 
 /**
   * Created by alonsodomin on 31/07/2016.
   */
-object AnyExprSpec extends Properties("AnyExpr") with BaseGenerators {
+object AnyExprSpec extends Properties("AnyExpr") with ExprGenerators {
   import Prop._
-  import Expr.AnyExpr
   import Arbitrary.arbitrary
 
-  property("min should be the same as its unit") = forAll(cronUnits) { unit =>
-    AnyExpr()(unit).min == unit.min
+  property("min should be the same as its unit") = forAll(anyExpressions) {
+    expr => expr.min == expr.unit.min
   }
 
-  property("max should be the same as its unit") = forAll(cronUnits) { unit =>
-    AnyExpr()(unit).max == unit.max
+  property("max should be the same as its unit") = forAll(anyExpressions) {
+    expr => expr.max == expr.unit.max
+  }
+
+  property("range must be the same as its unit") = forAll(anyExpressions) {
+    expr => expr.range == expr.unit.range
   }
 
   property("match should always succeed inside units range") = forAll(cronUnitAndValues) {

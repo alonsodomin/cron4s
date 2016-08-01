@@ -9,7 +9,6 @@ import org.scalacheck._
   */
 object ExprParsersSpec extends Properties("ExprParsers") with ExprParsers with InputGenerators {
   import cron4s.CronUnit._
-  import Expr._
   import Prop._
 
   def verifyParsed[F <: CronField, P <: Expr[F]](parser: Parser[P], input: String)(verify: P => Boolean): Boolean = {

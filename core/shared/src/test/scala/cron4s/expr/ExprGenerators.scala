@@ -1,14 +1,17 @@
 package cron4s.expr
 
 import cron4s._
-
 import org.scalacheck._
+
+import scala.collection.immutable.SortedSet
 
 /**
   * Created by alonsodomin on 31/07/2016.
   */
 trait ExprGenerators extends BaseGenerators {
-  import Expr._
+
+  private[this] def createAny[U](unit: U)(implicit isUnit: IsCronUnit[U]): AnyExpr[isUnit.F] =
+    AnyExpr[isUnit.F]()(isUnit(unit))
 
   private[this] def createConst[U](unit: U, value: Int)(implicit isUnit: IsCronUnit[U]): ConstExpr[isUnit.F] =
     ConstExpr[isUnit.F](isUnit(unit).field, value)(isUnit(unit))
@@ -18,13 +21,17 @@ trait ExprGenerators extends BaseGenerators {
 
   private[this] def createSeveral[U](unit: U, elems: Vector[EnumerableExpr[_]])(implicit isUnit: IsCronUnit[U]): SeveralExpr[isUnit.F] = {
     val mappedElems = elems.map(_.asInstanceOf[EnumerableExpr[isUnit.F]])
-    SeveralExpr[isUnit.F](mappedElems)(isUnit(unit))
+    SeveralExpr[isUnit.F](mappedElems.head, mappedElems.tail.toList)(isUnit(unit))
   }
 
   private[this] def createEvery[U](unit: U, base: DivisibleExpr[_], freq: Int)(implicit isUnit: IsCronUnit[U]): EveryExpr[isUnit.F] = {
     val mappedBase = base.asInstanceOf[DivisibleExpr[isUnit.F]]
     EveryExpr[isUnit.F](mappedBase, freq)(isUnit(unit))
   }
+
+  lazy val anyExpressions = for {
+    unit <- cronUnits
+  } yield createAny(unit)
 
   def constExpr[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[ConstExpr[isCronUnit.F]] = {
     val resolved = isCronUnit(unit)

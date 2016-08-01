@@ -17,4 +17,16 @@ object EveryExprSpec extends Properties("EveryExpr") with ExprGenerators {
     expr => expr.max == expr.value.max
   }
 
+  /*property("range must be stepped progression over its base") = forAll(everyExpressions) {
+    expr =>
+      val elems = Stream.iterate[Option[(Int, Int)]](Some(expr.min, 0)) {
+        prev => prev.flatMap { case (v, _) =>
+          println(s"stepping from $v at test")
+          expr.value.step(v, expr.freq)
+        }
+      }.flatten.takeWhile(_._2 < 1).map(_._1)
+
+      expr.range == elems.toIndexedSeq
+  }*/
+
 }

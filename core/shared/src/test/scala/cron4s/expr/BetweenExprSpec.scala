@@ -19,6 +19,10 @@ object BetweenExprSpec extends Properties("BetweenExpr") with ExprGenerators wit
     expr => expr.end.value == expr.max
   }
 
+  property("range must be from the begining to the end inclusive") = forAll(betweenExpressions) {
+    expr => expr.range == (expr.begin.value to expr.end.value)
+  }
+
   val valuesOutsideRange = for {
     expr  <- betweenExpressions
     value <- arbitrary[Int] if value < expr.min || value > expr.max

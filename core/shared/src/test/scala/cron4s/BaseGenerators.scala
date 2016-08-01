@@ -28,12 +28,12 @@ trait BaseGenerators {
 
   lazy val cronUnitAndValues: Gen[(CronUnit[_ <: CronField], Int)] = for {
     unit  <- cronUnits
-    value <- Gen.oneOf(unit.values)
+    value <- Gen.oneOf(unit.range)
   } yield (unit, value)
 
   lazy val cronUnitAndValuesOutsideRange: Gen[(CronUnit[_ <: CronField], Int)] = for {
     unit  <- cronUnits
-    value <- arbitrary[Int] if !unit.values.contains(value)
+    value <- arbitrary[Int] if !unit.range.contains(value)
   } yield (unit, value)
 
 }
