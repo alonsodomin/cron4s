@@ -8,11 +8,7 @@ import org.scalacheck._
   */
 object ConstExprSpec extends Properties("ConstExpr") with ExprGenerators {
   import Prop._
-  import Expr.ConstExpr
   import Arbitrary.arbitrary
-
-  def createConst[A](unit: A, value: Int)(implicit isUnit: IsCronUnit[A]): ConstExpr[isUnit.F] =
-    ConstExpr[isUnit.F](isUnit(unit).field, value)(isUnit(unit))
 
   property("min should be the constant value") = forAll(constExpressions) {
     expr => expr.min == expr.value

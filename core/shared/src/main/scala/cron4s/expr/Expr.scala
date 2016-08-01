@@ -98,11 +98,7 @@ object Expr {
 
     def step(from: Int, step: Int): Option[(Int, Int)] = {
       if (matches(from)) {
-        val range = min to max
-        Option(range.indexOf(from)).filter(_ >= 0).map(values).
-          flatMap {
-            _.step(from, step)
-          }
+        values.dropWhile(!_.matches(from)).headOption.flatMap(_.step(from, step))
       } else None
     }
 
