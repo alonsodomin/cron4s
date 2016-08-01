@@ -96,11 +96,8 @@ object Expr {
 
     def matches: Matcher[Int] = exists(values.map(_.matches))
 
-    def step(from: Int, step: Int): Option[(Int, Int)] = {
-      if (matches(from)) {
-        values.dropWhile(!_.matches(from)).headOption.flatMap(_.step(from, step))
-      } else None
-    }
+    def step(from: Int, step: Int): Option[(Int, Int)] =
+      values.dropWhile(!_.matches(from)).headOption.flatMap(_.step(from, step))
 
   }
 
