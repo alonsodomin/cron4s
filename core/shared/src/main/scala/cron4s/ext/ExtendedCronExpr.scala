@@ -1,15 +1,16 @@
 package cron4s.ext
 
 import cron4s.expr.CronExpr
-import cron4s.types.MonoidK
 import cron4s.matcher.Matcher
+
+import scalaz.PlusEmpty
 
 /**
   * Created by domingueza on 29/07/2016.
   */
 abstract class ExtendedCronExpr[DateTime: DateTimeAdapter](expr: CronExpr) {
 
-  def matches(implicit M: MonoidK[Matcher]): Matcher[DateTime] = {
+  def matches(implicit M: PlusEmpty[Matcher]): Matcher[DateTime] = {
     val reducer = new MatcherReducer[DateTime]
     reducer.run(expr)
   }

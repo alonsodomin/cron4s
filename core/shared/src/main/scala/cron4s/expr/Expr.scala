@@ -1,11 +1,11 @@
 package cron4s.expr
 
 import cron4s.{CronField, CronUnit}
-import cron4s.types.std.all._
 import cron4s.core.Sequential
 import cron4s.matcher._
 
-import scala.collection.immutable.SortedSet
+import scalaz._
+import Scalaz._
 
 /**
   * Created by alonsodomin on 07/11/2015.
@@ -137,7 +137,7 @@ final case class SeveralExpr[F <: CronField] private[expr]
 
   val max: Int = values.last.max
 
-  def matches: Matcher[Int] = exists(values.map(_.matches))
+  def matches: Matcher[Int] = anyOf(values.map(_.matches))
 
   def step(from: Int, step: Int): Option[(Int, Int)] = {
     if (from < unit.min || from > unit.max) None
@@ -160,7 +160,7 @@ final case class EveryExpr[F <: CronField](value: DivisibleExpr[F], freq: Int)
 
   def max: Int = value.max
 
-  def matches: Matcher[Int] = exists(range.toVector.map(x => equal(x)))
+  def matches: Matcher[Int] = anyOf(range.toVector.map(x => equal(x)))
 
   override def next(from: Int): Option[Int] = value.step(from, freq).map(_._1)
 

@@ -1,9 +1,11 @@
 package cron4s.expr
 
 import cron4s.matcher
-import cron4s.types.std.all._
 
 import org.scalacheck._
+
+import scalaz._
+import Scalaz._
 
 /**
   * Created by alonsodomin on 01/08/2016.
@@ -21,17 +23,17 @@ object SeveralExprSpec extends Properties("SeveralExpr") with ExprGenerators {
   }
 
   property("range must be sum of the ranges of its elements") = forAll(severalExpressions) {
-    expr => expr.range == expr.values.toIndexedSeq.flatMap(_.range)
+    expr => expr.range == expr.values.flatMap(_.range)
   }
 
   val valuesOutsideRange = for {
     expr <- severalExpressions
-    value <- arbitrary[Int] if !matcher.exists(expr.values.toVector.map(_.matches)).apply(value)
+    value <- arbitrary[Int] if !matcher.anyOf(expr.values.map(_.matches)).apply(value)
   } yield (expr, value)
 
   val valuesInsideRange = for {
     expr <- severalExpressions
-    value <- Gen.choose(expr.min, expr.max) if matcher.exists(expr.values.toVector.map(_.matches)).apply(value)
+    value <- Gen.choose(expr.min, expr.max) if matcher.anyOf(expr.values.map(_.matches)).apply(value)
   } yield (expr, value)
 
   property("should not match values outside the range of its elements") = forAll(valuesOutsideRange) {

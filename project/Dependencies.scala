@@ -7,6 +7,7 @@ object Dependencies {
   object version {
     val simulacrum = "0.7.0"
     val cats       = "0.6.0"
+    val scalaz     = "7.2.1"
     val shapeless  = "2.3.1"
     val scalacheck = "1.12.5"
     val momentjs   = "0.1.5"
@@ -19,8 +20,9 @@ object Dependencies {
       compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full),
       compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
 
-      "com.chuusai"          %%% "shapeless"  % version.shapeless,
-      "org.scalacheck"       %%% "scalacheck" % version.scalacheck % Test
+      "com.chuusai"    %%% "shapeless"   % version.shapeless,
+      "org.scalaz"     %%% "scalaz-core" % version.scalaz,
+      "org.scalacheck" %%% "scalacheck"  % version.scalacheck % Test
     )
   }
 
