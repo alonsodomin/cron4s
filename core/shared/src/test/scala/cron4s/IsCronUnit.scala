@@ -1,6 +1,11 @@
 package cron4s
 
 /**
+  * Type extractor used to help determine the actual type of the `CronField`
+  * from a `CronUnit`.
+  *
+  * Intended for use only when randomly generating expressions during testing.
+  *
   * Created by alonsodomin on 31/07/2016.
   */
 trait IsCronUnit[U] {

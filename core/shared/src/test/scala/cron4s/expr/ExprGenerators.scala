@@ -3,12 +3,12 @@ package cron4s.expr
 import cron4s._
 import org.scalacheck._
 
-import scala.collection.immutable.SortedSet
-
 /**
   * Created by alonsodomin on 31/07/2016.
   */
 trait ExprGenerators extends BaseGenerators {
+
+  // Helper methods able to construct an expression from a `CronUnit` value
 
   private[this] def createAny[U](unit: U)(implicit isUnit: IsCronUnit[U]): AnyExpr[isUnit.F] =
     AnyExpr[isUnit.F]()(isUnit(unit))
@@ -29,9 +29,7 @@ trait ExprGenerators extends BaseGenerators {
     EveryExpr[isUnit.F](mappedBase, freq)(isUnit(unit))
   }
 
-  lazy val anyExpressions = for {
-    unit <- cronUnits
-  } yield createAny(unit)
+  // Methods to construct expression generators for a give CronUnit. Uses same type resolution technique as above ones
 
   def constExpr[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[ConstExpr[isCronUnit.F]] = {
     val resolved = isCronUnit(unit)
@@ -39,12 +37,6 @@ trait ExprGenerators extends BaseGenerators {
       value <- Gen.choose(resolved.min, resolved.max)
     } yield ConstExpr[isCronUnit.F](resolved.field, value)(resolved)
   }
-
-  lazy val constExpressions = for {
-    unit  <- cronUnits
-    value <- Gen.choose(unit.min, unit.max)
-  } yield createConst(unit, value)
-  implicit lazy val arbitraryConstExpression = Arbitrary(constExpressions)
 
   def betweenExpr[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[BetweenExpr[isCronUnit.F]] = {
     val resolved = isCronUnit(unit)
@@ -54,21 +46,8 @@ trait ExprGenerators extends BaseGenerators {
     } yield BetweenExpr[isCronUnit.F](createConst(resolved, min), createConst(resolved, max))(resolved)
   }
 
-  lazy val betweenExpressions = for {
-    unit <- cronUnits
-    min  <- Gen.choose(unit.min, unit.max - 1)
-    max  <- Gen.choose(min + 1, unit.max)
-  } yield createBetween(unit, min, max)
-  implicit lazy val arbitraryBetweenExpression = Arbitrary(betweenExpressions)
-
   def enumerableExpressions[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[EnumerableExpr[isCronUnit.F]] =
     Gen.oneOf[EnumerableExpr[isCronUnit.F]](constExpr(unit), betweenExpr(unit))
-
-  val severalExpressions = for {
-    unit  <- cronUnits
-    size  <- Gen.posNum[Int] if size > 1
-    elems <- Gen.containerOfN[Vector, EnumerableExpr[_ <: CronField]](size, enumerableExpressions(unit))
-  } yield createSeveral(unit, elems)
 
   def severalExpr[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[SeveralExpr[isCronUnit.F]] = {
     val resolved = isCronUnit(unit)
@@ -81,10 +60,38 @@ trait ExprGenerators extends BaseGenerators {
   def divisibleExpressions[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[DivisibleExpr[isCronUnit.F]] =
     Gen.oneOf[DivisibleExpr[isCronUnit.F]](betweenExpr(unit), severalExpr(unit))
 
+  // Random expression generators
+
+  lazy val anyExpressions = for {
+    unit <- cronUnits
+  } yield createAny(unit)
+  implicit lazy val arbitraryAnyExpression = Arbitrary(anyExpressions)
+
+  lazy val constExpressions = for {
+    unit  <- cronUnits
+    value <- Gen.choose(unit.min, unit.max)
+  } yield createConst(unit, value)
+  implicit lazy val arbitraryConstExpression = Arbitrary(constExpressions)
+
+  lazy val betweenExpressions = for {
+    unit <- cronUnits
+    min  <- Gen.choose(unit.min, unit.max - 1)
+    max  <- Gen.choose(min + 1, unit.max)
+  } yield createBetween(unit, min, max)
+  implicit lazy val arbitraryBetweenExpression = Arbitrary(betweenExpressions)
+
+  val severalExpressions = for {
+    unit  <- cronUnits
+    size  <- Gen.posNum[Int] if size > 1
+    elems <- Gen.containerOfN[Vector, EnumerableExpr[_ <: CronField]](size, enumerableExpressions(unit))
+  } yield createSeveral(unit, elems)
+  implicit lazy val arbitrarySeveralExpression = Arbitrary(severalExpressions)
+
   val everyExpressions = for {
     unit <- cronUnits
     base <- divisibleExpressions(unit)
     freq <- Gen.posNum[Int] if freq > 0
   } yield createEvery(unit, base, freq)
+  implicit lazy val arbitraryEveryExpression = Arbitrary(everyExpressions)
 
 }

@@ -1,13 +1,11 @@
 package cron4s.expr
 
-import cron4s.BaseFunctions
-import org.scalacheck.Prop._
 import org.scalacheck._
 
 /**
   * Created by alonsodomin on 31/07/2016.
   */
-object BetweenExprSpec extends Properties("BetweenExpr") with ExprGenerators with BaseFunctions {
+object BetweenExprSpec extends Properties("BetweenExpr") with ExprGenerators {
   import Prop._
   import Arbitrary.arbitrary
 
