@@ -23,9 +23,14 @@ sealed trait Expr[F <: CronField] extends Sequential[Int] {
     * @return
     */
   def impliedBy[E <: Expr[F]](expr: E): Boolean =
-    range.map(x => expr.matches(x)).forall(identity)
+    range.forall(expr.matches(_))
 
   def unit: CronUnit[F]
+
+  def step(from: Int, step: Int): Option[(Int, Int)] = {
+    if (from < unit.min || from > unit.max) None
+    else Sequential.sequential(range).step(from, step)
+  }
 
   val range: IndexedSeq[Int]
 
@@ -48,8 +53,6 @@ final case class AnyExpr[F <: CronField](implicit val unit: CronUnit[F])
     else false
   }
 
-  def step(from: Int, step: Int): Option[(Int, Int)] = unit.step(from, step)
-
   val range = unit.range
 
 }
@@ -67,13 +70,6 @@ final case class ConstExpr[F <: CronField](field: F, value: Int, textValue: Opti
   def max: Int = value
 
   def matches: Matcher[Int] = equal(value)
-
-  def step(from: Int, step: Int): Option[(Int, Int)] = {
-    if (unit.range.contains(from)) {
-      if (value >= from && step != 0) Some((value, step - 1))
-      else Some((value, step))
-    } else None
-  }
 
   override def compare(that: EnumerableExpr[F]): Int = {
     if (value < that.min) 1
@@ -99,21 +95,6 @@ final case class BetweenExpr[F <: CronField](begin: ConstExpr[F], end: ConstExpr
     x >= begin.value && x <= end.value
   }
 
-  def step(from: Int, step: Int): Option[(Int, Int)] = {
-    if (from < unit.min || from > unit.max) None
-    else if (step == 0) Some((from, 0))
-    else {
-      if (matches(from)) unit.narrow(min, max).step(from, step)
-      else if (from < min) {
-        if (step > 0) Some((min, step - 1))
-        else Some((max, step))
-      } else {
-        if (step > 0) Some((min, step))
-        else Some((max, step + 1))
-      }
-    }
-  }
-
   override def compare(that: EnumerableExpr[F]): Int = {
     if (min > that.max) 1
     else if (max < that.min) -1
@@ -125,13 +106,11 @@ final case class BetweenExpr[F <: CronField](begin: ConstExpr[F], end: ConstExpr
 }
 
 final case class SeveralExpr[F <: CronField] private[expr]
-    (_values: Vector[EnumerableExpr[F]])
+    (values: Vector[EnumerableExpr[F]])
     (implicit val unit: CronUnit[F])
   extends Expr[F] with DivisibleExpr[F] {
 
-  //require(values.size > 1, "Expression should contain more than one element")
-
-  val values = _values.distinct.sorted
+  require(values.nonEmpty, "Expression should contain at least one element")
 
   val min: Int = values.head.min
 
@@ -139,17 +118,20 @@ final case class SeveralExpr[F <: CronField] private[expr]
 
   def matches: Matcher[Int] = anyOf(values.map(_.matches))
 
-  def step(from: Int, step: Int): Option[(Int, Int)] = {
-    if (from < unit.min || from > unit.max) None
-    else Sequential.sequential(range).step(from, step)
-  }
-
-  val range: IndexedSeq[Int] = values.flatMap(_.range)
+  val range: IndexedSeq[Int] = values.flatMap(_.range).distinct.sorted
 
 }
 object SeveralExpr {
-  def apply[F <: CronField](head: EnumerableExpr[F], tail: List[EnumerableExpr[F]])(implicit unit: CronUnit[F]) =
-    new SeveralExpr[F](Vector[EnumerableExpr[F]](head :: tail: _*))(unit)
+  import validation.validateSeveralExpr
+
+  def apply[F <: CronField](head: EnumerableExpr[F], tail: EnumerableExpr[F]*)(implicit unit: CronUnit[F]) = {
+    validateSeveralExpr(NonEmptyList[EnumerableExpr[F]](head, tail: _*)) match {
+      case Success(expr) => expr
+      case Failure(errors) =>
+        val msg = errors.list.toList.mkString("\n")
+        throw new IllegalArgumentException(msg)
+    }
+  }
 }
 
 final case class EveryExpr[F <: CronField](value: DivisibleExpr[F], freq: Int)
@@ -162,11 +144,11 @@ final case class EveryExpr[F <: CronField](value: DivisibleExpr[F], freq: Int)
 
   def matches: Matcher[Int] = anyOf(range.toVector.map(x => equal(x)))
 
-  override def next(from: Int): Option[Int] = value.step(from, freq).map(_._1)
+  override def next(from: Int): Option[Int] = super.step(from, freq).map(_._1)
 
-  override def previous(from: Int): Option[Int] = value.step(from, -freq).map(_._1)
+  override def previous(from: Int): Option[Int] = super.step(from, -freq).map(_._1)
 
-  def step(from: Int, step: Int): Option[(Int, Int)] = value.step(from, step * freq)
+  override def step(from: Int, step: Int): Option[(Int, Int)] = super.step(from, step * freq)
 
   val range: IndexedSeq[Int] = {
     val elements = Stream.iterate[Option[(Int, Int)]](Some(min, 0)) {

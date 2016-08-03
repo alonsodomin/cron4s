@@ -4,6 +4,7 @@ import cron4s.{CronField, CronUnit}
 import cron4s.expr._
 
 import scala.util.parsing.combinator.RegexParsers
+import scalaz.NonEmptyList
 
 /**
   * Created by alonsodomin on 01/01/2016.
@@ -56,10 +57,10 @@ trait ExprParsers extends RegexParsers {
 
   def several[F <: CronField](p: Parser[EnumerableExpr[F]])
       (implicit unit: CronUnit[F]): Parser[SeveralExpr[F]] =
-    p ~ (("," ~> p)+) ^^ { case head ~ tail => SeveralExpr(head, tail) }
+    p ~ (("," ~> p)+) ^^ { case head ~ tail => SeveralExpr(head, tail: _*) }
 
   def every[F <: CronField](p: Parser[DivisibleExpr[F]])
       (implicit unit: CronUnit[F]): Parser[EveryExpr[F]] =
-    p ~ """\/\d+""".r ^^ { case base ~ step => EveryExpr(base, step.substring(1).toInt) }
+    p ~ """\/\d+""".r ^^ { case base ~ freq => EveryExpr(base, freq.substring(1).toInt) }
 
 }

@@ -3,10 +3,31 @@ package cron4s.expr
 import cron4s._
 import org.scalacheck._
 
+import scala.collection.mutable.ListBuffer
+
 /**
   * Created by alonsodomin on 31/07/2016.
   */
 trait ExprGenerators extends BaseGenerators {
+
+  private[this] def filterImpliedElems[U](unit: U, xs: Vector[EnumerableExpr[_]])(implicit isUnit: IsCronUnit[U]): Vector[EnumerableExpr[isUnit.F]] = {
+    val mapped = xs.map(_.asInstanceOf[EnumerableExpr[isUnit.F]])
+    val result = ListBuffer.empty[EnumerableExpr[isUnit.F]]
+    var idx = 0
+    while (idx < mapped.size) {
+      val x = mapped(idx)
+      val alreadyImplied = result.find(_.impliedBy(x))
+      if (alreadyImplied.isDefined) {
+        result -= alreadyImplied.get
+      }
+
+      if (!result.exists(e => x.impliedBy(e))) {
+        result += x
+      }
+      idx += 1
+    }
+    result.toVector
+  }
 
   // Helper methods able to construct an expression from a `CronUnit` value
 
@@ -21,7 +42,7 @@ trait ExprGenerators extends BaseGenerators {
 
   private[this] def createSeveral[U](unit: U, elems: Vector[EnumerableExpr[_]])(implicit isUnit: IsCronUnit[U]): SeveralExpr[isUnit.F] = {
     val mappedElems = elems.map(_.asInstanceOf[EnumerableExpr[isUnit.F]])
-    SeveralExpr[isUnit.F](mappedElems.head, mappedElems.tail.toList)(isUnit(unit))
+    new SeveralExpr[isUnit.F](mappedElems.sorted)(isUnit(unit))
   }
 
   private[this] def createEvery[U](unit: U, base: DivisibleExpr[_], freq: Int)(implicit isUnit: IsCronUnit[U]): EveryExpr[isUnit.F] = {
@@ -49,11 +70,18 @@ trait ExprGenerators extends BaseGenerators {
   def enumerableExpressions[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[EnumerableExpr[isCronUnit.F]] =
     Gen.oneOf[EnumerableExpr[isCronUnit.F]](constExpr(unit), betweenExpr(unit))
 
+  def enumerableExpressionsVector[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[Vector[EnumerableExpr[isCronUnit.F]]] = {
+    val resolved = isCronUnit(unit)
+    for {
+      size  <- Gen.choose(5, 1500)
+      elems <- Gen.containerOfN[Vector, EnumerableExpr[_ <: CronField]](size, enumerableExpressions(resolved))
+    } yield filterImpliedElems(resolved, elems)
+  }
+
   def severalExpr[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[SeveralExpr[isCronUnit.F]] = {
     val resolved = isCronUnit(unit)
     for {
-      size  <- Gen.posNum[Int] if size > 1
-      elems <- Gen.containerOfN[Vector, EnumerableExpr[_ <: CronField]](size, enumerableExpressions(resolved))
+      elems <- enumerableExpressionsVector(resolved) retryUntil(_.size > 2)
     } yield createSeveral(resolved, elems)
   }
 
@@ -82,8 +110,7 @@ trait ExprGenerators extends BaseGenerators {
 
   val severalExpressions = for {
     unit  <- cronUnits
-    size  <- Gen.posNum[Int] if size > 1
-    elems <- Gen.containerOfN[Vector, EnumerableExpr[_ <: CronField]](size, enumerableExpressions(unit))
+    elems <- enumerableExpressionsVector(unit)
   } yield createSeveral(unit, elems)
   implicit lazy val arbitrarySeveralExpression = Arbitrary(severalExpressions)
 

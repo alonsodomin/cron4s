@@ -31,17 +31,9 @@ object CronUnit {
 
   private[cron4s] abstract class BaseCronUnit[F <: CronField](val min: Int, val max: Int, val field: F) extends CronUnit[F] {
 
-    def step(v: Int, amount: Int): Option[(Int, Int)] = {
-      if (v < min || v > max) None
-      else {
-        val cursor = (v - min) + amount
-        val newIdx = cursor % size
-        val newValue = {
-          if (newIdx < 0) (max + min) + newIdx
-          else min + newIdx
-        }
-        Some(newValue, cursor / size)
-      }
+    def step(from: Int, step: Int): Option[(Int, Int)] = {
+      if (from < min || from > max) None
+      else Sequential.sequential(range).step(from, step)
     }
 
     def indexOf(v: Int): Option[Int] = {

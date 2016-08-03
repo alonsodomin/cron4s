@@ -1,7 +1,7 @@
 package cron4s.expr
 
+import cron4s.core.Sequential
 import cron4s.matcher
-
 import org.scalacheck._
 
 import scalaz._
@@ -15,15 +15,21 @@ object SeveralExprSpec extends Properties("SeveralExpr") with ExprGenerators {
   import Arbitrary.arbitrary
 
   property("min should be the min value of the head") = forAll(severalExpressions) {
-    expr => expr.min == expr.values.head.min
+    expr => classify(expr.values.size > 5, "large", "small") {
+      expr.min == expr.values.head.min
+    }
   }
 
   property("max should be the max value of the last") = forAll(severalExpressions) {
-    expr => expr.max == expr.values.last.max
+    expr => classify(expr.values.size > 5, "large", "small") {
+      expr.max == expr.values.last.max
+    }
   }
 
-  property("range must be sum of the ranges of its elements") = forAll(severalExpressions) {
-    expr => expr.range == expr.values.flatMap(_.range)
+  property("range must be the distinct sum of the ranges of its elements") = forAll(severalExpressions) {
+    expr => classify(expr.values.size > 5, "large", "small") {
+      expr.range == expr.values.flatMap(_.range).distinct.sorted
+    }
   }
 
   val valuesOutsideRange = for {
@@ -67,7 +73,7 @@ object SeveralExprSpec extends Properties("SeveralExpr") with ExprGenerators {
 
   property("stepping with a non-zero size is the same as stepping inside the internal expression") = forAll(stepsFromInsideRange) {
     case (expr, fromValue, stepSize) =>
-      val internalExpr = expr.values.dropWhile(!_.matches(fromValue)).head
+      val internalExpr = Sequential.sequential(expr.range)
       expr.step(fromValue, stepSize) == internalExpr.step(fromValue, stepSize)
   }
 
