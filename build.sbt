@@ -1,4 +1,6 @@
 
+import scala.xml.transform.{RewriteRule, RuleTransformer}
+
 scalaVersion in ThisBuild := "2.11.8"
 
 // TODO The parser combinators lib needs to support multiple Scala/ScalaJS versions to enable this
@@ -23,14 +25,33 @@ val globalSettings = Def.settings(
 
 lazy val commonJsSettings = Seq(
   scalaJSStage in Test := FastOptStage,
-  scalaJSUseRhino in Global := false,
-  coverageExcludedFiles := ".*"
+  scalaJSUseRhino in Global := false
 )
 
 lazy val noPublishSettings = Seq(
   publish := (),
   publishLocal := (),
   publishArtifact := false
+)
+
+lazy val coverageSettings = Seq(
+  coverageHighlighting := true,
+  coverageExcludedPackages := "cron4s\\.bench\\..*",
+  // don't include scoverage as a dependency in the pom
+  // see issue #980
+  // this code was copied from https://github.com/mongodb/mongo-spark
+  pomPostProcess := { (node: xml.Node) =>
+    new RuleTransformer(
+      new RewriteRule {
+        override def transform(node: xml.Node): Seq[xml.Node] = node match {
+          case e: xml.Elem
+              if e.label == "dependency" && e.child.exists(child => child.label == "groupId" && child.text == "org.scoverage") => Nil
+          case _ => Seq(node)
+
+        }
+
+      }).transform(node).head
+  }
 )
 
 lazy val cron4s = (project in file(".")).
