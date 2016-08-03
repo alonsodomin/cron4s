@@ -1,8 +1,8 @@
 package cron4s.expr
 
 import cron4s.{CronField, CronUnit}
-import cron4s.core.Sequential
 import cron4s.matcher._
+import cron4s.types.Sequential
 
 import scalaz._
 import Scalaz._

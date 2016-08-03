@@ -1,6 +1,6 @@
 package cron4s
 
-import cron4s.core.{Bound, Indexed, Sequential}
+import cron4s.types.{Bound, Indexed, Sequential}
 
 import scala.annotation.implicitNotFound
 

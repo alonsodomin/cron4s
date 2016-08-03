@@ -1,7 +1,7 @@
 package cron4s.expr
 
-import cron4s.core.Sequential
 import cron4s.matcher
+import cron4s.types.Sequential
 import org.scalacheck._
 
 import scalaz._

@@ -1,6 +1,4 @@
-package cron4s.core
-
-import scala.collection.immutable.SortedSet
+package cron4s.types
 
 /**
   * Created by alonsodomin on 31/12/2015.

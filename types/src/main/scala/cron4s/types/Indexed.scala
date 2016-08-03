@@ -1,4 +1,4 @@
-package cron4s.core
+package cron4s.types
 
 /**
   * Created by domingueza on 31/12/15.

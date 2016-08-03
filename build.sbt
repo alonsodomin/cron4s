@@ -37,11 +37,11 @@ lazy val cron4s = (project in file(".")).
 
 lazy val cron4sJS = (project in file("js")).
   settings(noPublishSettings).
-  aggregate(typesJS, coreJS, catsJS)
+  aggregate(typesJS, coreJS)
 
 lazy val cron4sJVM = (project in file("jvm")).
   settings(noPublishSettings).
-  aggregate(typesJVM, coreJVM, catsJVM)
+  aggregate(typesJVM, coreJVM)
 
 lazy val types = (crossProject.crossType(CrossType.Pure) in file("types")).
   settings(
@@ -62,20 +62,10 @@ lazy val core = (crossProject in file("core")).
   settings(globalSettings: _*).
   settings(Dependencies.core: _*).
   jvmSettings(Dependencies.coreJVM: _*).
-  jsSettings(Dependencies.coreJS: _*)
+  jsSettings(Dependencies.coreJS: _*).
+  dependsOn(types)
 
 lazy val coreJS = core.js
 lazy val coreJVM = core.jvm
 
-lazy val cats = (crossProject.crossType(CrossType.Pure) in file("cats")).
-  settings(
-    name := "cats",
-    moduleName := "cron4s-cats"
-  ).
-  settings(globalSettings: _*).
-  settings(Dependencies.cats: _*).
-  dependsOn(types)
-
-lazy val catsJS = cats.js
-lazy val catsJVM = cats.jvm
 
