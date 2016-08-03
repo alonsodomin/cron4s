@@ -1,6 +1,6 @@
 package cron4s.matcher
 
-import cron4s.types.{MonoidK, Contravariant}
+import scalaz.{Contravariant, PlusEmpty}
 
 /**
   * Created by alonsodomin on 02/01/2016.
@@ -32,16 +32,16 @@ object Matcher {
 
   }
 
-  object conjunction extends MonoidK[Matcher] {
+  object conjunction extends PlusEmpty[Matcher] {
     def empty[A]: Matcher[A] = always(true)
 
-    def combineK[A](x: Matcher[A], y: Matcher[A]): Matcher[A] = x && y
+    def plus[A](x: Matcher[A], y: => Matcher[A]): Matcher[A] = x && y
   }
 
-  object disjunction extends MonoidK[Matcher] {
+  object disjunction extends PlusEmpty[Matcher] {
     def empty[A]: Matcher[A] = always(false)
 
-    def combineK[A](x: Matcher[A], y: Matcher[A]): Matcher[A] = x || y
+    def plus[A](x: Matcher[A], y: => Matcher[A]): Matcher[A] = x || y
   }
 
 }

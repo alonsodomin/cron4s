@@ -1,6 +1,6 @@
 package cron4s
 
-import cron4s.core.{Bound, Indexed, Sequential}
+import cron4s.types.{Bound, Indexed, Sequential}
 
 import scala.annotation.implicitNotFound
 
@@ -9,22 +9,19 @@ import scala.annotation.implicitNotFound
   */
 @implicitNotFound("Field ${F} is not supported on Cron expressions")
 sealed trait CronUnit[F <: CronField]
-    extends Sequential[Int] with Bound[Int] with Indexed[Int] with PartialOrdering[Int] {
+    extends Sequential[Int] with Bound[Int] with Indexed[Int] {
 
   def apply(index: Int): Option[Int] = {
     if (index < 0 || index >= size) None
-    else Some(values(index))
+    else Some(range(index))
   }
 
   def field: F
   def size: Int
 
-  def lteq(lhs: Int, rhs: Int): Boolean =
-    tryCompare(lhs, rhs).exists(_ <= 0)
-
   def narrow(min: Int, max: Int): CronUnit[F]
 
-  val values: IndexedSeq[Int]
+  val range: IndexedSeq[Int]
 }
 
 object CronUnit {
@@ -34,22 +31,9 @@ object CronUnit {
 
   private[cron4s] abstract class BaseCronUnit[F <: CronField](val min: Int, val max: Int, val field: F) extends CronUnit[F] {
 
-    def tryCompare(lhs: Int, rhs: Int): Option[Int] = {
-      if ((lhs < min || lhs > max) || (rhs < min || rhs > max)) None
-      else Some(lhs compare rhs)
-    }
-
-    def step(v: Int, amount: Int): Option[(Int, Int)] = {
-      if (v < min || v > max) None
-      else {
-        val cursor = (v - min) + amount
-        val newIdx = cursor % size
-        val newValue = {
-          if (newIdx < 0) (max + min) + newIdx
-          else min + newIdx
-        }
-        Some(newValue, cursor / size)
-      }
+    def step(from: Int, step: Int): Option[(Int, Int)] = {
+      if (from < min || from > max) None
+      else Sequential.sequential(range).step(from, step)
     }
 
     def indexOf(v: Int): Option[Int] = {
@@ -61,7 +45,7 @@ object CronUnit {
 
     def narrow(min: Int, max: Int): CronUnit[F] = new BaseCronUnit[F](min, max, field) {}
 
-    val values: IndexedSeq[Int] = min to max
+    val range: IndexedSeq[Int] = min to max
 
   }
 

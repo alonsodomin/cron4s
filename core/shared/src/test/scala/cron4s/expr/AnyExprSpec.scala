@@ -1,41 +1,53 @@
 package cron4s.expr
 
-import cron4s.BaseGenerators
 import org.scalacheck._
 
 /**
   * Created by alonsodomin on 31/07/2016.
   */
-object AnyExprSpec extends Properties("AnyExpr") with BaseGenerators {
+object AnyExprSpec extends Properties("AnyExpr") with ExprGenerators {
   import Prop._
-  import Expr.AnyExpr
   import Arbitrary.arbitrary
 
-  property("min should be the same as its unit") = forAll(cronUnits) { unit =>
-    AnyExpr()(unit).min == unit.min
+  property("min should be the same as its unit") = forAll(anyExpressions) {
+    expr => expr.min == expr.unit.min
   }
 
-  property("max should be the same as its unit") = forAll(cronUnits) { unit =>
-    AnyExpr()(unit).max == unit.max
+  property("max should be the same as its unit") = forAll(anyExpressions) {
+    expr => expr.max == expr.unit.max
   }
 
-  property("match should always succeed inside units range") = forAll(cronUnitAndValues) {
-    case (unit, value) => AnyExpr()(unit).matches(value)
+  property("range must be the same as its unit") = forAll(anyExpressions) {
+    expr => expr.range == expr.unit.range
   }
 
-  property("match should always fail outside its units range") = forAll(cronUnitAndValuesOutsideRange) {
-    case (unit, value) => !AnyExpr()(unit).matches(value)
+  val valuesInsideRange = for {
+    expr <- anyExpressions
+    value <- Gen.choose(expr.min, expr.max)
+  } yield (expr, value)
+
+  property("match should always succeed inside units range") = forAll(valuesInsideRange) {
+    case (expr, value) => expr.matches(value)
+  }
+
+  val valuesOutsideRange = for {
+    expr <- anyExpressions
+    value <- arbitrary[Int] if value < expr.min || value > expr.max
+  } yield (expr, value)
+
+  property("match should always fail outside its units range") = forAll(valuesOutsideRange) {
+    case (expr, value) => !expr.matches(value)
   }
 
   val valuesAndSteps = for {
-    unit  <- cronUnits
+    expr  <- anyExpressions
     value <- arbitrary[Int]
     step  <- arbitrary[Int]
-  } yield (unit, value, step)
+  } yield (expr, value, step)
 
   property("step should be the same as its unit") = forAll(valuesAndSteps) {
-    case (unit, value, step) =>
-      AnyExpr()(unit).step(value, step) == unit.step(value, step)
+    case (expr, value, step) =>
+      expr.step(value, step) == expr.unit.step(value, step)
   }
 
 }

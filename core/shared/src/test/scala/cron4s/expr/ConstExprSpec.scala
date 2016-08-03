@@ -1,6 +1,5 @@
 package cron4s.expr
 
-import cron4s._
 import org.scalacheck._
 
 /**
@@ -22,6 +21,10 @@ object ConstExprSpec extends Properties("ConstExpr") with ExprGenerators {
     expr => expr.min == expr.max
   }
 
+  property("range must be the single constant") = forAll(constExpressions) {
+    expr => expr.range == IndexedSeq(expr.value)
+  }
+
   property("match should always pass for the same value") = forAll(constExpressions) {
     expr => expr.matches(expr.value)
   }
@@ -37,7 +40,7 @@ object ConstExprSpec extends Properties("ConstExpr") with ExprGenerators {
 
   val stepsFromOutsideRange = for {
     expr      <- constExpressions
-    fromValue <- arbitrary[Int] if !expr.unit.values.contains(fromValue)
+    fromValue <- arbitrary[Int] if !expr.unit.range.contains(fromValue)
     stepSize  <- arbitrary[Int]
   } yield (expr, fromValue, stepSize)
 
