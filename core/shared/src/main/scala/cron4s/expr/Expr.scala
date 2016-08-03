@@ -49,8 +49,7 @@ final case class AnyExpr[F <: CronField](implicit val unit: CronUnit[F])
   def max: Int = unit.max
 
   def matches: Matcher[Int] = Matcher { x =>
-    if (unit.range.contains(x)) true
-    else false
+    x >= min && x <= max
   }
 
   val range = unit.range
@@ -148,7 +147,7 @@ final case class EveryExpr[F <: CronField](value: DivisibleExpr[F], freq: Int)
 
   def max: Int = value.max
 
-  def matches: Matcher[Int] = anyOf(range.toList.map(x => equal(x)))
+  def matches: Matcher[Int] = anyOf(range.map(x => equal(x)))
 
   override def next(from: Int): Option[Int] = super.step(from, freq).map(_._1)
 
@@ -156,12 +155,12 @@ final case class EveryExpr[F <: CronField](value: DivisibleExpr[F], freq: Int)
 
   override def step(from: Int, step: Int): Option[(Int, Int)] = super.step(from, step * freq)
 
-  val range: IndexedSeq[Int] = {
+  val range: Vector[Int] = {
     val elements = Stream.iterate[Option[(Int, Int)]](Some(min -> 0)) {
       prev => prev.flatMap { case (v, _) => value.step(v, freq) }
     }.flatten.takeWhile(_._2 < 1).map(_._1)
 
-    elements.toIndexedSeq
+    elements.toVector
   }
 
 }
