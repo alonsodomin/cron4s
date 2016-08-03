@@ -19,8 +19,6 @@ sealed trait CronUnit[F <: CronField]
   def field: F
   def size: Int
 
-  def narrow(min: Int, max: Int): CronUnit[F]
-
   val range: IndexedSeq[Int]
 }
 
@@ -42,8 +40,6 @@ object CronUnit {
     }
 
     def size: Int = (max - min) + 1
-
-    def narrow(min: Int, max: Int): CronUnit[F] = new BaseCronUnit[F](min, max, field) {}
 
     val range: IndexedSeq[Int] = min to max
 

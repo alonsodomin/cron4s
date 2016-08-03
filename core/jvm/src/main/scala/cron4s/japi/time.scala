@@ -1,4 +1,4 @@
-package cron4s.java
+package cron4s.japi
 
 import java.time.temporal.{ChronoField, Temporal, TemporalField}
 

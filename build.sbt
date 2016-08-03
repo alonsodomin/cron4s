@@ -84,4 +84,9 @@ lazy val core = (crossProject in file("core")).
 lazy val coreJS = core.js
 lazy val coreJVM = core.jvm
 
-
+lazy val bench = (project in file("bench")).
+  settings(name := "bench").
+  settings(globalSettings).
+  settings(noPublishSettings).
+  enablePlugins(JmhPlugin).
+  dependsOn(coreJVM)

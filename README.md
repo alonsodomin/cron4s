@@ -50,7 +50,7 @@ libraries available. To use the built-in support for it we need to import a coup
 
 ```
 import java.time._
-import cron4s.java.time._
+import cron4s.japi.time._
 ```
 
 Now we can perform 2 types of matches against any object that extends `java.time.Temporal`:
