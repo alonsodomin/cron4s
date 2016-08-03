@@ -1,12 +1,13 @@
 # Cron4s
 
 [![Build Status](https://travis-ci.org/alonsodomin/cron4s.svg?branch=master)](https://travis-ci.org/alonsodomin/cron4s)
+[![License](http://img.shields.io/:license-Apache%202-red.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 Idiomatic Cron expression parsing in Scala and ScalaJS.
 
 ## Getting started
 
-To start using *cron4s* in your project just include the library as part of your dependencies:
+To start using **cron4s** in your project just include the library as part of your dependencies:
 
 ```
 libraryDependencies += "com.github.alonsodomin" %% "cron4s-core" % "x.y.z"
@@ -35,9 +36,9 @@ the parsing has failed. Assuming that we have successfully parsed an expression,
 are two different things that we can do with it: Using it as a matcher against _DateTime_ objects
 and obtaining the next or previous _DateTime_ to a given one according to the parsed expression.
 
-Now, there are many flavours of _DateTime_ objects in either the JVM or in JS land. *cron4s*
+Now, there are many flavours of _DateTime_ objects in either the JVM or in JS land. **cron4s**
 supports a few out of the box and it also makes it easy to add your own types. Every single
-supported library out of box, or _adapted_ to work with *cron4s* will support the same
+supported library out of box, or _adapted_ to work with **cron4s** will support the same
 operations with the same semantics. So let's take a look at what are those operations
 
 ### Matching against time
@@ -55,7 +56,7 @@ Now we can perform 2 types of matches against any object that extends `java.time
 
 ```
 scala> val cron: CronExpr = ...
-cron: cron4s.expr.CronExpr = 
+cron: cron4s.expr.CronExpr = ...
 
 scala> val now = LocalDateTime.now
 now: java.time.LocalDateTime = 2016-08-03T18:35:45.982
@@ -114,3 +115,18 @@ These are the libraries that are currently supported:
  * JavaScript `Date` API: Package `cron4s.js`
  * MomentJS: Package `cron4s.momentjs`
  
+## License
+
+Copyright 2016 Antonio Alonso Dominguez
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
