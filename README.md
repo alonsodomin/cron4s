@@ -2,4 +2,115 @@
 
 [![Build Status](https://travis-ci.org/alonsodomin/cron4s.svg?branch=master)](https://travis-ci.org/alonsodomin/cron4s)
 
-Idiomatic Cron expression parsing in Scala
+Idiomatic Cron expression parsing in Scala and ScalaJS.
+
+## Getting started
+
+To start using *cron4s* in your project just include the library as part of your dependencies:
+
+```
+libraryDependencies += "com.github.alonsodomin" %% "cron4s-core" % "x.y.z"
+```
+
+Or in ScalaJS:
+
+```
+libraryDependencies += "com.github.alonsodomin" %%% "cron4s-core" % "x.y.z"
+```
+
+## How to Use
+
+To start with, we will need to parse a cron expression into a type that  we can work with:
+
+```
+scala> import cron4s._
+import cron4s._
+
+scala> val parsed = Cron("10-35 2,4,6 * * *")
+parsed: Either[String,cron4s.expr.CronExpr] = Right(CronExpr(BetweenExpr(ConstExpr(Minute,10,None),ConstExpr(Minute,35,None)) :: SeveralExpr(Vector(ConstExpr(Hour,6,None), ConstExpr(Hour,4,None), ConstExpr(Hour,2,None))) :: AnyExpr(cron4s.CronUnit$DaysOfMonth$@5db7a772) :: AnyExpr(cron4s.CronUnit$Months$@23379fa9) :: AnyExpr(cron4s.CronUnit$DaysOfWeek$@7008487a) :: HNil))
+```
+
+We will get an `Either[String, CronExpr]`, the right side giving us an error message if
+the parsing has failed. Assuming that we have successfully parsed an expression, there
+are two different things that we can do with it: Using it as a matcher against _DateTime_ objects
+and obtaining the next or previous _DateTime_ to a given one according to the parsed expression.
+
+Now, there are many flavours of _DateTime_ objects in either the JVM or in JS land. *cron4s*
+supports a few out of the box and it also makes it easy to add your own types. Every single
+supported library out of box, or _adapted_ to work with *cron4s* will support the same
+operations with the same semantics. So let's take a look at what are those operations
+
+### Matching against time
+
+We are going to use the brand new Java Time API added to Java 8 as is one of the bests 
+(if not the best) date & time libraries available. To use the built-in support for it we
+need to import a couple of packages:
+
+```
+import java.time._
+import cron4s.java.time._
+```
+
+Now we can perform 2 types of matches against any object that extends `java.time.Temporal`:
+
+```
+scala> val cron: CronExpr = ...
+cron: cron4s.expr.CronExpr = 
+
+scala> val now = LocalDateTime.now
+now: java.time.LocalDateTime = 2016-08-03T18:35:45.982
+
+scala> cron.allOf(now)
+res0: Boolean = false
+
+scala> cron.anyOf(now)
+res1: Boolean = true
+```
+
+`allOf` will evaluate all the fields of the Cron expression against all the fields
+of the _DateTime_ object and it will return `false` if there is any one that does
+not match the sub-expression corresponding to that field. In the other hand, `anyOf`
+will return `true` if there is at least one field in the Cron expression that matches
+it corresponding field.
+
+### Forwarding or Rewinding time
+
+Matching is OK but it's not exactly what Cron expressions are made for. They have
+been created to be able to calculate the following moment in time to a given one,
+and for doing that we have the operation `next`:
+
+```
+scala> cron.next(now)
+res2: Option[java.time.LocalDateTime] = Some(2016-08-04T02:10:45.982)
+```
+
+And of course, we can also get the previous moment in time to a given one:
+
+```
+scala> cron.previous(now)
+res3: Option[java.time.LocalDateTime] = Some(2016-08-03T18:34:45.982)
+```
+
+If for some reason we do not want the next now, but the following to the next one
+we can get it efficiently using the operation `step`:
+
+```
+scala> cron.step(now, 2)
+res4: Option[java.time.LocalDateTime] = Some(2016-08-04T02:11:45.982)
+```
+
+## Built-in library support
+
+These are the libraries that are currently supported:
+
+### At the JVM
+
+ * Java Time API (JSR-310): Package `cron4s.java.time`
+ * Java Calendar: Package `cron4s.java.calendar`
+ * Joda Time: Package `cron4s.joda`
+ 
+### ScalaJS
+
+ * JavaScript `Date` API: Package `cron4s.js`
+ * MomentJS: Package `cron4s.momentjs`
+ 

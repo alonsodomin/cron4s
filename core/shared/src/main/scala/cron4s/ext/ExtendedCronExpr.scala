@@ -10,15 +10,15 @@ import scalaz.PlusEmpty
   */
 abstract class ExtendedCronExpr[DateTime: DateTimeAdapter](expr: CronExpr) {
 
-  def matches(implicit M: PlusEmpty[Matcher]): Matcher[DateTime] = {
+  private[this] def matches(implicit M: PlusEmpty[Matcher]): Matcher[DateTime] = {
     val reducer = new MatcherReducer[DateTime]
     reducer.run(expr)
   }
 
-  def forall: Matcher[DateTime] =
+  def allOf: Matcher[DateTime] =
     matches(Matcher.conjunction)
 
-  def exists: Matcher[DateTime] =
+  def anyOf: Matcher[DateTime] =
     matches(Matcher.disjunction)
 
   @inline
