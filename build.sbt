@@ -22,7 +22,8 @@ val globalSettings = Seq(
 
 lazy val commonJsSettings = Seq(
   scalaJSStage in Test := FastOptStage,
-  scalaJSUseRhino in Global := false
+  scalaJSUseRhino in Global := false,
+  coverageExcludedFiles := ".*"
 )
 
 lazy val noPublishSettings = Seq(
@@ -37,6 +38,7 @@ lazy val cron4s = (project in file(".")).
 
 lazy val cron4sJS = (project in file("js")).
   settings(noPublishSettings).
+  settings(commonJsSettings: _*).
   aggregate(typesJS, coreJS)
 
 lazy val cron4sJVM = (project in file("jvm")).
@@ -60,6 +62,7 @@ lazy val core = (crossProject in file("core")).
     moduleName := "cron4s-core"
   ).
   settings(globalSettings: _*).
+  settings(commonJsSettings: _*).
   settings(Dependencies.core: _*).
   jvmSettings(Dependencies.coreJVM: _*).
   jsSettings(Dependencies.coreJS: _*).

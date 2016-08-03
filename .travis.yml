@@ -15,7 +15,9 @@ cache:
     - $HOME/.ivy2
 
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION clean cron4sJVM/test package
+  - sbt ++$TRAVIS_SCALA_VERSION clean coverage test package
+after_success:
+  - sbt coverageAggregate coverageReport
 
 branches:
   only:
