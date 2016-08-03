@@ -71,6 +71,12 @@ final case class ConstExpr[F <: CronField](field: F, value: Int, textValue: Opti
 
   def matches: Matcher[Int] = equal(value)
 
+  override def step(from: Int, step: Int): Option[(Int, Int)] = {
+    if (from < unit.min || from > unit.max) None
+    else if (step == 0) Some((value, 0))
+    else super.step(from, step)
+  }
+
   override def compare(that: EnumerableExpr[F]): Int = {
     if (value < that.min) 1
     else if (value > that.max) -1

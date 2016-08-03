@@ -1,5 +1,6 @@
 package cron4s.expr
 
+import cron4s.types.Sequential
 import org.scalacheck._
 
 /**
@@ -65,31 +66,10 @@ object BetweenExprSpec extends Properties("BetweenExpr") with ExprGenerators {
     stepSize  <- arbitrary[Int]
   } yield (expr, fromValue, stepSize)
 
-  val forwardStepsInsideRange = for {
-    expr      <- betweenExpressions
-    fromValue <- Gen.choose(expr.unit.min, expr.min)
-    stepSize  <- Gen.posNum[Int] if stepSize > 0
-  } yield (expr, fromValue, stepSize)
-
-  val backwardsStepsInsideRange = for {
-    expr      <- betweenExpressions
-    fromValue <- Gen.choose(expr.max, expr.unit.max)
-    stepSize  <- Gen.negNum[Int] if stepSize < 0
-  } yield (expr, fromValue, stepSize)
-
-  property("stepping forward from before the lower limit returns lower limit") = forAll(forwardStepsInsideRange) {
-    case (expr, fromValue, stepSize) =>
-      (fromValue < expr.min) ==> expr.step(fromValue, stepSize).contains((expr.min, stepSize - 1))
-  }
-
-  property("stepping backwards from before the lower limit returns upper limit") = forAll(backwardsStepsInsideRange) {
-    case (expr, fromValue, stepSize) =>
-      (fromValue > expr.max) ==> expr.step(fromValue, stepSize).contains((expr.max, stepSize + 1))
-  }
-
   property("stepping from inside the range is the same as narrowing the unit") = forAll(stepsIntoInsideRange) {
     case (expr, fromValue, stepSize) =>
-      expr.matches(fromValue) ==> (expr.step(fromValue, stepSize) == expr.unit.narrow(expr.min, expr.max).step(fromValue, stepSize))
+      val rangeStep = Sequential.sequential(expr.range).step(fromValue, stepSize)
+      expr.step(fromValue, stepSize) == rangeStep
   }
 
 }
