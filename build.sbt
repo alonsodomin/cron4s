@@ -17,7 +17,8 @@ val globalSettings = Def.settings(
     "-language:implicitConversions",
     "-language:higherKinds",
     "-language:existentials"
-  )
+  ),
+  releasePublishArtifactsAction := PgpKeys.publishSigned.value
 ) ++ Publish.settings
 
 lazy val commonJsSettings = Seq(
@@ -29,10 +30,7 @@ lazy val commonJsSettings = Seq(
 lazy val noPublishSettings = Seq(
   publish := (),
   publishLocal := (),
-  publishArtifact := false,
-  publishArtifact in (Compile, packageDoc) := false,
-  publishArtifact in (Compile, packageSrc) := false,
-  publishArtifact in (Compile, packageBin) := false
+  publishArtifact := false
 )
 
 lazy val cron4s = (project in file(".")).
@@ -40,19 +38,25 @@ lazy val cron4s = (project in file(".")).
   settings(noPublishSettings).
   aggregate(cron4sJS, cron4sJVM)
 
-lazy val cron4sJS = (project in file("js")).
-  enablePlugins(ScalaJSPlugin).
+lazy val cron4sJS = (project in file(".js")).
+  settings(
+    name := "cron4s",
+    moduleName := "cron4s"
+  ).
   settings(globalSettings: _*).
   settings(commonJsSettings: _*).
-  settings(name := "cron4s").
-  dependsOn(typesJS, coreJS).
-  aggregate(typesJS, coreJS)
+  enablePlugins(ScalaJSPlugin).
+  aggregate(typesJS, coreJS).
+  dependsOn(typesJS, coreJS)
 
-lazy val cron4sJVM = (project in file("jvm")).
+lazy val cron4sJVM = (project in file(".jvm")).
+  settings(
+    name := "cron4s",
+    moduleName := "cron4s"
+  ).
   settings(globalSettings: _*).
-  settings(name := "cron4s").
-  dependsOn(typesJVM, coreJVM).
-  aggregate(typesJVM, coreJVM)
+  aggregate(typesJVM, coreJVM).
+  dependsOn(typesJVM, coreJVM)
 
 lazy val types = (crossProject.crossType(CrossType.Pure) in file("types")).
   settings(

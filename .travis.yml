@@ -18,6 +18,7 @@ script:
   - sbt ++$TRAVIS_SCALA_VERSION clean coverage cron4sJVM/test package
 after_success:
   - sbt coverageAggregate coverageReport
+  - bash <(curl -s https://codecov.io/bash)
 
 branches:
   only:
