@@ -73,8 +73,8 @@ object SeveralExprSpec extends Properties("SeveralExpr") with ExprGenerators {
 
   property("stepping with a non-zero size is the same as stepping inside the internal expression") = forAll(stepsFromInsideRange) {
     case (expr, fromValue, stepSize) =>
-      val internalExpr = Sequential.sequential(expr.range)
-      expr.step(fromValue, stepSize) == internalExpr.step(fromValue, stepSize)
+      val internalRange = Sequential.sequential(expr.range)
+      expr.step(fromValue, stepSize) == internalRange.step(fromValue, stepSize)
   }
 
 }
