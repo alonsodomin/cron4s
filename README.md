@@ -43,9 +43,9 @@ operations with the same semantics. So let's take a look at what are those opera
 
 ### Matching against time
 
-We are going to use the brand new Java Time API added to Java 8 as is one of the bests 
-(if not the best) date & time libraries available. To use the built-in support for it we
-need to import a couple of packages:
+To be able to show examples of how to use **cron4s**, we are going to base them in the brand
+new Java Time API added to Java 8 as is one of the bests (if not the best) date & time
+libraries available. To use the built-in support for it we need to import a couple of packages:
 
 ```
 import java.time._
@@ -92,8 +92,10 @@ scala> cron.previous(now)
 res3: Option[java.time.LocalDateTime] = Some(2016-08-03T18:34:45.982)
 ```
 
-If for some reason we do not want the next now, but the following to the next one
-we can get it efficiently using the operation `step`:
+If for some reason we do not want the next one, but the following to the next one,
+then we could recursively invoke the `next` operation in any subsequent generated
+time; or we can get it more efficiently using the operation `step` and telling it
+how big is the step size that we want to make:
 
 ```
 scala> cron.step(now, 2)
