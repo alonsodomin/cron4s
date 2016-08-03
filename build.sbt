@@ -4,7 +4,7 @@ scalaVersion in ThisBuild := "2.11.8"
 // TODO The parser combinators lib needs to support multiple Scala/ScalaJS versions to enable this
 //crossScalaVersions in ThisBuild := Seq("2.10.4", "2.11.8", "2.12.0-M5")
 
-val globalSettings = Seq(
+val globalSettings = Def.settings(
   name := "cron4s",
   organization := "com.github.alonsodomin",
   scalacOptions ++= Seq(
@@ -18,7 +18,7 @@ val globalSettings = Seq(
     "-language:higherKinds",
     "-language:existentials"
   )
-)
+) ++ Publish.settings
 
 lazy val commonJsSettings = Seq(
   scalaJSStage in Test := FastOptStage,
@@ -29,20 +29,29 @@ lazy val commonJsSettings = Seq(
 lazy val noPublishSettings = Seq(
   publish := (),
   publishLocal := (),
-  publishArtifact := false
+  publishArtifact := false,
+  publishArtifact in (Compile, packageDoc) := false,
+  publishArtifact in (Compile, packageSrc) := false,
+  publishArtifact in (Compile, packageBin) := false
 )
 
 lazy val cron4s = (project in file(".")).
+  settings(globalSettings).
   settings(noPublishSettings).
   aggregate(cron4sJS, cron4sJVM)
 
 lazy val cron4sJS = (project in file("js")).
-  settings(noPublishSettings).
+  enablePlugins(ScalaJSPlugin).
+  settings(globalSettings: _*).
   settings(commonJsSettings: _*).
+  settings(name := "cron4s").
+  dependsOn(typesJS, coreJS).
   aggregate(typesJS, coreJS)
 
 lazy val cron4sJVM = (project in file("jvm")).
-  settings(noPublishSettings).
+  settings(globalSettings: _*).
+  settings(name := "cron4s").
+  dependsOn(typesJVM, coreJVM).
   aggregate(typesJVM, coreJVM)
 
 lazy val types = (crossProject.crossType(CrossType.Pure) in file("types")).
