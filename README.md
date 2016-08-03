@@ -117,6 +117,12 @@ These are the libraries that are currently supported:
  * JavaScript `Date` API: Package `cron4s.js`
  * MomentJS: Package `cron4s.momentjs`
  
+## Status
+
+At the moment the library should be considered as experimental and not ready
+for production yet. APIs might change and there are some [issues](https://github.com/alonsodomin/cron4s/issues) to get sorted
+out before a formal release is done.
+ 
 ## License
 
 Copyright 2016 Antonio Alonso Dominguez
