@@ -24,29 +24,34 @@ object ExprParsersSpec extends Properties("ExprParsers") with ExprParsers with I
   def verifyConst[F <: CronField](parser: Parser[ConstExpr[F]], input: String)(verify: ConstExpr[F] => Boolean): Boolean =
     verifyParsed[F, ConstExpr[F]](parser, input)(verify)
 
-  property("Should be able to parse minutes") = forAll(Gen.choose(0, 59)) {
+  property("should be able to parse minutes") = forAll(Gen.choose(0, 59)) {
     x => verifyConst(minute, x.toString) { expr => expr.value == x }
   }
 
-  property("Should be able to parse hours") = forAll(Gen.choose(0, 23)) {
+  property("should be able to parse hours") = forAll(Gen.choose(0, 23)) {
     x => verifyConst(hour, x.toString) { expr => expr.value == x }
   }
 
-  property("Should be able to parse days of month") = forAll(Gen.choose(1, 31)) {
+  property("should be able to parse days of month") = forAll(Gen.choose(1, 31)) {
     x => verifyConst(dayOfMonth, x.toString) { expr => expr.value == x }
   }
 
-  property("Should be able to parse numeric months") = forAll(Gen.choose(1, 12)) {
+  property("should be able to parse numeric months") = forAll(Gen.choose(1, 12)) {
     x => verifyConst(month, x.toString) { expr => expr.value == x && expr.textValue.isEmpty }
   }
-  property("Should be able to parse named months") = forAll(Gen.oneOf(Months.textValues)) {
+  property("should be able to parse named months") = forAll(Gen.oneOf(Months.textValues)) {
     x => verifyConst(month, x) { expr =>
       expr.textValue.contains(x) && expr.matches(Months.textValues.indexOf(x) + 1)
     }
   }
 
-  property("Should be able to parse numeric days of week") = forAll(Gen.choose(0, 6)) {
+  property("should be able to parse numeric days of week") = forAll(Gen.choose(0, 6)) {
     x => verifyConst(dayOfWeek, x.toString) { _.value == x }
+  }
+  property("should be able to parse named days of week") = forAll(Gen.oneOf(DaysOfWeek.textValues)) {
+    x => verifyConst(dayOfWeek, x) { expr =>
+      expr.textValue.contains(x) && expr.matches(DaysOfWeek.textValues.indexOf(x))
+    }
   }
 
 }
