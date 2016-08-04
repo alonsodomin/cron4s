@@ -79,13 +79,13 @@ object EveryExprSpec extends Properties("EveryExpr") with ExprGenerators {
   property("next is the same as next in the internal sequence") = forAll(valuesWithinRange) {
     case (expr, fromValue) =>
       val seq = Sequential.sequential(expr.range)
-      expr.next(fromValue) == seq.step(fromValue, expr.freq)
+      expr.next(fromValue) == seq.step(fromValue, expr.freq).map(_._1)
   }
 
   property("previous is the same as previous in the internal sequence") = forAll(valuesWithinRange) {
     case (expr, fromValue) =>
       val seq = Sequential.sequential(expr.range)
-      expr.previous(fromValue) == seq.step(fromValue, expr.freq * -1)
+      expr.previous(fromValue) == seq.step(fromValue, expr.freq * -1).map(_._1)
   }
 
 }
