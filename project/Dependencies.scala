@@ -44,13 +44,9 @@ object Dependencies {
     )
   }
 
-  lazy val cats = Def.settings {
+  lazy val types = Def.settings {
     libraryDependencies ++= Seq(
-      compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full),
-      compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
-
-      "com.github.mpilquist" %%% "simulacrum" % version.simulacrum,
-      "org.typelevel"        %%% "cats"       % version.cats
+      "org.scalacheck" %%% "scalacheck" % version.scalacheck % Test
     )
   }
 

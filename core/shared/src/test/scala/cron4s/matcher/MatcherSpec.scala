@@ -97,7 +97,15 @@ object MatcherSpec extends Properties("Matcher") {
   } yield (list, value)
 
   property("none") = forAll(matcherList) {
-    case (list, value) => (none(list)).apply(value) == not(allOf(list))(value)
+    case (list, value) => none(list).apply(value) == not(allOf(list))(value)
+  }
+
+  property("anyOf") = forAll(matcherList) {
+    case (list, value) => anyOf(list).apply(value) == list.exists(_(value))
+  }
+
+  property("allOf") = forAll(matcherList) {
+    case (list, value) => allOf(list).apply(value) == list.forall(_(value))
   }
 
 }

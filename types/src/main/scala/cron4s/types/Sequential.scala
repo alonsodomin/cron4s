@@ -18,7 +18,8 @@ object Sequential {
   def sequential(seq: IndexedSeq[Int]): Sequential[Int] = new Sequential[Int] {
 
     def step(v: Int, amount: Int): Option[(Int, Int)] = {
-      if (amount == 0) Some((v, 0))
+      if (seq.isEmpty) None
+      else if (amount == 0) Some((v, 0))
       else {
         val index = seq.lastIndexWhere(v >= _)
         val cursor = index + amount

@@ -87,7 +87,8 @@ lazy val types = (crossProject.crossType(CrossType.Pure) in file("types")).
     moduleName := "cron4s-types"
   ).
   settings(globalSettings: _*).
-  settings(commonJsSettings: _*)
+  settings(commonJsSettings: _*).
+  settings(Dependencies.types: _*)
 
 lazy val typesJS = types.js
 lazy val typesJVM = types.jvm
