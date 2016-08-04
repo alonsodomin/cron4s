@@ -8,6 +8,24 @@ object CronUnitSpec extends Properties("CronUnit") with BaseGenerators {
   import Prop._
   import Arbitrary.arbitrary
 
+  val unitsAndIndexes = for {
+    unit  <- cronUnits
+    index <- Gen.choose(0, unit.range.size - 1)
+  } yield unit -> index
+
+  property("apply should return the same as apply in the actual unit range") = forAll(unitsAndIndexes) {
+    case (unit, index) => unit(index) == Some(unit.range(index))
+  }
+
+  val unitsAndIndexesOutOfBounds = for {
+    unit  <- cronUnits
+    index <- arbitrary[Int] if index < 0 || index >= unit.range.size
+  } yield unit -> index
+
+  property("apply with index out of bounds returns None") = forAll(unitsAndIndexesOutOfBounds) {
+    case (unit, index) => unit(index) == None
+  }
+
   val unitsAndValues = for {
     unit  <- cronUnits
     value <- Gen.choose(unit.min, unit.max)
