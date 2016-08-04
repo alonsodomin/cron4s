@@ -15,6 +15,8 @@ val globalSettings = Def.settings(
     "-unchecked",
     "-deprecation",
     "-Xfuture",
+    "-Xlint",
+    "-Xfatal-warnings",
     "-Ywarn-dead-code",
     "-language:implicitConversions",
     "-language:higherKinds",

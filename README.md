@@ -4,6 +4,8 @@
 [![Scala.js](http://scala-js.org/assets/badges/scalajs-0.6.8.svg)](http://scala-js.org)
 [![License](http://img.shields.io/:license-Apache%202-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7580c36bb6ec4f0888d6ac8213340f4d)](https://www.codacy.com/app/alonso-domin/cron4s?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=alonsodomin/cron4s&amp;utm_campaign=Badge_Grade)
+
 Idiomatic Cron expression parsing in Scala and ScalaJS.
 
 ## Getting started
@@ -112,18 +114,18 @@ These are the libraries that are currently supported:
  * Java Time API (JSR-310): Package `cron4s.java.time`
  * Java Calendar: Package `cron4s.java.calendar`
  * Joda Time: Package `cron4s.joda`
- 
+
 ### ScalaJS
 
  * JavaScript `Date` API: Package `cron4s.js`
  * MomentJS: Package `cron4s.momentjs`
- 
+
 ## Status
 
 At the moment the library should be considered as experimental and not ready
 for production yet. APIs might change and there are some [issues](https://github.com/alonsodomin/cron4s/issues) to get sorted
 out before a formal release is done.
- 
+
 ## License
 
 Copyright 2016 Antonio Alonso Dominguez

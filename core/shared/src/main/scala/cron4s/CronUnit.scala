@@ -12,12 +12,11 @@ sealed trait CronUnit[F <: CronField]
     extends Sequential[Int] with Bound[Int] with Indexed[Int] {
 
   def apply(index: Int): Option[Int] = {
-    if (index < 0 || index >= size) None
+    if (index < 0 || index > max) None
     else Some(range(index))
   }
 
   def field: F
-  def size: Int
 
   val range: IndexedSeq[Int]
 }
@@ -27,7 +26,9 @@ object CronUnit {
 
   @inline def apply[F <: CronField](implicit unit: CronUnit[F]): CronUnit[F] = unit
 
-  private[cron4s] abstract class BaseCronUnit[F <: CronField](val min: Int, val max: Int, val field: F) extends CronUnit[F] {
+  private[cron4s] abstract class BaseCronUnit[F <: CronField](
+      val min: Int, val max: Int, val field: F
+    ) extends CronUnit[F] {
 
     def step(from: Int, step: Int): Option[(Int, Int)] = {
       if (from < min || from > max) None
@@ -38,8 +39,6 @@ object CronUnit {
       if (v < min || v > max) None
       else Some(v - min)
     }
-
-    def size: Int = (max - min) + 1
 
     val range: IndexedSeq[Int] = min to max
 

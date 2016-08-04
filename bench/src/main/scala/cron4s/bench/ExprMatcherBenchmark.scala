@@ -1,5 +1,6 @@
 package cron4s.bench
 
+import cron4s._
 import cron4s.expr._
 import org.openjdk.jmh.annotations._
 
