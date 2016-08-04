@@ -59,4 +59,6 @@ object CronUnit {
     val textValues = IndexedSeq("mon", "tue", "wed", "thu", "fri", "sat", "sun")
   }
 
+  final val All: Seq[CronUnit[_ <: CronField]] = Seq(Minutes, Hours, DaysOfMonth, Months, DaysOfWeek)
+
 }

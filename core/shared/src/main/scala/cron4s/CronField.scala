@@ -12,4 +12,6 @@ object CronField {
   case object Month extends CronField
   case object DayOfWeek extends CronField
 
+  final val All: Seq[CronField] = Seq(Minute, Hour, DayOfMonth, Month, DayOfWeek)
+
 }

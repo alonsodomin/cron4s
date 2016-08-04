@@ -9,11 +9,14 @@ object Dependencies {
     val cats        = "0.6.0"
     val scalaz      = "7.2.1"
     val shapeless   = "2.3.1"
-    val scalacheck  = "1.12.5"
+
     val momentjs    = "0.1.5"
     val jodaTime    = "2.9.4"
     val jodaConvert = "1.8.1"
     val parserComb  = "1.0.2"
+
+    val scalacheck  = "1.12.5"
+    val scalatest   = "3.0.0"
   }
 
   lazy val core = Def.settings {
@@ -24,7 +27,8 @@ object Dependencies {
       "com.chuusai"    %%% "shapeless"                 % version.shapeless,
       "org.scalaz"     %%% "scalaz-core"               % version.scalaz,
       "org.scalaz"     %%% "scalaz-scalacheck-binding" % version.scalaz     % Test,
-      "org.scalacheck" %%% "scalacheck"                % version.scalacheck % Test
+      "org.scalacheck" %%% "scalacheck"                % version.scalacheck % Test,
+      "org.scalatest"  %%% "scalatest"                 % version.scalatest  % Test
     )
   }
 

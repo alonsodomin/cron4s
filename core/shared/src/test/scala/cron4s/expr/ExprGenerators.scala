@@ -31,7 +31,7 @@ trait ExprGenerators extends BaseGenerators {
 
   // Helper methods able to construct an expression from a `CronUnit` value
 
-  private[this] def createAny[U](unit: U)(implicit isUnit: IsCronUnit[U]): AnyExpr[isUnit.F] =
+  protected def createAny[U](unit: U)(implicit isUnit: IsCronUnit[U]): AnyExpr[isUnit.F] =
     AnyExpr[isUnit.F]()(isUnit(unit))
 
   private[this] def createConst[U](unit: U, value: Int)(implicit isUnit: IsCronUnit[U]): ConstExpr[isUnit.F] =
