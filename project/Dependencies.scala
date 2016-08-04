@@ -21,15 +21,16 @@ object Dependencies {
       compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full),
       compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
 
-      "com.chuusai"    %%% "shapeless"   % version.shapeless,
-      "org.scalaz"     %%% "scalaz-core" % version.scalaz,
-      "org.scalacheck" %%% "scalacheck"  % version.scalacheck % Test
+      "com.chuusai"    %%% "shapeless"                 % version.shapeless,
+      "org.scalaz"     %%% "scalaz-core"               % version.scalaz,
+      "org.scalaz"     %%% "scalaz-scalacheck-binding" % version.scalaz     % Test,
+      "org.scalacheck" %%% "scalacheck"                % version.scalacheck % Test
     )
   }
 
   lazy val coreJS = Def.settings(
     libraryDependencies ++= Seq(
-      "io.github.widok" %%% "scala-js-momentjs"        % version.momentjs % Optional,
+      "io.github.widok" %%% "scala-js-momentjs"        % version.momentjs   % Optional,
       "org.scala-js"    %%% "scala-parser-combinators" % version.parserComb
     ),
     jsDependencies += RuntimeDOM % Test
@@ -37,7 +38,7 @@ object Dependencies {
 
   lazy val coreJVM = Def.settings {
     libraryDependencies ++= Seq(
-      "joda-time"               % "joda-time"                % version.jodaTime % Optional,
+      "joda-time"               % "joda-time"                % version.jodaTime    % Optional,
       "org.joda"                % "joda-convert"             % version.jodaConvert % Optional,
       "org.scala-lang.modules" %% "scala-parser-combinators" % version.parserComb
     )
