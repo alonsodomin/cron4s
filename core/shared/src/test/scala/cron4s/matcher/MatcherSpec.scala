@@ -9,7 +9,8 @@ import scalaz.scalacheck.ScalazProperties._
 /**
   * Created by alonsodomin on 04/08/2016.
   */
-class MatcherSpec extends Properties("Matcher") {
+object MatcherSpec extends Properties("Matcher") {
+  import Prop._
   import Arbitrary.arbitrary
 
   implicit lazy val arbitraryMatcher = Arbitrary[Matcher[Int]] {
@@ -28,11 +29,48 @@ class MatcherSpec extends Properties("Matcher") {
 
   object disjunction {
     implicit val instance = Matcher.disjunction
-    checkAll("Matcher", plusEmpty.laws[Matcher])
+
+    def check() = {
+      checkAll("Matcher", plusEmpty.laws[Matcher])
+    }
   }
   object conjuction {
     implicit val instance = Matcher.conjunction
-    checkAll("Matcher", plusEmpty.laws[Matcher])
+
+    def check() = {
+      checkAll("Matcher", plusEmpty.laws[Matcher])
+    }
+  }
+
+  disjunction.check()
+  conjuction.check()
+
+  val matchersAndValues = for {
+    matcher <- arbitrary[Matcher[Int]]
+    value   <- arbitrary[Int]
+  } yield (matcher, value)
+
+  property("not") = forAll(matchersAndValues) {
+    case (matcher, value) => !matcher(value) == {
+      val res = matcher(value)
+      !res
+    }
+  }
+
+  val pairsOfMatchers = for {
+    leftMatcher  <- arbitrary[Matcher[Int]]
+    rightMatcher <- arbitrary[Matcher[Int]]
+    value        <- arbitrary[Int]
+  } yield (leftMatcher, rightMatcher, value)
+
+  property("and") = forAll(pairsOfMatchers) {
+    case (left, right, value) =>
+      (left && right)(value) == (left(value) && right(value))
+  }
+
+  property("or") = forAll(pairsOfMatchers) {
+    case (left, right, value) =>
+      (left || right)(value) == (left(value) || right(value))
   }
 
 }
