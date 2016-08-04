@@ -51,10 +51,7 @@ object MatcherSpec extends Properties("Matcher") {
   } yield (matcher, value)
 
   property("not") = forAll(matchersAndValues) {
-    case (matcher, value) => !matcher(value) == {
-      val res = matcher(value)
-      !res
-    }
+    case (matcher, value) => (!matcher)(value) == !matcher(value)
   }
 
   val pairsOfMatchers = for {
@@ -71,6 +68,36 @@ object MatcherSpec extends Properties("Matcher") {
   property("or") = forAll(pairsOfMatchers) {
     case (left, right, value) =>
       (left || right)(value) == (left(value) || right(value))
+  }
+
+  val alwaysMatchers = for {
+    returnVal <- arbitrary[Boolean]
+    matcher   <- Gen.const(always[Int](returnVal))
+    value     <- arbitrary[Int]
+  } yield (matcher, returnVal, value)
+
+  property("always") = forAll(alwaysMatchers) {
+    case (matcher, returnVal, value) => matcher(value) == returnVal
+  }
+
+  val negatedMatchers = for {
+    matcher <- arbitrary[Matcher[Int]]
+    negated <- Gen.const(not(matcher))
+    value   <- arbitrary[Int]
+  } yield (matcher, negated, value)
+
+  property("negated") = forAll(negatedMatchers) {
+    case (matcher, negated, value) =>
+      negated(value) == !matcher(value)
+  }
+
+  val matcherList = for {
+    list  <- Gen.listOf(arbitrary[Matcher[Int]])
+    value <- arbitrary[Int]
+  } yield (list, value)
+
+  property("none") = forAll(matcherList) {
+    case (list, value) => (none(list)).apply(value) == not(allOf(list))(value)
   }
 
 }
