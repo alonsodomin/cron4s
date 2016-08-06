@@ -14,7 +14,7 @@ import scala.util.Try
 object joda {
   import CronField._
 
-  implicit def adapter[DT <: AbstractInstant]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
+  implicit def jodaTimeAdapter[DT <: AbstractInstant]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
 
     private[this] def mapField[F <: CronField](field: F): DateTimeFieldType = field match {
       case Minute     => DateTimeFieldType.minuteOfHour()

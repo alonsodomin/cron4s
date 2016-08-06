@@ -11,7 +11,7 @@ import scala.scalajs.js.Date
 object js {
   import CronField._
 
-  implicit object Adapter extends DateTimeAdapter[Date] {
+  implicit object JsAdapter extends DateTimeAdapter[Date] {
     override def get[F <: CronField](dateTime: Date, field: F): Option[Int] = field match {
       case Minute     => Some(dateTime.getMinutes())
       case Hour       => Some(dateTime.getHours())

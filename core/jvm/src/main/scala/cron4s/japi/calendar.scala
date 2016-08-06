@@ -12,7 +12,7 @@ import cron4s.ext.{DateTimeAdapter, ExtendedCronExpr, ExtendedExpr}
 object calendar {
   import CronField._
 
-  implicit object Adapter extends DateTimeAdapter[Calendar] {
+  implicit object JavaCalendarAdapter extends DateTimeAdapter[Calendar] {
 
     override def get[F <: CronField](dateTime: Calendar, field: F): Option[Int] = Some(field match {
       case Minute     => dateTime.get(Calendar.MINUTE)

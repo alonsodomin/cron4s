@@ -12,7 +12,7 @@ import cron4s.ext._
 object time {
   import CronField._
 
-  implicit def adapter[DT <: Temporal]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
+  implicit def javaTimeAdapter[DT <: Temporal]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
 
     private[this] def mapField(field: CronField): TemporalField = field match {
       case Minute     => ChronoField.MINUTE_OF_HOUR

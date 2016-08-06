@@ -2,6 +2,7 @@ package cron4s.ext
 
 import cron4s._
 import cron4s.expr.{CronExpr, Expr}
+
 import org.scalacheck.{Arbitrary, Gen}
 
 /**

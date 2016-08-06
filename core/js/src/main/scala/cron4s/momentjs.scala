@@ -11,7 +11,7 @@ import org.widok.moment.Date
 object momentjs {
   import CronField._
 
-  implicit object Adapter extends DateTimeAdapter[Date] {
+  implicit object MomentJSAdapter extends DateTimeAdapter[Date] {
 
     override def get[F <: CronField](dateTime: Date, field: F): Option[Int] = field match {
       case Minute => Some(dateTime.minute())
