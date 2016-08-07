@@ -37,6 +37,8 @@ lazy val noPublishSettings = Seq(
 )
 
 lazy val coverageSettings = Seq(
+  coverageMinimum := 60,
+  coverageFailOnMinimum := false,
   coverageHighlighting := true,
   coverageExcludedPackages := "cron4s\\.bench\\..*",
   // don't include scoverage as a dependency in the pom
