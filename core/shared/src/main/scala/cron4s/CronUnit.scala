@@ -11,6 +11,8 @@ import scala.annotation.implicitNotFound
 sealed trait CronUnit[F <: CronField]
     extends Sequential[Int] with Bound[Int] with Indexed[Int] {
 
+  type FieldType = F
+
   def apply(index: Int): Option[Int] = {
     if (index < 0 || index > max) None
     else Some(range(index))

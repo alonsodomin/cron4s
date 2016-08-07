@@ -11,6 +11,7 @@ import Scalaz._
   * Created by alonsodomin on 07/11/2015.
   */
 sealed trait Expr[F <: CronField] extends Sequential[Int] {
+  type FieldType = F
 
   def matches: Matcher[Int]
 
