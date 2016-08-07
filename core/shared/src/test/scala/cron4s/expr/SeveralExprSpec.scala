@@ -15,21 +15,15 @@ object SeveralExprSpec extends Properties("SeveralExpr") with ExprGenerators {
   import Arbitrary.arbitrary
 
   property("min should be the min value of the head") = forAll(severalExpressions) {
-    expr => classify(expr.values.size > 5, "large", "small") {
-      expr.min == expr.values.head.min
-    }
+    expr => expr.min == expr.values.head.min
   }
 
   property("max should be the max value of the last") = forAll(severalExpressions) {
-    expr => classify(expr.values.size > 5, "large", "small") {
-      expr.max == expr.values.last.max
-    }
+    expr => expr.max == expr.values.last.max
   }
 
   property("range must be the distinct sum of the ranges of its elements") = forAll(severalExpressions) {
-    expr => classify(expr.values.size > 5, "large", "small") {
-      expr.range == expr.values.flatMap(_.range).distinct.sorted
-    }
+    expr => expr.range == expr.values.flatMap(_.range).distinct.sorted
   }
 
   val valuesOutsideRange = for {

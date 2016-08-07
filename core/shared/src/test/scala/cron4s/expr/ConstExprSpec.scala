@@ -66,7 +66,7 @@ object ConstExprSpec extends Properties("ConstExpr") with ExprGenerators {
 
   property("stepping from value after const returns same const without consuming steps") = forAll(stepsFromInsideRange) {
     case (expr, fromValue, stepSize) =>
-      (fromValue > expr.value && stepSize != 0) ==> expr.step(fromValue, stepSize).contains((expr.value, stepSize))
+      (fromValue >= expr.value && stepSize != 0) ==> expr.step(fromValue, stepSize).contains((expr.value, stepSize))
   }
 
 }

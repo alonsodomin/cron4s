@@ -20,7 +20,9 @@ object Sequential {
     def step(v: Int, amount: Int): Option[(Int, Int)] = {
       if (seq.isEmpty) None
       else if (amount == 0) Some((v, 0))
-      else {
+      else if (min == max && v >= max) {
+        Some(min -> amount)
+      } else {
         val index = seq.lastIndexWhere(v >= _)
         val cursor = index + amount
         val newIdx = {

@@ -13,6 +13,9 @@ final case class CronExpr(repr: CronExprRepr) {
   lazy val months = repr.select[Expr[CronField.Month.type]]
   lazy val daysOfWeek = repr.select[Expr[CronField.DayOfWeek.type]]
 
+  def timePart = repr.take(2)
+  def datePart = repr.drop(2)
+
   def field[F <: CronField : CronUnit](f: F): Expr[F] = f match {
     case CronField.Minute     => minutes.asInstanceOf[Expr[F]]
     case CronField.Hour       => hours.asInstanceOf[Expr[F]]

@@ -34,7 +34,7 @@ private[ext] final class MatcherReducer[DateTime](implicit M: PlusEmpty[Matcher]
     implicit def caseAny = use(fuseMatchers _)
   }
 
-  def run(expr: CronExpr) = expr.repr.
+  def run(expr: CronExpr): Matcher[DateTime] = expr.repr.
     map(exprToMatcher).
     foldLeft(M.empty[DateTime])(combine)
 
