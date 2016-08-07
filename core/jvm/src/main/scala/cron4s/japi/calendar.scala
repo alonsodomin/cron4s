@@ -14,26 +14,32 @@ object calendar {
 
   implicit object JavaCalendarAdapter extends DateTimeAdapter[Calendar] {
 
-    override def get[F <: CronField](dateTime: Calendar, field: F): Option[Int] = Some(field match {
-      case Minute     => dateTime.get(Calendar.MINUTE)
-      case Hour       => dateTime.get(Calendar.HOUR_OF_DAY)
-      case DayOfMonth => dateTime.get(Calendar.DAY_OF_MONTH)
-      case Month      => dateTime.get(Calendar.MONTH)
-      case DayOfWeek  => dateTime.get(Calendar.DAY_OF_WEEK)
-    })
+    override def get[F <: CronField](dateTime: Calendar, field: F): Option[Int] = {
+      val value = field match {
+        case Minute     => dateTime.get(Calendar.MINUTE)
+        case Hour       => dateTime.get(Calendar.HOUR_OF_DAY)
+        case DayOfMonth => dateTime.get(Calendar.DAY_OF_MONTH)
+        case Month      => dateTime.get(Calendar.MONTH) + 1
+        case DayOfWeek  =>
+          val dayOfWeek = dateTime.get(Calendar.DAY_OF_WEEK)
+          (dayOfWeek - 2) % 7
+      }
+      Some(value)
+    }
 
     override def set[F <: CronField](dateTime: Calendar, field: F, value: Int): Option[Calendar] = {
       def setter(set: Calendar => Unit): Calendar = {
-        set(dateTime)
-        dateTime
+        val newDateTime = dateTime.clone().asInstanceOf[Calendar]
+        set(newDateTime)
+        newDateTime
       }
 
       Some(field match {
         case Minute     => setter(_.set(Calendar.MINUTE, value))
         case Hour       => setter(_.set(Calendar.HOUR_OF_DAY, value))
         case DayOfMonth => setter(_.set(Calendar.DAY_OF_MONTH, value))
-        case Month      => setter(_.set(Calendar.MONTH, value))
-        case DayOfWeek  => setter(_.set(Calendar.DAY_OF_WEEK, value))
+        case Month      => setter(_.set(Calendar.MONTH, value - 1))
+        case DayOfWeek  => setter(_.set(Calendar.DAY_OF_WEEK, (value + 2) % 7))
       })
     }
   }
