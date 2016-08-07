@@ -28,4 +28,12 @@ class ExtendedCronExprSpec extends Properties("ExtendedCronExpr") {
     case (expr, dt) => expr.allOf(dt) && expr.anyOf(dt)
   }
 
+  property("next is equals to step with 1") = forAll(anyDateCombinations) {
+    case (expr, dt) => expr.next(dt) == expr.step(dt, 1)
+  }
+
+  property("previous is equals to step with -1") = forAll(anyDateCombinations) {
+    case (expr, dt) => expr.previous(dt) == expr.step(dt, -1)
+  }
+
 }

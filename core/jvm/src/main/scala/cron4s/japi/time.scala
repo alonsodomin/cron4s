@@ -32,8 +32,10 @@ object time {
 
     override def set[F <: CronField](dateTime: DT, field: F, value: Int): Option[DT] = {
       val temporalField = mapField(field)
+
+      val offset = if (field == DayOfWeek) 1 else 0
       if (!dateTime.isSupported(temporalField)) None
-      else Some(dateTime.`with`(temporalField, value.toLong).asInstanceOf[DT])
+      else Some(dateTime.`with`(temporalField, value.toLong + offset).asInstanceOf[DT])
     }
 
   }
