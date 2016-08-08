@@ -3,10 +3,7 @@ package cron4s
 import cron4s.expr._
 import cron4s.ext._
 
-import org.joda.time.DateTimeFieldType
-import org.joda.time.base.AbstractInstant
-
-import scala.util.Try
+import org.joda.time.{DateTime, DateTimeFieldType}
 
 /**
   * Created by domingueza on 29/07/2016.
@@ -14,7 +11,7 @@ import scala.util.Try
 object joda {
   import CronField._
 
-  implicit def jodaTimeAdapter[DT <: AbstractInstant]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
+  implicit object JodaTimeAdapter extends DateTimeAdapter[DateTime] {
 
     private[this] def mapField[F <: CronField](field: F): DateTimeFieldType = field match {
       case Minute     => DateTimeFieldType.minuteOfHour()
@@ -24,19 +21,21 @@ object joda {
       case DayOfWeek  => DateTimeFieldType.dayOfWeek()
     }
 
-    override def get[F <: CronField](dateTime: DT, field: F): Option[Int] =
-      Try(dateTime.get(mapField(field))).toOption
+    override def get[F <: CronField](dateTime: DateTime, field: F): Option[Int] = {
+      val jodaField = mapField(field)
 
-    override def set[F <: CronField](dateTime: DT, field: F, value: Int): Option[DT] = {
-      Try {
-        val mutableDate = dateTime.toMutableDateTime
-        mutableDate.set(mapField(field), value)
-        mutableDate.asInstanceOf[DT]
-      } toOption
+      if (!dateTime.isSupported(jodaField)) None
+      else Some(dateTime.get(jodaField))
+    }
+
+    override def set[F <: CronField](dateTime: DateTime, field: F, value: Int): Option[DateTime] = {
+      val jodaField = mapField(field)
+      if (!dateTime.isSupported(jodaField)) None
+      else Some(dateTime.withField(jodaField, value))
     }
   }
 
-  implicit class JodaCronExpr[DT <: AbstractInstant](expr: CronExpr) extends ExtendedCronExpr[DT](expr)
-  implicit class JodaExpr[F <: CronField, DT <: AbstractInstant](expr: Expr[F]) extends ExtendedExpr[F, DT](expr)
+  implicit class JodaCronExpr(expr: CronExpr) extends ExtendedCronExpr[DateTime](expr)
+  implicit class JodaExpr[F <: CronField](expr: Expr[F]) extends ExtendedExpr[F, DateTime](expr)
 
 }
