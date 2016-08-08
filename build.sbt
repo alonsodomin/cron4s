@@ -27,7 +27,8 @@ val globalSettings = Def.settings(
 
 lazy val commonJsSettings = Seq(
   scalaJSStage in Test := FastOptStage,
-  scalaJSUseRhino in Global := false
+  scalaJSUseRhino in Global := false,
+  coverageExcludedFiles := ".*"
 )
 
 lazy val noPublishSettings = Seq(

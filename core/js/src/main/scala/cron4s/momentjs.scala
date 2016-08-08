@@ -21,7 +21,9 @@ object momentjs {
       case DayOfWeek => Some(dateTime.isoWeekday())
     }
 
-    override def set[F <: CronField](dateTime: Date, field: F, value: Int): Option[Date] = ???
+    override def set[F <: CronField](dateTime: Date, field: F, value: Int): Option[Date] = {
+      ???
+    }
   }
 
   implicit class MomentJSCronExpr(expr: CronExpr) extends ExtendedCronExpr[Date](expr)
