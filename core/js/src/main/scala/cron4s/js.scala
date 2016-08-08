@@ -12,27 +12,37 @@ object js {
   import CronField._
 
   implicit object JsAdapter extends DateTimeAdapter[Date] {
-    override def get[F <: CronField](dateTime: Date, field: F): Option[Int] = field match {
-      case Minute     => Some(dateTime.getMinutes())
-      case Hour       => Some(dateTime.getHours())
-      case DayOfMonth => Some(dateTime.getDate())
-      case Month      => Some(dateTime.getMonth() + 1)
-      case DayOfWeek  => Some(dateTime.getDay())
+    override def get[F <: CronField](dateTime: Date, field: F): Option[Int] = {
+      val value = field match {
+        case Minute     => dateTime.getMinutes()
+        case Hour       => dateTime.getHours()
+        case DayOfMonth => dateTime.getDate()
+        case Month      => dateTime.getMonth() + 1
+        case DayOfWeek  =>
+          val dayOfWeek = dateTime.getDay()
+          (dayOfWeek - 1) % 7
+      }
+
+      Some(value)
     }
 
     override def set[F <: CronField](dateTime: Date, field: F, value: Int): Option[Date] = {
       def setter(setter: Date => Unit): Date = {
-        setter(dateTime)
-        dateTime
+        val newDateTime = new Date(dateTime.getTime())
+        setter(newDateTime)
+        newDateTime
       }
 
-      field match {
-        case Minute     => Some(setter(_.setMinutes(value)))
-        case Hour       => Some(setter(_.setHours(value)))
-        case DayOfMonth => Some(setter(_.setDate(value)))
-        case Month      => Some(setter(_.setMonth(value)))
-        case DayOfWeek  => Some(dateTime)
-      }
+      Some(field match {
+        case Minute     => setter(_.setMinutes(value))
+        case Hour       => setter(_.setHours(value))
+        case DayOfMonth => setter(_.setDate(value))
+        case Month      => setter(_.setMonth(value - 1))
+        case DayOfWeek  =>
+          val dayToSet = (value + 1) % 7
+          val offset = dayToSet - dateTime.getDay()
+          setter(d => d.setDate(d.getDate() + offset))
+      })
     }
   }
 

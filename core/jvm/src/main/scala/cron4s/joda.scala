@@ -23,15 +23,18 @@ object joda {
 
     override def get[F <: CronField](dateTime: DateTime, field: F): Option[Int] = {
       val jodaField = mapField(field)
+      val offset = if (field == DayOfWeek) -1 else 0
 
       if (!dateTime.isSupported(jodaField)) None
-      else Some(dateTime.get(jodaField))
+      else Some(dateTime.get(jodaField) + offset)
     }
 
     override def set[F <: CronField](dateTime: DateTime, field: F, value: Int): Option[DateTime] = {
       val jodaField = mapField(field)
+      val offset = if (field == DayOfWeek) 1 else 0
+
       if (!dateTime.isSupported(jodaField)) None
-      else Some(dateTime.withField(jodaField, value))
+      else Some(dateTime.withField(jodaField, value + offset))
     }
   }
 
