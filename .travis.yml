@@ -12,8 +12,12 @@ cache:
     - $HOME/.sbt
     - $HOME/.ivy2
 
+before_install:
+  - npm install -g phantomjs-prebuilt
+
 script:
   - sbt ++$TRAVIS_SCALA_VERSION clean coverage test
+
 after_success:
   - sbt coverageReport && sbt coverageAggregate
   - bash <(curl -s https://codecov.io/bash)
