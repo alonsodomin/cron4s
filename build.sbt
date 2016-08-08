@@ -28,7 +28,8 @@ val globalSettings = Def.settings(
 lazy val commonJsSettings = Seq(
   scalaJSStage in Test := FastOptStage,
   scalaJSUseRhino in Global := false,
-  coverageExcludedFiles := ".*"
+  coverageExcludedFiles := ".*",
+  jsEnv in Test := new PhantomJS2Env(scalaJSPhantomJSClassLoader.value)
 )
 
 lazy val noPublishSettings = Seq(
