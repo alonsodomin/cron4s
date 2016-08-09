@@ -14,7 +14,9 @@ cache:
 
 before_install:
   - npm install source-map-support
+  - phantomjs --version
   - npm install phantomjs-prebuilt
+  - phantomjs --version
 
 script:
   - sbt ++$TRAVIS_SCALA_VERSION clean coverage test
