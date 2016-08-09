@@ -20,7 +20,7 @@ before_install:
   - phantomjs --version
 
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION clean coverage test
+  - sbt ++$TRAVIS_SCALA_VERSION clean coverage cron4sJVM/test
 
 after_success:
   - sbt coverageReport && sbt coverageAggregate
