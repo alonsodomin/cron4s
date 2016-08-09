@@ -13,7 +13,8 @@ cache:
     - $HOME/.ivy2
 
 before_install:
-  - npm install -g phantomjs-prebuilt
+  - npm install source-map-support
+  - npm install phantomjs-prebuilt
 
 script:
   - sbt ++$TRAVIS_SCALA_VERSION clean coverage test
