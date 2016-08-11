@@ -12,13 +12,6 @@ cache:
     - $HOME/.sbt
     - $HOME/.ivy2
 
-before_install:
-  - npm install source-map-support
-  - phantomjs --version
-  - npm install phantomjs-prebuilt
-  - export PATH=$PWD/node_modules/phantomjs-prebuilt/lib/phantom/bin:$PATH
-  - phantomjs --version
-
 script:
   - sbt ++$TRAVIS_SCALA_VERSION clean coverage cron4sJVM/test
 
