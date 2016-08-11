@@ -17,6 +17,8 @@ object Dependencies {
 
     val scalacheck  = "1.12.5"
     val scalatest   = "3.0.0"
+
+    val scalaJavaTime = "2.0.0-M3"
   }
 
   lazy val core = Def.settings {
@@ -25,10 +27,11 @@ object Dependencies {
       compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
 
       "com.chuusai"    %%% "shapeless"                 % version.shapeless,
+      "io.github.soc"  %%% "scala-java-time"           % version.scalaJavaTime,
       "org.scalaz"     %%% "scalaz-core"               % version.scalaz,
-      "org.scalaz"     %%% "scalaz-scalacheck-binding" % version.scalaz     % Test,
-      "org.scalacheck" %%% "scalacheck"                % version.scalacheck % Test,
-      "org.scalatest"  %%% "scalatest"                 % version.scalatest  % Test
+      "org.scalaz"     %%% "scalaz-scalacheck-binding" % version.scalaz         % Test,
+      "org.scalacheck" %%% "scalacheck"                % version.scalacheck     % Test,
+      "org.scalatest"  %%% "scalatest"                 % version.scalatest      % Test
     )
   }
 
