@@ -40,7 +40,7 @@ object threetenbp {
 
   }
 
-  implicit class Java8Expr[F <: CronField, DT <: Temporal](expr: Expr[F]) extends ExtendedExpr[F, DT](expr)
-  implicit class Java8CronExpr[DT <: Temporal](expr: CronExpr) extends ExtendedCronExpr[DT](expr)
+  implicit class JSR3108Expr[F <: CronField, DT <: Temporal](expr: Expr[F]) extends ExtendedExpr[F, DT](expr)
+  implicit class JSR310CronExpr[DT <: Temporal](expr: CronExpr) extends ExtendedCronExpr[DT](expr)
 
 }
