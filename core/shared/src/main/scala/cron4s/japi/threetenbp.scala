@@ -12,7 +12,7 @@ import org.threeten.bp.temporal.{ChronoField, Temporal, TemporalField}
   */
 object threetenbp {
 
-  implicit def javaTimeAdapter[DT <: Temporal]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
+  implicit def jsr310Adapter[DT <: Temporal]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
 
     private[this] def mapField(field: CronField): TemporalField = field match {
       case Minute     => ChronoField.MINUTE_OF_HOUR
