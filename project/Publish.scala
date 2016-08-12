@@ -1,11 +1,28 @@
 import sbt._
 import Keys._
 
+import sbtrelease.ReleasePlugin.autoImport._
+import ReleaseTransformations._
+
 object Publish {
 
   lazy val settings = Def.settings(
     publishMavenStyle := true,
     publishArtifact in Test := false,
+    releaseProcess := Seq[ReleaseStep](
+      checkSnapshotDependencies,
+      inquireVersions,
+      runClean,
+      runTest,
+      setReleaseVersion,
+      commitReleaseVersion,
+      tagRelease,
+      ReleaseStep(action = Command.process("publishSigned", _)),
+      setNextVersion,
+      commitNextVersion,
+      ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
+      pushChanges
+    ),
     pomExtra :=
       <url>https://github.com/alonsodomin/cron4s</url>
       <licenses>
