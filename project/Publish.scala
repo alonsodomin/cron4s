@@ -1,6 +1,8 @@
 import sbt._
 import Keys._
 
+import xerial.sbt.Sonatype.autoImport._
+
 import sbtrelease.ReleasePlugin.autoImport._
 import ReleaseTransformations._
 
@@ -9,6 +11,7 @@ object Publish {
   lazy val settings = Def.settings(
     publishMavenStyle := true,
     publishArtifact in Test := false,
+    sonatypeProfileName := "com.github.alonsodomin",
     releaseProcess := Seq[ReleaseStep](
       checkSnapshotDependencies,
       inquireVersions,
