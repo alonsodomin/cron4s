@@ -8,7 +8,7 @@ scalaVersion in ThisBuild := "2.11.8"
 
 val globalSettings = Def.settings(
   name := "cron4s",
-  organization := "com.github.alonsodomin",
+  organization := "com.github.alonsodomin.cron4s",
   scalacOptions ++= Seq(
     "-language:postfixOps",
     "-feature",
