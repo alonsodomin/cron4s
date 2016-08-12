@@ -120,7 +120,6 @@ These are the libraries that are currently supported:
 ### ScalaJS
 
  * JavaScript `Date` API: Package `cron4s.js`
- * MomentJS: Package `cron4s.momentjs`
 
 ## Status
 
