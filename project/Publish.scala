@@ -33,11 +33,11 @@ object Publish {
     pomExtra :=
       <url>https://github.com/alonsodomin/cron4s</url>
       <licenses>
-        <licence>
+        <license>
           <name>Apache License, Version 2.0</name>
           <url>https://www.apache.org/licenses/LICENSE-2.0</url>
           <distribution>repo</distribution>
-        </licence>
+        </license>
       </licenses>
       <scm>
         <url>git@github.com:alonsodomin/cron4s.git</url>
