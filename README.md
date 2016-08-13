@@ -120,6 +120,7 @@ These are the libraries that are currently supported:
 ### ScalaJS
 
  * JavaScript `Date` API: Package `cron4s.js`
+ * Java Time API (JSR-310): Package `cron4s.japi.threetenbp`. _Support is provided via [scala-java-time](https://github.com/soc/scala-java-time), which can also be used in the JVM. The two implementations for JSR-310 will be merged into one once this library reaches a final release._
 
 ## Status
 
