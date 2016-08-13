@@ -30,13 +30,13 @@ object SequentialSpec extends Properties("Sequential") {
   val sequentialOfOneValue = for {
     value      <- arbitrary[Int]
     sequential <- Gen.const(Sequential.sequential(Vector(value)))
-    fromValue  <- arbitrary[Int]
-    stepSize   <- arbitrary[Int]
+    fromValue  <- arbitrary[Int] retryUntil(_ >= value)
+    stepSize   <- arbitrary[Int] retryUntil(_ > 0)
   } yield (value, sequential, fromValue, stepSize)
 
   property("step on sequential of one element") = forAll(sequentialOfOneValue) {
     case (value, seq, fromValue, stepSize) =>
-      (fromValue >= value && stepSize > 0) ==> seq.step(fromValue, stepSize).contains(value -> stepSize)
+      seq.step(fromValue, stepSize).contains(value -> stepSize)
   }
 
 }
