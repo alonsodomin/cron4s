@@ -2,8 +2,7 @@ package cron4s.ext
 
 import cron4s._
 import cron4s.expr._
-import cron4s.matcher.Matcher
-
+import cron4s.types._
 import shapeless._
 
 import scala.annotation.tailrec
@@ -13,10 +12,13 @@ private[ext] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
 
   type Step = Option[(DateTime, Int)]
 
-  private[this] def stepField[F <: CronField](expr: Expr[F], step: Int) =
-    adapter.get(from, expr.unit.field).flatMap(v => expr.step(v, step))
+  private[this] def stepField[F <: CronField]
+      (expr: Expr[F], step: Int)
+      (implicit ev: SequencedExpr[Expr, F]) =
+    adapter.get(from, expr.unit.field).flatMap(v => ev.step(expr)(v, step))
 
-  private[this] def stepAndAdjust[F <: CronField](dateTimeAndStep: Step, expr: Expr[F]): Step = {
+  private[this] def stepAndAdjust[F <: CronField]
+      (dateTimeAndStep: Step, expr: Expr[F]): Step = {
     for {
       (dateTime, step)  <- dateTimeAndStep
       (value, nextStep) <- stepField(expr, step)
@@ -24,28 +26,30 @@ private[ext] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
     } yield (newDateTime, nextStep)
   }
 
-  private[this] def stepDayOfWeek(dt: DateTime, expr: Expr[DayOfWeek.type], stepSize: Int): Step = {
+  private[this] def stepDayOfWeek
+      (dt: DateTime, expr: Expr[DayOfWeek.type], stepSize: Int)
+      (implicit ev: SequencedExpr[Expr, DayOfWeek.type]): Step = {
     for {
       dayOfWeek         <- adapter.get(dt, DayOfWeek)
-      (value, nextStep) <- expr.step(dayOfWeek, stepSize)
+      (value, nextStep) <- ev.step(expr)(dayOfWeek, stepSize)
       newDateTime       <- adapter.set(dt, DayOfWeek, value)
       newDayOfWeek      <- adapter.get(dt, DayOfWeek)
     } yield newDateTime -> (nextStep + (newDayOfWeek - dayOfWeek))
   }
 
   object steppingTime extends Poly {
-    implicit def caseMinutes     = use(stepAndAdjust[Minute.type] _)
-    implicit def caseHours       = use(stepAndAdjust[Hour.type] _)
+    implicit def caseMinutes     = use((step: Step, expr: MinutesExpr) => stepAndAdjust(step, expr))
+    implicit def caseHours       = use((step: Step, expr: HoursExpr) => stepAndAdjust(step, expr))
   }
 
   object steppingDate extends Poly {
-    implicit def caseDaysOfMonth = use(stepAndAdjust[DayOfMonth.type] _)
-    implicit def caseMonths      = use(stepAndAdjust[Month.type] _)
+    implicit def caseDaysOfMonth = use((step: Step, expr: DaysOfMonthExpr) => stepAndAdjust(step, expr))
+    implicit def caseMonths      = use((step: Step, expr: MonthsExpr) => stepAndAdjust(step, expr))
   }
 
   def run(expr: CronExpr): Option[DateTime] = {
-    implicit val conjuction = Matcher.conjunction
-    val matching = new MatcherReducer[DateTime].run(expr)
+    implicit val conjuction = Predicate.conjunction
+    val matching = new PredicateReducer[DateTime].run(expr)
 
     def stepDatePart(previous: Step): Step = {
       val dateWithoutWeekOfDay = expr.datePart.take(2)

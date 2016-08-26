@@ -2,9 +2,11 @@ package cron4s.parser
 
 import cron4s.{CronField, CronUnit}
 import cron4s.expr._
+import cron4s.types._
 
 import scala.util.parsing.combinator.RegexParsers
-import scalaz.NonEmptyList
+
+import scala.language.higherKinds
 
 /**
   * Created by alonsodomin on 01/01/2016.
@@ -55,12 +57,12 @@ trait ExprParsers extends RegexParsers {
       (implicit unit: CronUnit[F]): Parser[BetweenExpr[F]] =
     p ~ ("-" ~> p) ^^ { case min ~ max => BetweenExpr(min, max) }
 
-  def several[F <: CronField](p: Parser[EnumerableExpr[F]])
-      (implicit unit: CronUnit[F]): Parser[SeveralExpr[F]] =
-    p ~ (("," ~> p)+) ^^ { case head ~ tail => SeveralExpr(head, tail: _*) }
+  def several[E[_] <: Expr[F], F <: CronField](p: Parser[E[F]])
+      (implicit unit: CronUnit[F], ev: SeqEnumerableExpr[E, F]): Parser[SeveralExpr[E, F]] =
+    p ~ (("," ~> p)+) ^^ { case head ~ tail => SeveralExpr[E, F](head, tail: _*) }
 
-  def every[F <: CronField](p: Parser[DivisibleExpr[F]])
-      (implicit unit: CronUnit[F]): Parser[EveryExpr[F]] =
+  def every[E[_] <: Expr[F], F <: CronField](p: Parser[E[F]])
+      (implicit unit: CronUnit[F], ev: SeqDivisibleExpr[E, F]): Parser[EveryExpr[E, F]] =
     p ~ """\/\d+""".r ^^ { case base ~ freq => EveryExpr(base, freq.substring(1).toInt) }
 
 }

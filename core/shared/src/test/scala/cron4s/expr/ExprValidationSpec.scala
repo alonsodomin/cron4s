@@ -16,7 +16,7 @@ class ExprValidationSpec extends FlatSpec with Matchers {
     val expr1 = ConstExpr(Minute, 23)
     val expr2 = BetweenExpr(ConstExpr(Minute, 10), ConstExpr(Minute, 24))
 
-    val result = validateSeveralExpr[Minute.type](NonEmptyList(expr1, expr2))
+    val result = validate[Minute.type](NonEmptyList(expr1, expr2))
     result shouldBe Failure(NonEmptyList(s"Expression $expr1 is implied by $expr2"))
   }
 
@@ -24,7 +24,7 @@ class ExprValidationSpec extends FlatSpec with Matchers {
     val expr1 = BetweenExpr(ConstExpr(Minute, 6), ConstExpr(Minute, 12))
     val expr2 = BetweenExpr(ConstExpr(Minute, 10), ConstExpr(Minute, 24))
 
-    val result = validateSeveralExpr[Minute.type](NonEmptyList(expr1, expr2))
+    val result = validate[Minute.type](NonEmptyList(expr1, expr2))
     result should matchPattern { case Success(SeveralExpr(_)) => }
   }
 

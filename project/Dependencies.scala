@@ -52,7 +52,12 @@ object Dependencies {
 
   lazy val types = Def.settings {
     libraryDependencies ++= Seq(
-      "org.scalacheck" %%% "scalacheck" % version.scalacheck % Test
+      compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full),
+      compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
+
+      "org.scalaz"     %%% "scalaz-core"               % version.scalaz,
+      "org.scalaz"     %%% "scalaz-scalacheck-binding" % version.scalaz         % Test,
+      "org.scalacheck" %%% "scalacheck"                % version.scalacheck % Test
     )
   }
 

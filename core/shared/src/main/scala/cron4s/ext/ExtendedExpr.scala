@@ -2,15 +2,16 @@ package cron4s.ext
 
 import cron4s.CronField
 import cron4s.expr.Expr
-import cron4s.matcher.Matcher
+import cron4s.types._
 
 /**
   * Created by alonsodomin on 31/07/2016.
   */
-abstract class ExtendedExpr[F <: CronField, DateTime: DateTimeAdapter](expr: Expr[F]) {
+abstract class ExtendedExpr[E[_] <: Expr[F], F <: CronField, DateTime]
+    (expr: E[F])
+    (implicit adapter: DateTimeAdapter[DateTime], ev: SequencedExpr[E, F]) {
 
-  def matchesIn: Matcher[DateTime] = Matcher { dt =>
-    val adapter = implicitly[DateTimeAdapter[DateTime]]
+  def matchesIn: Predicate[DateTime] = Predicate { dt =>
     val current = adapter.get(dt, expr.unit.field)
     current.map(expr.matches).getOrElse(false)
   }
@@ -22,7 +23,6 @@ abstract class ExtendedExpr[F <: CronField, DateTime: DateTimeAdapter](expr: Exp
   def previous(dateTime: DateTime): Option[DateTime] = step(dateTime, -1)
 
   def step(dateTime: DateTime, step: Int): Option[DateTime] = {
-    val adapter = implicitly[DateTimeAdapter[DateTime]]
     for {
       current  <- adapter.get(dateTime, expr.unit.field)
       newValue <- expr.step(current, step).map(_._1)

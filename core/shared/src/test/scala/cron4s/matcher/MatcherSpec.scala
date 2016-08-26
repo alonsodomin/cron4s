@@ -1,5 +1,6 @@
 package cron4s.matcher
 
+import cron4s.types.Predicate
 import org.scalacheck._
 
 import scalaz._
@@ -13,11 +14,11 @@ object MatcherSpec extends Properties("Matcher") {
   import Prop._
   import Arbitrary.arbitrary
 
-  implicit lazy val arbitraryMatcher = Arbitrary[Matcher[Int]] {
+  implicit lazy val arbitraryMatcher = Arbitrary[Predicate[Int]] {
     for { x <- arbitrary[Int] } yield equal(x)
   }
 
-  implicit val matcherEquality = Equal.equalBy[Matcher[Int], Boolean](_.apply(0))
+  implicit val matcherEquality = Equal.equalBy[Predicate[Int], Boolean](_.apply(0))
 
   def checkAll(name: String, props: Properties) = {
     for ((name2, prop) <- props.properties) yield {
@@ -25,20 +26,20 @@ object MatcherSpec extends Properties("Matcher") {
     }
   }
 
-  checkAll("Matcher", contravariant.laws[Matcher])
+  checkAll("Matcher", contravariant.laws[Predicate])
 
   object disjunction {
-    implicit val instance = Matcher.disjunction
+    implicit val instance = Predicate.disjunction
 
     def check() = {
-      checkAll("Matcher", plusEmpty.laws[Matcher])
+      checkAll("Matcher", plusEmpty.laws[Predicate])
     }
   }
   object conjuction {
-    implicit val instance = Matcher.conjunction
+    implicit val instance = Predicate.conjunction
 
     def check() = {
-      checkAll("Matcher", plusEmpty.laws[Matcher])
+      checkAll("Matcher", plusEmpty.laws[Predicate])
     }
   }
 
@@ -46,7 +47,7 @@ object MatcherSpec extends Properties("Matcher") {
   conjuction.check()
 
   val matchersAndValues = for {
-    matcher <- arbitrary[Matcher[Int]]
+    matcher <- arbitrary[Predicate[Int]]
     value   <- arbitrary[Int]
   } yield (matcher, value)
 
@@ -55,8 +56,8 @@ object MatcherSpec extends Properties("Matcher") {
   }
 
   val pairsOfMatchers = for {
-    leftMatcher  <- arbitrary[Matcher[Int]]
-    rightMatcher <- arbitrary[Matcher[Int]]
+    leftMatcher  <- arbitrary[Predicate[Int]]
+    rightMatcher <- arbitrary[Predicate[Int]]
     value        <- arbitrary[Int]
   } yield (leftMatcher, rightMatcher, value)
 
@@ -81,7 +82,7 @@ object MatcherSpec extends Properties("Matcher") {
   }
 
   val negatedMatchers = for {
-    matcher <- arbitrary[Matcher[Int]]
+    matcher <- arbitrary[Predicate[Int]]
     negated <- Gen.const(not(matcher))
     value   <- arbitrary[Int]
   } yield (matcher, negated, value)
@@ -92,7 +93,7 @@ object MatcherSpec extends Properties("Matcher") {
   }
 
   val matcherList = for {
-    list  <- Gen.listOf(arbitrary[Matcher[Int]])
+    list  <- Gen.listOf(arbitrary[Predicate[Int]])
     value <- arbitrary[Int]
   } yield (list, value)
 

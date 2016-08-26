@@ -4,7 +4,7 @@ import cron4s.CronField
 import cron4s.CronField._
 import cron4s.expr.{CronExpr, Expr}
 import cron4s.ext.{DateTimeAdapter, ExtendedCronExpr, ExtendedExpr}
-
+import cron4s.types.SequencedExpr
 import org.threeten.bp.temporal.{ChronoField, Temporal, TemporalField}
 
 /**
@@ -40,7 +40,10 @@ object threetenbp {
 
   }
 
-  implicit class JSR3108Expr[F <: CronField, DT <: Temporal](expr: Expr[F]) extends ExtendedExpr[F, DT](expr)
   implicit class JSR310CronExpr[DT <: Temporal](expr: CronExpr) extends ExtendedCronExpr[DT](expr)
+  implicit class JSR3108Expr[E[_] <: Expr[_], F <: CronField, DT <: Temporal]
+      (expr: E[F])
+      (implicit ev: SequencedExpr[E, F])
+    extends ExtendedExpr[E, F, DT](expr)
 
 }
