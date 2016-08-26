@@ -9,7 +9,7 @@ import cron4s.types._
   */
 abstract class ExtendedExpr[E[_] <: Expr[F], F <: CronField, DateTime]
     (expr: E[F])
-    (implicit adapter: DateTimeAdapter[DateTime], ev: SequencedExpr[E, F]) {
+    (implicit adapter: DateTimeAdapter[DateTime], ev: IsFieldExpr[E, F]) {
 
   def matchesIn: Predicate[DateTime] = Predicate { dt =>
     val current = adapter.get(dt, expr.unit.field)

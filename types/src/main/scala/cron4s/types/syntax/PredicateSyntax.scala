@@ -13,7 +13,9 @@ trait PredicateSyntax {
 
   def not[A](m: Predicate[A]): Predicate[A] = Predicate { a => !m(a) }
 
-  def equal[A: Equal](a: A): Predicate[A] = Predicate { b => implicitly[Equal[A]].equal(a, b) }
+  @deprecated("Use equalTo instead", "0.2.0")
+  def equal[A: Equal](a: A): Predicate[A] = equalTo[A](a)
+  def equalTo[A: Equal](a: A): Predicate[A] = Predicate { b => implicitly[Equal[A]].equal(a, b) }
 
   def none[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
     not(allOf(c))

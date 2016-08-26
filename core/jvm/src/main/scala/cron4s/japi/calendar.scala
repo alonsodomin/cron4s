@@ -5,7 +5,7 @@ import java.util.Calendar
 import cron4s.CronField
 import cron4s.expr.{CronExpr, Expr}
 import cron4s.ext.{DateTimeAdapter, ExtendedCronExpr, ExtendedExpr}
-import cron4s.types.SequencedExpr
+import cron4s.types.IsFieldExpr
 
 /**
   * Created by alonsodomin on 31/07/2016.
@@ -48,7 +48,7 @@ object calendar {
   implicit class CalendarCronExpr(expr: CronExpr) extends ExtendedCronExpr[Calendar](expr)
   implicit class CalendarExpr[E[_] <: Expr[_], F <: CronField]
       (expr: E[F])
-      (implicit ev: SequencedExpr[E, F])
+      (implicit ev: IsFieldExpr[E, F])
     extends ExtendedExpr[E, F, Calendar](expr)
 
 }

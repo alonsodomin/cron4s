@@ -18,7 +18,7 @@ private[ext] final class PredicateReducer[DateTime]
 
     private[this] def predicateFor[F <: CronField]
         (field: F, expr: Expr[F])
-        (implicit ev: SequencedExpr[Expr, F]): Predicate[DateTime] =
+        (implicit ev: IsFieldExpr[Expr, F]): Predicate[DateTime] =
       Predicate { dt =>
         adapter.get(dt, field).map(ev.matches(expr)).getOrElse(!M.empty[DateTime](dt))
       }

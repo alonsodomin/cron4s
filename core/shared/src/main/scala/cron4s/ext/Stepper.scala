@@ -14,7 +14,7 @@ private[ext] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
 
   private[this] def stepField[F <: CronField]
       (expr: Expr[F], step: Int)
-      (implicit ev: SequencedExpr[Expr, F]) =
+      (implicit ev: IsFieldExpr[Expr, F]) =
     adapter.get(from, expr.unit.field).flatMap(v => ev.step(expr)(v, step))
 
   private[this] def stepAndAdjust[F <: CronField]
@@ -28,7 +28,7 @@ private[ext] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
 
   private[this] def stepDayOfWeek
       (dt: DateTime, expr: Expr[DayOfWeek.type], stepSize: Int)
-      (implicit ev: SequencedExpr[Expr, DayOfWeek.type]): Step = {
+      (implicit ev: IsFieldExpr[Expr, DayOfWeek.type]): Step = {
     for {
       dayOfWeek         <- adapter.get(dt, DayOfWeek)
       (value, nextStep) <- ev.step(expr)(dayOfWeek, stepSize)

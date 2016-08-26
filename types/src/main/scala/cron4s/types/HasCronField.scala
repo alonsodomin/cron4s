@@ -7,7 +7,7 @@ import scala.language.higherKinds
 /**
   * Created by alonsodomin on 23/08/2016.
   */
-trait SequencedField[FL[_], F <: CronField] {
+trait HasCronField[FL[_], F <: CronField] {
 
   def min(fl: FL[F]): Int = range(fl).head
   def max(fl: FL[F]): Int = range(fl).last
@@ -38,8 +38,8 @@ trait SequencedField[FL[_], F <: CronField] {
   def range(fL: FL[F]): IndexedSeq[Int]
 }
 
-object SequencedField {
+object HasCronField {
 
-  @inline def apply[FL[_], F <: CronField](implicit ev: SequencedField[FL, F]): SequencedField[FL, F] = ev
+  @inline def apply[FL[_], F <: CronField](implicit ev: HasCronField[FL, F]): HasCronField[FL, F] = ev
 
 }

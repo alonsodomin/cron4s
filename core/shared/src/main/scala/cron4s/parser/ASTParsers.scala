@@ -13,13 +13,11 @@ trait ASTParsers extends ExprParsers {
   import CronField._
 
   def expr[F <: CronField](p: Parser[ConstExpr[F]])(implicit unit: CronUnit[F]): Parser[Expr[F]] = {
-    def everyAST(p: Parser[ConstExpr[F]]): Parser[Expr[F]] =
-      every[Expr, F](severalAST(p) | between(p) | any)
+    def everyAST(p: Parser[ConstExpr[F]]): Parser[EveryExpr[F]] =
+      every(severalAST(p) | between(p) | any)
 
-    def severalAST(p: Parser[ConstExpr[F]]): Parser[Expr[F]] = {
-      val betweenOrConst = between(p) | p
-      several(betweenOrConst)
-    }
+    def severalAST(p: Parser[ConstExpr[F]]): Parser[SeveralExpr[F]] =
+      several(between(p) | p)
 
     everyAST(p) | severalAST(p) | between(p) | p | any
   }

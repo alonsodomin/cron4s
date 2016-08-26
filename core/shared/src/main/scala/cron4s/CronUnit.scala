@@ -1,6 +1,6 @@
 package cron4s
 
-import cron4s.types.SequencedField
+import cron4s.types.HasCronField
 
 import scala.annotation.implicitNotFound
 import scala.language.higherKinds
@@ -71,15 +71,15 @@ private[cron4s] trait CronUnits {
 
 private[cron4s] trait CronUnitInstances extends CronUnits {
 
-  private[this] def cronUnitLike[F <: CronField](unit: CronUnit[F]): SequencedField[CronUnit, F] =
-    new SequencedField[CronUnit, F] {
+  private[this] def hasCronField[F <: CronField](unit: CronUnit[F]): HasCronField[CronUnit, F] =
+    new HasCronField[CronUnit, F] {
       override def range(fL: CronUnit[F]): IndexedSeq[Int] = unit.range
     }
 
-  implicit val minutesInstance     = cronUnitLike(Minutes)
-  implicit val hoursInstance       = cronUnitLike(Hours)
-  implicit val daysOfMonthInstance = cronUnitLike(DaysOfMonth)
-  implicit val monthsInstance      = cronUnitLike(Months)
-  implicit val daysOfWeekInstance  = cronUnitLike(DaysOfWeek)
+  implicit val minutesInstance     = hasCronField(Minutes)
+  implicit val hoursInstance       = hasCronField(Hours)
+  implicit val daysOfMonthInstance = hasCronField(DaysOfMonth)
+  implicit val monthsInstance      = hasCronField(Months)
+  implicit val daysOfWeekInstance  = hasCronField(DaysOfWeek)
 
 }
