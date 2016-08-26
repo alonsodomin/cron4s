@@ -21,7 +21,7 @@ sealed trait Expr[F <: CronField] {
 }
 
 sealed trait DivisibleExpr[F <: CronField] extends Expr[F]
-sealed trait EnumerableExpr[F <: CronField] extends Expr[F]
+sealed trait EnumerableExpr[F <: CronField] extends Expr[F] with Ordered[EnumerableExpr[F]]
 
 object Expr extends ExprInstances
 
@@ -38,10 +38,16 @@ case object Last extends SpecialChar
 
 final case class ConstExpr[F <: CronField]
     (field: F, value: Int, textValue: Option[String] = None)
-    (implicit val unit: CronUnit[F])
+    (implicit val unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F])
   extends Expr[F] with DivisibleExpr[F] with EnumerableExpr[F] {
 
   //require(unit.indexOf(value).nonEmpty, s"Value $value is out of bounds for field: ${unit.field}")
+
+  override def compare(that: EnumerableExpr[F]): Int = {
+    if (value < ops.min(that)) 1
+    else if (value > ops.max(that)) -1
+    else 0
+  }
 
   val range = Vector(value)
 
@@ -49,10 +55,16 @@ final case class ConstExpr[F <: CronField]
 
 final case class BetweenExpr[F <: CronField]
     (begin: ConstExpr[F], end: ConstExpr[F])
-    (implicit val unit: CronUnit[F])
+    (implicit val unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F])
   extends Expr[F] with DivisibleExpr[F] with EnumerableExpr[F] {
 
   require(begin.value < end.value, s"$begin should be less than $end")
+
+  override def compare(that: EnumerableExpr[F]): Int = {
+    if (ops.min(this) > ops.max(that)) 1
+    else if (ops.max(this) < ops.min(that)) -1
+    else 0
+  }
 
   val range = begin.value to end.value
 
@@ -72,9 +84,9 @@ object SeveralExpr {
   import validation.validateSeveral
 
   def apply[F <: CronField]
-      (head: EnumerableExpr[F], tail: EnumerableExpr[F]*)
-      (implicit unit: CronUnit[F]) = {
-    validateSeveral(NonEmptyList[EnumerableExpr[F]](head, tail: _*)) match {
+      (elements: NonEmptyList[EnumerableExpr[F]])
+      (implicit unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F]) = {
+    validateSeveral[F](elements) match {
       case Success(expr) => expr
       case Failure(errors) =>
         val msg = errors.list.toList.mkString("\n")

@@ -12,14 +12,15 @@ import Scalaz._
 private[expr] object validation {
   import Expr._
 
-  type ValidatedExpr[E[_] <: Expr[F], F <: CronField] = ValidationNel[String, E[F]]
+  type ValidatedExpr[E[_], F <: CronField] = ValidationNel[String, E[F]]
 
   def validateSeveral[F <: CronField](exprs: NonEmptyList[EnumerableExpr[F]])
       (implicit unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F]): ValidatedExpr[SeveralExpr, F] = {
 
-    def validateImplication(expr: EnumerableExpr[F],
-                            processed: Vector[EnumerableExpr[F]]
-                           ): ValidationNel[String, EnumerableExpr[F]] = {
+    def validateImplication(
+        expr: EnumerableExpr[F],
+        processed: Vector[EnumerableExpr[F]]
+    ): ValidatedExpr[EnumerableExpr, F] = {
       val alreadyImplied = processed.find(e => ops.impliedBy(expr)(e)).
         map(found => s"Expression $expr is implied by $found".failureNel[EnumerableExpr[F]])
       val impliesOther = processed.find(e => ops.impliedBy(e)(expr)).
