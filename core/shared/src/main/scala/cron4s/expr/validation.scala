@@ -10,9 +10,8 @@ import Scalaz._
   * Created by alonsodomin on 02/08/2016.
   */
 private[expr] object validation {
-  import Expr._
 
-  type ValidatedExpr[E[_], F <: CronField] = ValidationNel[String, E[F]]
+  type ValidatedExpr[E[_ <: CronField], F <: CronField] = ValidationNel[String, E[F]]
 
   def validateSeveral[F <: CronField](exprs: NonEmptyList[EnumerableExpr[F]])
       (implicit unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F]): ValidatedExpr[SeveralExpr, F] = {

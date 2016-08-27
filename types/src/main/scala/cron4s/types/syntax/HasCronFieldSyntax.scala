@@ -8,7 +8,7 @@ import scala.language.higherKinds
 /**
   * Created by alonsodomin on 23/08/2016.
   */
-private[syntax] class HasCronFieldOps[C[_], F <: CronField](self: C[F], tc: HasCronField[C, F]) {
+private[syntax] class HasCronFieldOps[C[_ <: CronField], F <: CronField](self: C[F], tc: HasCronField[C, F]) {
   def max: Int = tc.max(self)
   def min: Int = tc.min(self)
   def step(from: Int, stepSize: Int): Option[(Int, Int)] = tc.step(self)(from, stepSize)
@@ -18,7 +18,7 @@ private[syntax] class HasCronFieldOps[C[_], F <: CronField](self: C[F], tc: HasC
 
 private[syntax] trait HasCronFieldSyntax {
 
-  implicit def toHasCronFieldOps[C[_], F <: CronField]
+  implicit def toHasCronFieldOps[C[_ <: CronField], F <: CronField]
       (target: C[F])
       (implicit tc: HasCronField[C, F]): HasCronFieldOps[C, F] =
     new HasCronFieldOps[C, F](target, tc)

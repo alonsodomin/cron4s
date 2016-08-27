@@ -7,39 +7,39 @@ import scala.language.higherKinds
 /**
   * Created by alonsodomin on 23/08/2016.
   */
-trait HasCronField[FL[_], F <: CronField] {
+trait HasCronField[A[_ <: CronField], F <: CronField] {
 
-  def min(fl: FL[F]): Int = range(fl).head
-  def max(fl: FL[F]): Int = range(fl).last
+  def min(a: A[F]): Int = range(a).head
+  def max(a: A[F]): Int = range(a).last
 
-  def step(fl: FL[F])(from: Int, stepSize: Int): Option[(Int, Int)] = {
-    val flRange = range(fl)
+  def step(a: A[F])(from: Int, stepSize: Int): Option[(Int, Int)] = {
+    val aRange = range(a)
 
-    if (flRange.isEmpty) None
+    if (aRange.isEmpty) None
     else if (stepSize == 0) Some(from -> 0)
-    else if (min(fl) == max(fl) && from >= max(fl)) {
-      Some(min(fl) -> stepSize)
+    else if (min(a) == max(a) && from >= max(a)) {
+      Some(min(a) -> stepSize)
     } else {
-      val index = flRange.lastIndexWhere(from >= _)
+      val index = aRange.lastIndexWhere(from >= _)
       val cursor = index + stepSize
       val newIdx = {
-        val mod = cursor % flRange.size
-        if (mod < 0) flRange.size + mod
+        val mod = cursor % aRange.size
+        if (mod < 0) aRange.size + mod
         else mod
       }
-      val newValue = flRange(newIdx)
-      Some(newValue -> cursor / flRange.size)
+      val newValue = aRange(newIdx)
+      Some(newValue -> cursor / aRange.size)
     }
   }
 
-  def next(fl: FL[F])(from: Int): Option[Int] = step(fl)(from, 1).map(_._1)
-  def prev(fl: FL[F])(from: Int): Option[Int] = step(fl)(from, -1).map(_._1)
+  def next(a: A[F])(from: Int): Option[Int] = step(a)(from, 1).map(_._1)
+  def prev(a: A[F])(from: Int): Option[Int] = step(a)(from, -1).map(_._1)
 
-  def range(fL: FL[F]): IndexedSeq[Int]
+  def range(fL: A[F]): IndexedSeq[Int]
 }
 
 object HasCronField {
 
-  @inline def apply[FL[_], F <: CronField](implicit ev: HasCronField[FL, F]): HasCronField[FL, F] = ev
+  @inline def apply[A[_ <: CronField], F <: CronField](implicit ev: HasCronField[A, F]): HasCronField[A, F] = ev
 
 }

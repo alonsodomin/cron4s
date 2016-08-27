@@ -42,7 +42,7 @@ object time {
   }
 
   implicit class Java8CronExpr[DT <: Temporal](expr: CronExpr) extends ExtendedCronExpr[DT](expr)
-  implicit class Java8Expr[E[_] <: Expr[_], F <: CronField, DT <: Temporal]
+  implicit class Java8Expr[E[_ <: CronField] <: Expr[F], F <: CronField, DT <: Temporal]
       (expr: E[F])
       (implicit ev: IsFieldExpr[E, F])
     extends ExtendedExpr[E, F, DT](expr)

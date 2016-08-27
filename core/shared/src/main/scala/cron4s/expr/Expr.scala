@@ -2,6 +2,7 @@ package cron4s.expr
 
 import cron4s.{CronField, CronUnit}
 import cron4s.types._
+import cron4s.types.syntax._
 
 import scalaz._
 import Scalaz._
@@ -114,7 +115,7 @@ final case class EveryExpr[F <: CronField]
 private[expr] trait ExprInstances extends ExprInstances1 {
 
   implicit def anyExprLike[F <: CronField]: IsFieldExpr[AnyExpr, F] =
-    new IsFieldExprBase[AnyExpr, F] with IsDivisibleExpr[AnyExpr, F] {
+    new IsFieldExprBase[AnyExpr, F] {
       override def matches(e: AnyExpr[F]): Predicate[Int] = Predicate { x =>
         x >= min(e) && x <= max(e)
       }
@@ -182,7 +183,7 @@ private[expr] trait ExprInstances1 extends ExprInstances0 {
 }
 
 private[expr] trait ExprInstances0 {
-  private[expr] trait IsFieldExprBase[E[_] <: Expr[F], F <: CronField] extends IsFieldExpr[E, F] {
+  private[expr] trait IsFieldExprBase[E[_ <: CronField] <: Expr[_], F <: CronField] extends IsFieldExpr[E, F] {
     override def matches(e: E[F]): Predicate[Int] =
       Predicate { x => e.range.contains(x) }
 

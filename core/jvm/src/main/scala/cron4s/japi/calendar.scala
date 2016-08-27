@@ -46,7 +46,7 @@ object calendar {
   }
 
   implicit class CalendarCronExpr(expr: CronExpr) extends ExtendedCronExpr[Calendar](expr)
-  implicit class CalendarExpr[E[_] <: Expr[_], F <: CronField]
+  implicit class CalendarExpr[E[_ <: CronField] <: Expr[F], F <: CronField]
       (expr: E[F])
       (implicit ev: IsFieldExpr[E, F])
     extends ExtendedExpr[E, F, Calendar](expr)
