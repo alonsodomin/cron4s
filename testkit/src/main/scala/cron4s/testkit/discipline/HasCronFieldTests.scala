@@ -22,7 +22,8 @@ trait HasCronFieldTests[A[_ <: CronField], F <: CronField] extends Laws {
     "min" -> forAll(laws.min _),
     "max" -> forAll(laws.max _),
     "forward" -> forAll(laws.forward _),
-    "backwards" -> forAll(laws.backwards _)
+    "backwards" -> forAll(laws.backwards _),
+    "step" -> forAll(laws.stepable _)
   )
 
 }

@@ -20,10 +20,30 @@ trait HasCronFieldLaws[A[_ <: CronField], F <: CronField] {
     a.max === a.members.max
 
   def forward(a: A[F], from: Int): Boolean =
-    a.next(from) === a.step(from, 1).map(_._1)
+    a.next(from) === a.step(from, TC.steppingUnit(a)).map(_._1)
 
   def backwards(a: A[F], from: Int): Boolean =
-    a.prev(from) === a.step(from, -1).map(_._1)
+    a.prev(from) === a.step(from, -TC.steppingUnit(a)).map(_._1)
+
+  def stepable(a: A[F], from: Int, stepSize: Int): Boolean = {
+    if (a.members.isEmpty) {
+      a.step(from, stepSize) === None
+    } else if (stepSize == 0) {
+      a.step(from, stepSize) === Some(from -> 0)
+    } else if (a.members.size === 1 && from >= a.max) {
+      a.step(from, stepSize) === Some(a.min -> (stepSize * TC.steppingUnit(a)))
+    } else {
+      val index = a.members.lastIndexWhere(from >= _)
+      val cursor = index + (stepSize * TC.steppingUnit(a))
+      val newIdx = {
+        val mod = cursor % a.members.size
+        if (mod < 0) a.members.size + mod
+        else mod
+      }
+      val newValue = a.members(newIdx)
+      a.step(from, stepSize) === Some(newValue -> cursor / a.members.size)
+    }
+  }
 
 }
 

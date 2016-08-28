@@ -2,6 +2,7 @@ package cron4s.ext
 
 import cron4s._
 import cron4s.expr._
+
 import org.scalacheck.Arbitrary
 import org.scalatest.FunSuite
 import org.typelevel.discipline.scalatest.Discipline
@@ -69,47 +70,5 @@ abstract class ExtendedExprTestKit[DateTime : DateTimeAdapter : Equal : Arbitrar
   }
 
   for (exprType <- Seq(any, const, between, several, every)) exprType.check()
-
-  /*def checkExtendedExpr[F <: CronField](field: F)(implicit arbUnit: Arbitrary[CronUnit[F]], ev: HasCronField[CronUnit, F]): Unit = {
-    implicit lazy val arbitraryExpr = Arbitrary(arbUnit.arbitrary.map(u => exprGen(u)))
-
-    checkAll(s"ExtendedExpr[$field]", ExtendedExprTests[DateTime].extendedExpr)
-  }*/
-
-  /*def checkFieldOps[U](unit: U)(implicit isUnit: IsCronUnit[U]) = {
-    val resolved = isUnit(unit)
-
-    implicit lazy val arbitraryExpr = Arbitrary(exprGen(resolved))
-
-
-    val exprAndDateTime = for {
-      expr <- Gen.const(createAny(unit))
-      dt   <- arbitrary[DateTime]
-    } yield (expr, dt)
-
-    property(s"next:${resolved.field}") = forAll(exprAndDateTime) {
-      case (expr: Expr[_], dateTime: DateTime) =>
-        expr.next(dateTime) == expr.step(dateTime, 1)
-    }
-
-    property(s"previous:${resolved.field}") = forAll(exprAndDateTime) {
-      case (expr: Expr[_], dateTime: DateTime) =>
-        expr.previous(dateTime) == expr.step(dateTime, -1)
-    }
-
-    val exprDateTimeAndValue = for {
-      expr  <- Gen.const(createAny(unit))
-      dt    <- arbitrary[DateTime]
-      value <- Gen.choose(resolved.min, resolved.max)
-    } yield (expr, dt, value)
-
-    property(s"matches:${resolved.field}") = forAll(exprDateTimeAndValue) {
-      case (expr: Expr[_], dateTime: DateTime, value: Int) =>
-        val fieldVal = TestDummyAdapter.get(dateTime, resolved.field)
-        expr.matchesIn(dateTime) == fieldVal.exists(x => expr.matches(x))
-    }
-  }
-
-  for { unit <- CronUnit.All } checkFieldOps(unit)*/
 
 }

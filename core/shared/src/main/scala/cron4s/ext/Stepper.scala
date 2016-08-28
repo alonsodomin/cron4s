@@ -3,6 +3,7 @@ package cron4s.ext
 import cron4s._
 import cron4s.expr._
 import cron4s.types._
+
 import shapeless._
 
 import scala.annotation.tailrec
@@ -14,7 +15,7 @@ private[ext] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
 
   private[this] def stepField[F <: CronField]
       (expr: Expr[F], step: Int)
-      (implicit ev: IsFieldExpr[Expr, F]) =
+      (implicit ev: IsFieldExpr[Expr, F]): Option[(Int, Int)] =
     adapter.get(from, expr.unit.field).flatMap(v => ev.step(expr)(v, step))
 
   private[this] def stepAndAdjust[F <: CronField]
@@ -61,7 +62,7 @@ private[ext] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
     @tailrec
     def dateStepLoop(previous: Step): Step = previous match {
       case None => previous
-      case Some((dateTime, nextStep)) if nextStep != 0 =>
+      case Some((dateTime, nextStep)) if nextStep > 0 =>
         dateStepLoop(stepDatePart(previous))
 
       case Some((dateTime, _)) =>
@@ -72,8 +73,10 @@ private[ext] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
         }
     }
 
-    val initial: Step = Some((from, initialStep))
+    val initial: Step = Some(from -> initialStep)
     val timeAdjusted: Step = expr.timePart.foldLeft(initial)(steppingTime)
+    println(timeAdjusted)
+
     val adjusted = dateStepLoop(timeAdjusted)
     adjusted.map(_._1)
   }

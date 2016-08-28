@@ -160,14 +160,7 @@ private[expr] trait ExprInstances extends ExprInstances1 {
       override def matches(e: EveryExpr[F]): Predicate[Int] =
         anyOf(e.range.map(x => equalTo(x)))
 
-      override def next(e: EveryExpr[F])(from: Int): Option[Int] =
-        super.step(e)(from, e.freq).map(_._1)
-
-      override def prev(e: EveryExpr[F])(from: Int): Option[Int] =
-        super.step(e)(from, -e.freq).map(_._1)
-
-      override def step(e: EveryExpr[F])(from: Int, step: Int): Option[(Int, Int)] =
-        super.step(e)(from, step * e.freq)
+      override def steppingUnit(a: EveryExpr[F]): Int = a.freq
 
     }
 
