@@ -16,8 +16,8 @@ object Dependencies {
     val parserComb  = "1.0.2"
 
     val scalacheck  = "1.12.5"
-    val scalatest   = "3.0.0"
-    val discipline  = "0.5"
+    val scalatest   = "3.0.0-M8"
+    val discipline  = "0.4"
 
     val scalaJavaTime = "2.0.0-M3"
   }
