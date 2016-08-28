@@ -14,6 +14,7 @@ import scala.language.higherKinds
   * Created by alonsodomin on 07/11/2015.
   */
 sealed trait Expr[F <: CronField] {
+  final type FieldType = F
 
   val unit: CronUnit[F]
 

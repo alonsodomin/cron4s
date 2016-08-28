@@ -9,14 +9,8 @@ import org.typelevel.discipline.scalatest.Discipline
 /**
   * Created by alonsodomin on 31/07/2016.
   */
-class AnyExprSpec extends FunSuite with Discipline with ArbitraryExprs {
+class AnyExprSpec extends FunSuite with Discipline with ArbitraryAnyExpr {
   import CronField._
-
-  implicit lazy val arbitraryAnyMinuteExpr = Arbitrary(anyExprGen(CronUnit[Minute.type]))
-  implicit lazy val arbitraryAnyHourExpr = Arbitrary(anyExprGen(CronUnit[Hour.type]))
-  implicit lazy val arbitraryAnyDayOfMonthExpr = Arbitrary(anyExprGen(CronUnit[DayOfMonth.type]))
-  implicit lazy val arbitraryAnyMonthExpr = Arbitrary(anyExprGen(CronUnit[Month.type]))
-  implicit lazy val arbitraryAnyDayOfWeekExpr = Arbitrary(anyExprGen(CronUnit[DayOfWeek.type]))
 
   checkAll("AnyExpr[Minute]", IsFieldExprTests[AnyExpr, Minute.type].fieldExpr)
   checkAll("AnyExpr[Hour]", IsFieldExprTests[AnyExpr, Hour.type].fieldExpr)

@@ -11,14 +11,8 @@ import org.typelevel.discipline.scalatest.Discipline
 /**
   * Created by alonsodomin on 31/07/2016.
   */
-class ConstExprSpec extends FunSuite with Matchers with Discipline with ArbitraryExprs {
+class ConstExprSpec extends FunSuite with Discipline with ArbitraryConstExpr {
   import CronField._
-
-  implicit lazy val arbitraryConstMinuteExpr = Arbitrary(constExprGen(CronUnit[Minute.type]))
-  implicit lazy val arbitraryConstHourExpr = Arbitrary(constExprGen(CronUnit[Hour.type]))
-  implicit lazy val arbitraryConstDayOfMonthExpr = Arbitrary(constExprGen(CronUnit[DayOfMonth.type]))
-  implicit lazy val arbitraryConstMonthExpr = Arbitrary(constExprGen(CronUnit[Month.type]))
-  implicit lazy val arbitraryConstDayOfWeekExpr = Arbitrary(constExprGen(CronUnit[DayOfWeek.type]))
 
   checkAll("ConstExpr[Minute]", IsFieldExprTests[ConstExpr, Minute.type].fieldExpr)
   checkAll("ConstExpr[Hour]", IsFieldExprTests[ConstExpr, Hour.type].fieldExpr)

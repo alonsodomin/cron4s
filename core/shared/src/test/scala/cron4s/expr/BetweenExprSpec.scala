@@ -11,13 +11,7 @@ import org.typelevel.discipline.scalatest.Discipline
 /**
   * Created by alonsodomin on 31/07/2016.
   */
-class BetweenExprSpec extends FunSuite with Matchers with Discipline with ArbitraryExprs {
-
-  implicit lazy val arbitraryBetweenMinuteExpr = Arbitrary(betweenExprGen(CronUnit[Minute.type]))
-  implicit lazy val arbitraryBetweenHourExpr = Arbitrary(betweenExprGen(CronUnit[Hour.type]))
-  implicit lazy val arbitraryBetweenDayOfMonthExpr = Arbitrary(betweenExprGen(CronUnit[DayOfMonth.type]))
-  implicit lazy val arbitraryBetweenMonthExpr = Arbitrary(betweenExprGen(CronUnit[Month.type]))
-  implicit lazy val arbitraryBetweenDayOfWeekExpr = Arbitrary(betweenExprGen(CronUnit[DayOfWeek.type]))
+class BetweenExprSpec extends FunSuite with Discipline with ArbitraryBetweenExpr {
 
   checkAll("BetweenExpr[Minute]", IsFieldExprTests[BetweenExpr, Minute.type].fieldExpr)
   checkAll("BetweenExpr[Hour]", IsFieldExprTests[BetweenExpr, Hour.type].fieldExpr)

@@ -5,6 +5,8 @@ import cron4s.expr.{CronExpr, Expr}
 import cron4s.types.IsFieldExpr
 import org.scalacheck.{Arbitrary, Gen}
 
+import scalaz.Equal
+
 /**
   * Created by alonsodomin on 04/08/2016.
   */
@@ -19,6 +21,8 @@ object testdummy {
     months      <- Gen.choose(Months.min, Months.max)
     daysOfWeek  <- Gen.choose(DaysOfWeek.min, DaysOfWeek.max)
   } yield DummyDateTime(minutes, hours, daysOfMonth, months, daysOfWeek))
+
+  implicit val dateTimeEq = Equal.equal[DummyDateTime]((lhs, rhs) => lhs.equals(rhs))
 
   implicit object TestDummyAdapter extends DateTimeAdapter[DummyDateTime] {
     override def get[F <: CronField](dateTime: DummyDateTime, field: F): Option[Int] = Some(field match {

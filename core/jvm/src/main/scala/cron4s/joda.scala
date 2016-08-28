@@ -39,7 +39,7 @@ object joda {
   }
 
   implicit class JodaCronExpr(expr: CronExpr) extends ExtendedCronExpr[DateTime](expr)
-  implicit class JodaExpr[E[_ <: CronField] <: Expr[F], F <: CronField]
+  implicit class JodaExpr[E[_ <: CronField] <: Expr[_], F <: CronField]
       (expr: E[F])
       (implicit ev: IsFieldExpr[E, F])
     extends ExtendedExpr[E, F, DateTime](expr)

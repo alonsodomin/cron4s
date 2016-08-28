@@ -10,7 +10,7 @@ import scala.collection.mutable.ListBuffer
 /**
   * Created by alonsodomin on 31/07/2016.
   */
-trait ExprGenerators extends BaseGenerators {
+trait ExprGeneratorsOld extends BaseGenerators {
 
   private[this] def filterImpliedElems[U](unit: U, xs: Vector[EnumerableExpr[_]])(implicit isUnit: IsCronUnit[U]): Vector[EnumerableExpr[isUnit.F]] = {
     val mapped = xs.map(_.asInstanceOf[EnumerableExpr[isUnit.F]])

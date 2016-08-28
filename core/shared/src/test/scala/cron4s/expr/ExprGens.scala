@@ -11,7 +11,7 @@ import scala.collection.mutable.ListBuffer
 /**
   * Created by alonsodomin on 28/08/2016.
   */
-trait ArbitraryExprs extends ArbitraryCronUnits {
+trait ExprGens extends ArbitraryCronUnits {
 
   private[this] def filterImpliedElems[F <: CronField](xs: Vector[EnumerableExpr[F]]): Vector[EnumerableExpr[F]] = {
     val result = ListBuffer.empty[EnumerableExpr[F]]
@@ -64,7 +64,7 @@ trait ArbitraryExprs extends ArbitraryCronUnits {
   def severalExprGen[F <: CronField](unit: CronUnit[F])(implicit
       ev: HasCronField[CronUnit, F]
   ): Gen[SeveralExpr[F]] = for {
-    size  <- Gen.posNum[Int] if size > 2
+    size  <- Gen.posNum[Int] if size > 1
     elems <- Gen.containerOfN[Vector, EnumerableExpr[F]](size, enumerableExprGen(unit))
   } yield severalExpr(unit, filterImpliedElems(elems))
 
