@@ -3,7 +3,7 @@ package cron4s
 /**
   * Created by alonsodomin on 07/11/2015.
   */
-sealed trait CronField
+sealed trait CronField extends Serializable
 object CronField {
 
   case object Minute extends CronField

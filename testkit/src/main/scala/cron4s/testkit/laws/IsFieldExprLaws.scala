@@ -14,7 +14,7 @@ trait IsFieldExprLaws[E[_ <: CronField], F <: CronField] extends HasCronFieldLaw
   implicit def TC: IsFieldExpr[E, F]
 
   def matchable(expr: E[F], value: Int): Boolean = {
-    val withinRange = expr.range.contains(value)
+    val withinRange = expr.members.contains(value)
     expr.matches(value) === withinRange
   }
 

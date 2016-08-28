@@ -6,10 +6,30 @@ import cron4s.types._
 import cron4s.types.syntax._
 import org.scalacheck._
 
+import scala.collection.mutable.ListBuffer
+
 /**
   * Created by alonsodomin on 28/08/2016.
   */
 trait ArbitraryExprs extends ArbitraryCronUnits {
+
+  private[this] def filterImpliedElems[F <: CronField](xs: Vector[EnumerableExpr[F]]): Vector[EnumerableExpr[F]] = {
+    val result = ListBuffer.empty[EnumerableExpr[F]]
+    var idx = 0
+    while (idx < xs.size) {
+      val x = xs(idx)
+      val alreadyImplied = result.find(_.impliedBy(x))
+      if (alreadyImplied.isDefined) {
+        result -= alreadyImplied.get
+      }
+
+      if (!result.exists(e => x.impliedBy(e))) {
+        result += x
+      }
+      idx += 1
+    }
+    result.toVector
+  }
 
   def anyExprGen[F <: CronField](unit: CronUnit[F]): Gen[AnyExpr[F]] =
     Gen.const(AnyExpr()(unit))
@@ -46,7 +66,7 @@ trait ArbitraryExprs extends ArbitraryCronUnits {
   ): Gen[SeveralExpr[F]] = for {
     size  <- Gen.posNum[Int] if size > 2
     elems <- Gen.containerOfN[Vector, EnumerableExpr[F]](size, enumerableExprGen(unit))
-  } yield severalExpr(unit, elems)
+  } yield severalExpr(unit, filterImpliedElems(elems))
 
   //implicit lazy val arbitrarySeveralMinuteExpr = Arbitrary(severalExprGen[Minute.type])
 

@@ -19,11 +19,11 @@ class SeveralExprSpec extends FunSuite with Matchers with Discipline with Arbitr
   implicit lazy val arbitrarySeveralMonthExpr = Arbitrary(severalExprGen(CronUnit[Month.type]))
   implicit lazy val arbitrarySeveralDayOfWeekExpr = Arbitrary(severalExprGen(CronUnit[DayOfWeek.type]))
 
-  checkAll("Several[Minute]", IsFieldExprTests[SeveralExpr, Minute.type].fieldExpr)
-  checkAll("Several[Hour]", IsFieldExprTests[SeveralExpr, Hour.type].fieldExpr)
-  checkAll("Several[DayOfMonth]", IsFieldExprTests[SeveralExpr, DayOfMonth.type].fieldExpr)
-  checkAll("Several[Month]", IsFieldExprTests[SeveralExpr, Month.type].fieldExpr)
-  checkAll("Several[DayOfWeek]", IsFieldExprTests[SeveralExpr, DayOfWeek.type].fieldExpr)
+  checkAll("SeveralExpr[Minute]", IsFieldExprTests[SeveralExpr, Minute.type].fieldExpr)
+  checkAll("SeveralExpr[Hour]", IsFieldExprTests[SeveralExpr, Hour.type].fieldExpr)
+  checkAll("SeveralExpr[DayOfMonth]", IsFieldExprTests[SeveralExpr, DayOfMonth.type].fieldExpr)
+  checkAll("SeveralExpr[Month]", IsFieldExprTests[SeveralExpr, Month.type].fieldExpr)
+  checkAll("SeveralExpr[DayOfWeek]", IsFieldExprTests[SeveralExpr, DayOfWeek.type].fieldExpr)
 
   /*property("min should be the min value of the head") = forAll(severalExpressions) {
     expr => expr.min == expr.values.head.min

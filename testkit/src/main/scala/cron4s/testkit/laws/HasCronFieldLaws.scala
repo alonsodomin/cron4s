@@ -14,16 +14,16 @@ trait HasCronFieldLaws[A[_ <: CronField], F <: CronField] {
   implicit def TC: HasCronField[A, F]
 
   def min(a: A[F]): Boolean =
-    a.min === a.range.min
+    a.min === a.members.min
 
   def max(a: A[F]): Boolean =
-    a.max === a.range.max
+    a.max === a.members.max
 
   def forward(a: A[F], from: Int): Boolean =
-    a.next(from) === a.step(from, 1).map(_._2)
+    a.next(from) === a.step(from, 1).map(_._1)
 
   def backwards(a: A[F], from: Int): Boolean =
-    a.prev(from) === a.step(from, -1).map(_._2)
+    a.prev(from) === a.step(from, -1).map(_._1)
 
 }
 
