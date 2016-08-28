@@ -2,7 +2,7 @@ package cron4s.ext
 
 import cron4s._
 import cron4s.expr.{CronExpr, Expr}
-
+import cron4s.types.IsFieldExpr
 import org.scalacheck.{Arbitrary, Gen}
 
 /**
@@ -41,6 +41,9 @@ object testdummy {
   }
 
   implicit class DummyCronExpr(expr: CronExpr) extends ExtendedCronExpr[DummyDateTime](expr)
-  implicit class DummyExpr[F <: CronField](expr: Expr[F]) extends ExtendedExpr[F, DummyDateTime](expr)
+  implicit class DummyExpr[E[_ <: CronField] <: Expr[F], F <: CronField]
+      (expr: E[F])
+      (implicit ev: IsFieldExpr[E, F])
+    extends ExtendedExpr[E, F, DummyDateTime](expr)
 
 }

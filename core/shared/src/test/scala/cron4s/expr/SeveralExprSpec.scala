@@ -1,20 +1,31 @@
 package cron4s.expr
 
-import cron4s.matcher
-import cron4s.types.Sequential
+import cron4s.CronField._
+import cron4s.CronUnit
+import cron4s.testkit.discipline.IsFieldExprTests
 import org.scalacheck._
+import org.scalatest.{FunSuite, Matchers}
+import org.typelevel.discipline.scalatest.Discipline
 
-import scalaz._
-import Scalaz._
 
 /**
   * Created by alonsodomin on 01/08/2016.
   */
-object SeveralExprSpec extends Properties("SeveralExpr") with ExprGenerators {
-  import Prop._
-  import Arbitrary.arbitrary
+class SeveralExprSpec extends FunSuite with Matchers with Discipline with ArbitraryExprs {
 
-  property("min should be the min value of the head") = forAll(severalExpressions) {
+  implicit lazy val arbitrarySeveralMinuteExpr = Arbitrary(severalExprGen(CronUnit[Minute.type]))
+  implicit lazy val arbitrarySeveralHourExpr = Arbitrary(severalExprGen(CronUnit[Hour.type]))
+  implicit lazy val arbitrarySeveralDayOfMonthExpr = Arbitrary(severalExprGen(CronUnit[DayOfMonth.type]))
+  implicit lazy val arbitrarySeveralMonthExpr = Arbitrary(severalExprGen(CronUnit[Month.type]))
+  implicit lazy val arbitrarySeveralDayOfWeekExpr = Arbitrary(severalExprGen(CronUnit[DayOfWeek.type]))
+
+  checkAll("Several[Minute]", IsFieldExprTests[SeveralExpr, Minute.type].fieldExpr)
+  checkAll("Several[Hour]", IsFieldExprTests[SeveralExpr, Hour.type].fieldExpr)
+  checkAll("Several[DayOfMonth]", IsFieldExprTests[SeveralExpr, DayOfMonth.type].fieldExpr)
+  checkAll("Several[Month]", IsFieldExprTests[SeveralExpr, Month.type].fieldExpr)
+  checkAll("Several[DayOfWeek]", IsFieldExprTests[SeveralExpr, DayOfWeek.type].fieldExpr)
+
+  /*property("min should be the min value of the head") = forAll(severalExpressions) {
     expr => expr.min == expr.values.head.min
   }
 
@@ -69,6 +80,6 @@ object SeveralExprSpec extends Properties("SeveralExpr") with ExprGenerators {
     case (expr, fromValue, stepSize) =>
       val internalRange = Sequential.sequential(expr.range)
       expr.step(fromValue, stepSize) == internalRange.step(fromValue, stepSize)
-  }
+  }*/
 
 }

@@ -35,11 +35,19 @@ trait HasCronField[A[_ <: CronField], F <: CronField] {
   def next(a: A[F])(from: Int): Option[Int] = step(a)(from, 1).map(_._1)
   def prev(a: A[F])(from: Int): Option[Int] = step(a)(from, -1).map(_._1)
 
-  def range(fL: A[F]): IndexedSeq[Int]
+  def range(a: A[F]): IndexedSeq[Int]
 }
 
 object HasCronField {
 
   @inline def apply[A[_ <: CronField], F <: CronField](implicit ev: HasCronField[A, F]): HasCronField[A, F] = ev
+
+  trait Laws[A[_ <: CronField], F <: CronField] {
+    import syntax.field._
+
+    implicit def A: HasCronField[A, F]
+
+
+  }
 
 }

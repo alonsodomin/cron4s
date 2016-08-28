@@ -1,16 +1,31 @@
 package cron4s.expr
 
-import cron4s.types.Sequential
+import cron4s.CronField._
+import cron4s.CronUnit
+import cron4s.testkit.discipline.IsFieldExprTests
+
 import org.scalacheck._
+import org.scalatest.{FunSuite, Matchers}
+import org.typelevel.discipline.scalatest.Discipline
 
 /**
   * Created by alonsodomin on 31/07/2016.
   */
-object BetweenExprSpec extends Properties("BetweenExpr") with ExprGenerators {
-  import Prop._
-  import Arbitrary.arbitrary
+class BetweenExprSpec extends FunSuite with Matchers with Discipline with ArbitraryExprs {
 
-  property("min should be the begin constant") = forAll(betweenExpressions) {
+  implicit lazy val arbitraryBetweenMinuteExpr = Arbitrary(betweenExprGen(CronUnit[Minute.type]))
+  implicit lazy val arbitraryBetweenHourExpr = Arbitrary(betweenExprGen(CronUnit[Hour.type]))
+  implicit lazy val arbitraryBetweenDayOfMonthExpr = Arbitrary(betweenExprGen(CronUnit[DayOfMonth.type]))
+  implicit lazy val arbitraryBetweenMonthExpr = Arbitrary(betweenExprGen(CronUnit[Month.type]))
+  implicit lazy val arbitraryBetweenDayOfWeekExpr = Arbitrary(betweenExprGen(CronUnit[DayOfWeek.type]))
+
+  checkAll("BetweenExpr[Minute]", IsFieldExprTests[BetweenExpr, Minute.type].fieldExpr)
+  checkAll("BetweenExpr[Hour]", IsFieldExprTests[BetweenExpr, Hour.type].fieldExpr)
+  checkAll("BetweenExpr[DayOfMonth]", IsFieldExprTests[BetweenExpr, DayOfMonth.type].fieldExpr)
+  checkAll("BetweenExpr[Month]", IsFieldExprTests[BetweenExpr, Month.type].fieldExpr)
+  checkAll("BetweenExpr[DayOfWeek]", IsFieldExprTests[BetweenExpr, DayOfWeek.type].fieldExpr)
+
+  /*property("min should be the begin constant") = forAll(betweenExpressions) {
     expr => expr.begin.value == expr.min
   }
 
@@ -70,6 +85,6 @@ object BetweenExprSpec extends Properties("BetweenExpr") with ExprGenerators {
     case (expr, fromValue, stepSize) =>
       val rangeStep = Sequential.sequential(expr.range).step(fromValue, stepSize)
       expr.step(fromValue, stepSize) == rangeStep
-  }
+  }*/
 
 }

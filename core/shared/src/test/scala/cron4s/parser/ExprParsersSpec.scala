@@ -2,6 +2,8 @@ package cron4s.parser
 
 import cron4s.CronField
 import cron4s.expr._
+import cron4s.types.syntax.expr._
+
 import org.scalacheck._
 
 /**

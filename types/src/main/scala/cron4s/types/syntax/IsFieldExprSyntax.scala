@@ -24,3 +24,5 @@ private[syntax] trait IsFieldExprSyntax extends HasCronFieldSyntax {
     new IsFieldExprOps[E, F](target, tc)
 
 }
+
+object expr extends IsFieldExprSyntax

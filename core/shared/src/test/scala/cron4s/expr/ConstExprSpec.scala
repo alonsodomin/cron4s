@@ -1,15 +1,32 @@
 package cron4s.expr
 
-import org.scalacheck._
+import cron4s.CronField
+import cron4s.CronUnit
+import cron4s.testkit.discipline.IsFieldExprTests
+
+import org.scalacheck.Arbitrary
+import org.scalatest.{FunSuite, Matchers}
+import org.typelevel.discipline.scalatest.Discipline
 
 /**
   * Created by alonsodomin on 31/07/2016.
   */
-object ConstExprSpec extends Properties("ConstExpr") with ExprGenerators {
-  import Prop._
-  import Arbitrary.arbitrary
+class ConstExprSpec extends FunSuite with Matchers with Discipline with ArbitraryExprs {
+  import CronField._
 
-  property("min should be the constant value") = forAll(constExpressions) {
+  implicit lazy val arbitraryConstMinuteExpr = Arbitrary(constExprGen(CronUnit[Minute.type]))
+  implicit lazy val arbitraryConstHourExpr = Arbitrary(constExprGen(CronUnit[Hour.type]))
+  implicit lazy val arbitraryConstDayOfMonthExpr = Arbitrary(constExprGen(CronUnit[DayOfMonth.type]))
+  implicit lazy val arbitraryConstMonthExpr = Arbitrary(constExprGen(CronUnit[Month.type]))
+  implicit lazy val arbitraryConstDayOfWeekExpr = Arbitrary(constExprGen(CronUnit[DayOfWeek.type]))
+
+  checkAll("ConstExpr[Minute]", IsFieldExprTests[ConstExpr, Minute.type].fieldExpr)
+  checkAll("ConstExpr[Hour]", IsFieldExprTests[ConstExpr, Hour.type].fieldExpr)
+  checkAll("ConstExpr[DayOfMonth]", IsFieldExprTests[ConstExpr, DayOfMonth.type].fieldExpr)
+  checkAll("ConstExpr[Month]", IsFieldExprTests[ConstExpr, Month.type].fieldExpr)
+  checkAll("ConstExpr[DayOfWeek]", IsFieldExprTests[ConstExpr, DayOfWeek.type].fieldExpr)
+
+  /*property("min should be the constant value") = forAll(constExpressions) {
     expr => expr.min == expr.value
   }
 
@@ -67,6 +84,6 @@ object ConstExprSpec extends Properties("ConstExpr") with ExprGenerators {
   property("stepping from value after const returns same const without consuming steps") = forAll(stepsFromInsideRange) {
     case (expr, fromValue, stepSize) =>
       (fromValue >= expr.value && stepSize != 0) ==> expr.step(fromValue, stepSize).contains((expr.value, stepSize))
-  }
+  }*/
 
 }

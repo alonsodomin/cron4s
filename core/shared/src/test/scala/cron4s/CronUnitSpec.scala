@@ -1,39 +1,21 @@
 package cron4s
 
-import cron4s.types.Sequential
+import cron4s.testkit.discipline.HasCronFieldTests
 
-import org.scalacheck._
+import org.scalatest.{FunSuite, Matchers}
+import org.typelevel.discipline.scalatest.Discipline
 
-object CronUnitSpec extends Properties("CronUnit") with BaseGenerators {
-  import Prop._
+class CronUnitSpec extends FunSuite with Discipline with ArbitraryCronUnits {
+  import CronField._
+
+  checkAll("CronUnit[Minute]", HasCronFieldTests[CronUnit, Minute.type].hasCronField)
+  checkAll("CronUnit[Hour]", HasCronFieldTests[CronUnit, Hour.type].hasCronField)
+  checkAll("CronUnit[DayOfMonth]", HasCronFieldTests[CronUnit, DayOfMonth.type].hasCronField)
+  checkAll("CronUnit[Month]", HasCronFieldTests[CronUnit, Month.type].hasCronField)
+  checkAll("CronUnit[DayOfWeek]", HasCronFieldTests[CronUnit, DayOfWeek.type].hasCronField)
+
+  /*import Prop._
   import Arbitrary.arbitrary
-
-  val unitsAndIndexes = for {
-    unit  <- cronUnits
-    index <- Gen.choose(0, unit.range.size - 1)
-  } yield unit -> index
-
-  property("apply should return the same as apply in the actual unit range") = forAll(unitsAndIndexes) {
-    case (unit, index) => unit(index) == Some(unit.range(index))
-  }
-
-  val unitsAndIndexesOutOfBounds = for {
-    unit  <- cronUnits
-    index <- arbitrary[Int] if index < 0 || index >= unit.range.size
-  } yield unit -> index
-
-  property("apply with index out of bounds returns None") = forAll(unitsAndIndexesOutOfBounds) {
-    case (unit, index) => unit(index) == None
-  }
-
-  val unitsAndValues = for {
-    unit  <- cronUnits
-    value <- Gen.choose(unit.min, unit.max)
-  } yield unit -> value
-
-  property("indexOf should be the same as looking in the range") = forAll(unitsAndValues) {
-    case (unit, value) => unit.indexOf(value).get == unit.range.indexOf(value)
-  }
 
   val stepsFromOutsideRange = for {
     unit      <- cronUnits
@@ -57,8 +39,7 @@ object CronUnitSpec extends Properties("CronUnit") with BaseGenerators {
 
   property("stepping from inside the range yields sequential values") = forAll(stepsFromWithinRange) {
     case (unit, fromValue, stepSize) =>
-      val seq = Sequential.sequential(unit.range)
       unit.step(fromValue, stepSize) == seq.step(fromValue, stepSize)
-  }
+  }*/
 
 }

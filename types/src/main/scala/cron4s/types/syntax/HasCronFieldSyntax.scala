@@ -14,6 +14,7 @@ private[syntax] class HasCronFieldOps[C[_ <: CronField], F <: CronField](self: C
   def step(from: Int, stepSize: Int): Option[(Int, Int)] = tc.step(self)(from, stepSize)
   def next(from: Int): Option[Int] = tc.next(self)(from)
   def prev(from: Int): Option[Int] = tc.prev(self)(from)
+  def range: IndexedSeq[Int] = tc.range(self)
 }
 
 private[syntax] trait HasCronFieldSyntax {
@@ -24,3 +25,5 @@ private[syntax] trait HasCronFieldSyntax {
     new HasCronFieldOps[C, F](target, tc)
 
 }
+
+object field extends HasCronFieldSyntax

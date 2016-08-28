@@ -1,17 +1,31 @@
 package cron4s.expr
 
-import cron4s.types.Sequential
-
+import cron4s.CronField
+import cron4s.CronUnit
+import cron4s.testkit.discipline.IsFieldExprTests
 import org.scalacheck._
+import org.scalatest.{FunSuite, Matchers}
+import org.typelevel.discipline.scalatest.Discipline
 
 /**
   * Created by alonsodomin on 01/08/2016.
   */
-object EveryExprSpec extends Properties("EveryExpr") with ExprGenerators {
-  import Prop._
-  import Arbitrary.arbitrary
+class EveryExprSpec extends FunSuite with Matchers with Discipline with ArbitraryExprs {
+  import CronField._
 
-  def generateRange(expr: EveryExpr[_]): IndexedSeq[Int] = {
+  implicit lazy val arbitraryEveryMinuteExpr = Arbitrary(everyExprGen(CronUnit[Minute.type]))
+  implicit lazy val arbitraryEveryHourExpr = Arbitrary(everyExprGen(CronUnit[Hour.type]))
+  implicit lazy val arbitraryEveryDayOfMonthExpr = Arbitrary(everyExprGen(CronUnit[DayOfMonth.type]))
+  implicit lazy val arbitraryEveryMonthExpr = Arbitrary(everyExprGen(CronUnit[Month.type]))
+  implicit lazy val arbitraryEveryDayOfWeekExpr = Arbitrary(everyExprGen(CronUnit[DayOfWeek.type]))
+
+  checkAll("EveryExpr[Minute]", IsFieldExprTests[EveryExpr, Minute.type].fieldExpr)
+  checkAll("EveryExpr[Hour]", IsFieldExprTests[EveryExpr, Hour.type].fieldExpr)
+  checkAll("EveryExpr[DayOfMonth]", IsFieldExprTests[EveryExpr, DayOfMonth.type].fieldExpr)
+  checkAll("EveryExpr[Month]", IsFieldExprTests[EveryExpr, Month.type].fieldExpr)
+  checkAll("EveryExpr[DayOfWeek]", IsFieldExprTests[EveryExpr, DayOfWeek.type].fieldExpr)
+
+  /*def generateRange(expr: EveryExpr[_]): IndexedSeq[Int] = {
     Stream.iterate[Option[(Int, Int)]](Some(expr.min -> 0)) {
       prev => prev.flatMap { case (v, _) => expr.value.step(v, expr.freq) }
     }.flatten.takeWhile(_._2 < 1).map(_._1).toVector
@@ -86,6 +100,6 @@ object EveryExprSpec extends Properties("EveryExpr") with ExprGenerators {
     case (expr, fromValue) =>
       val seq = Sequential.sequential(expr.range)
       expr.previous(fromValue) == seq.step(fromValue, expr.freq * -1).map(_._1)
-  }
+  }*/
 
 }

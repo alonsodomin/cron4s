@@ -1,6 +1,8 @@
 package cron4s.expr
 
 import cron4s._
+import cron4s.types.syntax._
+
 import org.scalacheck._
 
 import scala.collection.mutable.ListBuffer
@@ -31,7 +33,7 @@ trait ExprGenerators extends BaseGenerators {
 
   // Helper methods able to construct an expression from a `CronUnit` value
 
-  protected def createAny[U](unit: U)(implicit isUnit: IsCronUnit[U]): AnyExpr[isUnit.F] =
+  /*protected def createAny[U](unit: U)(implicit isUnit: IsCronUnit[U]): AnyExpr[isUnit.F] =
     AnyExpr[isUnit.F]()(isUnit(unit))
 
   private[this] def createConst[U](unit: U, value: Int)(implicit isUnit: IsCronUnit[U]): ConstExpr[isUnit.F] =
@@ -48,11 +50,11 @@ trait ExprGenerators extends BaseGenerators {
   private[this] def createEvery[U](unit: U, base: DivisibleExpr[_], freq: Int)(implicit isUnit: IsCronUnit[U]): EveryExpr[isUnit.F] = {
     val mappedBase = base.asInstanceOf[DivisibleExpr[isUnit.F]]
     EveryExpr[isUnit.F](mappedBase, freq)(isUnit(unit))
-  }
+  }*/
 
   // Methods to construct expression generators for a give CronUnit. Uses same type resolution technique as above ones
 
-  def constExpr[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[ConstExpr[isCronUnit.F]] = {
+  /*def constExpr[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[ConstExpr[isCronUnit.F]] = {
     val resolved = isCronUnit(unit)
     for {
       value <- Gen.choose(resolved.min, resolved.max)
@@ -87,10 +89,11 @@ trait ExprGenerators extends BaseGenerators {
 
   def divisibleExpressions[U](unit: U)(implicit isCronUnit: IsCronUnit[U]): Gen[DivisibleExpr[isCronUnit.F]] =
     Gen.oneOf[DivisibleExpr[isCronUnit.F]](betweenExpr(unit), severalExpr(unit))
+*/
 
   // Random expression generators
 
-  lazy val anyExpressions = for {
+  /*lazy val anyExpressions = for {
     unit <- cronUnits
   } yield createAny(unit)
   implicit lazy val arbitraryAnyExpression = Arbitrary(anyExpressions)
@@ -119,6 +122,6 @@ trait ExprGenerators extends BaseGenerators {
     base <- divisibleExpressions(unit)
     freq <- Gen.posNum[Int] if freq > 0
   } yield createEvery(unit, base, freq)
-  implicit lazy val arbitraryEveryExpression = Arbitrary(everyExpressions)
+  implicit lazy val arbitraryEveryExpression = Arbitrary(everyExpressions)*/
 
 }

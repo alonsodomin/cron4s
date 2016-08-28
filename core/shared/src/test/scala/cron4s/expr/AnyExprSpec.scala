@@ -1,15 +1,30 @@
 package cron4s.expr
 
+import cron4s.{ArbitraryCronUnits, CronField, CronUnit, IsCronUnit}
+import cron4s.testkit.discipline.IsFieldExprTests
 import org.scalacheck._
+import org.scalatest.{FunSuite, Matchers}
+import org.typelevel.discipline.scalatest.Discipline
 
 /**
   * Created by alonsodomin on 31/07/2016.
   */
-object AnyExprSpec extends Properties("AnyExpr") with ExprGenerators {
-  import Prop._
-  import Arbitrary.arbitrary
+class AnyExprSpec extends FunSuite with Discipline with ArbitraryExprs {
+  import CronField._
 
-  property("min should be the same as its unit") = forAll(anyExpressions) {
+  implicit lazy val arbitraryAnyMinuteExpr = Arbitrary(anyExprGen(CronUnit[Minute.type]))
+  implicit lazy val arbitraryAnyHourExpr = Arbitrary(anyExprGen(CronUnit[Hour.type]))
+  implicit lazy val arbitraryAnyDayOfMonthExpr = Arbitrary(anyExprGen(CronUnit[DayOfMonth.type]))
+  implicit lazy val arbitraryAnyMonthExpr = Arbitrary(anyExprGen(CronUnit[Month.type]))
+  implicit lazy val arbitraryAnyDayOfWeekExpr = Arbitrary(anyExprGen(CronUnit[DayOfWeek.type]))
+
+  checkAll("AnyExpr[Minute]", IsFieldExprTests[AnyExpr, Minute.type].fieldExpr)
+  checkAll("AnyExpr[Hour]", IsFieldExprTests[AnyExpr, Hour.type].fieldExpr)
+  checkAll("AnyExpr[DayOfMonth]", IsFieldExprTests[AnyExpr, DayOfMonth.type].fieldExpr)
+  checkAll("AnyExpr[Month]", IsFieldExprTests[AnyExpr, Month.type].fieldExpr)
+  checkAll("AnyExpr[DayOfWeek]", IsFieldExprTests[AnyExpr, DayOfWeek.type].fieldExpr)
+
+  /*property("min should be the same as its unit") = forAll(anyExpressions) {
     expr => expr.min == expr.unit.min
   }
 
@@ -48,6 +63,6 @@ object AnyExprSpec extends Properties("AnyExpr") with ExprGenerators {
   property("step should be the same as its unit") = forAll(valuesAndSteps) {
     case (expr, value, step) =>
       expr.step(value, step) == expr.unit.step(value, step)
-  }
+  }*/
 
 }

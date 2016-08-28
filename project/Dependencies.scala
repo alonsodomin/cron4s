@@ -17,6 +17,7 @@ object Dependencies {
 
     val scalacheck  = "1.12.5"
     val scalatest   = "3.0.0"
+    val discipline  = "0.5"
 
     val scalaJavaTime = "2.0.0-M3"
   }
@@ -56,8 +57,21 @@ object Dependencies {
       compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
 
       "org.scalaz"     %%% "scalaz-core"               % version.scalaz,
-      "org.scalaz"     %%% "scalaz-scalacheck-binding" % version.scalaz         % Test,
+      "org.typelevel"  %%% "discipline"                % version.discipline % Test,
+      "org.scalaz"     %%% "scalaz-scalacheck-binding" % version.scalaz     % Test,
       "org.scalacheck" %%% "scalacheck"                % version.scalacheck % Test
+    )
+  }
+
+  lazy val testkit = Def.settings {
+    libraryDependencies ++= Seq(
+      compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full),
+      compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
+
+      "org.scalaz"     %%% "scalaz-core"               % version.scalaz,
+      "org.typelevel"  %%% "discipline"                % version.discipline,
+      "org.scalaz"     %%% "scalaz-scalacheck-binding" % version.scalaz,
+      "org.scalacheck" %%% "scalacheck"                % version.scalacheck
     )
   }
 

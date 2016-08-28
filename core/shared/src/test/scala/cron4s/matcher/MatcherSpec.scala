@@ -15,7 +15,7 @@ object MatcherSpec extends Properties("Matcher") {
   import Arbitrary.arbitrary
 
   implicit lazy val arbitraryMatcher = Arbitrary[Predicate[Int]] {
-    for { x <- arbitrary[Int] } yield equal(x)
+    for { x <- arbitrary[Int] } yield equalTo(x)
   }
 
   implicit val matcherEquality = Equal.equalBy[Predicate[Int], Boolean](_.apply(0))

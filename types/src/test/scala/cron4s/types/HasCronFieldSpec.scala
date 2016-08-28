@@ -1,13 +1,16 @@
 package cron4s.types
 
+import cron4s.CronField
 import org.scalacheck._
 
 /**
   * Created by alonsodomin on 04/08/2016.
   */
-object SequentialSpec extends Properties("Sequential") {
+object HasCronFieldSpec extends Properties("HasCronField") {
   import Prop._
   import Arbitrary.arbitrary
+
+  /*def hasCronField[F <: CronField]
 
   val sequentialGen = for {
     vector     <- Gen.nonEmptyContainerOf[Vector, Int](arbitrary[Int])
@@ -37,6 +40,6 @@ object SequentialSpec extends Properties("Sequential") {
   property("step on sequential of one element") = forAll(sequentialOfOneValue) {
     case (value, seq, fromValue, stepSize) =>
       seq.step(fromValue, stepSize).contains(value -> stepSize)
-  }
+  }*/
 
 }
