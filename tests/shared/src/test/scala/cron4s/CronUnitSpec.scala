@@ -1,6 +1,6 @@
 package cron4s
 
-import cron4s.laws.discipline.HasCronFieldTests
+import cron4s.testkit.discipline.HasCronFieldTests
 import cron4s.testkit.gen.ArbitraryCronUnits
 import org.scalatest.FunSuite
 import org.typelevel.discipline.scalatest.Discipline

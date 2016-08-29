@@ -1,11 +1,10 @@
-package cron4s.laws.laws
+package cron4s.testkit.laws
 
 import cron4s.CronField
 import cron4s.types.IsFieldExpr
 import cron4s.types.syntax.expr._
 
-import scalaz._
-import Scalaz._
+import scalaz.Scalaz._
 
 /**
   * Created by alonsodomin on 28/08/2016.

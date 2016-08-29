@@ -2,7 +2,10 @@ package cron4s.bench
 
 import cron4s._
 import cron4s.expr._
+
 import org.openjdk.jmh.annotations._
+
+import scalaz.NonEmptyList
 
 /**
   * Created by alonsodomin on 03/08/2016.
@@ -19,15 +22,18 @@ class ExprMatcherBenchmark {
     ConstExpr(CronField.Minute, CronUnit.Minutes.max)
   )
   val severalEnumeratedExpr = {
-    val minutes = for {
+    val minutes: Seq[EnumerableExpr[CronField.Minute.type]] = for {
       value <- CronUnit.Minutes.range
     } yield ConstExpr(CronField.Minute, value)
-    SeveralExpr(minutes.head, minutes.tail: _*)
+    SeveralExpr(NonEmptyList(minutes.head, minutes.tail: _*))
   }
-  val severalBetweenExpr = SeveralExpr(BetweenExpr(
-    ConstExpr(CronField.Minute, CronUnit.Minutes.min),
-    ConstExpr(CronField.Minute, CronUnit.Minutes.max)
-  ))
+  val severalBetweenExpr = {
+    val betweenExpr: EnumerableExpr[CronField.Minute.type] = BetweenExpr(
+      ConstExpr(CronField.Minute, CronUnit.Minutes.min),
+      ConstExpr(CronField.Minute, CronUnit.Minutes.max)
+    )
+    SeveralExpr(NonEmptyList(betweenExpr))
+  }
   val everyAnyExpr = EveryExpr(anyExpr, 1)
 
   @Benchmark

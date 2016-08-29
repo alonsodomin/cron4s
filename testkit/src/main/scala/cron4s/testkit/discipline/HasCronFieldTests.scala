@@ -1,14 +1,11 @@
-package cron4s.laws.discipline
+package cron4s.testkit.discipline
 
 import cron4s.CronField
-import cron4s.laws.laws.HasCronFieldLaws
+import cron4s.testkit.laws.HasCronFieldLaws
 import cron4s.types.HasCronField
-
-import org.typelevel.discipline.Laws
-
 import org.scalacheck.Arbitrary
-import org.scalacheck.Prop
-import Prop._
+import org.scalacheck.Prop._
+import org.typelevel.discipline.Laws
 
 /**
   * Created by alonsodomin on 27/08/2016.

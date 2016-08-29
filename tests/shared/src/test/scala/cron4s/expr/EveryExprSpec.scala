@@ -1,7 +1,7 @@
 package cron4s.expr
 
 import cron4s.CronField
-import cron4s.laws.discipline.IsFieldExprTests
+import cron4s.testkit.discipline.IsFieldExprTests
 import cron4s.testkit.gen.ArbitraryEveryExpr
 import org.scalatest.FunSuite
 import org.typelevel.discipline.scalatest.Discipline

@@ -1,12 +1,10 @@
-package cron4s.laws.discipline
+package cron4s.testkit.discipline
 
 import cron4s.CronField
-import cron4s.laws.laws.IsFieldExprLaws
+import cron4s.testkit.laws.IsFieldExprLaws
 import cron4s.types.IsFieldExpr
-
 import org.scalacheck.Arbitrary
-import org.scalacheck.Prop
-import Prop._
+import org.scalacheck.Prop._
 
 /**
   * Created by alonsodomin on 28/08/2016.
