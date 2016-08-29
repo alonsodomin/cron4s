@@ -2,10 +2,13 @@ package cron4s.japi
 
 import cron4s.CronField._
 import cron4s.expr.{AnyExpr, ConstExpr, CronExpr}
+
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatest.{Matchers, PropSpec}
+
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.temporal.Temporal
+
 import shapeless._
 
 /**
