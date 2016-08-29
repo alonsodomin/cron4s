@@ -25,6 +25,10 @@ object ExprParsersSpec extends Properties("ExprParsers") with ExprParsers with I
   def verifyConst[F <: CronField](parser: Parser[ConstExpr[F]], input: String)(verify: ConstExpr[F] => Boolean): Boolean =
     verifyParsed[F, ConstExpr[F]](parser, input)(verify)
 
+  property("should be able to parse seconds") = forAll(Gen.choose(0, 59)) {
+    x => verifyConst(second, x.toString) { expr => expr.value == x }
+  }
+
   property("should be able to parse minutes") = forAll(Gen.choose(0, 59)) {
     x => verifyConst(minute, x.toString) { expr => expr.value == x }
   }
