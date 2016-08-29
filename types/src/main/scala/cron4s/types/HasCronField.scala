@@ -18,9 +18,10 @@ trait HasCronField[A[_ <: CronField], F <: CronField] {
     val aRange = range(a)
 
     if (aRange.isEmpty) None
-    else if (stepSize == 0) Some(from -> 0)
-    else if (min(a) == max(a) && from >= max(a)) {
+    else if (from < min(a) && stepSize >= 0) {
       Some(min(a) -> (stepSize * steppingUnit(a)))
+    } else if (from > max(a) && stepSize <= 0) {
+      Some(max(a) -> (stepSize * steppingUnit(a)))
     } else {
       val index = aRange.lastIndexWhere(from >= _)
       val cursor = index + (stepSize * steppingUnit(a))

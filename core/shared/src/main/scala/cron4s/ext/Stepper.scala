@@ -49,34 +49,35 @@ private[ext] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
   }
 
   def run(expr: CronExpr): Option[DateTime] = {
-    implicit val conjuction = Predicate.conjunction
-    val matching = new PredicateReducer[DateTime].run(expr)
+    val matches = {
+      implicit val conjuction = Predicate.conjunction
+      new PredicateReducer[DateTime].run(expr)
+    }
 
-    def stepDatePart(previous: Step): Step = {
-      val dateWithoutWeekOfDay = expr.datePart.take(2)
+    val dateWithoutWeekOfDay = expr.datePart.take(2)
+
+    def stepDatePart(previous: Step): Step =
       dateWithoutWeekOfDay.foldLeft(previous)(steppingDate).flatMap {
         case (dt, stepSize) => stepDayOfWeek(dt, expr.daysOfWeek, stepSize)
       }
-    }
 
     @tailrec
-    def dateStepLoop(previous: Step): Step = previous match {
-      case None => previous
-      case Some((dateTime, nextStep)) if nextStep > 0 =>
-        dateStepLoop(stepDatePart(previous))
+    def dateStepLoop(previous: Step): Step = {
+      val dateAdjusted = stepDatePart(previous)
+      dateAdjusted match {
+        case Some((dateTime, nextStep)) if nextStep != 0 =>
+          dateStepLoop(stepDatePart(dateAdjusted))
 
-      case Some((dateTime, _)) =>
-        if (matching(dateTime)) previous
-        else {
+        case Some((dateTime, _)) if !matches(dateTime) =>
           val nextStep: Step = Some(dateTime -> 1)
           stepDatePart(nextStep)
-        }
+
+        case _ => dateAdjusted
+      }
     }
 
     val initial: Step = Some(from -> initialStep)
     val timeAdjusted: Step = expr.timePart.foldLeft(initial)(steppingTime)
-    println(timeAdjusted)
-
     val adjusted = dateStepLoop(timeAdjusted)
     adjusted.map(_._1)
   }

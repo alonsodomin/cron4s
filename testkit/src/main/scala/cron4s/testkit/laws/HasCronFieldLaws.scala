@@ -28,10 +28,10 @@ trait HasCronFieldLaws[A[_ <: CronField], F <: CronField] {
   def stepable(a: A[F], from: Int, stepSize: Int): Boolean = {
     if (a.members.isEmpty) {
       a.step(from, stepSize) === None
-    } else if (stepSize == 0) {
-      a.step(from, stepSize) === Some(from -> 0)
-    } else if (a.members.size === 1 && from >= a.max) {
+    } else if (from < a.min && stepSize >= 0) {
       a.step(from, stepSize) === Some(a.min -> (stepSize * TC.steppingUnit(a)))
+    } else if (from > a.max && stepSize <= 0) {
+      a.step(from, stepSize) === Some(a.max -> (stepSize * TC.steppingUnit(a)))
     } else {
       val index = a.members.lastIndexWhere(from >= _)
       val cursor = index + (stepSize * TC.steppingUnit(a))
