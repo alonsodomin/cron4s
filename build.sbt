@@ -128,8 +128,8 @@ lazy val cron4sJS = (project in file(".js")).
   settings(commonJsSettings: _*).
   settings(publishSettings).
   enablePlugins(ScalaJSPlugin).
-  aggregate(typesJS, testkitJS, coreJS).
-  dependsOn(typesJS, testkitJS, coreJS)
+  aggregate(typesJS, lawsJS, testkitJS, coreJS, testsJS).
+  dependsOn(typesJS, lawsJS, testkitJS, coreJS, testsJS)
 
 lazy val cron4sJVM = (project in file(".jvm")).
   settings(
@@ -138,8 +138,8 @@ lazy val cron4sJVM = (project in file(".jvm")).
   ).
   settings(commonSettings: _*).
   settings(publishSettings).
-  aggregate(typesJVM, testkitJVM, coreJVM).
-  dependsOn(typesJVM, testkitJVM, coreJVM)
+  aggregate(typesJVM, lawsJVM, testkitJVM, coreJVM, testsJVM).
+  dependsOn(typesJVM, lawsJVM, testkitJVM, coreJVM, testsJVM)
 
 lazy val core = (crossProject in file("core")).
   settings(
@@ -152,7 +152,7 @@ lazy val core = (crossProject in file("core")).
   settings(Dependencies.core: _*).
   jvmSettings(Dependencies.coreJVM: _*).
   jsSettings(Dependencies.coreJS: _*).
-  dependsOn(types, testkit % Test)
+  dependsOn(types, laws % Test)
 
 lazy val coreJS = core.js
 lazy val coreJVM = core.jvm
@@ -166,7 +166,7 @@ lazy val testkit = (crossProject.crossType(CrossType.Pure) in file("testkit")).
   settings(commonJsSettings: _*).
   settings(publishSettings: _*).
   settings(Dependencies.testkit: _*).
-  dependsOn(types)
+  dependsOn(core, laws)
 
 lazy val testkitJS = testkit.js
 lazy val testkitJVM = testkit.jvm
@@ -183,6 +183,36 @@ lazy val types = (crossProject.crossType(CrossType.Pure) in file("types")).
 
 lazy val typesJS = types.js
 lazy val typesJVM = types.jvm
+
+lazy val laws = (crossProject.crossType(CrossType.Pure) in file("laws")).
+  settings(
+    name := "laws",
+    moduleName := "cron4s-laws"
+  ).
+  settings(commonSettings: _*).
+  settings(commonJsSettings: _*).
+  settings(publishSettings: _*).
+  settings(Dependencies.laws: _*).
+  dependsOn(types)
+
+lazy val lawsJS = laws.js
+lazy val lawsJVM = laws.jvm
+
+lazy val tests = (crossProject in file("tests")).
+  settings(
+    name := "tests",
+    moduleName := "cron4s-tests"
+  ).
+  settings(commonSettings: _*).
+  settings(commonJsSettings: _*).
+  settings(noPublishSettings: _*).
+  settings(Dependencies.tests: _*).
+  jvmSettings(Dependencies.testsJVM: _*).
+  jsSettings(Dependencies.testsJS: _*).
+  dependsOn(testkit % Test)
+
+lazy val testsJS = tests.js
+lazy val testsJVM = tests.jvm
 
 lazy val bench = (project in file("bench")).
   settings(name := "bench").

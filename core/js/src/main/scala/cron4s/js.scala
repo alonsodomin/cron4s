@@ -48,7 +48,7 @@ object js {
   }
 
   implicit class JSCronExpr(expr: CronExpr) extends ExtendedCronExpr[Date](expr)
-  implicit class JSExpr[E[_ <: CronField] <: Expr[F], F <: CronField]
+  implicit class JSExpr[E[_ <: CronField] <: Expr[_], F <: CronField]
       (expr: E[F])
       (implicit ev: IsFieldExpr[E, F])
     extends ExtendedExpr[E, F, Date](expr)
