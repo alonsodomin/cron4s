@@ -30,8 +30,7 @@ val commonSettings = Def.settings(
 lazy val commonJsSettings = Seq(
   scalaJSStage in Test := FastOptStage,
   scalaJSUseRhino in Global := false,
-  persistLauncher in Test := false,
-  coverageExcludedFiles := ".*"
+  persistLauncher in Test := false
 )
 
 lazy val noPublishSettings = Seq(
