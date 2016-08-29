@@ -1,6 +1,7 @@
 package cron4s.expr
 
 import cron4s.{CronField, CronUnit}
+import cron4s.types._
 
 import scalaz._
 import Scalaz._
@@ -10,17 +11,18 @@ import Scalaz._
   */
 private[expr] object validation {
 
-  type ValidatedExpr[F <: CronField] = ValidationNel[String, SeveralExpr[F]]
+  type ValidatedExpr[E[_ <: CronField], F <: CronField] = ValidationNel[String, E[F]]
 
-  def validateSeveralExpr[F <: CronField](exprs: NonEmptyList[EnumerableExpr[F]])
-                                         (implicit unit: CronUnit[F]): ValidatedExpr[F] = {
+  def validateSeveral[F <: CronField](exprs: NonEmptyList[EnumerableExpr[F]])
+      (implicit unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F]): ValidatedExpr[SeveralExpr, F] = {
 
-    def validateImplication(expr: EnumerableExpr[F],
-                            processed: Vector[EnumerableExpr[F]]
-                           ): ValidationNel[String, EnumerableExpr[F]] = {
-      val alreadyImplied = processed.find(e => expr.impliedBy(e)).
+    def validateImplication(
+        expr: EnumerableExpr[F],
+        processed: Vector[EnumerableExpr[F]]
+    ): ValidatedExpr[EnumerableExpr, F] = {
+      val alreadyImplied = processed.find(e => ops.impliedBy(expr)(e)).
         map(found => s"Expression $expr is implied by $found".failureNel[EnumerableExpr[F]])
-      val impliesOther = processed.find(_.impliedBy(expr)).
+      val impliesOther = processed.find(e => ops.impliedBy(e)(expr)).
         map(found => s"Expression $found is implied by $expr".failureNel[EnumerableExpr[F]])
 
       alreadyImplied.orElse(impliesOther).getOrElse(expr.successNel[String])
@@ -31,7 +33,7 @@ private[expr] object validation {
       val validated = (acc |@| validateImplication(expr, seen))((prev, next) => prev :+ next)
       (seen :+ expr, validated)
     }
-    result.map(vec => SeveralExpr(vec.sorted))
+    result.map(vec => SeveralExpr[F](vec.sorted))
   }
 
 }

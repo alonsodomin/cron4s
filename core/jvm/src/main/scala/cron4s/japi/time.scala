@@ -5,6 +5,7 @@ import java.time.temporal.{ChronoField, Temporal, TemporalField}
 import cron4s.CronField
 import cron4s.expr._
 import cron4s.ext._
+import cron4s.types.IsFieldExpr
 
 /**
   * Created by domingueza on 29/07/2016.
@@ -40,7 +41,10 @@ object time {
 
   }
 
-  implicit class Java8Expr[F <: CronField, DT <: Temporal](expr: Expr[F]) extends ExtendedExpr[F, DT](expr)
   implicit class Java8CronExpr[DT <: Temporal](expr: CronExpr) extends ExtendedCronExpr[DT](expr)
+  implicit class Java8Expr[E[_ <: CronField] <: Expr[_], F <: CronField, DT <: Temporal]
+      (expr: E[F])
+      (implicit ev: IsFieldExpr[E, F])
+    extends ExtendedExpr[E, F, DT](expr)
 
 }

@@ -2,6 +2,7 @@ package cron4s
 
 import cron4s.expr._
 import cron4s.ext._
+import cron4s.types.IsFieldExpr
 
 import org.joda.time.{DateTime, DateTimeFieldType}
 
@@ -39,6 +40,9 @@ object joda {
   }
 
   implicit class JodaCronExpr(expr: CronExpr) extends ExtendedCronExpr[DateTime](expr)
-  implicit class JodaExpr[F <: CronField](expr: Expr[F]) extends ExtendedExpr[F, DateTime](expr)
+  implicit class JodaExpr[E[_ <: CronField] <: Expr[_], F <: CronField]
+      (expr: E[F])
+      (implicit ev: IsFieldExpr[E, F])
+    extends ExtendedExpr[E, F, DateTime](expr)
 
 }
