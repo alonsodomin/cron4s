@@ -2,12 +2,11 @@ package cron4s.types
 
 import org.scalacheck._
 
+import cron4s.types.syntax.predicate._
+
 import scalaz._
 import Scalaz._
-
 import scalaz.scalacheck.ScalazProperties._
-
-import cron4s.types.syntax.predicate._
 
 /**
   * Created by alonsodomin on 04/08/2016.
@@ -99,8 +98,8 @@ object PredicateSpec extends Properties("Predicate") {
     value <- arbitrary[Int]
   } yield (list, value)
 
-  property("none") = forAll(predicateList) {
-    case (list, value) => none(list).apply(value) == not(allOf(list))(value)
+  property("noneOf") = forAll(predicateList) {
+    case (list, value) => noneOf(list).apply(value) == not(allOf(list))(value)
   }
 
   property("anyOf") = forAll(predicateList) {
