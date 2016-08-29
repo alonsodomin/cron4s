@@ -5,12 +5,19 @@ import cron4s.CronField._
 import cron4s.expr.{CronExpr, Expr}
 import cron4s.ext.{DateTimeAdapter, ExtendedCronExpr, ExtendedExpr}
 import cron4s.types.IsFieldExpr
+
+import org.threeten.bp.{LocalDateTime, ZonedDateTime}
 import org.threeten.bp.temporal.{ChronoField, Temporal, TemporalField}
+
+import scalaz.Equal
 
 /**
   * Created by alonsodomin on 11/08/2016.
   */
 object threetenbp {
+
+  implicit val localDateTimeInstance = Equal.equalA[LocalDateTime]
+  implicit val zonedDateTimeInstnce = Equal.equalA[ZonedDateTime]
 
   implicit def jsr310Adapter[DT <: Temporal]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
 

@@ -7,11 +7,16 @@ import cron4s.expr.{CronExpr, Expr}
 import cron4s.ext.{DateTimeAdapter, ExtendedCronExpr, ExtendedExpr}
 import cron4s.types.IsFieldExpr
 
+import scalaz._
+import Scalaz._
+
 /**
   * Created by alonsodomin on 31/07/2016.
   */
 object calendar {
   import CronField._
+
+  implicit val calendarInstance = Equal.equalBy[Calendar, Long](_.getTimeInMillis)
 
   implicit object JavaCalendarAdapter extends DateTimeAdapter[Calendar] {
 

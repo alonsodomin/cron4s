@@ -6,11 +6,15 @@ import cron4s.types.IsFieldExpr
 
 import org.joda.time.{DateTime, DateTimeFieldType}
 
+import scalaz.Equal
+
 /**
   * Created by domingueza on 29/07/2016.
   */
 object joda {
   import CronField._
+
+  implicit val dateTimeInstance = Equal.equalA[DateTime]
 
   implicit object JodaTimeAdapter extends DateTimeAdapter[DateTime] {
 

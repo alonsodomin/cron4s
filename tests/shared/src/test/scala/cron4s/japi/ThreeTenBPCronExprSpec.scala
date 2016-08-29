@@ -8,9 +8,4 @@ import threetenbp._
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-class ThreeTenBPCronExprSpec extends ExtendedCronExprTestKit[LocalDateTime] {
-
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): LocalDateTime =
-    LocalDateTime.of(2016, month, dayOfMonth, hours, minutes, seconds)
-
-}
+class ThreeTenBPCronExprSpec extends ExtendedCronExprTestKit[LocalDateTime] with ThreeTenBPLocalDateTimeTestBase

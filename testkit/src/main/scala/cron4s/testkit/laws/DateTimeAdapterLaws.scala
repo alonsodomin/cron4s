@@ -12,18 +12,16 @@ import Scalaz._
   */
 trait DateTimeAdapterLaws[DateTime <: AnyRef] {
   implicit def adapter: DateTimeAdapter[DateTime]
-  implicit def eq: Equal[DateTime]
+  implicit val eq: Equal[DateTime]
 
   def immutability[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Boolean = {
-    val result = for {
-      current     <- adapter.get(dt, fieldValue.field)
-      newDateTime <- adapter.set(dt, fieldValue.field, fieldValue.value)
-    } yield {
-      if (current == fieldValue.value) newDateTime === dt
-      else newDateTime =/= dt
-    }
+    val currentVal = adapter.get(dt, fieldValue.field)
+    val newDateTime = adapter.set(dt, fieldValue.field, fieldValue.value)
 
-    result.exists(identity)
+    currentVal.flatMap(current => newDateTime.map { ndt =>
+      if (current == fieldValue.value) ndt == dt
+      else ndt != dt
+    }).exists(identity)
   }
 
   def settable[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Boolean = {
@@ -40,7 +38,7 @@ object DateTimeAdapterLaws {
       eqEv: Equal[DateTime]
   ): DateTimeAdapterLaws[DateTime] =
     new DateTimeAdapterLaws[DateTime] {
-      implicit def eq: Equal[DateTime] = eqEv
+      implicit val eq: Equal[DateTime] = eqEv
       implicit def adapter: DateTimeAdapter[DateTime] = adapterEv
     }
 

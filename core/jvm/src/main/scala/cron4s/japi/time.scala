@@ -1,5 +1,6 @@
 package cron4s.japi
 
+import java.time.{LocalDateTime, ZonedDateTime}
 import java.time.temporal.{ChronoField, Temporal, TemporalField}
 
 import cron4s.CronField
@@ -7,11 +8,17 @@ import cron4s.expr._
 import cron4s.ext._
 import cron4s.types.IsFieldExpr
 
+import scalaz.Equal
+
 /**
   * Created by domingueza on 29/07/2016.
   */
 object time {
   import CronField._
+
+  implicit val localDateTimeInstance = Equal.equalA[LocalDateTime]
+
+  implicit val zonedDateTimeInstance = Equal.equalA[ZonedDateTime]
 
   implicit def javaTimeAdapter[DT <: Temporal]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
 

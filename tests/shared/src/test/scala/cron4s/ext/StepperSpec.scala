@@ -2,8 +2,10 @@ package cron4s.ext
 
 import cron4s._
 import cron4s.expr._
+
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatest.{Matchers, PropSpec}
+
 import shapeless._
 
 /**

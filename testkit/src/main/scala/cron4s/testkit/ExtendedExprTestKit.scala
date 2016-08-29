@@ -6,7 +6,7 @@ import cron4s.ext.DateTimeAdapter
 import cron4s.testkit.discipline.ExtendedExprTests
 import cron4s.testkit.gen._
 
-import org.scalacheck.Arbitrary
+import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
 
 import org.typelevel.discipline.scalatest.Discipline
@@ -16,12 +16,23 @@ import scalaz.Equal
 /**
   * Created by alonsodomin on 04/08/2016.
   */
-abstract class ExtendedExprTestKit[DateTime : DateTimeAdapter : Equal : Arbitrary] extends FunSuite with Discipline {
+abstract class ExtendedExprTestKit[DateTime <: AnyRef : DateTimeAdapter : Equal]
+  extends FunSuite with Discipline with ExtensionsTestKitBase[DateTime] {
   import CronField._
+  import CronUnit._
 
   trait ExprCheck {
     def check(): Unit
   }
+
+  implicit lazy val arbitraryDateTime = Arbitrary(for {
+    seconds     <- Gen.choose(Seconds.min, Seconds.max)
+    minutes     <- Gen.choose(Minutes.min, Minutes.max)
+    hours       <- Gen.choose(Hours.min, Hours.max)
+    daysOfMonth <- Gen.choose(DaysOfMonth.min, DaysOfMonth.max)
+    months      <- Gen.choose(Months.min, Months.max)
+    daysOfWeek  <- Gen.choose(DaysOfWeek.min, DaysOfWeek.max)
+  } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, daysOfWeek))
 
   object any extends ExprCheck with ArbitraryAnyExpr {
     def check() = {

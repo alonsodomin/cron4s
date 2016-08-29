@@ -3,7 +3,6 @@ package cron4s.ext
 import cron4s._
 import cron4s.expr.{CronExpr, Expr}
 import cron4s.types.IsFieldExpr
-import org.scalacheck.{Arbitrary, Gen}
 
 import scalaz.Equal
 
@@ -12,18 +11,8 @@ import scalaz.Equal
   */
 object testdummy {
   import CronField._
-  import CronUnit._
 
-  implicit lazy val arbitraryDummyDateTime = Arbitrary(for {
-    seconds     <- Gen.choose(Seconds.min, Seconds.max)
-    minutes     <- Gen.choose(Minutes.min, Minutes.max)
-    hours       <- Gen.choose(Hours.min, Hours.max)
-    daysOfMonth <- Gen.choose(DaysOfMonth.min, DaysOfMonth.max)
-    months      <- Gen.choose(Months.min, Months.max)
-    daysOfWeek  <- Gen.choose(DaysOfWeek.min, DaysOfWeek.max)
-  } yield DummyDateTime(seconds, minutes, hours, daysOfMonth, months, daysOfWeek))
-
-  implicit val dateTimeEq = Equal.equal[DummyDateTime]((lhs, rhs) => lhs.equals(rhs))
+  implicit val dummyDTInstance = Equal.equalA[DummyDateTime]
 
   implicit object TestDummyAdapter extends DateTimeAdapter[DummyDateTime] {
     override def get[F <: CronField](dateTime: DummyDateTime, field: F): Option[Int] = Some(field match {
