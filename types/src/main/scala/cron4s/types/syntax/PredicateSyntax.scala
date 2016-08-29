@@ -27,3 +27,5 @@ trait PredicateSyntax {
     Predicate { a => ev.all(c)(_(a)) }
 
 }
+
+object predicate extends PredicateSyntax
