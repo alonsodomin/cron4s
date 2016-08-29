@@ -9,6 +9,7 @@ import org.scalacheck.Arbitrary
   */
 trait ArbitraryBetweenExpr extends ExprGens {
 
+  implicit lazy val arbitraryBetweenSecondExpr = Arbitrary(betweenExprGen(CronUnit[Second.type]))
   implicit lazy val arbitraryBetweenMinuteExpr = Arbitrary(betweenExprGen(CronUnit[Minute.type]))
   implicit lazy val arbitraryBetweenHourExpr = Arbitrary(betweenExprGen(CronUnit[Hour.type]))
   implicit lazy val arbitraryBetweenDayOfMonthExpr = Arbitrary(betweenExprGen(CronUnit[DayOfMonth.type]))

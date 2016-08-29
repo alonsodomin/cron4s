@@ -10,7 +10,7 @@ import threetenbp._
   */
 class ThreeTenBPCronExprSpec extends ExtendedCronExprTestKit[LocalDateTime] {
 
-  def createDateTime(minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): LocalDateTime =
-    LocalDateTime.of(2016, month, dayOfMonth, hours, minutes)
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): LocalDateTime =
+    LocalDateTime.of(2016, month, dayOfMonth, hours, minutes, seconds)
 
 }

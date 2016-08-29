@@ -39,6 +39,7 @@ private[ext] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
   }
 
   object steppingTime extends Poly {
+    implicit def caseSeconds     = use((step: Step, expr: SecondExpr) => stepAndAdjust(step, expr))
     implicit def caseMinutes     = use((step: Step, expr: MinutesExpr) => stepAndAdjust(step, expr))
     implicit def caseHours       = use((step: Step, expr: HoursExpr) => stepAndAdjust(step, expr))
   }

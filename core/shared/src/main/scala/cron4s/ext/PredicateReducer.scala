@@ -23,6 +23,7 @@ private[ext] final class PredicateReducer[DateTime]
         adapter.get(dt, field).map(ev.matches(expr)).getOrElse(!M.empty[DateTime](dt))
       }
 
+    implicit def caseSeconds     = at[SecondExpr](expr => predicateFor(Second, expr))
     implicit def caseMinutes     = at[MinutesExpr](expr => predicateFor(Minute, expr))
     implicit def caseHours       = at[HoursExpr](expr => predicateFor(Hour, expr))
     implicit def caseDaysOfMonth = at[DaysOfMonthExpr](expr => predicateFor(DayOfMonth, expr))

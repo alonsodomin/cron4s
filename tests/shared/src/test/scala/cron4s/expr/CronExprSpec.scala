@@ -10,16 +10,20 @@ import shapeless._
 class CronExprSpec extends FlatSpec with Matchers {
   import CronField._
 
+  val secondExpr     = ConstExpr(Second, 15)
   val minuteExpr     = ConstExpr(Minute, 10)
   val hourExpr       = ConstExpr(Hour, 4)
   val dayOfMonthExpr = ConstExpr(DayOfMonth, 12)
   val monthExpr      = ConstExpr(Month, 6)
   val dayOfWeekExpr  = ConstExpr(DayOfWeek, 3)
 
-  val expr = CronExpr(minuteExpr :: hourExpr :: dayOfMonthExpr ::
+  val expr = CronExpr(secondExpr :: minuteExpr :: hourExpr :: dayOfMonthExpr ::
     monthExpr :: dayOfWeekExpr :: HNil)
 
   "field" should "return the expression for the correct cron field" in {
+    expr.field(Second) shouldBe secondExpr
+    expr.seconds shouldBe secondExpr
+
     expr.field(Minute) shouldBe minuteExpr
     expr.minutes shouldBe minuteExpr
 
@@ -37,7 +41,7 @@ class CronExprSpec extends FlatSpec with Matchers {
   }
 
   "timePart" should "return the time relative part of the expression" in {
-    expr.timePart shouldBe (minuteExpr :: hourExpr :: HNil)
+    expr.timePart shouldBe (secondExpr :: minuteExpr :: hourExpr :: HNil)
   }
 
   "datePart" should "return the date relative part of the expression" in {

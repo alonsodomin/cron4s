@@ -15,6 +15,7 @@ object threetenbp {
   implicit def jsr310Adapter[DT <: Temporal]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
 
     private[this] def mapField(field: CronField): TemporalField = field match {
+      case Second     => ChronoField.SECOND_OF_MINUTE
       case Minute     => ChronoField.MINUTE_OF_HOUR
       case Hour       => ChronoField.HOUR_OF_DAY
       case DayOfMonth => ChronoField.DAY_OF_MONTH

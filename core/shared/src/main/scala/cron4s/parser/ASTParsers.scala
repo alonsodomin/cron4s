@@ -22,14 +22,15 @@ trait ASTParsers extends ExprParsers {
     everyAST(p) | severalAST(p) | between(p) | p | any
   }
 
+  val seconds     : Parser[SecondExpr]      = expr[Second.type](second)
   val minutes     : Parser[MinutesExpr]     = expr[Minute.type](minute)
   val hours       : Parser[HoursExpr]       = expr[Hour.type](hour)
   val daysOfMonth : Parser[DaysOfMonthExpr] = expr[DayOfMonth.type](dayOfMonth)
   val months      : Parser[MonthsExpr]      = expr[Month.type](month)
   val daysOfWeek  : Parser[DaysOfWeekExpr]  = expr[DayOfWeek.type](dayOfWeek)
 
-  def cron: Parser[CronExpr] = minutes ~ hours ~ daysOfMonth ~ months ~ daysOfWeek ^^ {
-    case m ~ h ~ dm ~ mm ~ dw => CronExpr(m :: h :: dm :: mm :: dw :: HNil)
+  def cron: Parser[CronExpr] = seconds ~ minutes ~ hours ~ daysOfMonth ~ months ~ daysOfWeek ^^ {
+    case s ~ m ~ h ~ dm ~ mm ~ dw => CronExpr(s :: m :: h :: dm :: mm :: dw :: HNil)
   }
 
 }

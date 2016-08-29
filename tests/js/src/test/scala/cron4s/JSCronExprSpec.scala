@@ -13,7 +13,7 @@ import org.scalatest.Ignore
 @Ignore
 class JSCronExprSpec extends ExtendedCronExprTestKit[Date] {
 
-  def createDateTime(minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): Date =
-    new Date(2016, month, dayOfMonth, hours, minutes)
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): Date =
+    new Date(2016, month, dayOfMonth, hours, minutes, seconds)
 
 }

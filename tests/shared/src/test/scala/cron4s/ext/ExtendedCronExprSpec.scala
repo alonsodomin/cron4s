@@ -14,7 +14,7 @@ class ExtendedCronExprSpec extends Properties("ExtendedCronExpr") {
   import Prop._
   import testdummy._
 
-  val anyExpr = CronExpr(AnyExpr[Minute.type] :: AnyExpr[Hour.type] :: AnyExpr[DayOfMonth.type] ::
+  val anyExpr = CronExpr(AnyExpr[Second.type] :: AnyExpr[Minute.type] :: AnyExpr[Hour.type] :: AnyExpr[DayOfMonth.type] ::
     AnyExpr[Month.type] :: AnyExpr[DayOfWeek.type] :: HNil)
 
   val anyDateCombinations = for {

@@ -17,6 +17,9 @@ trait ExprParsers extends RegexParsers {
 
   // Unit parsers
 
+  def second: Parser[ConstExpr[Second.type]] =
+    """[0-5]?\d""".r ^^ { value => ConstExpr(Second, value.toInt) }
+
   def minute: Parser[ConstExpr[Minute.type]] =
     """[0-5]?\d""".r ^^ { value => ConstExpr(Minute, value.toInt) }
 

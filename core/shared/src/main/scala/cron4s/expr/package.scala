@@ -7,14 +7,15 @@ import shapeless._
   */
 package object expr {
 
+  type SecondExpr      = Expr[CronField.Second.type]
   type MinutesExpr     = Expr[CronField.Minute.type]
   type HoursExpr       = Expr[CronField.Hour.type]
   type DaysOfMonthExpr = Expr[CronField.DayOfMonth.type]
   type MonthsExpr      = Expr[CronField.Month.type]
   type DaysOfWeekExpr  = Expr[CronField.DayOfWeek.type]
 
-  type TimePartRepr = MinutesExpr :: HoursExpr :: HNil
+  type TimePartRepr = SecondExpr :: MinutesExpr :: HoursExpr :: HNil
   type DatePartRepr = DaysOfMonthExpr :: MonthsExpr :: DaysOfWeekExpr :: HNil
-  type CronExprRepr = MinutesExpr :: HoursExpr :: DaysOfMonthExpr :: MonthsExpr :: DaysOfWeekExpr :: HNil
+  type CronExprRepr = SecondExpr :: MinutesExpr :: HoursExpr :: DaysOfMonthExpr :: MonthsExpr :: DaysOfWeekExpr :: HNil
 
 }
