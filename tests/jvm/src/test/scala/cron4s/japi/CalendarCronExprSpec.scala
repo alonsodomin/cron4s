@@ -15,10 +15,10 @@ import org.scalatest.Ignore
 @Ignore
 class CalendarCronExprSpec extends ExtendedCronExprTestKit[Calendar] {
 
-  def createDateTime(minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): Calendar = {
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): Calendar = {
     val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
 
-    val timeMillis = LocalDateTime.of(2016, month, dayOfMonth, hours, minutes).
+    val timeMillis = LocalDateTime.of(2016, month, dayOfMonth, hours, minutes, seconds).
       toInstant(ZoneOffset.UTC).toEpochMilli
     cal.setTimeInMillis(timeMillis)
 

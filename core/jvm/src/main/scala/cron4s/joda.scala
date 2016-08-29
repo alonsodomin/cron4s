@@ -15,6 +15,7 @@ object joda {
   implicit object JodaTimeAdapter extends DateTimeAdapter[DateTime] {
 
     private[this] def mapField[F <: CronField](field: F): DateTimeFieldType = field match {
+      case Second     => DateTimeFieldType.secondOfMinute()
       case Minute     => DateTimeFieldType.minuteOfHour()
       case Hour       => DateTimeFieldType.hourOfDay()
       case DayOfMonth => DateTimeFieldType.dayOfMonth()

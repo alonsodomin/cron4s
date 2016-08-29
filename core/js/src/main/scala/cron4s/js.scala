@@ -15,6 +15,7 @@ object js {
   implicit object JsAdapter extends DateTimeAdapter[Date] {
     override def get[F <: CronField](dateTime: Date, field: F): Option[Int] = {
       val value = field match {
+        case Second     => dateTime.getSeconds()
         case Minute     => dateTime.getMinutes()
         case Hour       => dateTime.getHours()
         case DayOfMonth => dateTime.getDate()
@@ -35,6 +36,7 @@ object js {
       }
 
       Some(field match {
+        case Second     => setter(_.setSeconds(value))
         case Minute     => setter(_.setMinutes(value))
         case Hour       => setter(_.setHours(value))
         case DayOfMonth => setter(_.setDate(value))

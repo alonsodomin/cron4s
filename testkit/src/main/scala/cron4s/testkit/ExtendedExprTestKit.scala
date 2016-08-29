@@ -25,6 +25,7 @@ abstract class ExtendedExprTestKit[DateTime : DateTimeAdapter : Equal : Arbitrar
 
   object any extends ExprCheck with ArbitraryAnyExpr {
     def check() = {
+      checkAll("ExtendedExpr[AnyExpr, Second]", ExtendedExprTests[AnyExpr, Second.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[AnyExpr, Minute]", ExtendedExprTests[AnyExpr, Minute.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[AnyExpr, Hour]", ExtendedExprTests[AnyExpr, Hour.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[AnyExpr, DayOfMonth]", ExtendedExprTests[AnyExpr, DayOfMonth.type, DateTime].extendedExpr)
@@ -35,6 +36,7 @@ abstract class ExtendedExprTestKit[DateTime : DateTimeAdapter : Equal : Arbitrar
 
   object const extends ExprCheck with ArbitraryConstExpr {
     def check() = {
+      checkAll("ExtendedExpr[ConstExpr, Second]", ExtendedExprTests[ConstExpr, Second.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[ConstExpr, Minute]", ExtendedExprTests[ConstExpr, Minute.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[ConstExpr, Hour]", ExtendedExprTests[ConstExpr, Hour.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[ConstExpr, DayOfMonth]", ExtendedExprTests[ConstExpr, DayOfMonth.type, DateTime].extendedExpr)
@@ -45,6 +47,7 @@ abstract class ExtendedExprTestKit[DateTime : DateTimeAdapter : Equal : Arbitrar
 
   object between extends ExprCheck with ArbitraryBetweenExpr {
     def check() = {
+      checkAll("ExtendedExpr[BetweenExpr, Second]", ExtendedExprTests[BetweenExpr, Second.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[BetweenExpr, Minute]", ExtendedExprTests[BetweenExpr, Minute.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[BetweenExpr, Hour]", ExtendedExprTests[BetweenExpr, Hour.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[BetweenExpr, DayOfMonth]", ExtendedExprTests[BetweenExpr, DayOfMonth.type, DateTime].extendedExpr)
@@ -55,6 +58,7 @@ abstract class ExtendedExprTestKit[DateTime : DateTimeAdapter : Equal : Arbitrar
 
   object several extends ExprCheck with ArbitrarySeveralExpr {
     def check() = {
+      checkAll("ExtendedExpr[SeveralExpr, Second]", ExtendedExprTests[SeveralExpr, Second.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[SeveralExpr, Minute]", ExtendedExprTests[SeveralExpr, Minute.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[SeveralExpr, Hour]", ExtendedExprTests[SeveralExpr, Hour.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[SeveralExpr, DayOfMonth]", ExtendedExprTests[SeveralExpr, DayOfMonth.type, DateTime].extendedExpr)
@@ -65,6 +69,7 @@ abstract class ExtendedExprTestKit[DateTime : DateTimeAdapter : Equal : Arbitrar
 
   object every extends ExprCheck with ArbitraryEveryExpr {
     def check() = {
+      checkAll("ExtendedExpr[EveryExpr, Second]", ExtendedExprTests[EveryExpr, Second.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[EveryExpr, Minute]", ExtendedExprTests[EveryExpr, Minute.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[EveryExpr, Hour]", ExtendedExprTests[EveryExpr, Hour.type, DateTime].extendedExpr)
       checkAll("ExtendedExpr[EveryExpr, DayOfMonth]", ExtendedExprTests[EveryExpr, DayOfMonth.type, DateTime].extendedExpr)

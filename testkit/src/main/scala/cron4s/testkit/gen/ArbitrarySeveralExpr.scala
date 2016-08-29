@@ -9,6 +9,7 @@ import org.scalacheck.Arbitrary
   */
 trait ArbitrarySeveralExpr extends ExprGens {
 
+  implicit lazy val arbitrarySeveralSecondExpr = Arbitrary(severalExprGen(CronUnit[Second.type]))
   implicit lazy val arbitrarySeveralMinuteExpr = Arbitrary(severalExprGen(CronUnit[Minute.type]))
   implicit lazy val arbitrarySeveralHourExpr = Arbitrary(severalExprGen(CronUnit[Hour.type]))
   implicit lazy val arbitrarySeveralDayOfMonthExpr = Arbitrary(severalExprGen(CronUnit[DayOfMonth.type]))

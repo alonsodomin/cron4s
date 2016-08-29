@@ -17,6 +17,7 @@ object calendar {
 
     override def get[F <: CronField](dateTime: Calendar, field: F): Option[Int] = {
       val value = field match {
+        case Second     => dateTime.get(Calendar.SECOND)
         case Minute     => dateTime.get(Calendar.MINUTE)
         case Hour       => dateTime.get(Calendar.HOUR_OF_DAY)
         case DayOfMonth => dateTime.get(Calendar.DAY_OF_MONTH)
@@ -36,6 +37,7 @@ object calendar {
       }
 
       Some(field match {
+        case Second     => setter(_.set(Calendar.SECOND, value))
         case Minute     => setter(_.set(Calendar.MINUTE, value))
         case Hour       => setter(_.set(Calendar.HOUR_OF_DAY, value))
         case DayOfMonth => setter(_.set(Calendar.DAY_OF_MONTH, value))

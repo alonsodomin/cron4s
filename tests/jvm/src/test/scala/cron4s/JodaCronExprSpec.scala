@@ -11,7 +11,7 @@ import joda._
   */
 class JodaCronExprSpec extends ExtendedCronExprTestKit[DateTime] {
 
-  def createDateTime(minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): DateTime =
-    new DateTime(2016, month, dayOfMonth, hours, minutes)
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): DateTime =
+    new DateTime(2016, month, dayOfMonth, hours, minutes, seconds)
 
 }

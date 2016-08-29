@@ -24,7 +24,7 @@ object CronUnit extends CronUnitInstances {
 
   @inline def apply[F <: CronField](implicit unit: CronUnit[F]): CronUnit[F] = unit
 
-  final val All: Seq[CronUnit[_ <: CronField]] = Seq(Minutes, Hours, DaysOfMonth, Months, DaysOfWeek)
+  final val All: Seq[CronUnit[_ <: CronField]] = Seq(Seconds, Minutes, Hours, DaysOfMonth, Months, DaysOfWeek)
 
 }
 
@@ -55,6 +55,7 @@ private[cron4s] trait CronUnits {
 
   }
 
+  implicit case object Seconds extends AbstractCronUnit[Second.type](Second, 0, 59)
   implicit case object Minutes extends AbstractCronUnit[Minute.type](Minute, 0, 59)
   implicit case object Hours extends AbstractCronUnit[Hour.type](Hour, 0, 23)
   implicit case object DaysOfMonth extends AbstractCronUnit[DayOfMonth.type](DayOfMonth, 1, 31)
@@ -79,6 +80,7 @@ private[cron4s] trait CronUnitInstances extends CronUnits {
       override def range(fL: CronUnit[F]): IndexedSeq[Int] = unit.range
     }
 
+  implicit val secondsInstance     = hasCronField(Seconds)
   implicit val minutesInstance     = hasCronField(Minutes)
   implicit val hoursInstance       = hasCronField(Hours)
   implicit val daysOfMonthInstance = hasCronField(DaysOfMonth)
