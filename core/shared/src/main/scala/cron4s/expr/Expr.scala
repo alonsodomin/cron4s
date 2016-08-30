@@ -4,16 +4,16 @@ import cron4s.{CronField, CronUnit}
 import cron4s.types._
 import cron4s.types.syntax._
 
+import scala.language.{implicitConversions, higherKinds}
+import scala.util.parsing.input.Positional
+
 import scalaz._
 import Scalaz._
-
-import scala.language.implicitConversions
-import scala.language.higherKinds
 
 /**
   * Created by alonsodomin on 07/11/2015.
   */
-sealed trait Expr[F <: CronField] {
+sealed trait Expr[F <: CronField] extends Positional {
   final type FieldType = F
 
   val unit: CronUnit[F]
