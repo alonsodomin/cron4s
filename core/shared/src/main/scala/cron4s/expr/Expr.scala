@@ -3,6 +3,7 @@ package cron4s.expr
 import cron4s.{CronField, CronUnit}
 import cron4s.types._
 import cron4s.types.syntax._
+import cron4s.validation._
 
 import scala.language.{implicitConversions, higherKinds}
 import scala.util.parsing.input.Positional
@@ -83,18 +84,12 @@ final case class SeveralExpr[F <: CronField] private[expr]
 
 }
 object SeveralExpr {
-  import validation.validateSeveral
 
   def apply[F <: CronField]
       (elements: NonEmptyList[EnumerableExpr[F]])
-      (implicit unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F]) = {
-    validateSeveral[F](elements) match {
-      case Success(expr) => expr
-      case Failure(errors) =>
-        val msg = errors.list.toList.mkString("\n")
-        throw new IllegalArgumentException(msg)
-    }
-  }
+      (implicit unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F]
+  ): ValidatedExpr[SeveralExpr, F] =
+    validateSeveral[F](elements)
 
 }
 
