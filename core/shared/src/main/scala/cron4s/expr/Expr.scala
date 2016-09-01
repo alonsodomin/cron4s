@@ -3,17 +3,18 @@ package cron4s.expr
 import cron4s.{CronField, CronUnit}
 import cron4s.types._
 import cron4s.types.syntax._
+import cron4s.validation._
+
+import scala.language.{implicitConversions, higherKinds}
+import scala.util.parsing.input.Positional
 
 import scalaz._
 import Scalaz._
 
-import scala.language.implicitConversions
-import scala.language.higherKinds
-
 /**
   * Created by alonsodomin on 07/11/2015.
   */
-sealed trait Expr[F <: CronField] {
+sealed trait Expr[F <: CronField] extends Positional {
   final type FieldType = F
 
   val unit: CronUnit[F]
@@ -48,8 +49,8 @@ final case class ConstExpr[F <: CronField]
   //require(unit.indexOf(value).nonEmpty, s"Value $value is out of bounds for field: ${unit.field}")
 
   override def compare(that: EnumerableExpr[F]): Int = {
-    if (value < ops.min(that)) 1
-    else if (value > ops.max(that)) -1
+    if (value > ops.min(that)) 1
+    else if (value < ops.max(that)) -1
     else 0
   }
 
@@ -91,18 +92,12 @@ final case class SeveralExpr[F <: CronField] private[expr]
 
 }
 object SeveralExpr {
-  import validation.validateSeveral
 
   def apply[F <: CronField]
       (elements: NonEmptyList[EnumerableExpr[F]])
-      (implicit unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F]) = {
-    validateSeveral[F](elements) match {
-      case Success(expr) => expr
-      case Failure(errors) =>
-        val msg = errors.list.toList.mkString("\n")
-        throw new IllegalArgumentException(msg)
-    }
-  }
+      (implicit unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F]
+  ): ValidatedExpr[SeveralExpr, F] =
+    validateSeveral[F](elements)
 
 }
 

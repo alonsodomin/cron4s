@@ -19,8 +19,8 @@ trait DateTimeAdapterLaws[DateTime <: AnyRef] {
     val newDateTime = adapter.set(dt, fieldValue.field, fieldValue.value)
 
     currentVal.flatMap(current => newDateTime.map { ndt =>
-      if (current == fieldValue.value) ndt == dt
-      else ndt != dt
+      if (current === fieldValue.value) ndt === dt
+      else ndt =/= dt
     }).exists(identity)
   }
 

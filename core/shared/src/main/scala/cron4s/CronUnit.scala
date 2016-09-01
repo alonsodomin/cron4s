@@ -16,8 +16,6 @@ sealed abstract class CronUnit[F <: CronField] extends Serializable {
 
   def range: IndexedSeq[Int]
 
-  //override def toString = s"CronUnit[$field]"
-
 }
 
 object CronUnit extends CronUnitInstances {
@@ -34,16 +32,6 @@ private[cron4s] trait CronUnits {
   private[cron4s] abstract class AbstractCronUnit[F <: CronField](
     val field: F, val min: Int, val max: Int
   ) extends CronUnit[F] {
-
-    /*def step(from: Int, step: Int): Option[(Int, Int)] = {
-      if (from < min || from > max) None
-      else Sequential.sequential(range).step(from, step)
-    }
-
-    def indexOf(v: Int): Option[Int] = {
-      if (v < min || v > max) None
-      else Some(v - min)
-    }*/
 
     override def equals(that: Any): Boolean = that match {
       case other: AbstractCronUnit[F] =>
