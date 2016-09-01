@@ -9,4 +9,4 @@ import joda._
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-class JodaCronExprSpec extends ExtendedCronExprTestKit[DateTime] with JodaDateTimeTestBase
+class JodaCronExprSpec extends ExtendedCronExprTestKit[DateTime] with JodaTestBase

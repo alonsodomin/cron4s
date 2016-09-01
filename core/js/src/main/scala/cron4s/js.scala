@@ -6,11 +6,23 @@ import cron4s.types.IsFieldExpr
 
 import scala.scalajs.js.Date
 
+import scalaz._
+
 /**
   * Created by alonsodomin on 31/07/2016.
   */
 object js {
   import CronField._
+
+  implicit val jsDateInstance = Equal.equal[Date] { (lhs, rhs) =>
+    lhs.getUTCFullYear() == rhs.getUTCFullYear() &&
+    lhs.getUTCMonth() == rhs.getUTCMonth() &&
+    lhs.getUTCDate() == rhs.getUTCDate() &&
+    lhs.getUTCHours() == rhs.getUTCHours() &&
+    lhs.getUTCMinutes() == rhs.getUTCMinutes() &&
+    lhs.getUTCSeconds() == rhs.getUTCSeconds() &&
+    lhs.getUTCMilliseconds() == rhs.getUTCMilliseconds()
+  }
 
   implicit object JsAdapter extends DateTimeAdapter[Date] {
     override def get[F <: CronField](dateTime: Date, field: F): Option[Int] = {
