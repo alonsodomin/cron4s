@@ -1,6 +1,6 @@
 package cron4s
 
-import cron4s.expr.{EnumerableExpr, SeveralExpr}
+import cron4s.expr._
 import cron4s.types.IsFieldExpr
 
 import scalaz._
@@ -19,14 +19,17 @@ package object validation {
       (exprs: NonEmptyList[EnumerableExpr[F]])
       (implicit unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F]): ValidatedExpr[SeveralExpr, F] = {
 
+    def implicationErrorMsg(that: EnumerableExpr[F], impliedBy: EnumerableExpr[F]): String =
+      s"Expression '$that' at field ${that.unit.field} is implied by '$impliedBy'"
+
     def validateImplication(
         expr: EnumerableExpr[F],
         processed: Vector[EnumerableExpr[F]]
     ): ValidatedExpr[EnumerableExpr, F] = {
       val alreadyImplied = processed.find(e => ops.impliedBy(expr)(e)).
-        map(found => InvalidExpression(expr.unit.field, s"Expression $expr is implied by $found").failureNel[EnumerableExpr[F]])
+        map(found => InvalidExpression(expr.unit.field, implicationErrorMsg(expr, found)).failureNel[EnumerableExpr[F]])
       val impliesOther = processed.find(e => ops.impliedBy(e)(expr)).
-        map(found => InvalidExpression(expr.unit.field, s"Expression $found is implied by $expr").failureNel[EnumerableExpr[F]])
+        map(found => InvalidExpression(expr.unit.field, implicationErrorMsg(found, expr)).failureNel[EnumerableExpr[F]])
 
       alreadyImplied.orElse(impliesOther).getOrElse(expr.successNel[InvalidExpression[F]])
     }

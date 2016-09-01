@@ -13,11 +13,11 @@ object Cron {
   private object parser extends ASTParsers
   import parser._
 
-  def apply(expr: String): Either[String, CronExpr] = {
-    val input = new CharArrayReader(expr.toCharArray)
+  def apply(expr: String): Either[ParseError, CronExpr] = {
+    val input = new CharArrayReader(expr.trim.toCharArray)
     parser.parseAll(parser.cron, input) match {
-      case Success(e, _)     => Right(e)
-      case NoSuccess(msg, _) => Left(msg)
+      case Success(e, _)        => Right(e)
+      case NoSuccess(msg, next) => Left(ParseError(msg, expr.trim, next.pos))
     }
   }
 

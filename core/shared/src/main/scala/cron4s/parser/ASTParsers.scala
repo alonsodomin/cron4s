@@ -12,6 +12,10 @@ import shapeless._
 trait ASTParsers extends ExprParsers {
   import CronField._
 
+  override val whiteSpace = """\s+""".r
+
+  override val skipWhitespace = false
+
   def expr[F <: CronField](p: Parser[ConstExpr[F]])(implicit unit: CronUnit[F]): Parser[Expr[F]] = {
     def everyAST(p: Parser[ConstExpr[F]]): Parser[EveryExpr[F]] =
       every(severalAST(p) | between(p) | any)
@@ -19,7 +23,7 @@ trait ASTParsers extends ExprParsers {
     def severalAST(p: Parser[ConstExpr[F]]): Parser[SeveralExpr[F]] =
       several(between(p) | p)
 
-    everyAST(p) | severalAST(p) | between(p) | p | any
+    (everyAST(p) | severalAST(p) | between(p) | p | any) <~ whiteSpace.?
   }
 
   val seconds     : Parser[SecondExpr]      = expr[Second.type](second)
@@ -29,8 +33,8 @@ trait ASTParsers extends ExprParsers {
   val months      : Parser[MonthsExpr]      = expr[Month.type](month)
   val daysOfWeek  : Parser[DaysOfWeekExpr]  = expr[DayOfWeek.type](dayOfWeek)
 
-  def cron: Parser[CronExpr] = phrase(seconds ~ minutes ~ hours ~ daysOfMonth ~ months ~ daysOfWeek ^^ {
+  def cron: Parser[CronExpr] = seconds ~ minutes ~ hours ~ daysOfMonth ~ months ~ daysOfWeek ^^ {
     case s ~ m ~ h ~ dm ~ mm ~ dw => CronExpr(s :: m :: h :: dm :: mm :: dw :: HNil)
-  })
+  }
 
 }

@@ -49,8 +49,8 @@ final case class ConstExpr[F <: CronField]
   //require(unit.indexOf(value).nonEmpty, s"Value $value is out of bounds for field: ${unit.field}")
 
   override def compare(that: EnumerableExpr[F]): Int = {
-    if (value < ops.min(that)) 1
-    else if (value > ops.max(that)) -1
+    if (value > ops.min(that)) 1
+    else if (value < ops.max(that)) -1
     else 0
   }
 

@@ -61,12 +61,12 @@ trait ExprParsers extends RegexParsers {
 
   def several[F <: CronField](p: Parser[EnumerableExpr[F]])
       (implicit unit: CronUnit[F]): Parser[SeveralExpr[F]] = {
-    positioned(p ~ (("," ~> p) +) ^^ { case head ~ tail =>
+    positioned(p ~ (("," ~> p)+) ^^ { case head ~ tail =>
       SeveralExpr[F](NonEmptyList(head, tail: _*))
     } ^? ({
       case Successz(expr) => expr
     }, {
-      case Failurez(errors) => errors.list.toList.mkString("\n")
+      case Failurez(errors) => errors.list.toList.map(_.msg).mkString("\n")
       case Successz(_) => sys.error("received a scalaz.Success when handling an error") // should not happen
     }))
   }
