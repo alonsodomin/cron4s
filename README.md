@@ -33,10 +33,10 @@ scala> import cron4s._
 import cron4s._
 
 scala> val parsed = Cron("10-35 2,4,6 * * *")
-parsed: Either[String,cron4s.expr.CronExpr] = Right(CronExpr(BetweenExpr(ConstExpr(Minute,10,None),ConstExpr(Minute,35,None)) :: SeveralExpr(Vector(ConstExpr(Hour,6,None), ConstExpr(Hour,4,None), ConstExpr(Hour,2,None))) :: AnyExpr(cron4s.CronUnit$DaysOfMonth$@5db7a772) :: AnyExpr(cron4s.CronUnit$Months$@23379fa9) :: AnyExpr(cron4s.CronUnit$DaysOfWeek$@7008487a) :: HNil))
+parsed: Either[cron4s.ParseError,cron4s.expr.CronExpr] = Right(10-35 2,4,6 * * *)
 ```
 
-We will get an `Either[String, CronExpr]`, the right side giving us an error message if
+We will get an `Either[ParseError, CronExpr]`, the right side giving us an error description if
 the parsing has failed. Assuming that we have successfully parsed an expression, there
 are two different things that we can do with it: Using it as a matcher against _DateTime_ objects
 and obtaining the next or previous _DateTime_ to a given one according to the parsed expression.
