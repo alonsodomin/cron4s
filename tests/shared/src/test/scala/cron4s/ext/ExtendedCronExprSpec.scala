@@ -26,8 +26,14 @@ class ExtendedCronExprSpec extends Properties("ExtendedCronExpr") with DummyTest
     daysOfWeek  <- Gen.choose(DaysOfWeek.min, DaysOfWeek.max)
   } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, daysOfWeek))
 
-  val anyExpr = CronExpr(AnyExpr[Second.type] :: AnyExpr[Minute.type] :: AnyExpr[Hour.type] :: AnyExpr[DayOfMonth.type] ::
-    AnyExpr[Month.type] :: AnyExpr[DayOfWeek.type] :: HNil)
+  val anyExpr = CronExpr(
+    AnyExpr[Second.type],
+    AnyExpr[Minute.type],
+    AnyExpr[Hour.type],
+    AnyExpr[DayOfMonth.type],
+    AnyExpr[Month.type],
+    AnyExpr[DayOfWeek.type]
+  )
 
   val anyDateCombinations = for {
     expr <- Gen.const(anyExpr)

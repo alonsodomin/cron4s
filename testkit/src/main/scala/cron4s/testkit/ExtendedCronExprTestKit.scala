@@ -15,10 +15,22 @@ import shapeless._
 abstract class ExtendedCronExprTestKit[DateTime <: AnyRef : DateTimeAdapter]
   extends PropSpec with TableDrivenPropertyChecks with Matchers { this: ExtensionsTestKitBase[DateTime] =>
 
-  val onlyTuesdaysAt12 = CronExpr(ConstExpr(Second, 0) :: ConstExpr(Minute, 0) :: ConstExpr(Hour, 12) ::
-    AnyExpr[DayOfMonth.type] :: AnyExpr[Month.type] :: ConstExpr(DayOfWeek, 1) :: HNil)
-  val onlySundays = CronExpr(ConstExpr(Second, 0) :: AnyExpr[Minute.type] :: AnyExpr[Hour.type] ::
-    AnyExpr[DayOfMonth.type] :: AnyExpr[Month.type] :: ConstExpr(DayOfWeek, 6) :: HNil)
+  val onlyTuesdaysAt12 = CronExpr(
+    ConstExpr(Second, 0),
+    ConstExpr(Minute, 0),
+    ConstExpr(Hour, 12),
+    AnyExpr[DayOfMonth.type],
+    AnyExpr[Month.type],
+    ConstExpr(DayOfWeek, 1)
+  )
+  val onlySundays = CronExpr(
+    ConstExpr(Second, 0),
+    AnyExpr[Minute.type],
+    AnyExpr[Hour.type],
+    AnyExpr[DayOfMonth.type],
+    AnyExpr[Month.type],
+    ConstExpr(DayOfWeek, 6)
+  )
 
   lazy val samples = Table(
     ("expr", "from", "stepSize", "expected"),

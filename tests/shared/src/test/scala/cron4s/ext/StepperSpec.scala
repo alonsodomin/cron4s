@@ -15,10 +15,22 @@ class StepperSpec extends PropSpec with TableDrivenPropertyChecks with Matchers 
   import CronField._
   import testdummy._
 
-  val onlyTuesdaysAt12 = CronExpr(ConstExpr(Second, 0) :: ConstExpr(Minute, 0) :: ConstExpr(Hour, 12) ::
-    AnyExpr[DayOfMonth.type] :: AnyExpr[Month.type] :: ConstExpr(DayOfWeek, 1) :: HNil)
-  val everyMinuteBetween2And3 = CronExpr(ConstExpr(Second, 0) :: AnyExpr[Minute.type] :: BetweenExpr(ConstExpr(Hour, 2), ConstExpr(Hour, 3)) ::
-    AnyExpr[DayOfMonth.type] :: AnyExpr[Month.type] :: AnyExpr[DayOfWeek.type] :: HNil)
+  val onlyTuesdaysAt12 = CronExpr(
+    ConstExpr(Second, 0),
+    ConstExpr(Minute, 0),
+    ConstExpr(Hour, 12),
+    AnyExpr[DayOfMonth.type],
+    AnyExpr[Month.type],
+    ConstExpr(DayOfWeek, 1)
+  )
+  val everyMinuteBetween2And3 = CronExpr(
+    ConstExpr(Second, 0),
+    AnyExpr[Minute.type],
+    BetweenExpr(ConstExpr(Hour, 2), ConstExpr(Hour, 3)),
+    AnyExpr[DayOfMonth.type],
+    AnyExpr[Month.type],
+    AnyExpr[DayOfWeek.type]
+  )
 
   val sample = Table(
     ("expr", "from", "stepSize", "expected"),
