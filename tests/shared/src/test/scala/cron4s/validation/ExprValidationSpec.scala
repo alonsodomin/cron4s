@@ -17,7 +17,9 @@ class ExprValidationSpec extends FlatSpec with Matchers {
     val expr2 = BetweenExpr(ConstExpr(Minute, 10), ConstExpr(Minute, 24))
 
     val result = validateSeveral[Minute.type](NonEmptyList(expr1, expr2))
-    result shouldBe Failure(NonEmptyList(InvalidExpression(Minute, s"Expression $expr1 is implied by $expr2")))
+    result shouldBe Failure(NonEmptyList(
+      InvalidExpression(Minute, s"Expression '$expr1' at field Minute is implied by '$expr2'")
+    ))
   }
 
   it should "not fail if expressions overlap without full implication" in {
