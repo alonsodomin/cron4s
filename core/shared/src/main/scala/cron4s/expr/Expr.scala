@@ -34,6 +34,8 @@ final case class AnyExpr[F <: CronField](implicit val unit: CronUnit[F])
 
   val range = unit.range
 
+  override def toString = "*"
+
 }
 
 case object Last extends SpecialChar
@@ -53,6 +55,8 @@ final case class ConstExpr[F <: CronField]
 
   val range = Vector(value)
 
+  override def toString = textValue.getOrElse(value.toString)
+
 }
 
 final case class BetweenExpr[F <: CronField]
@@ -70,6 +74,8 @@ final case class BetweenExpr[F <: CronField]
 
   val range = begin.value to end.value
 
+  override def toString = s"$begin-$end"
+
 }
 
 final case class SeveralExpr[F <: CronField] private[expr]
@@ -80,6 +86,8 @@ final case class SeveralExpr[F <: CronField] private[expr]
   require(values.nonEmpty, "Expression should contain at least one element")
 
   val range: IndexedSeq[Int] = values.flatMap(_.range).distinct.sorted
+
+  override def toString = values.mkString(",")
 
 }
 object SeveralExpr {
@@ -110,6 +118,8 @@ final case class EveryExpr[F <: CronField]
 
     elements.toVector
   }
+
+  override def toString = s"$value/$freq"
 
 }
 

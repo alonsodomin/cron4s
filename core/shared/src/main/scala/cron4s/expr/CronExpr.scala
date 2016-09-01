@@ -26,4 +26,6 @@ final case class CronExpr(repr: CronExprRepr) {
     case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[Expr[F]]
   }
 
+  override def toString = s"$seconds $minutes $hours $daysOfMonth $months $daysOfWeek"
+
 }
