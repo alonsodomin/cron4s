@@ -41,7 +41,10 @@ abstract class ExtendedCronExprTestKit[DateTime <: AnyRef : DateTimeAdapter]
   property("step") {
     forAll(samples) { (expr: CronExpr, initial: DateTime, stepSize: Int, expected: DateTime) =>
       val extCronExpr = new ExtendedCronExpr[DateTime](expr) { }
-      extCronExpr.step(initial, stepSize) shouldBe Some(expected)
+      val returnedDateTime = extCronExpr.step(initial, stepSize)
+
+      returnedDateTime shouldBe defined
+      returnedDateTime.foreach { _ shouldBe expected }
     }
   }
 

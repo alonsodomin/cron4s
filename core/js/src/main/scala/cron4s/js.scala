@@ -33,8 +33,12 @@ object js {
         case DayOfMonth => dateTime.getDate()
         case Month      => dateTime.getMonth() + 1
         case DayOfWeek  =>
-          val dayOfWeek = dateTime.getDay()
-          (dayOfWeek - 1) % 7
+          val dayOfWeek = {
+            val idx = dateTime.getDay() - 1
+            if (idx < 0) 7 + idx
+            else idx
+          }
+          dayOfWeek
       }
 
       Some(value)

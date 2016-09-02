@@ -10,6 +10,6 @@ import scala.scalajs.js.Date
 trait JSTestBase extends ExtensionsTestKitBase[Date] {
 
   protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): Date =
-    new Date(2016, month, dayOfMonth, hours, minutes, seconds)
+    new Date(2016, month - 1, dayOfMonth, hours, minutes, seconds)
 
 }
