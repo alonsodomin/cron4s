@@ -12,16 +12,16 @@ import org.scalacheck.Prop._
 trait IsFieldExprTests[E[_ <: CronField], F <: CronField] extends HasCronFieldTests[E, F] {
   def laws: IsFieldExprLaws[E, F]
 
-  def fieldExpr(implicit
+  def fieldExpr[EE[_ <: CronField]](implicit
       arbEF: Arbitrary[E[F]],
-      //arbEEF: Arbitrary[EE[F]],
-      arbFrom: Arbitrary[Int]
-      //ev: IsFieldExpr[EE, F]
+      arbEEF: Arbitrary[EE[F]],
+      arbFrom: Arbitrary[Int],
+      ev: IsFieldExpr[EE, F]
   ): RuleSet = new DefaultRuleSet(
     name = "fieldExpr",
     parent = Some(hasCronField),
-    "matchable"   -> forAll(laws.matchable _)
-    //"implication" -> forAll(laws.implication[EE] _)
+    "matchable"   -> forAll(laws.matchable _),
+    "implication" -> forAll(laws.implicationEquivalence[EE] _)
   )
 
 }

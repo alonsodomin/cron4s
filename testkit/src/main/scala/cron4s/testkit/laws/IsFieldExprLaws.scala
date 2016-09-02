@@ -17,8 +17,8 @@ trait IsFieldExprLaws[E[_ <: CronField], F <: CronField] extends HasCronFieldLaw
     expr.matches(value) === withinRange
   }
 
-  def implication[EE[_ <: CronField]](left: E[F], right: EE[F])(implicit ev: IsFieldExpr[EE, F]): Boolean = {
-    (left == right) === (left.impliedBy(right) && right.impliedBy(left))
+  def implicationEquivalence[EE[_ <: CronField]](left: E[F], right: EE[F])(implicit ev: IsFieldExpr[EE, F]): Boolean = {
+    (left.impliedBy(right) && right.impliedBy(left)) === (left.members == right.members)
   }
 
 }
