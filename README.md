@@ -114,7 +114,6 @@ These are the libraries that are currently supported:
 ### At the JVM
 
  * Java Time API (JSR-310): Package `cron4s.japi.time`
- * Java Calendar: Package `cron4s.japi.calendar`
  * Joda Time: Package `cron4s.joda`
 
 ### ScalaJS
