@@ -33,12 +33,6 @@ private[cron4s] trait CronUnits {
     val field: F, val min: Int, val max: Int
   ) extends CronUnit[F] {
 
-    override def equals(that: Any): Boolean = that match {
-      case other: AbstractCronUnit[F] =>
-        this.field == other.field && this.range == other.range
-      case _ => false
-    }
-
     val range: IndexedSeq[Int] = min to max
 
   }

@@ -43,10 +43,10 @@ case object Last extends SpecialChar
 
 final case class ConstExpr[F <: CronField]
     (field: F, value: Int, textValue: Option[String] = None)
-    (implicit val unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F])
+    (implicit val unit: CronUnit[F], ev: HasCronField[CronUnit, F], ops: IsFieldExpr[EnumerableExpr, F])
   extends Expr[F] with DivisibleExpr[F] with EnumerableExpr[F] {
 
-  //require(unit.indexOf(value).nonEmpty, s"Value $value is out of bounds for field: ${unit.field}")
+  require(value >= unit.min && value <= unit.max, s"Value $value is out of bounds for field: ${unit.field}")
 
   override def compare(that: EnumerableExpr[F]): Int = {
     if (value > ops.min(that)) 1
