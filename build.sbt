@@ -42,7 +42,6 @@ lazy val noPublishSettings = Seq(
 lazy val publishSettings = Seq(
   publishMavenStyle := true,
   publishArtifact in Test := false,
-  sonatypeProfileName := "com.github.alonsodomin",
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   publishTo := Some(
     if (isSnapshot.value) Opts.resolver.sonatypeSnapshots
@@ -95,6 +94,7 @@ lazy val releaseSettings = {
   import ReleaseTransformations._
 
   Seq(
+    sonatypeProfileName := "com.github.alonsodomin",
     releaseProcess := Seq[ReleaseStep](
       checkSnapshotDependencies,
       inquireVersions,
