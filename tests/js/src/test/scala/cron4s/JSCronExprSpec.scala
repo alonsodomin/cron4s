@@ -10,4 +10,4 @@ import org.scalatest.Ignore
   * Created by alonsodomin on 29/08/2016.
   */
 @Ignore
-class JSCronExprSpec extends ExtendedCronExprTestKit[Date] with JSTestBase
+abstract class JSCronExprSpec extends ExtendedCronExprTestKit[Date] with JSTestBase
