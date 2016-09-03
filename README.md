@@ -21,7 +21,7 @@ libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s-core" % "x.y.z
 Or in ScalaJS:
 
 ```
-libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s" % "x.y.z"
+libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s-core" % "x.y.z"
 ```
 
 ## How to Use
