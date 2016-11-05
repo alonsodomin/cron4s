@@ -130,12 +130,6 @@ private[expr] trait ExprInstances extends ExprInstances1 {
   implicit def constExprLike[F <: CronField]: IsFieldExpr[ConstExpr, F] =
     new IsFieldExprBase[ConstExpr, F] {
       override def matches(e: ConstExpr[F]): Predicate[Int] = equalTo(e.value)
-
-      /*override def compare(x: ConstExpr[F], y: ConstExpr[F]): Int = {
-        if (x.value < min(y)) 1
-        else if (x.value > max(y)) -1
-        else 0
-      }*/
     }
 
   implicit def betweenExprLike[F <: CronField]: IsFieldExpr[BetweenExpr, F] =
@@ -144,12 +138,6 @@ private[expr] trait ExprInstances extends ExprInstances1 {
       override def matches(e: BetweenExpr[F]): Predicate[Int] = Predicate { x =>
         x >= e.begin.value && x <= e.end.value
       }
-
-      /*override def compare(x: BetweenExpr[F], y: BetweenExpr[F]): Int = {
-        if (min(x) > max(y)) 1
-        else if (max(x) < min(y)) -1
-        else 0
-      }*/
     }
 
   implicit def severalExprLike[F <: CronField]
