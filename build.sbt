@@ -116,7 +116,7 @@ lazy val cron4s = (project in file(".")).
   settings(commonSettings).
   settings(noPublishSettings).
   settings(releaseSettings).
-  aggregate(cron4sJS, cron4sJVM)
+  aggregate(cron4sJS, cron4sJVM, docs)
 
 lazy val cron4sJS = (project in file(".js")).
   settings(
@@ -139,6 +139,16 @@ lazy val cron4sJVM = (project in file(".jvm")).
   settings(publishSettings).
   aggregate(typesJVM, testkitJVM, coreJVM, testsJVM).
   dependsOn(typesJVM, testkitJVM, coreJVM, testsJVM)
+
+lazy val docs = (project in file("docs")).
+  enablePlugins(ParadoxSitePlugin).
+  settings(
+    name := "docs",
+    moduleName := "cron4s-docs",
+    paradoxTheme := Some(builtinParadoxTheme("generic"))
+  ).
+  settings(commonSettings).
+  settings(noPublishSettings)
 
 lazy val core = (crossProject in file("core")).
   settings(
