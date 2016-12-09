@@ -148,7 +148,8 @@ lazy val docs = (project in file("docs")).
     paradoxTheme := Some(builtinParadoxTheme("generic"))
   ).
   settings(commonSettings).
-  settings(noPublishSettings)
+  settings(noPublishSettings).
+  dependsOn(coreJVM)
 
 lazy val core = (crossProject in file("core")).
   settings(
