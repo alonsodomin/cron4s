@@ -1,9 +1,0 @@
-<!-- #setup_example -->
-
-<dependency>
-    <groupId>com.github.alonsodomin.cron4s</groupId>
-    <artifactId>cron4s-core_${scala.version}</artifactId>
-    <version>x.y.z</version>
-</dependency>
-
-<!-- #setup_example -->

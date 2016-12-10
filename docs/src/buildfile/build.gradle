@@ -1,3 +1,0 @@
-// #setup_example
-compile "com.github.alonsodomin.cron4s:cron4s-core_${scalaVersion}:x.y.z"
-// #setup_example

@@ -40,11 +40,13 @@ class CronExprSpec extends FlatSpec with Matchers {
   }
 
   "timePart" should "return the time relative part of the expression" in {
-    expr.timePart shouldBe (secondExpr :: minuteExpr :: hourExpr :: HNil)
+    val expected = new TimePartExpr(secondExpr :: minuteExpr :: hourExpr :: HNil)
+    expr.timePart shouldBe expected
   }
 
   "datePart" should "return the date relative part of the expression" in {
-    expr.datePart shouldBe (dayOfMonthExpr :: monthExpr :: dayOfWeekExpr :: HNil)
+    val expected = new DatePartExpr(dayOfMonthExpr :: monthExpr :: dayOfWeekExpr :: HNil)
+    expr.datePart shouldBe expected
   }
 
 }

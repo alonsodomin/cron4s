@@ -90,6 +90,17 @@ lazy val coverageSettings = Seq(
   coverageExcludedPackages := "cron4s\\.bench\\..*"
 )
 
+lazy val docSettings = Seq(
+  micrositeName := "Cron4s",
+  micrositeDescription := "Scala CRON Expressions",
+  micrositeHighlightTheme := "atom-one-light",
+  micrositeGithubOwner := "alonsodomin",
+  micrositeGithubRepo := "cron4s",
+  micrositeHomepage := "http://alonsodoming.github.io/cron4s",
+  micrositeDocumentationUrl := "/docs",
+  fork in tut := true
+)
+
 lazy val releaseSettings = {
   import ReleaseTransformations._
 
@@ -141,14 +152,14 @@ lazy val cron4sJVM = (project in file(".jvm")).
   dependsOn(typesJVM, testkitJVM, coreJVM, testsJVM)
 
 lazy val docs = (project in file("docs")).
-  enablePlugins(ParadoxSitePlugin).
+  enablePlugins(MicrositesPlugin).
   settings(
     name := "docs",
-    moduleName := "cron4s-docs",
-    paradoxTheme := Some(builtinParadoxTheme("generic"))
+    moduleName := "cron4s-docs"
   ).
   settings(commonSettings).
   settings(noPublishSettings).
+  settings(docSettings).
   dependsOn(coreJVM)
 
 lazy val core = (crossProject in file("core")).

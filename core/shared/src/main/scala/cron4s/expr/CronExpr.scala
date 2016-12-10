@@ -17,8 +17,8 @@ final case class CronExpr(
   ) {
 
   lazy val repr: CronExprRepr = Generic[CronExpr].to(this)
-  lazy val timePart: TimePartRepr = repr.take(3)
-  lazy val datePart: DatePartRepr = repr.drop(3)
+  lazy val timePart: TimePartExpr = new TimePartExpr(repr.take(3))
+  lazy val datePart: DatePartExpr = new DatePartExpr(repr.drop(3))
 
   def field[F <: CronField : CronUnit](f: F): Expr[F] = f match {
     case CronField.Second     => seconds.asInstanceOf[Expr[F]]
