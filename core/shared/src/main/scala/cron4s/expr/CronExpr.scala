@@ -16,7 +16,7 @@ final case class CronExpr(
     daysOfWeek: DaysOfWeekExpr
   ) {
 
-  lazy val repr: CronExprRepr = Generic[CronExpr].to(this)
+  private[cron4s] lazy val repr: CronExprRepr = Generic[CronExpr].to(this)
   lazy val timePart: TimePartExpr = new TimePartExpr(repr.take(3))
   lazy val datePart: DatePartExpr = new DatePartExpr(repr.drop(3))
 
