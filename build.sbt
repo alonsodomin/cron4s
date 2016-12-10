@@ -98,11 +98,11 @@ lazy val docSettings = Seq(
   micrositeHighlightTheme := "atom-one-light",
   micrositeGithubOwner := "alonsodomin",
   micrositeGithubRepo := "cron4s",
-  micrositeHomepage := "http://alonsodoming.github.io/cron4s",
+  micrositeHomepage := "http://alonsodomin.github.io/cron4s",
   micrositeDocumentationUrl := "docs",
   fork in tut := true,
   ghpagesNoJekyll := false,
-  git.remoteRepo := "git@github.com:alonsodomin/cron4s.git"
+  git.remoteRepo := "https://github.com/alonsodomin/cron4s.git"
 )
 
 lazy val releaseSettings = {
