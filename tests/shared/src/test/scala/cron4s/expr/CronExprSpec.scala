@@ -17,6 +17,9 @@ class CronExprSpec extends FlatSpec with Matchers {
   val monthExpr      = ConstExpr(Month, 6)
   val dayOfWeekExpr  = ConstExpr(DayOfWeek, 3)
 
+  val timePart = new TimePartExpr(secondExpr :: minuteExpr :: hourExpr :: HNil)
+  val datePart = new DatePartExpr(dayOfMonthExpr :: monthExpr :: dayOfWeekExpr :: HNil)
+
   val expr = CronExpr(secondExpr, minuteExpr, hourExpr, dayOfMonthExpr, monthExpr, dayOfWeekExpr)
 
   "field" should "return the expression for the correct cron field" in {
@@ -40,13 +43,19 @@ class CronExprSpec extends FlatSpec with Matchers {
   }
 
   "timePart" should "return the time relative part of the expression" in {
-    val expected = new TimePartExpr(secondExpr :: minuteExpr :: hourExpr :: HNil)
-    expr.timePart shouldBe expected
+    expr.timePart shouldBe timePart
+
+    timePart.seconds shouldBe secondExpr
+    timePart.minutes shouldBe minuteExpr
+    timePart.hours shouldBe hourExpr
   }
 
   "datePart" should "return the date relative part of the expression" in {
-    val expected = new DatePartExpr(dayOfMonthExpr :: monthExpr :: dayOfWeekExpr :: HNil)
-    expr.datePart shouldBe expected
+    expr.datePart shouldBe datePart
+
+    datePart.daysOfMonth shouldBe dayOfMonthExpr
+    datePart.months shouldBe monthExpr
+    datePart.daysOfWeek shouldBe dayOfWeekExpr
   }
 
 }

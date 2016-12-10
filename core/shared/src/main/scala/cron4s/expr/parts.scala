@@ -1,16 +1,16 @@
 package cron4s.expr
 
-class DatePartExpr(val underlying: DatePartRepr) extends AnyVal {
+class DatePartExpr private[expr] (val underlying: DatePartRepr) extends AnyVal {
 
   def daysOfMonth: DaysOfMonthExpr = underlying.select[DaysOfMonthExpr]
   def months: MonthsExpr = underlying.select[MonthsExpr]
-  def daysOfWeekExpr: DaysOfWeekExpr = underlying.select[DaysOfWeekExpr]
+  def daysOfWeek: DaysOfWeekExpr = underlying.select[DaysOfWeekExpr]
 
-  override def toString = s"$daysOfMonth $months $daysOfWeekExpr"
+  override def toString = s"$daysOfMonth $months $daysOfWeek"
 
 }
 
-class TimePartExpr(val underlying: TimePartRepr) extends AnyVal {
+class TimePartExpr private[expr] (val underlying: TimePartRepr) extends AnyVal {
 
   def seconds: SecondExpr = underlying.select[SecondExpr]
   def minutes: MinutesExpr = underlying.select[MinutesExpr]
