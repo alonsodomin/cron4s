@@ -96,6 +96,7 @@ lazy val docSettings = Seq(
   micrositeName := "Cron4s",
   micrositeDescription := "Scala CRON Expressions",
   micrositeHighlightTheme := "atom-one-light",
+  micrositeAuthor := "Antonio Alonso Dominguez",
   micrositeGithubOwner := "alonsodomin",
   micrositeGithubRepo := "cron4s",
   micrositeHomepage := "https://alonsodomin.github.io/cron4s",
@@ -108,6 +109,9 @@ lazy val docSettings = Seq(
 
 lazy val releaseSettings = {
   import ReleaseTransformations._
+
+  val sonatypeReleaseAll = ReleaseStep(action = Command.process("sonatypeReleaseAll", _))
+  val publishDocs = ReleaseStep(action = Command.process("publishMicrosite", _))
 
   Seq(
     sonatypeProfileName := "com.github.alonsodomin",
@@ -122,8 +126,9 @@ lazy val releaseSettings = {
       publishArtifacts,
       setNextVersion,
       commitNextVersion,
-      ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
-      pushChanges
+      sonatypeReleaseAll,
+      pushChanges,
+      publishDocs
     )
   )
 }
@@ -163,7 +168,7 @@ lazy val docs = project.
   settings(noPublishSettings).
   settings(ghpages.settings).
   settings(docSettings).
-  dependsOn(coreJVM)
+  dependsOn(cron4sJVM)
 
 lazy val core = (crossProject in file("core")).
   settings(

@@ -7,26 +7,27 @@ object Dependencies {
   object version {
     val simulacrum  = "0.7.0"
     val cats        = "0.6.0"
-    val scalaz      = "7.2.1"
-    val shapeless   = "2.3.1"
+    val scalaz      = "7.2.8"
+    val shapeless   = "2.3.2"
 
     val momentjs    = "0.1.5"
-    val jodaTime    = "2.9.4"
+    val jodaTime    = "2.9.6"
     val jodaConvert = "1.8.1"
     val parserComb  = "1.0.2"
 
-    val scalacheck  = "1.12.5"
-    val scalatest   = "3.0.0-M8"
-    val discipline  = "0.4"
+    val scalacheck  = "1.13.4"
+    val scalatest   = "3.0.1"
+    val discipline  = "0.7.2"
 
-    val scalaJavaTime = "2.0.0-M3"
+    val scalaJavaTime = "2.0.0-M5"
   }
 
-  lazy val core = Def.settings {
-    libraryDependencies ++= Seq(
-      compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full),
-      compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
+  val macroParadise = compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full)
+  val kindProjector = compilerPlugin("org.spire-math"  % "kind-projector" % "0.9.3" cross CrossVersion.binary)
+  lazy val compilerPlugins = Seq(macroParadise, kindProjector)
 
+  lazy val core = Def.settings {
+    libraryDependencies ++= compilerPlugins ++ Seq(
       "com.chuusai"    %%% "shapeless"                 % version.shapeless,
       "io.github.soc"  %%% "scala-java-time"           % version.scalaJavaTime,
       "org.scalaz"     %%% "scalaz-core"               % version.scalaz
@@ -48,10 +49,7 @@ object Dependencies {
   }
 
   lazy val types = Def.settings {
-    libraryDependencies ++= Seq(
-      compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full),
-      compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
-
+    libraryDependencies ++= compilerPlugins ++ Seq(
       "org.scalaz"     %%% "scalaz-core"               % version.scalaz,
       "org.typelevel"  %%% "discipline"                % version.discipline % Test,
       "org.scalaz"     %%% "scalaz-scalacheck-binding" % version.scalaz     % Test,
@@ -60,10 +58,7 @@ object Dependencies {
   }
 
   lazy val testkit = Def.settings {
-    libraryDependencies ++= Seq(
-      compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full),
-      compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
-
+    libraryDependencies ++= compilerPlugins ++ Seq(
       "org.scalaz"     %%% "scalaz-core"               % version.scalaz,
       "org.typelevel"  %%% "discipline"                % version.discipline,
       "org.scalaz"     %%% "scalaz-scalacheck-binding" % version.scalaz,
@@ -73,10 +68,7 @@ object Dependencies {
   }
 
   lazy val tests = Def.settings {
-    libraryDependencies ++= Seq(
-      compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full),
-      compilerPlugin("org.spire-math"  % "kind-projector" % "0.8.0" cross CrossVersion.binary),
-
+    libraryDependencies ++= compilerPlugins ++ Seq(
       "org.scalatest"  %%% "scalatest"                 % version.scalatest      % Test
     )
   }
