@@ -1,5 +1,6 @@
 
 import com.typesafe.sbt.pgp.PgpKeys
+import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 
 import scala.xml.transform.{RewriteRule, RuleTransformer}
 
@@ -24,7 +25,8 @@ val commonSettings = Def.settings(
     "-language:implicitConversions",
     "-language:higherKinds",
     "-language:existentials"
-  )
+  ),
+  scmInfo := Some(ScmInfo(url("https://github.com/alonsodomin/cron4s"), "scm:git:git@github.com:alonsodomin/cron4s.git"))
 )
 
 lazy val commonJsSettings = Seq(
@@ -97,8 +99,10 @@ lazy val docSettings = Seq(
   micrositeGithubOwner := "alonsodomin",
   micrositeGithubRepo := "cron4s",
   micrositeHomepage := "http://alonsodoming.github.io/cron4s",
-  micrositeDocumentationUrl := "/docs",
-  fork in tut := true
+  micrositeDocumentationUrl := "docs",
+  fork in tut := true,
+  ghpagesNoJekyll := false,
+  git.remoteRepo := "git@github.com:alonsodomin/cron4s.git"
 )
 
 lazy val releaseSettings = {
@@ -151,14 +155,12 @@ lazy val cron4sJVM = (project in file(".jvm")).
   aggregate(typesJVM, testkitJVM, coreJVM, testsJVM).
   dependsOn(typesJVM, testkitJVM, coreJVM, testsJVM)
 
-lazy val docs = (project in file("docs")).
+lazy val docs = project.
   enablePlugins(MicrositesPlugin).
-  settings(
-    name := "docs",
-    moduleName := "cron4s-docs"
-  ).
+  settings(moduleName := "cron4s-docs").
   settings(commonSettings).
   settings(noPublishSettings).
+  settings(ghpages.settings).
   settings(docSettings).
   dependsOn(coreJVM)
 
