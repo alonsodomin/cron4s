@@ -1,0 +1,24 @@
+options:
+
+  - title: First steps
+    url: docs/index.html
+    section: intro
+
+  - title: Working with Time
+    url: docs/time_usage.html
+    section: intro
+    #menu_type: usage
+    #menu_section: usage
+
+    nested_options:
+      - title: Matching
+        url: docs/time_usage/matching.html
+        #menu_section: usage
+
+      - title: Forwards & Backwards
+        url: docs/time_usage/forward_backwards.html
+        #menu_section: usage
+
+  - title: Built-in libs
+    url: docs/builtin_libs.html
+    section: intro
