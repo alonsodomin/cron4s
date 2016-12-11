@@ -19,16 +19,16 @@ abstract class ExtendedCronExprTestKit[DateTime <: AnyRef : DateTimeAdapter]
     ConstExpr(Second, 0),
     ConstExpr(Minute, 0),
     ConstExpr(Hour, 12),
-    AnyExpr[DayOfMonth.type],
-    AnyExpr[Month.type],
+    AnyExpr[DayOfMonth],
+    AnyExpr[Month],
     ConstExpr(DayOfWeek, 1)
   )
   val onlySundays = CronExpr(
     ConstExpr(Second, 0),
-    AnyExpr[Minute.type],
-    AnyExpr[Hour.type],
-    AnyExpr[DayOfMonth.type],
-    AnyExpr[Month.type],
+    AnyExpr[Minute],
+    AnyExpr[Hour],
+    AnyExpr[DayOfMonth],
+    AnyExpr[Month],
     ConstExpr(DayOfWeek, 6)
   )
 

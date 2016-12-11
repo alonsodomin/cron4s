@@ -27,11 +27,11 @@ abstract class DateTimeAdapterTestKit[DateTime <: AnyRef : DateTimeAdapter : Equ
     daysOfWeek  <- Gen.choose(DaysOfWeek.min, DaysOfWeek.max)
   } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, daysOfWeek))
 
-  checkAll(s"DateTimeAdapter[$name, Second]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Second.type])
-  checkAll(s"DateTimeAdapter[$name, Minute]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Minute.type])
-  checkAll(s"DateTimeAdapter[$name, Hour]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Hour.type])
-  checkAll(s"DateTimeAdapter[$name, DayOfMonth]", DateTimeAdapterTests[DateTime].dateTimeAdapter[DayOfMonth.type])
-  checkAll(s"DateTimeAdapter[$name, Month]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Month.type])
-  checkAll(s"DateTimeAdapter[$name, DayOfWeek]", DateTimeAdapterTests[DateTime].dateTimeAdapter[DayOfWeek.type])
+  checkAll(s"DateTimeAdapter[$name, Second]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Second])
+  checkAll(s"DateTimeAdapter[$name, Minute]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Minute])
+  checkAll(s"DateTimeAdapter[$name, Hour]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Hour])
+  checkAll(s"DateTimeAdapter[$name, DayOfMonth]", DateTimeAdapterTests[DateTime].dateTimeAdapter[DayOfMonth])
+  checkAll(s"DateTimeAdapter[$name, Month]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Month])
+  checkAll(s"DateTimeAdapter[$name, DayOfWeek]", DateTimeAdapterTests[DateTime].dateTimeAdapter[DayOfWeek])
 
 }

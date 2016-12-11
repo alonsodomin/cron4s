@@ -27,8 +27,8 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
   }
 
   private[this] def stepDayOfWeek
-      (dt: DateTime, expr: Expr[DayOfWeek.type], stepSize: Int)
-      (implicit ev: IsFieldExpr[Expr, DayOfWeek.type]): Step = {
+      (dt: DateTime, expr: Expr[DayOfWeek], stepSize: Int)
+      (implicit ev: IsFieldExpr[Expr, DayOfWeek]): Step = {
     for {
       dayOfWeek         <- adapter.get(dt, DayOfWeek)
       (value, nextStep) <- ev.step(expr)(dayOfWeek, stepSize)
