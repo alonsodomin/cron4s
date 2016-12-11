@@ -2,7 +2,7 @@ package cron4s.testkit.laws
 
 import cron4s.CronField
 import cron4s.expr._
-import cron4s.ext.{DateTimeAdapter, ExtendedExpr}
+import cron4s.spi.{DateTimeAdapter, ExtendedExpr}
 import cron4s.types._
 
 import scalaz.Scalaz._

@@ -1,13 +1,11 @@
 package cron4s.testkit
 
+import cron4s.spi.DateTimeAdapter
 import cron4s.{CronField, CronUnit}
-import cron4s.ext.DateTimeAdapter
 import cron4s.testkit.discipline.DateTimeAdapterTests
 import cron4s.testkit.gen.ArbitraryCronFieldValues
-
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
-
 import org.typelevel.discipline.scalatest.Discipline
 
 import scalaz.Equal

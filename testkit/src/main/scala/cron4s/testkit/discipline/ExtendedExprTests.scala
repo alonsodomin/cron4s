@@ -2,7 +2,7 @@ package cron4s.testkit.discipline
 
 import cron4s.CronField
 import cron4s.expr.Expr
-import cron4s.ext.DateTimeAdapter
+import cron4s.spi.DateTimeAdapter
 import cron4s.testkit.laws.ExtendedExprLaws
 import cron4s.types.IsFieldExpr
 import org.scalacheck.Prop._

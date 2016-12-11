@@ -1,0 +1,5 @@
+cron4s 0.3.0 has major enhancements from 0.2.1. The
+list of changes in this release are:
+
+ * Updated ScalaJS to 0.6.13
+ * Re-organized the built-in extensions under the `spi` package.

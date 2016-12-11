@@ -2,7 +2,7 @@ package cron4s.testkit
 
 import cron4s._
 import cron4s.expr._
-import cron4s.ext.DateTimeAdapter
+import cron4s.spi.DateTimeAdapter
 import cron4s.testkit.discipline.ExtendedExprTests
 import cron4s.testkit.gen._
 
