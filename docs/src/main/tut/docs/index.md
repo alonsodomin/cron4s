@@ -132,4 +132,20 @@ val fixedSecond = ConstExpr[CronField.Second](30)
 
 anySecond.impliedBy(fixedSecond)
 fixedSecond.impliedBy(anySecond)
+
+val minutesRange = BetweenExpr[CronField.Minute](ConstExpr(2), ConstExpr(10))
+val fixedMinute = ConstExpr[CronField.Minute](7)
+
+minutesRange.impliedBy(fixedMinute)
+fixedMinute.impliedBy(minutesRange)
 ```
+
+It's important to notice that when using the `impliedBy` operation, if the two expressions are not
+parameterized for the same field type, the code won't compile:
+ 
+```tut:fail
+minutesRange.impliedBy(anySecond)
+```
+
+The error looks a bit scary, but in essence is saying to us that the `impliedBy` method was expecting
+any kind of expression as long as it was for the `Minute` field (expressed as `EE[cron4s.CronField.Minute]`).
