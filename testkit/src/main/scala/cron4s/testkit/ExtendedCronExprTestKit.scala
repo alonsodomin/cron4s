@@ -2,7 +2,7 @@ package cron4s.testkit
 
 import cron4s.CronField._
 import cron4s.expr.{AnyExpr, ConstExpr, CronExpr}
-import cron4s.ext.{DateTimeAdapter, ExtendedCronExpr}
+import cron4s.spi.{DateTimeAdapter, ExtendedCronExpr}
 
 import org.scalatest.{Matchers, PropSpec}
 import org.scalatest.prop.TableDrivenPropertyChecks

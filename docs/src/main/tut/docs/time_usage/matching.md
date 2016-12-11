@@ -12,7 +12,7 @@ libraries available. To use the built-in support for it we will need the followi
 ```tut:silent
 import java.time._
 import cron4s._
-import cron4s.japi.time._
+import cron4s.spi.javatime._
 ```
 
 Now let's parse a new expression:
