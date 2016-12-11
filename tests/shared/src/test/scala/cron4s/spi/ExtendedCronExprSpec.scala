@@ -27,12 +27,12 @@ class ExtendedCronExprSpec extends Properties("ExtendedCronExpr") with DummyTest
   } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, daysOfWeek))
 
   val anyExpr = CronExpr(
-    AnyExpr[Second.type],
-    AnyExpr[Minute.type],
-    AnyExpr[Hour.type],
-    AnyExpr[DayOfMonth.type],
-    AnyExpr[Month.type],
-    AnyExpr[DayOfWeek.type]
+    AnyExpr[Second],
+    AnyExpr[Minute],
+    AnyExpr[Hour],
+    AnyExpr[DayOfMonth],
+    AnyExpr[Month],
+    AnyExpr[DayOfWeek]
   )
 
   val anyDateCombinations = for {

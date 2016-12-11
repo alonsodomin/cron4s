@@ -12,11 +12,11 @@ import org.typelevel.discipline.scalatest.Discipline
 class EveryExprSpec extends FunSuite with Discipline with ArbitraryEveryExpr {
   import CronField._
 
-  checkAll("EveryExpr[Second]", IsFieldExprTests[EveryExpr, Second.type].fieldExpr)
-  checkAll("EveryExpr[Minute]", IsFieldExprTests[EveryExpr, Minute.type].fieldExpr)
-  checkAll("EveryExpr[Hour]", IsFieldExprTests[EveryExpr, Hour.type].fieldExpr)
-  checkAll("EveryExpr[DayOfMonth]", IsFieldExprTests[EveryExpr, DayOfMonth.type].fieldExpr)
-  checkAll("EveryExpr[Month]", IsFieldExprTests[EveryExpr, Month.type].fieldExpr)
-  checkAll("EveryExpr[DayOfWeek]", IsFieldExprTests[EveryExpr, DayOfWeek.type].fieldExpr)
+  checkAll("EveryExpr[Second]", IsFieldExprTests[EveryExpr, Second].fieldExpr)
+  checkAll("EveryExpr[Minute]", IsFieldExprTests[EveryExpr, Minute].fieldExpr)
+  checkAll("EveryExpr[Hour]", IsFieldExprTests[EveryExpr, Hour].fieldExpr)
+  checkAll("EveryExpr[DayOfMonth]", IsFieldExprTests[EveryExpr, DayOfMonth].fieldExpr)
+  checkAll("EveryExpr[Month]", IsFieldExprTests[EveryExpr, Month].fieldExpr)
+  checkAll("EveryExpr[DayOfWeek]", IsFieldExprTests[EveryExpr, DayOfWeek].fieldExpr)
 
 }

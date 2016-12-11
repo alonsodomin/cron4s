@@ -103,6 +103,14 @@ Which is different than the range of values accepted by the expression at that g
 cron.seconds.range
 ```
 
+We can also obtain a field expression by means of the `field` method in `CronExpr` and passing
+either the cron field type or the cron unit.
+
+```tut
+cron.field[CronField.Minute]
+cron.field(CronUnit.Minutes)
+```
+
 Other interesting operations are the ones that can be used to test if a given value matches the
 field expression:
 
@@ -120,7 +128,7 @@ the same field type). To show this, let's work with some simple field expression
 import cron4s.expr._
 
 val anySecond = AnyExpr[CronField.Second]
-val fixedSecond = ConstExpr[CronField.Second](CronField.Second, 30)
+val fixedSecond = ConstExpr[CronField.Second](30)
 
 anySecond.impliedBy(fixedSecond)
 fixedSecond.impliedBy(anySecond)

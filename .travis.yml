@@ -22,7 +22,7 @@ install:
   - gem install jekyll -v 3.2.1
 
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION clean coverage cron4sJVM/test
+  - sbt ++$TRAVIS_SCALA_VERSION clean coverage cron4sJVM/test makeMicrosite
 
 after_success:
   - sbt coverageReport && sbt coverageAggregate && sbt codacyCoverage

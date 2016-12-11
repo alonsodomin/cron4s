@@ -12,8 +12,7 @@ import scala.language.higherKinds
   * @author Antonio Alonso Dominguez
   */
 @implicitNotFound("Field ${F} is not supported on Cron expressions")
-sealed abstract class CronUnit[F <: CronField] extends Serializable {
-  final type FieldType = F
+sealed abstract class CronUnit[+F <: CronField] extends Serializable {
 
   /**
     * @return the CronField for this unit

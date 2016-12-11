@@ -17,35 +17,35 @@ trait ExprParsers extends RegexParsers {
   // Unit parsers
 
   def second: Parser[ConstExpr[Second]] =
-    positioned("""[0-5]?\d""".r ^^ { value => ConstExpr(Second, value.toInt) })
+    positioned("""[0-5]?\d""".r ^^ { value => ConstExpr(value.toInt) })
 
   def minute: Parser[ConstExpr[Minute]] =
-    positioned("""[0-5]?\d""".r ^^ { value => ConstExpr(Minute, value.toInt) })
+    positioned("""[0-5]?\d""".r ^^ { value => ConstExpr(value.toInt) })
 
   def hour: Parser[ConstExpr[Hour]] =
-    positioned("""2[0-3]|[01]?[0-9]""".r ^^ { value => ConstExpr(Hour, value.toInt) })
+    positioned("""2[0-3]|[01]?[0-9]""".r ^^ { value => ConstExpr(value.toInt) })
 
   def dayOfMonth: Parser[ConstExpr[DayOfMonth]] =
-    positioned("""3[01]|[012]?\d""".r ^^ { value => ConstExpr(DayOfMonth, value.toInt) })
+    positioned("""3[01]|[012]?\d""".r ^^ { value => ConstExpr(value.toInt) })
 
   private[this] def numericMonth: Parser[ConstExpr[Month]] =
-    positioned("""1[0-2]|[1-9]""".r ^^ { value => ConstExpr(Month, value.toInt) })
+    positioned("""1[0-2]|[1-9]""".r ^^ { value => ConstExpr(value.toInt) })
 
   private[this] def textMonth: Parser[ConstExpr[Month]] =
     positioned(Months.textValues.mkString("|").r ^^ { v =>
       val value = Months.textValues.indexOf(v) + 1
-      ConstExpr(Month, value, Some(v))
+      ConstExpr(value, Some(v))
     })
 
   def month: Parser[ConstExpr[Month]] = numericMonth | textMonth
 
   private[this] def numberDayOfWeek: Parser[ConstExpr[DayOfWeek]] =
-    positioned("""[0-6]""".r ^^ { value => ConstExpr(DayOfWeek, value.toInt) })
+    positioned("""[0-6]""".r ^^ { value => ConstExpr(value.toInt) })
 
   private[this] def textDayOfWeek: Parser[ConstExpr[DayOfWeek]] =
     positioned(DaysOfWeek.textValues.mkString("|").r ^^ { v =>
       val value = DaysOfWeek.textValues.indexOf(v)
-      ConstExpr(DayOfWeek, value, Some(v))
+      ConstExpr(value, Some(v))
     })
 
   def dayOfWeek: Parser[ConstExpr[DayOfWeek]] = numberDayOfWeek | textDayOfWeek

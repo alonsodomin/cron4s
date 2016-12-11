@@ -16,20 +16,20 @@ abstract class ExtendedCronExprTestKit[DateTime <: AnyRef : DateTimeAdapter]
   extends PropSpec with TableDrivenPropertyChecks with Matchers { this: ExtensionsTestKitBase[DateTime] =>
 
   val onlyTuesdaysAt12 = CronExpr(
-    ConstExpr(Second, 0),
-    ConstExpr(Minute, 0),
-    ConstExpr(Hour, 12),
+    ConstExpr[Second](0),
+    ConstExpr[Minute](0),
+    ConstExpr[Hour](12),
     AnyExpr[DayOfMonth],
     AnyExpr[Month],
-    ConstExpr(DayOfWeek, 1)
+    ConstExpr[DayOfWeek](1)
   )
   val onlySundays = CronExpr(
-    ConstExpr(Second, 0),
+    ConstExpr[Second](0),
     AnyExpr[Minute],
     AnyExpr[Hour],
     AnyExpr[DayOfMonth],
     AnyExpr[Month],
-    ConstExpr(DayOfWeek, 6)
+    ConstExpr[DayOfWeek](6)
   )
 
   lazy val samples = Table(
