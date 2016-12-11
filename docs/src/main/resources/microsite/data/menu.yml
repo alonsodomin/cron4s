@@ -22,3 +22,7 @@ options:
   - title: Built-in libs
     url: docs/builtin_libs.html
     section: intro
+
+  - title: API Docs
+    url: api/index.html
+    section: intro

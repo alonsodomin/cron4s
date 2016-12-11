@@ -1,6 +1,7 @@
 
 import com.typesafe.sbt.pgp.PgpKeys
 import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
+import sbtunidoc.Plugin.UnidocKeys._
 
 import scala.xml.transform.{RewriteRule, RuleTransformer}
 
@@ -45,6 +46,8 @@ lazy val publishSettings = Seq(
   publishMavenStyle := true,
   publishArtifact in Test := false,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+  autoAPIMappings := true,
+  apiURL := Some(url("https://alonsodomin.github.io/cron4s/api/")),
   publishTo := Some(
     if (isSnapshot.value) Opts.resolver.sonatypeSnapshots
     else Opts.resolver.sonatypeStaging
@@ -92,9 +95,11 @@ lazy val coverageSettings = Seq(
   coverageExcludedPackages := "cron4s\\.bench\\..*"
 )
 
+lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
+
 lazy val docSettings = Seq(
   micrositeName := "Cron4s",
-  micrositeDescription := "Scala CRON Expressions",
+  micrositeDescription := "Scala CRON Parser",
   micrositeHighlightTheme := "atom-one-light",
   micrositeAuthor := "Antonio Alonso Dominguez",
   micrositeGithubOwner := "alonsodomin",
@@ -103,8 +108,19 @@ lazy val docSettings = Seq(
   micrositeBaseUrl := "/cron4s",
   micrositeDocumentationUrl := "docs",
   fork in tut := true,
+  fork in (ScalaUnidoc, unidoc) := true,
+  autoAPIMappings := true,
+  docsMappingsAPIDir := "api",
+  addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
   ghpagesNoJekyll := false,
-  git.remoteRepo := "https://github.com/alonsodomin/cron4s.git"
+  git.remoteRepo := "https://github.com/alonsodomin/cron4s.git",
+  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(coreJVM),
+  scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
+    "-Xfatal-warnings",
+    "-doc-source-url", scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
+    "-sourcepath", baseDirectory.in(LocalRootProject).value.getAbsolutePath
+    //"-diagrams"
+  )
 )
 
 lazy val releaseSettings = {
@@ -167,6 +183,7 @@ lazy val docs = project.
   settings(commonSettings).
   settings(noPublishSettings).
   settings(ghpages.settings).
+  settings(unidocSettings).
   settings(docSettings).
   dependsOn(cron4sJVM)
 
