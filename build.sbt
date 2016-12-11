@@ -1,6 +1,8 @@
 
 import com.typesafe.sbt.pgp.PgpKeys
 import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
+import com.typesafe.tools.mima.plugin.MimaKeys.mimaPreviousArtifacts
+import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 import sbtunidoc.Plugin.UnidocKeys._
 
 import scala.xml.transform.{RewriteRule, RuleTransformer}
@@ -93,6 +95,10 @@ lazy val coverageSettings = Seq(
   coverageFailOnMinimum := false,
   coverageHighlighting := true,
   coverageExcludedPackages := "cron4s\\.bench\\..*"
+)
+
+def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
+  mimaPreviousArtifacts := Set("com.github.alonsodomin.cron4s" % s"cron4s-${module}_2.11" % "0.2.1")
 )
 
 lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
@@ -197,6 +203,7 @@ lazy val core = (crossProject in file("core")).
   settings(publishSettings: _*).
   settings(Dependencies.core: _*).
   jvmSettings(Dependencies.coreJVM: _*).
+  jvmSettings(mimaSettings("core"): _*).
   jsSettings(Dependencies.coreJS: _*).
   dependsOn(types)
 
@@ -212,6 +219,7 @@ lazy val testkit = (crossProject.crossType(CrossType.Pure) in file("testkit")).
   settings(commonJsSettings: _*).
   settings(publishSettings: _*).
   settings(Dependencies.testkit: _*).
+  jvmSettings(mimaSettings("testkit"): _*).
   dependsOn(core)
 
 lazy val testkitJS = testkit.js
@@ -225,7 +233,8 @@ lazy val types = (crossProject.crossType(CrossType.Pure) in file("types")).
   settings(commonSettings: _*).
   settings(commonJsSettings: _*).
   settings(publishSettings: _*).
-  settings(Dependencies.types: _*)
+  settings(Dependencies.types: _*).
+  jvmSettings(mimaSettings("types"): _*)
 
 lazy val typesJS = types.js
 lazy val typesJVM = types.jvm
