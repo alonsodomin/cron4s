@@ -25,7 +25,7 @@ abstract class ExtendedCronExpr[DateTime: DateTimeAdapter](expr: CronExpr) {
   def next(from: DateTime): Option[DateTime] = step(from, 1)
 
   @inline
-  def previous(from: DateTime): Option[DateTime] = step(from, -1)
+  def prev(from: DateTime): Option[DateTime] = step(from, -1)
 
   def step(from: DateTime, amount: Int): Option[DateTime] = {
     val stepper = new Stepper[DateTime](from, amount)

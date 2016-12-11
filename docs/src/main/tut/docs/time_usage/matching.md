@@ -35,3 +35,13 @@ of the _DateTime_ object and it will return `false` if there is any one that doe
 not match the sub-expression corresponding to that field. In the other hand, `anyOf`
 will return `true` if there is at least one field in the Cron expression that matches
 it corresponding field.
+
+### Individual Fields
+
+We can also test if the fields that compound the expression match separately instead
+of using the whole expression:
+
+```tut
+cron.seconds.matchesIn(now)
+cron.minutes.matchesIn(now)
+```

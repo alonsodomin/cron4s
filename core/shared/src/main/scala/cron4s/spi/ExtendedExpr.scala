@@ -22,9 +22,6 @@ abstract class ExtendedExpr[E[_ <: CronField] <: Expr[_], F <: CronField, DateTi
   @inline
   def prev(dateTime: DateTime): Option[DateTime] = step(dateTime, -1)
 
-  @deprecated("Use prev(dateTime) instead", "0.2.0")
-  def previous(dateTime: DateTime): Option[DateTime] = prev(dateTime)
-
   def step(dateTime: DateTime, step: Int): Option[DateTime] = {
     for {
       current  <- adapter.get(dateTime, underlying.asInstanceOf[Expr[F]].unit.field)

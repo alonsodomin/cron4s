@@ -49,7 +49,7 @@ class ExtendedCronExprSpec extends Properties("ExtendedCronExpr") with DummyTest
   }
 
   property("previous is equals to step with -1") = forAll(anyDateCombinations) {
-    case (expr, dt) => expr.previous(dt) == expr.step(dt, -1)
+    case (expr, dt) => expr.prev(dt) == expr.step(dt, -1)
   }
 
 }

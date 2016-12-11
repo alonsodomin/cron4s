@@ -8,13 +8,13 @@ title: "First Steps"
 To start using **cron4s** in your project just include the library as part of your dependencies:
 
 ```
-libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s-core" % "x.y.z"
+libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s" % "x.y.z"
 ```
 
 Or in ScalaJS:
 
 ```
-libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s-core" % "x.y.z"
+libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s" % "x.y.z"
 ```
 
 ### Parsing

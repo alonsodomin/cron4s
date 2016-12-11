@@ -32,7 +32,7 @@ cron.next(now)
 And of course, we can also get the previous moment in time to a given one:
 
 ```tut
-cron.previous(now)
+cron.prev(now)
 ```
 
 If for some reason we do not want the next one, but the following to the next one,
@@ -42,4 +42,14 @@ how big is the step size that we want to make:
 
 ```tut
 cron.step(now, 2)
+```
+
+### Individual fields
+
+The same type of operations are also available on the individual fields of the CRON
+expression:
+
+```tut
+cron.seconds.next(now)
+cron.minutes.prev(now)
 ```
