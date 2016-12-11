@@ -15,22 +15,22 @@ class ExprMatcherBenchmark {
 
   final val ValueToMatch = 30
 
-  val anyExpr = AnyExpr[CronField.Minute.type]
-  val constExpr = ConstExpr(CronField.Minute, 30)
+  val anyExpr = AnyExpr[CronField.Minute]
+  val constExpr = ConstExpr[CronField.Minute](30)
   val betweenExpr = BetweenExpr(
-    ConstExpr(CronField.Minute, CronUnit.Minutes.min),
-    ConstExpr(CronField.Minute, CronUnit.Minutes.max)
+    ConstExpr[CronField.Minute](CronUnit.Minutes.min),
+    ConstExpr[CronField.Minute](CronUnit.Minutes.max)
   )
   val severalEnumeratedExpr = {
-    val minutes: Seq[EnumerableExpr[CronField.Minute.type]] = for {
+    val minutes: Seq[EnumerableExpr[CronField.Minute]] = for {
       value <- CronUnit.Minutes.range
-    } yield ConstExpr(CronField.Minute, value)
+    } yield ConstExpr[CronField.Minute](value)
     SeveralExpr(NonEmptyList(minutes.head, minutes.tail: _*))
   }
   val severalBetweenExpr = {
-    val betweenExpr: EnumerableExpr[CronField.Minute.type] = BetweenExpr(
-      ConstExpr(CronField.Minute, CronUnit.Minutes.min),
-      ConstExpr(CronField.Minute, CronUnit.Minutes.max)
+    val betweenExpr: EnumerableExpr[CronField.Minute] = BetweenExpr(
+      ConstExpr[CronField.Minute](CronUnit.Minutes.min),
+      ConstExpr[CronField.Minute](CronUnit.Minutes.max)
     )
     SeveralExpr(NonEmptyList(betweenExpr))
   }
@@ -38,7 +38,7 @@ class ExprMatcherBenchmark {
 
   @Benchmark
   def matchAnyExpr(): Boolean = {
-    AnyExpr[CronField.Minute.type].matches(ValueToMatch)
+    AnyExpr[CronField.Minute].matches(ValueToMatch)
   }
 
   @Benchmark

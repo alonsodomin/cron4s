@@ -1,8 +1,8 @@
 package cron4s.expr
 
 import cron4s.{CronField, CronUnit}
-
 import shapeless._
+import shapeless.ops.hlist.Selector
 
 /**
   * Representation of a valid CRON expression as an AST
@@ -33,11 +33,11 @@ final case class CronExpr(
     * Generic field accessor. Given a CronField, this method can be used
     * to access the expression on that given field.
     *
-    * @param f CronField
+    * @param unit the CronUnit for the given field
     * @tparam F CronField type
     * @return field-based expression for given field
     */
-  def field[F <: CronField : CronUnit](f: F): Expr[F] = f match {
+  def field[F <: CronField](implicit unit: CronUnit[F]): Expr[F] = unit.field match {
     case CronField.Second     => seconds.asInstanceOf[Expr[F]]
     case CronField.Minute     => minutes.asInstanceOf[Expr[F]]
     case CronField.Hour       => hours.asInstanceOf[Expr[F]]

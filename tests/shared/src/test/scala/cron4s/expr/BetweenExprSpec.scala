@@ -11,11 +11,11 @@ import org.typelevel.discipline.scalatest.Discipline
   */
 class BetweenExprSpec extends FunSuite with Discipline with ArbitraryBetweenExpr {
 
-  checkAll("BetweenExpr[Second]", IsFieldExprTests[BetweenExpr, Second.type].fieldExpr)
-  checkAll("BetweenExpr[Minute]", IsFieldExprTests[BetweenExpr, Minute.type].fieldExpr)
-  checkAll("BetweenExpr[Hour]", IsFieldExprTests[BetweenExpr, Hour.type].fieldExpr)
-  checkAll("BetweenExpr[DayOfMonth]", IsFieldExprTests[BetweenExpr, DayOfMonth.type].fieldExpr)
-  checkAll("BetweenExpr[Month]", IsFieldExprTests[BetweenExpr, Month.type].fieldExpr)
-  checkAll("BetweenExpr[DayOfWeek]", IsFieldExprTests[BetweenExpr, DayOfWeek.type].fieldExpr)
+  checkAll("BetweenExpr[Second]", IsFieldExprTests[BetweenExpr, Second].fieldExpr)
+  checkAll("BetweenExpr[Minute]", IsFieldExprTests[BetweenExpr, Minute].fieldExpr)
+  checkAll("BetweenExpr[Hour]", IsFieldExprTests[BetweenExpr, Hour].fieldExpr)
+  checkAll("BetweenExpr[DayOfMonth]", IsFieldExprTests[BetweenExpr, DayOfMonth].fieldExpr)
+  checkAll("BetweenExpr[Month]", IsFieldExprTests[BetweenExpr, Month].fieldExpr)
+  checkAll("BetweenExpr[DayOfWeek]", IsFieldExprTests[BetweenExpr, DayOfWeek].fieldExpr)
 
 }

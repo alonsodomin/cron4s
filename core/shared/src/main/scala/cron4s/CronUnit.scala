@@ -12,8 +12,7 @@ import scala.language.higherKinds
   * @author Antonio Alonso Dominguez
   */
 @implicitNotFound("Field ${F} is not supported on Cron expressions")
-sealed abstract class CronUnit[F <: CronField] extends Serializable {
-  final type FieldType = F
+sealed abstract class CronUnit[+F <: CronField] extends Serializable {
 
   /**
     * @return the CronField for this unit
@@ -48,11 +47,11 @@ private[cron4s] trait CronUnits {
 
   }
 
-  implicit case object Seconds extends AbstractCronUnit[Second.type](Second, 0, 59)
-  implicit case object Minutes extends AbstractCronUnit[Minute.type](Minute, 0, 59)
-  implicit case object Hours extends AbstractCronUnit[Hour.type](Hour, 0, 23)
-  implicit case object DaysOfMonth extends AbstractCronUnit[DayOfMonth.type](DayOfMonth, 1, 31)
-  implicit case object Months extends AbstractCronUnit[Month.type](Month, 1, 12) {
+  implicit case object Seconds extends AbstractCronUnit[Second](Second, 0, 59)
+  implicit case object Minutes extends AbstractCronUnit[Minute](Minute, 0, 59)
+  implicit case object Hours extends AbstractCronUnit[Hour](Hour, 0, 23)
+  implicit case object DaysOfMonth extends AbstractCronUnit[DayOfMonth](DayOfMonth, 1, 31)
+  implicit case object Months extends AbstractCronUnit[Month](Month, 1, 12) {
     val textValues = IndexedSeq(
       "jan", "feb", "mar",
       "apr", "may", "jun",
@@ -60,7 +59,7 @@ private[cron4s] trait CronUnits {
       "oct", "nov", "dec"
     )
   }
-  implicit case object DaysOfWeek extends AbstractCronUnit(DayOfWeek, 0, 6) {
+  implicit case object DaysOfWeek extends AbstractCronUnit[DayOfWeek](DayOfWeek, 0, 6) {
     val textValues = IndexedSeq("mon", "tue", "wed", "thu", "fri", "sat", "sun")
   }
 

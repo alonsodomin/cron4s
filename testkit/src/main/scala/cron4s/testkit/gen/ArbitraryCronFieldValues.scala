@@ -17,17 +17,17 @@ trait ArbitraryCronFieldValues {
   def cronFieldValueGen[F <: CronField](unit: CronUnit[F])(implicit ev: HasCronField[CronUnit, F]): Gen[CronFieldValue[F]] =
     Gen.choose(unit.min, unit.max).map(v => CronFieldValue(unit.field, v))
 
-  implicit lazy val arbitrarySecondValue: Arbitrary[CronFieldValue[Second.type]] =
+  implicit lazy val arbitrarySecondValue: Arbitrary[CronFieldValue[Second]] =
     Arbitrary(cronFieldValueGen(Seconds))
-  implicit lazy val arbitraryMinuteValue: Arbitrary[CronFieldValue[Minute.type]] =
+  implicit lazy val arbitraryMinuteValue: Arbitrary[CronFieldValue[Minute]] =
     Arbitrary(cronFieldValueGen(Minutes))
-  implicit lazy val arbitraryHourValue: Arbitrary[CronFieldValue[Hour.type]] =
+  implicit lazy val arbitraryHourValue: Arbitrary[CronFieldValue[Hour]] =
     Arbitrary(cronFieldValueGen(Hours))
-  implicit lazy val arbitraryDayOfMonthValue: Arbitrary[CronFieldValue[DayOfMonth.type]] =
+  implicit lazy val arbitraryDayOfMonthValue: Arbitrary[CronFieldValue[DayOfMonth]] =
     Arbitrary(cronFieldValueGen(DaysOfMonth))
-  implicit lazy val arbitraryMonthValue: Arbitrary[CronFieldValue[Month.type]] =
+  implicit lazy val arbitraryMonthValue: Arbitrary[CronFieldValue[Month]] =
     Arbitrary(cronFieldValueGen(Months))
-  implicit lazy val arbitraryDayOfWeekValue: Arbitrary[CronFieldValue[DayOfWeek.type]] =
+  implicit lazy val arbitraryDayOfWeekValue: Arbitrary[CronFieldValue[DayOfWeek]] =
     Arbitrary(cronFieldValueGen(DaysOfWeek))
 
 }

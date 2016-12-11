@@ -9,11 +9,11 @@ import org.scalacheck._
   */
 trait ArbitraryCronUnits {
 
-  implicit lazy val arbitrarySecondsUnit     = Arbitrary(Gen.const(CronUnit[Second.type]))
-  implicit lazy val arbitraryMinutesUnit     = Arbitrary(Gen.const(CronUnit[Minute.type]))
-  implicit lazy val arbitraryHoursUnit       = Arbitrary(Gen.const(CronUnit[Hour.type]))
-  implicit lazy val arbitraryDaysOfMonthUnit = Arbitrary(Gen.const(CronUnit[DayOfMonth.type]))
-  implicit lazy val arbitraryMonthsUnit      = Arbitrary(Gen.const(CronUnit[Month.type]))
-  implicit lazy val arbitraryDaysOfWeekUnit  = Arbitrary(Gen.const(CronUnit[DayOfWeek.type]))
+  implicit lazy val arbitrarySecondsUnit     = Arbitrary(Gen.const(CronUnit[Second]))
+  implicit lazy val arbitraryMinutesUnit     = Arbitrary(Gen.const(CronUnit[Minute]))
+  implicit lazy val arbitraryHoursUnit       = Arbitrary(Gen.const(CronUnit[Hour]))
+  implicit lazy val arbitraryDaysOfMonthUnit = Arbitrary(Gen.const(CronUnit[DayOfMonth]))
+  implicit lazy val arbitraryMonthsUnit      = Arbitrary(Gen.const(CronUnit[Month]))
+  implicit lazy val arbitraryDaysOfWeekUnit  = Arbitrary(Gen.const(CronUnit[DayOfWeek]))
 
 }

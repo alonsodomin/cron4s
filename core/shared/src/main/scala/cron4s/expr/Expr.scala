@@ -16,9 +16,8 @@ import Scalaz._
   *
   * @author Antonio Alonso Dominguez
   */
-sealed trait Expr[F <: CronField] extends Positional {
-  final type FieldType = F
-
+sealed trait Expr[+F <: CronField] extends Positional {
+  
   /**
     * Unit of this expression
     */
@@ -50,7 +49,7 @@ final case class AnyExpr[F <: CronField](implicit val unit: CronUnit[F])
 case object Last extends SpecialChar
 
 final case class ConstExpr[F <: CronField]
-    (field: F, value: Int, textValue: Option[String] = None)
+    (value: Int, textValue: Option[String] = None)
     (implicit val unit: CronUnit[F], ev: HasCronField[CronUnit, F], ops: IsFieldExpr[EnumerableExpr, F])
   extends Expr[F] with DivisibleExpr[F] with EnumerableExpr[F] {
 

@@ -47,7 +47,7 @@ val cron = parsed.right.get
 **_Note:_** _It is not recommended to use `.right.get` to extract values out of `Either[..., ...]`
 types, we are doing it here as a means of simplifying the types just for the sake of the tutorial._ 
 
-### CRON AST
+### The Cron4s AST
 
 After successfully parsing a CRON expression, the `CronExpr` resulting type represents the previously
 parsed expression as an AST, in which we can access all the expression fields individually:
@@ -80,3 +80,72 @@ To convert an AST back into the original string expression we simply use the `to
 ```tut
 cron.toString
 ```
+
+#### Field expressions
+
+All field expressions have their own type, which is parameterized in the actual field type they
+operate on. We can access that field type definition via the `unit` of field expression:
+
+```tut
+cron.seconds.unit.field
+```
+
+The expression unit can be used to give us information about what values are valid for that
+specific field:
+
+```tut
+cron.seconds.unit.range
+```
+
+Which is different than the range of values accepted by the expression at that given field:
+
+```tut
+cron.seconds.range
+```
+
+We can also obtain a field expression by means of the `field` method in `CronExpr` and passing
+either the cron field type or the cron unit.
+
+```tut
+cron.field[CronField.Minute]
+cron.field(CronUnit.Minutes)
+```
+
+Other interesting operations are the ones that can be used to test if a given value matches the
+field expression:
+
+```tut
+cron.seconds.matches(5)
+cron.seconds.matches(15)
+cron.minutes.matches(4)
+cron.minutes.matches(5)
+```
+
+Or to test if a given field expression is implied by another one (that is also parameterized by
+the same field type). To show this, let's work with some simple field expressions:
+
+```tut
+import cron4s.expr._
+
+val anySecond = AnyExpr[CronField.Second]
+val fixedSecond = ConstExpr[CronField.Second](30)
+
+anySecond.impliedBy(fixedSecond)
+fixedSecond.impliedBy(anySecond)
+
+val minutesRange = BetweenExpr[CronField.Minute](ConstExpr(2), ConstExpr(10))
+val fixedMinute = ConstExpr[CronField.Minute](7)
+
+minutesRange.impliedBy(fixedMinute)
+fixedMinute.impliedBy(minutesRange)
+```
+
+It's important to notice that when using the `impliedBy` operation, if the two expressions are not
+parameterized for the same field type, the code won't compile:
+ 
+```tut:fail
+minutesRange.impliedBy(anySecond)
+```
+
+The error looks a bit scary, but in essence is saying to us that the `impliedBy` method was expecting
+any kind of expression as long as it was for the `Minute` field (expressed as `EE[cron4s.CronField.Minute]`).
