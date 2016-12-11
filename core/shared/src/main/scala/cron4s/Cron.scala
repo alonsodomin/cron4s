@@ -6,7 +6,9 @@ import cron4s.parser._
 import scala.util.parsing.input.CharArrayReader
 
 /**
-  * Created by alonsodomin on 02/01/2016.
+  * Entry point for the CRON parsing operation
+  *
+  * @author Antonio Alonso Dominguez
   */
 object Cron {
 

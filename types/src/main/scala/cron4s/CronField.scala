@@ -1,7 +1,9 @@
 package cron4s
 
 /**
-  * Created by alonsodomin on 07/11/2015.
+  * Each of the different fields supported in CRON expressions
+  *
+  * @author Antonio Alonso Dominguez
   */
 sealed trait CronField extends Serializable
 object CronField {

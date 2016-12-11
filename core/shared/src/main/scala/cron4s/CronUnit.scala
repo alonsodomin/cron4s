@@ -6,14 +6,25 @@ import scala.annotation.implicitNotFound
 import scala.language.higherKinds
 
 /**
-  * Created by alonsodomin on 02/01/2016.
+  * A Cron Unit is the representation of valid values that are accepted
+  * at a given Cron Field.
+  *
+  * @author Antonio Alonso Dominguez
   */
 @implicitNotFound("Field ${F} is not supported on Cron expressions")
 sealed abstract class CronUnit[F <: CronField] extends Serializable {
   final type FieldType = F
 
+  /**
+    * @return the CronField for this unit
+    */
   def field: F
 
+  /**
+    * Cron units have a range of valid values
+    *
+    * @return the range of valid values
+    */
   def range: IndexedSeq[Int]
 
 }

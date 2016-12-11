@@ -34,7 +34,8 @@ val commonSettings = Def.settings(
 
 lazy val commonJsSettings = Seq(
   scalaJSStage in Test := FastOptStage,
-  persistLauncher in Test := false
+  persistLauncher in Test := false,
+  requiresDOM := false
 )
 
 lazy val noPublishSettings = Seq(
@@ -90,14 +91,14 @@ lazy val publishSettings = Seq(
 )
 
 lazy val coverageSettings = Seq(
-  coverageMinimum := 60,
-  coverageFailOnMinimum := false,
+  coverageMinimum := 80,
+  coverageFailOnMinimum := true,
   coverageHighlighting := true,
   coverageExcludedPackages := "cron4s\\.bench\\..*"
 )
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
-  mimaPreviousArtifacts := Set("com.github.alonsodomin.cron4s" % s"cron4s-${module}_2.11" % "0.2.1")
+  mimaPreviousArtifacts := Set("com.github.alonsodomin.cron4s" %% s"cron4s-${module}" % "0.2.1")
 )
 
 lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
@@ -110,7 +111,7 @@ lazy val docSettings = Seq(
   micrositeGithubOwner := "alonsodomin",
   micrositeGithubRepo := "cron4s",
   micrositeHomepage := "https://alonsodomin.github.io/cron4s",
-  //micrositeBaseUrl := "/cron4s",
+  micrositeBaseUrl := "/cron4s",
   micrositeDocumentationUrl := "docs",
   fork in tut := true,
   fork in (ScalaUnidoc, unidoc) := true,

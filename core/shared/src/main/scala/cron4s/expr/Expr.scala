@@ -12,13 +12,21 @@ import scalaz._
 import Scalaz._
 
 /**
-  * Created by alonsodomin on 07/11/2015.
+  * Generic representation of the expression for a given field
+  *
+  * @author Antonio Alonso Dominguez
   */
 sealed trait Expr[F <: CronField] extends Positional {
   final type FieldType = F
 
+  /**
+    * Unit of this expression
+    */
   val unit: CronUnit[F]
 
+  /**
+    * Range of valid values accepted by this expression
+    */
   val range: IndexedSeq[Int]
 
 }
