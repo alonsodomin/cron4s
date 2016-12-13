@@ -1,8 +1,8 @@
 package cron4s.expr
 
 import cron4s.{CronField, CronUnit}
+
 import shapeless._
-import shapeless.ops.hlist.Selector
 
 /**
   * Representation of a valid CRON expression as an AST

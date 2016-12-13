@@ -6,7 +6,6 @@ import cron4s.types.syntax._
 import cron4s.validation._
 
 import scala.language.{implicitConversions, higherKinds}
-import scala.util.parsing.input.Positional
 
 import scalaz._
 import Scalaz._
@@ -16,7 +15,7 @@ import Scalaz._
   *
   * @author Antonio Alonso Dominguez
   */
-sealed trait Expr[+F <: CronField] extends Positional {
+sealed trait Expr[+F <: CronField] {
   
   /**
     * Unit of this expression
@@ -87,15 +86,13 @@ final case class BetweenExpr[F <: CronField]
 }
 
 final case class SeveralExpr[F <: CronField] private[expr]
-    (values: Vector[EnumerableExpr[F]])
+    (values: NonEmptyList[EnumerableExpr[F]])
     (implicit val unit: CronUnit[F])
   extends Expr[F] with DivisibleExpr[F] {
 
-  require(values.nonEmpty, "Expression should contain at least one element")
+  val range: IndexedSeq[Int] = values.list.toVector.flatMap(_.range).distinct.sorted
 
-  val range: IndexedSeq[Int] = values.flatMap(_.range).distinct.sorted
-
-  override def toString = values.mkString(",")
+  override val toString: String = values.list.toVector.mkString(",")
 
 }
 object SeveralExpr {

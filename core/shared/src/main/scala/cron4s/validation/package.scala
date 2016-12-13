@@ -11,9 +11,12 @@ import Scalaz._
   */
 package object validation {
 
-  type ValidatedExpr[E[_ <: CronField], F <: CronField] = ValidationNel[InvalidExpression[F], E[F]]
+  type ValidatedExpr[E[_ <: CronField], F <: CronField] = ValidationNel[InvalidFieldExpr[F], E[F]]
 
-  type ValidationHandler[E[_ <: CronField], F <: CronField, R] = PartialFunction[ValidatedExpr[E, F], R]
+  def validate(expr: CronExpr): InvalidCronExpr \/ CronExpr = {
+    expr.repr
+    ???
+  }
 
   def validateSeveral[F <: CronField]
       (exprs: NonEmptyList[EnumerableExpr[F]])
@@ -27,15 +30,15 @@ package object validation {
         processed: Vector[EnumerableExpr[F]]
     ): ValidatedExpr[EnumerableExpr, F] = {
       val alreadyImplied = processed.find(e => ops.impliedBy(expr)(e)).
-        map(found => InvalidExpression(expr.unit.field, implicationErrorMsg(expr, found)).failureNel[EnumerableExpr[F]])
+        map(found => InvalidFieldExpr(expr.unit.field, implicationErrorMsg(expr, found)).failureNel[EnumerableExpr[F]])
       val impliesOther = processed.find(e => ops.impliedBy(e)(expr)).
-        map(found => InvalidExpression(expr.unit.field, implicationErrorMsg(found, expr)).failureNel[EnumerableExpr[F]])
+        map(found => InvalidFieldExpr(expr.unit.field, implicationErrorMsg(found, expr)).failureNel[EnumerableExpr[F]])
 
-      alreadyImplied.orElse(impliesOther).getOrElse(expr.successNel[InvalidExpression[F]])
+      alreadyImplied.orElse(impliesOther).getOrElse(expr.successNel[InvalidFieldExpr[F]])
     }
 
     val zero = Vector.empty[EnumerableExpr[F]]
-    val (_, result) = exprs.foldLeft((zero, zero.successNel[InvalidExpression[F]])) { case ((seen, acc), expr) =>
+    val (_, result) = exprs.foldLeft((zero, zero.successNel[InvalidFieldExpr[F]])) { case ((seen, acc), expr) =>
       val validated = (acc |@| validateImplication(expr, seen))((prev, next) => prev :+ next)
       (seen :+ expr, validated)
     }

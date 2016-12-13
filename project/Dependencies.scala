@@ -14,6 +14,7 @@ object Dependencies {
     val jodaTime    = "2.9.6"
     val jodaConvert = "1.8.1"
     val parserComb  = "1.0.2"
+    val fastparse   = "0.4.1"
 
     val scalacheck  = "1.13.4"
     val scalatest   = "3.0.1"
@@ -28,9 +29,10 @@ object Dependencies {
 
   lazy val core = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
-      "com.chuusai"    %%% "shapeless"                 % version.shapeless,
-      "io.github.soc"  %%% "scala-java-time"           % version.scalaJavaTime,
-      "org.scalaz"     %%% "scalaz-core"               % version.scalaz
+      "com.chuusai"    %%% "shapeless"       % version.shapeless,
+      "io.github.soc"  %%% "scala-java-time" % version.scalaJavaTime,
+      "org.scalaz"     %%% "scalaz-core"     % version.scalaz,
+      "com.lihaoyi"    %%% "fastparse"       % version.fastparse
     )
   }
 
@@ -69,18 +71,14 @@ object Dependencies {
 
   lazy val tests = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
-      "org.scalatest"  %%% "scalatest"                 % version.scalatest      % Test
+      "org.scalatest"  %%% "scalatest" % version.scalatest % Test
     )
-  }
-
-  lazy val testsJS = Def.settings {
-    jsDependencies += RuntimeDOM % Test
   }
 
   lazy val testsJVM = Def.settings {
     libraryDependencies ++= Seq(
-      "joda-time"               % "joda-time"                % version.jodaTime,
-      "org.joda"                % "joda-convert"             % version.jodaConvert
+      "joda-time" % "joda-time"    % version.jodaTime,
+      "org.joda"  % "joda-convert" % version.jodaConvert
     )
   }
 

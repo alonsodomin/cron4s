@@ -18,7 +18,7 @@ class ExprValidationSpec extends FlatSpec with Matchers {
 
     val result = validateSeveral[Minute](NonEmptyList(expr1, expr2))
     result shouldBe Failure(NonEmptyList(
-      InvalidExpression(Minute, s"Expression '$expr1' at field Minute is implied by '$expr2'")
+      InvalidFieldExpr(Minute, s"Expression '$expr1' at field Minute is implied by '$expr2'")
     ))
   }
 
