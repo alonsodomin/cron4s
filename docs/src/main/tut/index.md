@@ -30,6 +30,8 @@ Or in ScalaJS:
 libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s" % "x.y.z"
 ```
 
+**cron4s** is cross compiled for Scala 2.11 and Scala 2.12. 
+
 ## Status
 
 At the moment the library should be considered as experimental and APIs might change.
