@@ -5,15 +5,12 @@ import Keys._
 object Dependencies {
 
   object version {
-    val simulacrum  = "0.7.0"
-    val cats        = "0.6.0"
     val scalaz      = "7.2.8"
     val shapeless   = "2.3.2"
 
     val momentjs    = "0.1.5"
     val jodaTime    = "2.9.6"
     val jodaConvert = "1.8.1"
-    val parserComb  = "1.0.2"
     val fastparse   = "0.4.1"
 
     val scalacheck  = "1.13.4"
@@ -36,15 +33,8 @@ object Dependencies {
     )
   }
 
-  lazy val coreJS = Def.settings(
-    libraryDependencies ++= Seq(
-      "org.scala-js"    %%% "scala-parser-combinators" % version.parserComb
-    )
-  )
-
   lazy val coreJVM = Def.settings {
     libraryDependencies ++= Seq(
-      "org.scala-lang.modules" %% "scala-parser-combinators" % version.parserComb,
       "joda-time"               % "joda-time"                % version.jodaTime    % Optional,
       "org.joda"                % "joda-convert"             % version.jodaConvert % Optional
     )

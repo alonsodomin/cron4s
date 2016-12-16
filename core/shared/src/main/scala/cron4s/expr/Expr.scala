@@ -97,11 +97,11 @@ final case class SeveralExpr[F <: CronField] private[expr]
 }
 object SeveralExpr {
 
-  def apply[F <: CronField]
+  /*def apply[F <: CronField]
       (elements: NonEmptyList[EnumerableExpr[F]])
       (implicit unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F]
   ): ValidatedExpr[SeveralExpr, F] =
-    validateSeveral[F](elements)
+    validateSeveral[F](elements)*/
 
 }
 

@@ -8,11 +8,11 @@ import org.scalacheck._
 /**
   * Created by alonsodomin on 13/01/2016.
   */
-object ExprParsersSpec extends Properties("ExprParsers") with ExprParsers with InputGenerators {
+object ExprParsersSpec extends Properties("ExprParsers") with InputGenerators {
   import Prop._
   import cron4s.CronUnit._
 
-  def verifyParsed[F <: CronField, P <: Expr[F]](parser: Parser[P], input: String)(verify: P => Boolean): Boolean = {
+  /*def verifyParsed[F <: CronField, P <: Expr[F]](parser: Parser[P], input: String)(verify: P => Boolean): Boolean = {
     parseAll(parser, input) match {
       case Success(parsed, _) => verify(parsed)
       case NoSuccess(msg, _) =>
@@ -21,7 +21,7 @@ object ExprParsersSpec extends Properties("ExprParsers") with ExprParsers with I
     }
   }
 
-  /** Utility method to help with type inference */
+  /** Utility method to help with type inference
   def verifyConst[F <: CronField](parser: Parser[ConstExpr[F]], input: String)(verify: ConstExpr[F] => Boolean): Boolean =
     verifyParsed[F, ConstExpr[F]](parser, input)(verify)
 
@@ -57,6 +57,6 @@ object ExprParsersSpec extends Properties("ExprParsers") with ExprParsers with I
     x => verifyConst(dayOfWeek, x) { expr =>
       expr.textValue.contains(x) && expr.matches(DaysOfWeek.textValues.indexOf(x))
     }
-  }
+  }*/*/
 
 }

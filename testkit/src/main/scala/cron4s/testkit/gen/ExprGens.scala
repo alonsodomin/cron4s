@@ -4,9 +4,11 @@ import cron4s.expr._
 import cron4s.types._
 import cron4s.types.syntax._
 import cron4s.{CronField, CronUnit}
+
 import org.scalacheck._
 
 import scala.collection.mutable.ListBuffer
+import scalaz.NonEmptyList
 
 /**
   * Created by alonsodomin on 28/08/2016.
@@ -43,8 +45,6 @@ trait ExprGens extends ArbitraryCronUnits {
     value <- Gen.choose(unit.min, unit.max)
   } yield constExpr(unit, value)
 
-  //implicit lazy val arbitraryConstMinuteExpr = Arbitrary(constExprGen[Minute.type])
-
   def betweenExprGen[F <: CronField](unit: CronUnit[F])(implicit
       ev: HasCronField[CronUnit, F]
   ): Gen[BetweenExpr[F]] = for {
@@ -52,14 +52,14 @@ trait ExprGens extends ArbitraryCronUnits {
     max  <- Gen.choose(min + 1, unit.max)
   } yield BetweenExpr(constExpr(unit, min), constExpr(unit, max))(unit, IsFieldExpr[EnumerableExpr, F])
 
-  //implicit lazy val arbitraryBetweenMinuteExpr = Arbitrary(betweenExprGen[Minute.type])
-
   def enumerableExprGen[F <: CronField](unit: CronUnit[F])(implicit
       ev: HasCronField[CronUnit, F]
   ): Gen[EnumerableExpr[F]] = Gen.oneOf(constExprGen[F](unit), betweenExprGen[F](unit))
 
-  def severalExpr[F <: CronField](unit: CronUnit[F], values: Vector[EnumerableExpr[F]]): SeveralExpr[F] =
-    SeveralExpr[F](values.sorted)(unit)
+  def severalExpr[F <: CronField](unit: CronUnit[F], values: Vector[EnumerableExpr[F]]): SeveralExpr[F] = {
+    val sortedValues = values.sorted
+    SeveralExpr[F](NonEmptyList(sortedValues.head, sortedValues.tail: _*))(unit)
+  }
 
   def severalExprGen[F <: CronField](unit: CronUnit[F])(implicit
       ev: HasCronField[CronUnit, F]
@@ -67,8 +67,6 @@ trait ExprGens extends ArbitraryCronUnits {
     size  <- Gen.posNum[Int] if size > 1
     elems <- Gen.containerOfN[Vector, EnumerableExpr[F]](size, enumerableExprGen(unit))
   } yield severalExpr(unit, filterImpliedElems(elems))
-
-  //implicit lazy val arbitrarySeveralMinuteExpr = Arbitrary(severalExprGen[Minute.type])
 
   def divisibleExprGen[F <: CronField](unit: CronUnit[F])(implicit
       ev: HasCronField[CronUnit, F]
@@ -84,10 +82,5 @@ trait ExprGens extends ArbitraryCronUnits {
 
   def exprGen[F <: CronField](unit: CronUnit[F])(implicit ev: HasCronField[CronUnit, F]): Gen[Expr[F]] =
     Gen.oneOf(anyExprGen[F](unit), constExprGen[F](unit), severalExprGen[F](unit), everyExprGen[F](unit))
-
-  /*def exprForUnitGen[U](unit: U)(implicit resolve: IsCronUnit[U]): Gen[Expr[resolve.F]] = {
-    val resolvedUnit = resolve(unit)
-    exprGen(resolvedUnit)(HasCronField[CronUnit, resolve.F])
-  }*/
 
 }

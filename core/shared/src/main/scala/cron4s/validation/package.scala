@@ -13,11 +13,6 @@ package object validation {
 
   type ValidatedExpr[E[_ <: CronField], F <: CronField] = ValidationNel[InvalidFieldExpr[F], E[F]]
 
-  def validate(expr: CronExpr): InvalidCronExpr \/ CronExpr = {
-    expr.repr
-    ???
-  }
-
   def validateSeveral[F <: CronField]
       (exprs: NonEmptyList[EnumerableExpr[F]])
       (implicit unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F]): ValidatedExpr[SeveralExpr, F] = {
@@ -42,7 +37,8 @@ package object validation {
       val validated = (acc |@| validateImplication(expr, seen))((prev, next) => prev :+ next)
       (seen :+ expr, validated)
     }
-    result.map(vec => SeveralExpr[F](vec.sorted))
+    //result.map(vec => SeveralExpr[F](vec.sorted))
+    ???
   }
 
 }

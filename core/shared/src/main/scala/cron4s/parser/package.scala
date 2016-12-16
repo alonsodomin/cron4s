@@ -1,15 +1,15 @@
-package cron4s.parser2
+package cron4s
 
-import cron4s.{CronField, CronUnit}
 import cron4s.expr._
+
 import fastparse.all._
 
 import scalaz.NonEmptyList
 
 /**
-  * Created by alonsodomin on 11/12/2016.
+  * Created by alonsodomin on 15/12/2016.
   */
-object dsl {
+package object parser {
   import CronField._
   import CronUnit._
 
@@ -62,9 +62,23 @@ object dsl {
   def several[F <: CronField](p: Parser[EnumerableExpr[F]])(implicit unit: CronUnit[F]): Parser[SeveralExpr[F]] =
     p.rep(min = 1, sep = ",")
       .map(values => SeveralExpr[F](NonEmptyList(values.head, values.tail: _*)))
-      .map(_.toEither.right.get)
+  //.map(_.toEither.right.get)
 
   def every[F <: CronField](p: Parser[DivisibleExpr[F]])(implicit unit: CronUnit[F]): Parser[EveryExpr[F]] =
     (p ~ "/" ~/ CharIn('0' to '9').rep(1).!).map { case (base, freq) => EveryExpr[F](base, freq.toInt) }
+
+  def of[F <: CronField](p: Parser[ConstExpr[F]])(implicit unit: CronUnit[F]): Parser[Expr[F]] = {
+    val severalExpr = several(between(p) | p)
+    val everyExpr = every(severalExpr | between(p) | each[F])
+
+    everyExpr | severalExpr | between(p) | p | each
+  }
+
+  val cron: Parser[CronExpr] = P(
+    Start ~ of(seconds) ~ " " ~/ of(minutes) ~ " " ~/ of(hours) ~ " " ~/
+      of(daysOfMonth) ~ " " ~/ of(months) ~ " " ~/ of(daysOfWeek) ~ End
+  ).map { case (sec, min, hour, day, month, weekDay) =>
+    CronExpr(sec, min, hour, day, month, weekDay)
+  }
 
 }
