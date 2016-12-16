@@ -11,7 +11,7 @@ object Dependencies {
     val momentjs    = "0.1.5"
     val jodaTime    = "2.9.6"
     val jodaConvert = "1.8.1"
-    val fastparse   = "0.4.1"
+    val fastparse   = "0.4.2"
 
     val scalacheck  = "1.13.4"
     val scalatest   = "3.0.1"
