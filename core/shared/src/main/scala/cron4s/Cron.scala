@@ -13,20 +13,20 @@ import scalaz._
   */
 object Cron {
 
-  def apply(e: String): Either[ParseFailed, CronExpr] = {
+  def apply(e: String): Either[InvalidCron, CronExpr] = {
     \/.fromEither(parse(e))
       //.flatMap(validation.validate)
       .toEither
   }
 
-  private[this] def parse(e: String): Either[InvalidCron, CronExpr] = {
+  private[this] def parse(e: String): Either[ParseFailed, CronExpr] = {
     parser.cron.parse(e) match {
       case Parsed.Success(expr, _) =>
         Right(expr)
 
       case err @ Parsed.Failure(_, idx, _) =>
         val error = ParseError(err)
-        Left(InvalidCron(error.failure.msg))
+        Left(ParseFailed(error.failure.msg, idx))
     }
   }
 
