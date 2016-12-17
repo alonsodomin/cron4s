@@ -38,6 +38,24 @@ object ParserSpec extends Properties("parser") with InputGenerators with ExprGen
   def verifyBetween[F <: CronField](parser: Parser[BetweenExpr[F]], input: String)(verify: BetweenExpr[F] => Boolean): Boolean =
     verifyParsed[F, BetweenExpr[F]](parser, input)(verify)
 
+  def verifySeveral[F <: CronField, A](parser: Parser[SeveralExpr[F]], input: String, expected: List[Either[String, (A, A)]])(verify: (ConstExpr[F], String) => Boolean): Boolean = {
+    verifyParsed[F, SeveralExpr[F]](parser, input) { expr =>
+      if (expr.values.size == expected.size) {
+        val matches = expr.values.list.toList.zip(expected).map { case (exprPart, expectedPart) =>
+          expectedPart match {
+            case Left(value) =>
+              exprPart.isInstanceOf[ConstExpr[F]] && verify(exprPart.asInstanceOf[ConstExpr[F]], value)
+            case Right((start, end)) =>
+              val betweenPart = exprPart.asInstanceOf[BetweenExpr[F]]
+              verify(betweenPart.begin, start.toString) && verify(betweenPart.end, end.toString)
+          }
+        }
+
+        !matches.contains(false)
+      } else false
+    }
+  }
+
   // --------------------------------------------------------------
   // Properties for the individual parsers
   // --------------------------------------------------------------
@@ -134,6 +152,60 @@ object ParserSpec extends Properties("parser") with InputGenerators with ExprGen
     case (input, (start, end)) =>
       verifyBetween(between(daysOfWeek), input) { expr =>
         expr.begin.textValue.contains(start) && expr.end.textValue.contains(end)
+      }
+  }
+
+  property("should be able to parse sequences of second expressions") = forAll(secondsOrMinutesSeqGen) {
+    case (input, values) =>
+      verifySeveral(several(seconds), input, values) { (expr, expected) =>
+        expr.value == expected.toInt
+      }
+  }
+
+  property("should be able to parse sequences of minutes expressions") = forAll(secondsOrMinutesSeqGen) {
+    case (input, values) =>
+      verifySeveral(several(minutes), input, values) { (expr, expected) =>
+        expr.value == expected.toInt
+      }
+  }
+
+  property("should be able to parse sequences of hour expressions") = forAll(hoursSeqGen) {
+    case (input, values) =>
+      verifySeveral(several(hours), input, values) { (expr, expected) =>
+        expr.value == expected.toInt
+      }
+  }
+
+  property("should be able to parse sequences of days of month expressions") = forAll(daysOfMonthSeqGen) {
+    case (input, values) =>
+      verifySeveral(several(daysOfMonth), input, values) { (expr, expected) =>
+        expr.value == expected.toInt
+      }
+  }
+
+  property("should be able to parse sequences of numeric month expressions") = forAll(numericMonthsSeqGen) {
+    case (input, values) =>
+      verifySeveral(several(months), input, values) { (expr, expected) =>
+        expr.value == expected.toInt
+      }
+  }
+  property("should be able to parse sequences of named month expressions") = forAll(namedMonthsSeqGen) {
+    case (input, values) =>
+      verifySeveral(several(months), input, values) { (expr, expected) =>
+        expr.textValue.contains(expected)
+      }
+  }
+
+  property("should be able to parse sequences of numeric days of week expressions") = forAll(numericDaysOfWeekSeqGen) {
+    case (input, values) =>
+      verifySeveral(several(daysOfWeek), input, values) { (expr, expected) =>
+        expr.value == expected.toInt
+      }
+  }
+  property("should be able to parse sequences of named days of week expressions") = forAll(namedDaysOfWeekSeqGen) {
+    case (input, values) =>
+      verifySeveral(several(daysOfWeek), input, values) { (expr, expected) =>
+        expr.textValue.contains(expected)
       }
   }
 
