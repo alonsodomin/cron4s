@@ -2,13 +2,15 @@ package cron4s.validation
 
 import cron4s._
 import cron4s.expr.{BetweenExpr, ConstExpr, SeveralExpr}
-import org.scalatest.{FlatSpec, Matchers}
+
+import org.scalatest._
 
 import scalaz._
 
 /**
   * Created by alonsodomin on 05/08/2016.
   */
+@Ignore
 class ExprValidationSpec extends FlatSpec with Matchers {
   import CronField._
 
