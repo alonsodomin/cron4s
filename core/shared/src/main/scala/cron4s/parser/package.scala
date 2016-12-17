@@ -70,14 +70,14 @@ package object parser {
     P("*").map(_ => EachExpr[F])
 
   def between[F <: CronField](p: Parser[ConstExpr[F]])(implicit unit: CronUnit[F]): Parser[BetweenExpr[F]] =
-    (p ~ "-" ~/ p).map { case (min, max) => BetweenExpr[F](min, max) }
+    (p ~ "-" ~ p).map { case (min, max) => BetweenExpr[F](min, max) }
 
   def several[F <: CronField](p: Parser[EnumerableExpr[F]])(implicit unit: CronUnit[F]): Parser[SeveralExpr[F]] =
     p.rep(min = 1, sep = ",")
       .map(values => SeveralExpr[F](NonEmptyList(values.head, values.tail: _*)))
 
   def every[F <: CronField](p: Parser[DivisibleExpr[F]])(implicit unit: CronUnit[F]): Parser[EveryExpr[F]] =
-    (p ~ "/" ~/ CharIn('0' to '9').rep(1).!).map { case (base, freq) => EveryExpr[F](base, freq.toInt) }
+    (p ~ "/" ~/ digit.rep(1).!).map { case (base, freq) => EveryExpr[F](base, freq.toInt) }
 
   //----------------------------------------
   // AST Parsing & Building
