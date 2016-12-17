@@ -70,7 +70,7 @@ package object parser {
     P("*").map(_ => EachExpr[F])
 
   def between[F <: CronField](p: Parser[ConstExpr[F]])(implicit unit: CronUnit[F]): Parser[BetweenExpr[F]] =
-    (p ~ p).map { case (min, max) => BetweenExpr[F](min, max) }
+    (p ~ "-" ~/ p).map { case (min, max) => BetweenExpr[F](min, max) }
 
   def several[F <: CronField](p: Parser[EnumerableExpr[F]])(implicit unit: CronUnit[F]): Parser[SeveralExpr[F]] =
     p.rep(min = 1, sep = ",")

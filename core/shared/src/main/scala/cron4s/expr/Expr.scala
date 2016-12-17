@@ -29,14 +29,14 @@ sealed trait Expr[+F <: CronField] {
 
 }
 
-sealed trait DivisibleExpr[F <: CronField] extends Expr[F]
+sealed trait DivisibleExpr[+F <: CronField] extends Expr[F]
 sealed trait EnumerableExpr[F <: CronField] extends Expr[F] with Ordered[EnumerableExpr[F]]
 
 object Expr extends ExprInstances
 
 sealed trait SpecialChar
 
-final case class EachExpr[F <: CronField](implicit val unit: CronUnit[F])
+final case class EachExpr[+F <: CronField](implicit val unit: CronUnit[F])
   extends Expr[F] with DivisibleExpr[F] with SpecialChar {
 
   val range = unit.range
@@ -71,7 +71,7 @@ final case class BetweenExpr[F <: CronField]
     (implicit val unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F])
   extends Expr[F] with DivisibleExpr[F] with EnumerableExpr[F] {
 
-  require(begin.value < end.value, s"$begin should be less than $end")
+  //require(begin.value < end.value, s"$begin should be less than $end")
 
   override def compare(that: EnumerableExpr[F]): Int = {
     if (ops.min(this) > ops.max(that)) 1

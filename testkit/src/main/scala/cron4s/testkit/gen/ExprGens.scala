@@ -33,8 +33,9 @@ trait ExprGens extends ArbitraryCronUnits {
     result.toVector
   }
 
-  def eachExprGen[F <: CronField](unit: CronUnit[F]): Gen[AnyExpr[F]] =
-    Gen.const(AnyExpr()(unit))
+  def eachExprGen[F <: CronField](unit: CronUnit[F]): Gen[EachExpr[F]] =
+    Gen.const(EachExpr()(unit))
+  //implicit lazy val arbitraryEachExpr
 
   def constExpr[F <: CronField](unit: CronUnit[F], value: Int)(implicit ev: HasCronField[CronUnit, F]) =
     ConstExpr[F](value)(unit, ev, IsFieldExpr[EnumerableExpr, F])
