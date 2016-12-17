@@ -36,7 +36,7 @@ object Expr extends ExprInstances
 
 sealed trait SpecialChar
 
-final case class AnyExpr[F <: CronField](implicit val unit: CronUnit[F])
+final case class EachExpr[F <: CronField](implicit val unit: CronUnit[F])
   extends Expr[F] with DivisibleExpr[F] with SpecialChar {
 
   val range = unit.range
@@ -115,9 +115,9 @@ final case class EveryExpr[F <: CronField]
 
 private[expr] trait ExprInstances extends ExprInstances1 {
 
-  implicit def anyExprLike[F <: CronField]: IsFieldExpr[AnyExpr, F] =
-    new IsFieldExprBase[AnyExpr, F] {
-      override def matches(e: AnyExpr[F]): Predicate[Int] = Predicate { x =>
+  implicit def anyExprLike[F <: CronField]: IsFieldExpr[EachExpr, F] =
+    new IsFieldExprBase[EachExpr, F] {
+      override def matches(e: EachExpr[F]): Predicate[Int] = Predicate { x =>
         x >= min(e) && x <= max(e)
       }
     }

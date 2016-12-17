@@ -34,14 +34,14 @@ abstract class ExtendedExprTestKit[DateTime <: AnyRef : DateTimeAdapter : Equal]
     daysOfWeek  <- Gen.choose(DaysOfWeek.min, DaysOfWeek.max)
   } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, daysOfWeek))
 
-  object any extends ExprCheck with ArbitraryAnyExpr {
+  object any extends ExprCheck with ArbitraryEachExpr {
     def check() = {
-      checkAll("ExtendedExpr[AnyExpr, Second]", ExtendedExprTests[AnyExpr, Second, DateTime].extendedExpr)
-      checkAll("ExtendedExpr[AnyExpr, Minute]", ExtendedExprTests[AnyExpr, Minute, DateTime].extendedExpr)
-      checkAll("ExtendedExpr[AnyExpr, Hour]", ExtendedExprTests[AnyExpr, Hour, DateTime].extendedExpr)
-      checkAll("ExtendedExpr[AnyExpr, DayOfMonth]", ExtendedExprTests[AnyExpr, DayOfMonth, DateTime].extendedExpr)
-      checkAll("ExtendedExpr[AnyExpr, Month]", ExtendedExprTests[AnyExpr, Month, DateTime].extendedExpr)
-      checkAll("ExtendedExpr[AnyExpr, DayOfWeek]", ExtendedExprTests[AnyExpr, DayOfWeek, DateTime].extendedExpr)
+      checkAll("ExtendedExpr[EachExpr, Second]", ExtendedExprTests[EachExpr, Second, DateTime].extendedExpr)
+      checkAll("ExtendedExpr[EachExpr, Minute]", ExtendedExprTests[EachExpr, Minute, DateTime].extendedExpr)
+      checkAll("ExtendedExpr[EachExpr, Hour]", ExtendedExprTests[EachExpr, Hour, DateTime].extendedExpr)
+      checkAll("ExtendedExpr[EachExpr, DayOfMonth]", ExtendedExprTests[EachExpr, DayOfMonth, DateTime].extendedExpr)
+      checkAll("ExtendedExpr[EachExpr, Month]", ExtendedExprTests[EachExpr, Month, DateTime].extendedExpr)
+      checkAll("ExtendedExpr[EachExpr, DayOfWeek]", ExtendedExprTests[EachExpr, DayOfWeek, DateTime].extendedExpr)
     }
   }
 

@@ -27,7 +27,7 @@ options:
     url: api/index.html
     section: intro
 
-  - title: Migrating Guides
+  - title: Migration Guides
     section: intro
 
     nested_options:

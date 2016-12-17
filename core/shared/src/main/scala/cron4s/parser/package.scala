@@ -66,8 +66,8 @@ package object parser {
   // Field-Based Expression Atoms
   //----------------------------------------
 
-  def each[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyExpr[F]] =
-    P("*").map(_ => AnyExpr[F])
+  def each[F <: CronField](implicit unit: CronUnit[F]): Parser[EachExpr[F]] =
+    P("*").map(_ => EachExpr[F])
 
   def between[F <: CronField](p: Parser[ConstExpr[F]])(implicit unit: CronUnit[F]): Parser[BetweenExpr[F]] =
     (p ~ p).map { case (min, max) => BetweenExpr[F](min, max) }

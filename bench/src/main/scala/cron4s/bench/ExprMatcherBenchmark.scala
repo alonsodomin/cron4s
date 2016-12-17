@@ -15,7 +15,7 @@ class ExprMatcherBenchmark {
 
   final val ValueToMatch = 30
 
-  val anyExpr = AnyExpr[CronField.Minute]
+  val eachExpr = EachExpr[CronField.Minute]
   val constExpr = ConstExpr[CronField.Minute](30)
   val betweenExpr = BetweenExpr(
     ConstExpr[CronField.Minute](CronUnit.Minutes.min),
@@ -34,11 +34,11 @@ class ExprMatcherBenchmark {
     )
     SeveralExpr(NonEmptyList(betweenExpr))
   }
-  val everyAnyExpr = EveryExpr(anyExpr, 1)
+  val everyEachExpr = EveryExpr(eachExpr, 1)
 
   @Benchmark
-  def matchAnyExpr(): Boolean = {
-    AnyExpr[CronField.Minute].matches(ValueToMatch)
+  def matchEachExpr(): Boolean = {
+    EachExpr[CronField.Minute].matches(ValueToMatch)
   }
 
   @Benchmark
@@ -62,8 +62,8 @@ class ExprMatcherBenchmark {
   }
 
   @Benchmark
-  def matchEveryAnyExpr(): Boolean = {
-    everyAnyExpr.matches(ValueToMatch)
+  def matchEveryEachExpr(): Boolean = {
+    everyEachExpr.matches(ValueToMatch)
   }
 
 }
