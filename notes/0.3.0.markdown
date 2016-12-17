@@ -1,5 +1,9 @@
-cron4s 0.3.0 has major enhancements from 0.2.1. The
-list of changes in this release are:
+[cron4s](https://alonsodomin.github.io/cron4s) 0.3.0 has major enhancements from 0.2.1. This release is not
+binary compatible with previous ones and has several API breaking changes which will make users have to update
+their codebases to be able to compile with it. The list of changes in this release are:
 
  * Updated ScalaJS to 0.6.13
- * Re-organized the built-in extensions under the `spi` package.
+ * Support for Scala 2.12 [(#22)](https://github.com/alonsodomin/cron4s/pull/22)
+ * Re-organized the built-in extensions under the `spi` package. [(#17)](https://github.com/alonsodomin/cron4s/pull/17)
+ * `cron4s.expr.AnyExpr` has been renamed to `cron4s.expr.EachExpr` to properly reflect the semantics of the `*` symbol in CRON expressions. [(#22)](https://github.com/alonsodomin/cron4s/pull/22)
+ * Parser implementation has been rewritten using [FastParse](http://www.lihaoyi.com/fastparse/) [(#22)](https://github.com/alonsodomin/cron4s/pull/22)

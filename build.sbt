@@ -10,7 +10,7 @@ import scala.xml.transform.{RewriteRule, RuleTransformer}
 scalaVersion in ThisBuild := "2.11.8"
 
 // TODO The parser combinators lib needs to support multiple Scala/ScalaJS versions to enable this
-//crossScalaVersions in ThisBuild := Seq("2.10.4", "2.11.8", "2.12.0-M5")
+crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12.1")
 
 val commonSettings = Def.settings(
   name := "cron4s",
@@ -24,7 +24,6 @@ val commonSettings = Def.settings(
     "-Xlint",
     "-Xfatal-warnings",
     "-Ywarn-dead-code",
-    "-Yinline-warnings",
     "-language:implicitConversions",
     "-language:higherKinds",
     "-language:existentials"
@@ -204,7 +203,6 @@ lazy val core = (crossProject in file("core")).
   settings(Dependencies.core: _*).
   jvmSettings(Dependencies.coreJVM: _*).
   jvmSettings(mimaSettings("core"): _*).
-  jsSettings(Dependencies.coreJS: _*).
   dependsOn(types)
 
 lazy val coreJS = core.js
@@ -249,7 +247,6 @@ lazy val tests = (crossProject in file("tests")).
   settings(noPublishSettings: _*).
   settings(Dependencies.tests: _*).
   jvmSettings(Dependencies.testsJVM: _*).
-  jsSettings(Dependencies.testsJS: _*).
   dependsOn(testkit % Test)
 
 lazy val testsJS = tests.js

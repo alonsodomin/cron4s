@@ -6,7 +6,6 @@ import cron4s.types.syntax._
 import cron4s.validation._
 
 import scala.language.{implicitConversions, higherKinds}
-import scala.util.parsing.input.Positional
 
 import scalaz._
 import Scalaz._
@@ -16,7 +15,7 @@ import Scalaz._
   *
   * @author Antonio Alonso Dominguez
   */
-sealed trait Expr[+F <: CronField] extends Positional {
+sealed trait Expr[+F <: CronField] {
   
   /**
     * Unit of this expression
@@ -30,14 +29,14 @@ sealed trait Expr[+F <: CronField] extends Positional {
 
 }
 
-sealed trait DivisibleExpr[F <: CronField] extends Expr[F]
+sealed trait DivisibleExpr[+F <: CronField] extends Expr[F]
 sealed trait EnumerableExpr[F <: CronField] extends Expr[F] with Ordered[EnumerableExpr[F]]
 
 object Expr extends ExprInstances
 
 sealed trait SpecialChar
 
-final case class AnyExpr[F <: CronField](implicit val unit: CronUnit[F])
+final case class EachExpr[+F <: CronField](implicit val unit: CronUnit[F])
   extends Expr[F] with DivisibleExpr[F] with SpecialChar {
 
   val range = unit.range
@@ -72,7 +71,7 @@ final case class BetweenExpr[F <: CronField]
     (implicit val unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F])
   extends Expr[F] with DivisibleExpr[F] with EnumerableExpr[F] {
 
-  require(begin.value < end.value, s"$begin should be less than $end")
+  //require(begin.value < end.value, s"$begin should be less than $end")
 
   override def compare(that: EnumerableExpr[F]): Int = {
     if (ops.min(this) > ops.max(that)) 1
@@ -87,24 +86,13 @@ final case class BetweenExpr[F <: CronField]
 }
 
 final case class SeveralExpr[F <: CronField] private[expr]
-    (values: Vector[EnumerableExpr[F]])
+    (values: NonEmptyList[EnumerableExpr[F]])
     (implicit val unit: CronUnit[F])
   extends Expr[F] with DivisibleExpr[F] {
 
-  require(values.nonEmpty, "Expression should contain at least one element")
+  val range: IndexedSeq[Int] = values.list.toVector.flatMap(_.range).distinct.sorted
 
-  val range: IndexedSeq[Int] = values.flatMap(_.range).distinct.sorted
-
-  override def toString = values.mkString(",")
-
-}
-object SeveralExpr {
-
-  def apply[F <: CronField]
-      (elements: NonEmptyList[EnumerableExpr[F]])
-      (implicit unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F]
-  ): ValidatedExpr[SeveralExpr, F] =
-    validateSeveral[F](elements)
+  override val toString: String = values.list.toVector.mkString(",")
 
 }
 
@@ -127,9 +115,9 @@ final case class EveryExpr[F <: CronField]
 
 private[expr] trait ExprInstances extends ExprInstances1 {
 
-  implicit def anyExprLike[F <: CronField]: IsFieldExpr[AnyExpr, F] =
-    new IsFieldExprBase[AnyExpr, F] {
-      override def matches(e: AnyExpr[F]): Predicate[Int] = Predicate { x =>
+  implicit def anyExprLike[F <: CronField]: IsFieldExpr[EachExpr, F] =
+    new IsFieldExprBase[EachExpr, F] {
+      override def matches(e: EachExpr[F]): Predicate[Int] = Predicate { x =>
         x >= min(e) && x <= max(e)
       }
     }

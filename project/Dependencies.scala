@@ -5,15 +5,13 @@ import Keys._
 object Dependencies {
 
   object version {
-    val simulacrum  = "0.7.0"
-    val cats        = "0.6.0"
     val scalaz      = "7.2.8"
     val shapeless   = "2.3.2"
 
     val momentjs    = "0.1.5"
     val jodaTime    = "2.9.6"
     val jodaConvert = "1.8.1"
-    val parserComb  = "1.0.2"
+    val fastparse   = "0.4.2"
 
     val scalacheck  = "1.13.4"
     val scalatest   = "3.0.1"
@@ -28,21 +26,15 @@ object Dependencies {
 
   lazy val core = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
-      "com.chuusai"    %%% "shapeless"                 % version.shapeless,
-      "io.github.soc"  %%% "scala-java-time"           % version.scalaJavaTime,
-      "org.scalaz"     %%% "scalaz-core"               % version.scalaz
+      "com.chuusai"    %%% "shapeless"       % version.shapeless,
+      "io.github.soc"  %%% "scala-java-time" % version.scalaJavaTime,
+      "org.scalaz"     %%% "scalaz-core"     % version.scalaz,
+      "com.lihaoyi"    %%% "fastparse"       % version.fastparse
     )
   }
 
-  lazy val coreJS = Def.settings(
-    libraryDependencies ++= Seq(
-      "org.scala-js"    %%% "scala-parser-combinators" % version.parserComb
-    )
-  )
-
   lazy val coreJVM = Def.settings {
     libraryDependencies ++= Seq(
-      "org.scala-lang.modules" %% "scala-parser-combinators" % version.parserComb,
       "joda-time"               % "joda-time"                % version.jodaTime    % Optional,
       "org.joda"                % "joda-convert"             % version.jodaConvert % Optional
     )
@@ -69,18 +61,14 @@ object Dependencies {
 
   lazy val tests = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
-      "org.scalatest"  %%% "scalatest"                 % version.scalatest      % Test
+      "org.scalatest"  %%% "scalatest" % version.scalatest % Test
     )
-  }
-
-  lazy val testsJS = Def.settings {
-    jsDependencies += RuntimeDOM % Test
   }
 
   lazy val testsJVM = Def.settings {
     libraryDependencies ++= Seq(
-      "joda-time"               % "joda-time"                % version.jodaTime,
-      "org.joda"                % "joda-convert"             % version.jodaConvert
+      "joda-time" % "joda-time"    % version.jodaTime,
+      "org.joda"  % "joda-convert" % version.jodaConvert
     )
   }
 

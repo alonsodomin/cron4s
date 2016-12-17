@@ -1,7 +1,7 @@
 package cron4s.testkit
 
 import cron4s.CronField._
-import cron4s.expr.{AnyExpr, ConstExpr, CronExpr}
+import cron4s.expr.{EachExpr, ConstExpr, CronExpr}
 import cron4s.spi.{DateTimeAdapter, ExtendedCronExpr}
 
 import org.scalatest.{Matchers, PropSpec}
@@ -19,16 +19,16 @@ abstract class ExtendedCronExprTestKit[DateTime <: AnyRef : DateTimeAdapter]
     ConstExpr[Second](0),
     ConstExpr[Minute](0),
     ConstExpr[Hour](12),
-    AnyExpr[DayOfMonth],
-    AnyExpr[Month],
+    EachExpr[DayOfMonth],
+    EachExpr[Month],
     ConstExpr[DayOfWeek](1)
   )
   val onlySundays = CronExpr(
     ConstExpr[Second](0),
-    AnyExpr[Minute],
-    AnyExpr[Hour],
-    AnyExpr[DayOfMonth],
-    AnyExpr[Month],
+    EachExpr[Minute],
+    EachExpr[Hour],
+    EachExpr[DayOfMonth],
+    EachExpr[Month],
     ConstExpr[DayOfWeek](6)
   )
 

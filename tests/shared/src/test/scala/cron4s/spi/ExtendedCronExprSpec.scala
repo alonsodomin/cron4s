@@ -1,7 +1,7 @@
 package cron4s.ext
 
 import cron4s._
-import cron4s.expr.{AnyExpr, CronExpr}
+import cron4s.expr.{EachExpr, CronExpr}
 
 import org.scalacheck._
 
@@ -26,29 +26,29 @@ class ExtendedCronExprSpec extends Properties("ExtendedCronExpr") with DummyTest
     daysOfWeek  <- Gen.choose(DaysOfWeek.min, DaysOfWeek.max)
   } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, daysOfWeek))
 
-  val anyExpr = CronExpr(
-    AnyExpr[Second],
-    AnyExpr[Minute],
-    AnyExpr[Hour],
-    AnyExpr[DayOfMonth],
-    AnyExpr[Month],
-    AnyExpr[DayOfWeek]
+  val eachExpr = CronExpr(
+    EachExpr[Second],
+    EachExpr[Minute],
+    EachExpr[Hour],
+    EachExpr[DayOfMonth],
+    EachExpr[Month],
+    EachExpr[DayOfWeek]
   )
 
-  val anyDateCombinations = for {
-    expr <- Gen.const(anyExpr)
+  val eachDateCombinations = for {
+    expr <- Gen.const(eachExpr)
     dt   <- arbitrary[DummyDateTime]
   } yield (expr, dt)
 
-  property("any expression matches everything") = forAll(anyDateCombinations) {
+  property("each expression matches everything") = forAll(eachDateCombinations) {
     case (expr, dt) => expr.allOf(dt) && expr.anyOf(dt)
   }
 
-  property("next is equals to step with 1") = forAll(anyDateCombinations) {
+  property("next is equals to step with 1") = forAll(eachDateCombinations) {
     case (expr, dt) => expr.next(dt) == expr.step(dt, 1)
   }
 
-  property("previous is equals to step with -1") = forAll(anyDateCombinations) {
+  property("previous is equals to step with -1") = forAll(eachDateCombinations) {
     case (expr, dt) => expr.prev(dt) == expr.step(dt, -1)
   }
 

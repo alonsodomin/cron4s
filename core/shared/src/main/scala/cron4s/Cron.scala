@@ -1,9 +1,10 @@
 package cron4s
 
 import cron4s.expr._
-import cron4s.parser._
 
-import scala.util.parsing.input.CharArrayReader
+import fastparse.all._
+
+import scalaz._
 
 /**
   * Entry point for the CRON parsing operation
@@ -12,14 +13,20 @@ import scala.util.parsing.input.CharArrayReader
   */
 object Cron {
 
-  private object parser extends ASTParsers
-  import parser._
+  def apply(e: String): Either[InvalidCron, CronExpr] = {
+    \/.fromEither(parse(e))
+      //.flatMap(validation.validate)
+      .toEither
+  }
 
-  def apply(expr: String): Either[ParseError, CronExpr] = {
-    val input = new CharArrayReader(expr.trim.toCharArray)
-    parser.parseAll(parser.cron, input) match {
-      case Success(e, _)        => Right(e)
-      case NoSuccess(msg, next) => Left(ParseError(msg, expr.trim, next.pos))
+  private[this] def parse(e: String): Either[ParseFailed, CronExpr] = {
+    parser.cron.parse(e) match {
+      case Parsed.Success(expr, _) =>
+        Right(expr)
+
+      case err @ Parsed.Failure(_, idx, _) =>
+        val error = ParseError(err)
+        Left(ParseFailed(error.failure.msg, idx))
     }
   }
 
