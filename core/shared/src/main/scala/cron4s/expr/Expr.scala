@@ -95,15 +95,6 @@ final case class SeveralExpr[F <: CronField] private[expr]
   override val toString: String = values.list.toVector.mkString(",")
 
 }
-object SeveralExpr {
-
-  /*def apply[F <: CronField]
-      (elements: NonEmptyList[EnumerableExpr[F]])
-      (implicit unit: CronUnit[F], ops: IsFieldExpr[EnumerableExpr, F]
-  ): ValidatedExpr[SeveralExpr, F] =
-    validateSeveral[F](elements)*/
-
-}
 
 final case class EveryExpr[F <: CronField]
     (value: DivisibleExpr[F], freq: Int)

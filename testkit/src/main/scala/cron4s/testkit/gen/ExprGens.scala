@@ -33,7 +33,7 @@ trait ExprGens extends ArbitraryCronUnits {
     result.toVector
   }
 
-  def anyExprGen[F <: CronField](unit: CronUnit[F]): Gen[AnyExpr[F]] =
+  def eachExprGen[F <: CronField](unit: CronUnit[F]): Gen[AnyExpr[F]] =
     Gen.const(AnyExpr()(unit))
 
   def constExpr[F <: CronField](unit: CronUnit[F], value: Int)(implicit ev: HasCronField[CronUnit, F]) =
@@ -81,6 +81,6 @@ trait ExprGens extends ArbitraryCronUnits {
   } yield EveryExpr(base, freq)(unit, IsFieldExpr[DivisibleExpr, F])
 
   def exprGen[F <: CronField](unit: CronUnit[F])(implicit ev: HasCronField[CronUnit, F]): Gen[Expr[F]] =
-    Gen.oneOf(anyExprGen[F](unit), constExprGen[F](unit), severalExprGen[F](unit), everyExprGen[F](unit))
+    Gen.oneOf(eachExprGen[F](unit), constExprGen[F](unit), severalExprGen[F](unit), everyExprGen[F](unit))
 
 }

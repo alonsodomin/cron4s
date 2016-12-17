@@ -13,44 +13,58 @@ package object parser {
   import CronField._
   import CronUnit._
 
-  val seconds: Parser[ConstExpr[Second]] = P((("0" | CharIn('1' to '5')).? ~ CharIn('0' to '9')).!).map {
-    value => ConstExpr[Second](value.toInt)
-  }
+  private[this] val digit = P(CharIn('0' to '9'))
+  private[this] val sexagesimal = P(((CharIn('1' to '5') ~ digit) | ("0" ~ digit) | digit).!).map(_.toInt)
 
-  val minutes: Parser[ConstExpr[Minute]] = P((("0" | CharIn('1' to '5')).? ~ CharIn('0' to '9')).!).map {
-    value => ConstExpr[Minute](value.toInt)
-  }
+  //----------------------------------------
+  // Individual Expression Atoms
+  //----------------------------------------
 
-  val hours: Parser[ConstExpr[Hour]] = P((("2" ~ CharIn('0' to '3')) | ("0" | "1").? ~ CharIn('0' to '9')).!).map {
+  // Seconds
+
+  val seconds: Parser[ConstExpr[Second]] = sexagesimal.map(value => ConstExpr[Second](value))
+
+  // Minutes
+
+  val minutes: Parser[ConstExpr[Minute]] = sexagesimal.map(value => ConstExpr[Minute](value))
+
+  // Hours
+
+  val hours: Parser[ConstExpr[Hour]] = P((("2" ~ CharIn('0' to '3')) | ("0" | "1") ~ digit | digit).!).map {
     value => ConstExpr[Hour](value.toInt)
   }
 
-  val daysOfMonth: Parser[ConstExpr[DayOfMonth]] = P((("3" ~ ("0" | "1")) | (("0" | "1" | "2").? ~ CharIn('0' to '9'))).!).map {
+  // Day Of Month
+
+  val daysOfMonth: Parser[ConstExpr[DayOfMonth]] = P(((("0" | "1" | "2") ~ digit) | ("3" ~ ("0" | "1")) | digit).!).map {
     value => ConstExpr[DayOfMonth](value.toInt)
   }
 
-  private[this] val numericMonth = P((("1" ~ CharIn('0' to '2')) | ("0".? ~ CharIn('1' to '9'))).!).map {
+  // Month
+
+  private[this] val numericMonth = P((("1" ~ CharIn('0' to '2')) | ("0".? ~ digit)).!).map {
     value => ConstExpr[Month](value.toInt)
   }.opaque("numeric month")
-  private[this] val textualMonth = Months.textValues
-    .map(name => P(name).!)
-    .reduce(_ | _)
-    .map { value =>
-      val index = Months.textValues.indexOf(value)
-      ConstExpr[Month](index, Some(value))
-    }.opaque("month name")
-  val months: Parser[ConstExpr[Month]] = numericMonth | textualMonth
+  private[this] val textualMonth = P(StringIn(Months.textValues: _*).!).map { value =>
+    val index = Months.textValues.indexOf(value)
+    ConstExpr[Month](index + 1, Some(value))
+  }
+
+  val months: Parser[ConstExpr[Month]] = textualMonth | numericMonth
+
+  // Day Of Week
 
   private[this] val numericDayOfWeek = P(CharIn('0' to '6').!)
     .map(value => ConstExpr[DayOfWeek](value.toInt))
-  private[this] val textualDayOfWeek = DaysOfWeek.textValues
-    .map(name => P(name).!)
-    .reduce(_ | _)
-    .map { value =>
-      val index = DaysOfWeek.textValues.indexOf(value)
-      ConstExpr[DayOfWeek](index, Some(value))
-    }.opaque("day of week name")
+  private[this] val textualDayOfWeek = P(StringIn(DaysOfWeek.textValues: _*).!).map { value =>
+    val index = DaysOfWeek.textValues.indexOf(value)
+    ConstExpr[DayOfWeek](index, Some(value))
+  }
   val daysOfWeek: Parser[ConstExpr[DayOfWeek]] = numericDayOfWeek | textualDayOfWeek
+
+  //----------------------------------------
+  // Field-Based Expression Atoms
+  //----------------------------------------
 
   def each[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyExpr[F]] =
     P("*").map(_ => AnyExpr[F])
@@ -58,14 +72,16 @@ package object parser {
   def between[F <: CronField](p: Parser[ConstExpr[F]])(implicit unit: CronUnit[F]): Parser[BetweenExpr[F]] =
     (p ~ p).map { case (min, max) => BetweenExpr[F](min, max) }
 
-  // TODO allow the error to propagate through the parser
   def several[F <: CronField](p: Parser[EnumerableExpr[F]])(implicit unit: CronUnit[F]): Parser[SeveralExpr[F]] =
     p.rep(min = 1, sep = ",")
       .map(values => SeveralExpr[F](NonEmptyList(values.head, values.tail: _*)))
-  //.map(_.toEither.right.get)
 
   def every[F <: CronField](p: Parser[DivisibleExpr[F]])(implicit unit: CronUnit[F]): Parser[EveryExpr[F]] =
     (p ~ "/" ~/ CharIn('0' to '9').rep(1).!).map { case (base, freq) => EveryExpr[F](base, freq.toInt) }
+
+  //----------------------------------------
+  // AST Parsing & Building
+  //----------------------------------------
 
   def of[F <: CronField](p: Parser[ConstExpr[F]])(implicit unit: CronUnit[F]): Parser[Expr[F]] = {
     val severalExpr = several(between(p) | p)
