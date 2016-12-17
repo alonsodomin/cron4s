@@ -36,9 +36,16 @@ import cron4s._
 val parsed = Cron("10-35 2,4,6 * * * *")
 ```
 
-We will get an `Either[ParseError, CronExpr]`, the right side giving us an error description if
-the parsing has failed. Assuming that we have successfully parsed an expression, we can extract it
-out of the `Either[..., ...]` with following expression:
+We will get an `Either[InvalidCron, CronExpr]`, the right side giving us an error description if the parsing
+has failed. In the above example the expression parsed successfully but if we pass a wrong or invalid expression
+we will get the actual reason for the failure in the left side of the `Either`:
+
+```tut
+val invalid = Cron("10-65 * * * * *")
+```
+
+Assuming that we have successfully parsed an expression, we can extract it out of the `Either[..., ...]`
+with following expression:
 
 ```tut
 val cron = parsed.right.get
@@ -127,11 +134,11 @@ the same field type). To show this, let's work with some simple field expression
 ```tut
 import cron4s.expr._
 
-val anySecond = AnyExpr[CronField.Second]
+val eachSecond = EachExpr[CronField.Second]
 val fixedSecond = ConstExpr[CronField.Second](30)
 
-anySecond.impliedBy(fixedSecond)
-fixedSecond.impliedBy(anySecond)
+eachSecond.impliedBy(fixedSecond)
+fixedSecond.impliedBy(eachSecond)
 
 val minutesRange = BetweenExpr[CronField.Minute](ConstExpr(2), ConstExpr(10))
 val fixedMinute = ConstExpr[CronField.Minute](7)
@@ -144,7 +151,7 @@ It's important to notice that when using the `impliedBy` operation, if the two e
 parameterized for the same field type, the code won't compile:
  
 ```tut:fail
-minutesRange.impliedBy(anySecond)
+minutesRange.impliedBy(eachSecond)
 ```
 
 The error looks a bit scary, but in essence is saying to us that the `impliedBy` method was expecting
