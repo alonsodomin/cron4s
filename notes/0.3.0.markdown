@@ -7,3 +7,6 @@ their codebases to be able to compile with it. The list of changes in this relea
  * Re-organized the built-in extensions under the `spi` package. [(#17)](https://github.com/alonsodomin/cron4s/pull/17)
  * `cron4s.expr.AnyExpr` has been renamed to `cron4s.expr.EachExpr` to properly reflect the semantics of the `*` symbol in CRON expressions. [(#22)](https://github.com/alonsodomin/cron4s/pull/22)
  * Parser implementation has been rewritten using [FastParse](http://www.lihaoyi.com/fastparse/) [(#22)](https://github.com/alonsodomin/cron4s/pull/22)
+ * Full type signatures in the AST are now preserved after parsing the expression [(#24)](https://github.com/alonsodomin/cron4s/pull/24)
+
+A [migration guide](https://alonsodomin.github.io/cron4s/docs/migration/0_3_0.html) has been published for anyone that would like to update.
