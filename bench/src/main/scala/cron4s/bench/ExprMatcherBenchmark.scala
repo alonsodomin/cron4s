@@ -5,10 +5,18 @@ import cron4s.expr._
 
 import org.openjdk.jmh.annotations._
 
+import shapeless.Coproduct
+
 import scalaz.NonEmptyList
 
 /**
-  * Created by alonsodomin on 03/08/2016.
+  * Sample run
+  *    sbt "bench/jmh:run -r 2 -i 20 -w 2 -wi 20 -f 1 -t 1 cron4s.bench.ExprMatcherBenchmark"
+  *
+  * Which means "20 iterations" of "2 seconds" each, "20 warm-up
+  * iterations" of "2 seconds" each, "1 fork", "1 thread".  Please note
+  * that benchmarks should be usually executed at least in 10
+  * iterations (as a rule of thumb), but the more is better.
   */
 @State(Scope.Benchmark)
 class ExprMatcherBenchmark {
@@ -22,13 +30,13 @@ class ExprMatcherBenchmark {
     ConstExpr[CronField.Minute](CronUnit.Minutes.max)
   )
   val severalEnumeratedExpr = {
-    val minutes: Seq[EnumerableExpr[CronField.Minute]] = for {
+    val minutes = for {
       value <- CronUnit.Minutes.range
-    } yield ConstExpr[CronField.Minute](value)
+    } yield Coproduct[EnumExprAST[CronField.Minute]](ConstExpr[CronField.Minute](value))
     SeveralExpr(NonEmptyList(minutes.head, minutes.tail: _*))
   }
-  val severalBetweenExpr = {
-    val betweenExpr: EnumerableExpr[CronField.Minute] = BetweenExpr(
+  val severalBetweenExpr: SeveralExpr[CronField.Minute] = {
+    val betweenExpr: BetweenExpr[CronField.Minute] = BetweenExpr(
       ConstExpr[CronField.Minute](CronUnit.Minutes.min),
       ConstExpr[CronField.Minute](CronUnit.Minutes.max)
     )

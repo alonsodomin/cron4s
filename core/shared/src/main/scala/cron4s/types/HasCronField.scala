@@ -43,6 +43,7 @@ trait HasCronField[A[_ <: CronField], F <: CronField] {
 
 object HasCronField {
 
-  @inline def apply[A[_ <: CronField], F <: CronField](implicit ev: HasCronField[A, F]): HasCronField[A, F] = ev
+  @inline def apply[A[_ <: CronField], F <: CronField]
+      (implicit ev: HasCronField[A, F]): HasCronField[A, F] = ev
 
 }
