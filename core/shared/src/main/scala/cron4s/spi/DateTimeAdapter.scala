@@ -31,3 +31,7 @@ trait DateTimeAdapter[DateTime] {
   def set[F <: CronField](dateTime: DateTime, field: F, value: Int): Option[DateTime]
 
 }
+
+object DateTimeAdapter {
+  def apply[DateTime](implicit ev: DateTimeAdapter[DateTime]): DateTimeAdapter[DateTime] = ev
+}

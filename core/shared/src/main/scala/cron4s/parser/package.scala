@@ -75,21 +75,21 @@ package object parser {
     (p ~ "-" ~ p).map { case (min, max) => BetweenExpr[F](min, max) }
 
   def several[F <: CronField](p: Parser[ConstExpr[F]])(implicit unit: CronUnit[F]): Parser[SeveralExpr[F]] = {
-    def compose(p: Parser[EnumExpr[F]])(implicit unit: CronUnit[F]): Parser[SeveralExpr[F]] =
+    def compose(p: Parser[EnumExprAST[F]])(implicit unit: CronUnit[F]): Parser[SeveralExpr[F]] =
       p.rep(min = 1, sep = ",")
         .map(values => SeveralExpr[F](NonEmptyList(values.head, values.tail: _*)))
 
-    compose(between(p).map(v => Coproduct[EnumExpr[F]](v)) | p.map(v => Coproduct[EnumExpr[F]](v)))
+    compose(between(p).map(v => Coproduct[EnumExprAST[F]](v)) | p.map(v => Coproduct[EnumExprAST[F]](v)))
   }
 
   def every[F <: CronField](p: Parser[ConstExpr[F]])(implicit unit: CronUnit[F]): Parser[EveryExpr[F]] = {
-    def compose(p: Parser[DivExpr[F]])(implicit unit: CronUnit[F]): Parser[EveryExpr[F]] =
+    def compose(p: Parser[DivExprAST[F]])(implicit unit: CronUnit[F]): Parser[EveryExpr[F]] =
       (p ~ "/" ~/ digit.rep(1).!).map { case (base, freq) => EveryExpr[F](base, freq.toInt) }
 
     compose(
-      several(p).map(v => Coproduct[DivExpr[F]](v)) |
-      between(p).map(v => Coproduct[DivExpr[F]](v)) |
-      each[F].map(v => Coproduct[DivExpr[F]](v))
+      several(p).map(v => Coproduct[DivExprAST[F]](v)) |
+      between(p).map(v => Coproduct[DivExprAST[F]](v)) |
+      each[F].map(v => Coproduct[DivExprAST[F]](v))
     )
   }
 
@@ -97,12 +97,12 @@ package object parser {
   // AST Parsing & Building
   //----------------------------------------
 
-  def of[F <: CronField](p: Parser[ConstExpr[F]])(implicit unit: CronUnit[F]): Parser[FieldExpr[F]] = {
-    every(p).map(v => Coproduct[FieldExpr[F]](v)) |
-      several(p).map(v => Coproduct[FieldExpr[F]](v)) |
-      between(p).map(v => Coproduct[FieldExpr[F]](v)) |
-      p.map(v => Coproduct[FieldExpr[F]](v)) |
-      each[F].map(v => Coproduct[FieldExpr[F]](v))
+  def of[F <: CronField](p: Parser[ConstExpr[F]])(implicit unit: CronUnit[F]): Parser[FieldExprAST[F]] = {
+    every(p).map(v => Coproduct[FieldExprAST[F]](v)) |
+      several(p).map(v => Coproduct[FieldExprAST[F]](v)) |
+      between(p).map(v => Coproduct[FieldExprAST[F]](v)) |
+      p.map(v => Coproduct[FieldExprAST[F]](v)) |
+      each[F].map(v => Coproduct[FieldExprAST[F]](v))
   }
 
   val cron: Parser[CronExpr] = P(

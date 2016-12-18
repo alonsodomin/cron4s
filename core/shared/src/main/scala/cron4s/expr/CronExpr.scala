@@ -10,15 +10,15 @@ import shapeless._
   * @author Antonio Alonso Dominguez
   */
 final case class CronExpr(
-    seconds: SecondsExpr,
-    minutes: MinutesExpr,
-    hours: HoursExpr,
-    daysOfMonth: DaysOfMonthExpr,
-    months: MonthsExpr,
-    daysOfWeek: DaysOfWeekExpr
+    seconds: FieldExprAST[CronField.Second],
+    minutes: FieldExprAST[CronField.Minute],
+    hours: FieldExprAST[CronField.Hour],
+    daysOfMonth: FieldExprAST[CronField.DayOfMonth],
+    months: FieldExprAST[CronField.Month],
+    daysOfWeek: FieldExprAST[CronField.DayOfWeek]
   ) {
 
-  private[cron4s] lazy val repr: CronExprRepr = Generic[CronExpr].to(this)
+  private[cron4s] lazy val ast: CronExprAST = Generic[CronExpr].to(this)
 
   /**
     * Time part of the CRON expression
@@ -38,17 +38,17 @@ final case class CronExpr(
     * @tparam F CronField type
     * @return field-based expression for given field
     */
-  def field[F <: CronField](implicit unit: CronUnit[F]): FieldExpr[F] = unit.field match {
-    case CronField.Second     => seconds.asInstanceOf[FieldExpr[F]]
-    case CronField.Minute     => minutes.asInstanceOf[FieldExpr[F]]
-    case CronField.Hour       => hours.asInstanceOf[FieldExpr[F]]
-    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[FieldExpr[F]]
-    case CronField.Month      => months.asInstanceOf[FieldExpr[F]]
-    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[FieldExpr[F]]
+  def field[F <: CronField](implicit unit: CronUnit[F]): FieldExprAST[F] = unit.field match {
+    case CronField.Second     => seconds.asInstanceOf[FieldExprAST[F]]
+    case CronField.Minute     => minutes.asInstanceOf[FieldExprAST[F]]
+    case CronField.Hour       => hours.asInstanceOf[FieldExprAST[F]]
+    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[FieldExprAST[F]]
+    case CronField.Month      => months.asInstanceOf[FieldExprAST[F]]
+    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[FieldExprAST[F]]
   }
 
-  def ranges: List[Vector[Int]] = repr.map(cron4s.util.range).toList
+  def ranges: List[Vector[Int]] = ast.map(cron4s.util.range).toList
 
-  override def toString = repr.map(cron4s.util.show).toList.mkString(" ")
+  override def toString = ast.map(cron4s.util.show).toList.mkString(" ")
 
 }

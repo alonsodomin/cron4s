@@ -14,12 +14,12 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
   type Step = Option[(DateTime, Int)]
 
   private[this] def stepField[F <: CronField]
-      (expr: FieldExpr[F], step: Int): Option[(Int, Int)] =
+      (expr: FieldExprAST[F], step: Int): Option[(Int, Int)] =
     adapter.get(from, expr.unit.field)
       .flatMap(v => expr.step(v, step))
 
   private[this] def stepAndAdjust[F <: CronField]
-      (dateTimeAndStep: Step, expr: FieldExpr[F]): Step = {
+      (dateTimeAndStep: Step, expr: FieldExprAST[F]): Step = {
     for {
       (dateTime, step)  <- dateTimeAndStep
       (value, nextStep) <- stepField(expr, step)
@@ -28,7 +28,7 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
   }
 
   private[this] def stepDayOfWeek
-      (dt: DateTime, expr: FieldExpr[DayOfWeek], stepSize: Int): Step = {
+      (dt: DateTime, expr: FieldExprAST[DayOfWeek], stepSize: Int): Step = {
     for {
       dayOfWeek         <- adapter.get(dt, DayOfWeek)
       (value, nextStep) <- expr.step(dayOfWeek, stepSize)
@@ -38,11 +38,11 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
   }
 
   object stepping extends Poly2 {
-    implicit def caseSeconds     = at[Step, SecondsExpr](stepAndAdjust)
-    implicit def caseMinutes     = at[Step, MinutesExpr](stepAndAdjust)
-    implicit def caseHours       = at[Step, HoursExpr](stepAndAdjust)
-    implicit def caseDaysOfMonth = at[Step, DaysOfMonthExpr](stepAndAdjust)
-    implicit def caseMonths      = at[Step, MonthsExpr](stepAndAdjust)
+    implicit def caseSeconds     = at[Step, SecondsAST](stepAndAdjust)
+    implicit def caseMinutes     = at[Step, MinutesAST](stepAndAdjust)
+    implicit def caseHours       = at[Step, HoursAST](stepAndAdjust)
+    implicit def caseDaysOfMonth = at[Step, DaysOfMonthAST](stepAndAdjust)
+    implicit def caseMonths      = at[Step, MonthsAST](stepAndAdjust)
   }
 
   def run(expr: CronExpr): Option[DateTime] = {

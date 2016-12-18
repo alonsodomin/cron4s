@@ -74,7 +74,7 @@ final case class BetweenExpr[F <: CronField]
 }
 
 final case class SeveralExpr[F <: CronField] private[expr]
-    (values: NonEmptyList[EnumExpr[F]])
+    (values: NonEmptyList[EnumExprAST[F]])
     (implicit val unit: CronUnit[F])
   extends Expr[F] {
 
@@ -84,7 +84,7 @@ final case class SeveralExpr[F <: CronField] private[expr]
 }
 
 final case class EveryExpr[F <: CronField]
-    (value: DivExpr[F], freq: Int)
+    (value: DivExprAST[F], freq: Int)
     (implicit val unit: CronUnit[F])
   extends Expr[F] {
 
@@ -93,7 +93,7 @@ final case class EveryExpr[F <: CronField]
 
 }
 
-private[expr] trait ExprInstances extends ExprInstances1 {
+private[expr] trait ExprInstances extends LowPriorityExprInstances {
 
   implicit def eachExprInstance[F <: CronField]: IsFieldExpr[EachExpr, F] =
     new IsFieldExpr[EachExpr, F] {
@@ -127,7 +127,7 @@ private[expr] trait ExprInstances extends ExprInstances1 {
     }
 
   implicit def severalExprInstance[F <: CronField]
-    (implicit elem: Lazy[IsFieldExpr[EnumExpr, F]]): IsFieldExpr[SeveralExpr, F] =
+    (implicit elem: Lazy[IsFieldExpr[EnumExprAST, F]]): IsFieldExpr[SeveralExpr, F] =
       new IsFieldExpr[SeveralExpr, F] {
         def unit(expr: SeveralExpr[F]): CronUnit[F] = expr.unit
 
@@ -139,7 +139,7 @@ private[expr] trait ExprInstances extends ExprInstances1 {
       }
 
   implicit def everyExprInstance[F <: CronField]
-    (implicit base: Lazy[IsFieldExpr[DivExpr, F]]): IsFieldExpr[EveryExpr, F] =
+    (implicit base: Lazy[IsFieldExpr[DivExprAST, F]]): IsFieldExpr[EveryExpr, F] =
     new IsFieldExpr[EveryExpr, F] {
 
       def unit(expr: EveryExpr[F]): CronUnit[F] = expr.unit
@@ -161,38 +161,38 @@ private[expr] trait ExprInstances extends ExprInstances1 {
 
 }
 
-private[expr] trait ExprInstances1 {
+private[expr] trait LowPriorityExprInstances {
 
-  implicit def enumExpr[F <: CronField]: IsFieldExpr[EnumExpr, F] = new IsFieldExpr[EnumExpr, F] {
-    def matches(e: EnumExpr[F]): Predicate[Int] =
+  implicit def enumExpr[F <: CronField]: IsFieldExpr[EnumExprAST, F] = new IsFieldExpr[EnumExprAST, F] {
+    def matches(e: EnumExprAST[F]): Predicate[Int] =
       e.fold(cron4s.util.matches)
 
-    def range(e: EnumExpr[F]): Vector[Int] =
+    def range(e: EnumExprAST[F]): Vector[Int] =
       e.fold(cron4s.util.range)
 
-    def unit(expr: EnumExpr[F]): CronUnit[F] =
+    def unit(expr: EnumExprAST[F]): CronUnit[F] =
       expr.fold(cron4s.util.unit)
   }
 
-  implicit def divExpr[F <: CronField]: IsFieldExpr[DivExpr, F] = new IsFieldExpr[DivExpr, F] {
-    def matches(e: DivExpr[F]): Predicate[Int] =
+  implicit def divExpr[F <: CronField]: IsFieldExpr[DivExprAST, F] = new IsFieldExpr[DivExprAST, F] {
+    def matches(e: DivExprAST[F]): Predicate[Int] =
       e.fold(cron4s.util.matches)
 
-    def range(e: DivExpr[F]): Vector[Int] =
+    def range(e: DivExprAST[F]): Vector[Int] =
       e.fold(cron4s.util.range)
 
-    def unit(expr: DivExpr[F]): CronUnit[F] =
+    def unit(expr: DivExprAST[F]): CronUnit[F] =
       expr.fold(cron4s.util.unit)
   }
 
-  implicit def fieldExpr[F <: CronField]: IsFieldExpr[FieldExpr, F] = new IsFieldExpr[FieldExpr, F] {
-    def matches(expr: FieldExpr[F]): Predicate[Int] =
+  implicit def fieldExpr[F <: CronField]: IsFieldExpr[FieldExprAST, F] = new IsFieldExpr[FieldExprAST, F] {
+    def matches(expr: FieldExprAST[F]): Predicate[Int] =
       expr.fold(cron4s.util.matches)
 
-    def range(expr: FieldExpr[F]): Vector[Int] =
+    def range(expr: FieldExprAST[F]): Vector[Int] =
       expr.fold(cron4s.util.range)
 
-    def unit(expr: FieldExpr[F]): CronUnit[F] =
+    def unit(expr: FieldExprAST[F]): CronUnit[F] =
       expr.fold(cron4s.util.unit)
   }
 

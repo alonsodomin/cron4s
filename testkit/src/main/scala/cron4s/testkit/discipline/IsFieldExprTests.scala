@@ -28,5 +28,5 @@ trait IsFieldExprTests[E[_ <: CronField], F <: CronField] extends HasCronFieldTe
 
 object IsFieldExprTests {
   def apply[E[_ <: CronField], F <: CronField](implicit ev: IsFieldExpr[E, F]): IsFieldExprTests[E, F] =
-    new IsFieldExprTests[E, F] { def laws = IsFieldExprLaws[E, F] }
+    new IsFieldExprTests[E, F] { val laws = IsFieldExprLaws[E, F] }
 }

@@ -17,8 +17,8 @@ import scalaz.NonEmptyList
   */
 trait ExprGens extends ArbitraryCronUnits {
 
-  private[this] def filterImpliedElems[F <: CronField](xs: Vector[EnumExpr[F]]): Vector[EnumExpr[F]] = {
-    val result = ListBuffer.empty[EnumExpr[F]]
+  private[this] def filterImpliedElems[F <: CronField](xs: Vector[EnumExprAST[F]]): Vector[EnumExprAST[F]] = {
+    val result = ListBuffer.empty[EnumExprAST[F]]
     var idx = 0
     while (idx < xs.size) {
       val x = xs(idx)
@@ -56,27 +56,27 @@ trait ExprGens extends ArbitraryCronUnits {
 
   def enumerableExprGen[F <: CronField](unit: CronUnit[F])(implicit
       ev: HasCronField[CronUnit, F]
-  ): Gen[EnumExpr[F]] = Gen.oneOf(
-    constExprGen[F](unit).map(e => Coproduct[EnumExpr[F]](e)),
-    betweenExprGen[F](unit).map(e => Coproduct[EnumExpr[F]](e))
+  ): Gen[EnumExprAST[F]] = Gen.oneOf(
+    constExprGen[F](unit).map(e => Coproduct[EnumExprAST[F]](e)),
+    betweenExprGen[F](unit).map(e => Coproduct[EnumExprAST[F]](e))
   )
 
-  def severalExpr[F <: CronField](unit: CronUnit[F], values: Vector[EnumExpr[F]]): SeveralExpr[F] =
+  def severalExpr[F <: CronField](unit: CronUnit[F], values: Vector[EnumExprAST[F]]): SeveralExpr[F] =
     SeveralExpr[F](NonEmptyList(values.head, values.tail: _*))(unit)
 
   def severalExprGen[F <: CronField](unit: CronUnit[F])(implicit
       ev: HasCronField[CronUnit, F]
   ): Gen[SeveralExpr[F]] = for {
     size  <- Gen.posNum[Int] if size > 1
-    elems <- Gen.containerOfN[Vector, EnumExpr[F]](size, enumerableExprGen(unit))
+    elems <- Gen.containerOfN[Vector, EnumExprAST[F]](size, enumerableExprGen(unit))
   } yield severalExpr(unit, filterImpliedElems(elems))
 
   def divisibleExprGen[F <: CronField](unit: CronUnit[F])(implicit
       ev: HasCronField[CronUnit, F]
-  ): Gen[DivExpr[F]] =
+  ): Gen[DivExprAST[F]] =
     Gen.oneOf(
-      betweenExprGen[F](unit).map(e => Coproduct[DivExpr[F]](e)),
-      severalExprGen[F](unit).map(e => Coproduct[DivExpr[F]](e))
+      betweenExprGen[F](unit).map(e => Coproduct[DivExprAST[F]](e)),
+      severalExprGen[F](unit).map(e => Coproduct[DivExprAST[F]](e))
     )
 
   def everyExprGen[F <: CronField](unit: CronUnit[F])(implicit

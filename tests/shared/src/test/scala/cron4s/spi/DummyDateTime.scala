@@ -1,4 +1,4 @@
-package cron4s.ext
+package cron4s.spi
 
 /**
   * Created by alonsodomin on 04/08/2016.

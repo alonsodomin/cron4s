@@ -50,6 +50,6 @@ The same type of operations are also available on the individual fields of the C
 expression:
 
 ```tut
-cron.seconds.next(now)
-cron.minutes.prev(now)
+cron.seconds.nextIn(now)
+cron.minutes.prevIn(now)
 ```

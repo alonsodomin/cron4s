@@ -1,4 +1,4 @@
-package cron4s.ext
+package cron4s.spi
 
 import cron4s._
 import cron4s.expr.{EachExpr, CronExpr}
@@ -10,7 +10,7 @@ import shapeless._
 /**
   * Created by alonsodomin on 06/08/2016.
   */
-class ExtendedCronExprSpec extends Properties("ExtendedCronExpr") with DummyTestBase {
+class CronDateTimeSpec extends Properties("CronDateTime") with DummyTestBase {
   import Arbitrary.arbitrary
   import CronField._
   import CronUnit._

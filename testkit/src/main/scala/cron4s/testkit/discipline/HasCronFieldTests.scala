@@ -27,5 +27,5 @@ trait HasCronFieldTests[A[_ <: CronField], F <: CronField] extends Laws {
 
 object HasCronFieldTests {
   def apply[A[_ <: CronField], F <: CronField](implicit ev: HasCronField[A, F]): HasCronFieldTests[A, F] =
-    new HasCronFieldTests[A, F] { def laws = HasCronFieldLaws[A, F] }
+    new HasCronFieldTests[A, F] { val laws = HasCronFieldLaws[A, F] }
 }

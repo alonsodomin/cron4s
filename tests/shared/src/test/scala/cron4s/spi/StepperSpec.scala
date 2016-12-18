@@ -1,4 +1,4 @@
-package cron4s.ext
+package cron4s.spi
 
 import cron4s._
 import cron4s.expr._

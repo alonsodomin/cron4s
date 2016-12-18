@@ -18,22 +18,22 @@ private[spi] final class PredicateReducer[DateTime]
     import CronField._
 
     private[this] def predicateFor[F <: CronField]
-        (field: F, expr: FieldExpr[F])
-        (implicit ev: Lazy[IsFieldExpr[FieldExpr, F]]): Predicate[DateTime] =
+        (field: F, expr: FieldExprAST[F])
+        (implicit ev: Lazy[IsFieldExpr[FieldExprAST, F]]): Predicate[DateTime] =
       Predicate { dt =>
         adapter.get(dt, field).map(ev.value.matches(expr)).getOrElse(!M.empty[DateTime](dt))
       }
 
-    implicit def caseSeconds     = at[SecondsExpr](expr => predicateFor(Second, expr))
-    implicit def caseMinutes     = at[MinutesExpr](expr => predicateFor(Minute, expr))
-    implicit def caseHours       = at[HoursExpr](expr => predicateFor(Hour, expr))
-    implicit def caseDaysOfMonth = at[DaysOfMonthExpr](expr => predicateFor(DayOfMonth, expr))
-    implicit def caseMonths      = at[MonthsExpr](expr => predicateFor(Month, expr))
-    implicit def caseDaysOfWeek  = at[DaysOfWeekExpr](expr => predicateFor(DayOfWeek, expr))
+    implicit def caseSeconds     = at[SecondsAST](expr => predicateFor(Second, expr))
+    implicit def caseMinutes     = at[MinutesAST](expr => predicateFor(Minute, expr))
+    implicit def caseHours       = at[HoursAST](expr => predicateFor(Hour, expr))
+    implicit def caseDaysOfMonth = at[DaysOfMonthAST](expr => predicateFor(DayOfMonth, expr))
+    implicit def caseMonths      = at[MonthsAST](expr => predicateFor(Month, expr))
+    implicit def caseDaysOfWeek  = at[DaysOfWeekAST](expr => predicateFor(DayOfWeek, expr))
   }
 
   def run(expr: CronExpr): Predicate[DateTime] =
-    expr.repr.map(exprToMatcher).toList
+    expr.ast.map(exprToMatcher).toList
       .foldLeft(M.empty[DateTime])((lhs, rhs) => M.plus(lhs, rhs))
 
 }

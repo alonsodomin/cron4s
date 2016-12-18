@@ -23,7 +23,7 @@ private[cron4s] object util {
     implicit def caseBetween[F <: CronField] = at[BetweenExpr[F]](_.matches)
     implicit def caseSeveral[F <: CronField] = at[SeveralExpr[F]](_.matches)
     implicit def caseEvery[F <: CronField]   = at[EveryExpr[F]](_.matches)
-    implicit def default[F <: CronField]     = at[FieldExpr[F]](_.fold(matches))
+    implicit def default[F <: CronField]     = at[FieldExprAST[F]](_.fold(matches))
   }
 
   object range extends Poly1 {
@@ -32,7 +32,7 @@ private[cron4s] object util {
     implicit def caseBetween[F <: CronField] = at[BetweenExpr[F]](_.range)
     implicit def caseSeveral[F <: CronField] = at[SeveralExpr[F]](_.range)
     implicit def caseEvery[F <: CronField]   = at[EveryExpr[F]](_.range)
-    implicit def default[F <: CronField]     = at[FieldExpr[F]](_.fold(range))
+    implicit def default[F <: CronField]     = at[FieldExprAST[F]](_.fold(range))
   }
 
   object show extends Poly1 {
@@ -41,7 +41,7 @@ private[cron4s] object util {
     implicit def caseBetween[F <: CronField] = at[BetweenExpr[F]](_.toString)
     implicit def caseSeveral[F <: CronField] = at[SeveralExpr[F]](_.toString)
     implicit def caseEvery[F <: CronField]   = at[EveryExpr[F]](_.toString)
-    implicit def default[F <: CronField]     = at[FieldExpr[F]](_.fold(show))
+    implicit def default[F <: CronField]     = at[FieldExprAST[F]](_.fold(show))
   }
 
   object unit extends Poly1 {
@@ -50,11 +50,11 @@ private[cron4s] object util {
     implicit def caseBetween[F <: CronField] = at[BetweenExpr[F]](_.unit)
     implicit def caseSeveral[F <: CronField] = at[SeveralExpr[F]](_.unit)
     implicit def caseEvery[F <: CronField]   = at[EveryExpr[F]](_.unit)
-    implicit def default[F <: CronField]     = at[FieldExpr[F]](_.fold(unit))
+    implicit def default[F <: CronField]     = at[FieldExprAST[F]](_.fold(unit))
   }
 
   object unify extends Poly1 {
-    implicit def default[F <: CronField] = at[FieldExpr[F]](_.unify)
+    implicit def default[F <: CronField] = at[FieldExprAST[F]](_.unify)
   }
 
 }

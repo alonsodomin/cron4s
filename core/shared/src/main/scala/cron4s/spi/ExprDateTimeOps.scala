@@ -1,7 +1,6 @@
 package cron4s.spi
 
 import cron4s.CronField
-import cron4s.expr.Expr
 import cron4s.types._
 
 /**
@@ -9,9 +8,8 @@ import cron4s.types._
   *
   * @author Antonio Alonso Dominguez
   */
-abstract class ExtendedExpr[E[_ <: CronField] <: Expr[_], F <: CronField, DateTime]
-    (private[spi] val underlying: E[F])
-    (implicit adapter: DateTimeAdapter[DateTime], ev: IsFieldExpr[E, F]) {
+abstract class ExprDateTimeOps[E[_ <: CronField], F <: CronField, DateTime]
+    (self: E[F], adapter: DateTimeAdapter[DateTime], tc: IsFieldExpr[E, F]) {
 
   /**
     * Tests if this field expressions matches in the given date-time
@@ -19,8 +17,8 @@ abstract class ExtendedExpr[E[_ <: CronField] <: Expr[_], F <: CronField, DateTi
     * @return true if there is a field in this date-time that matches this expression
     */
   def matchesIn: Predicate[DateTime] = Predicate { dt =>
-    val current = adapter.get(dt, underlying.asInstanceOf[Expr[F]].unit.field)
-    current.map(ev.matches(underlying)).getOrElse(false)
+    val current = adapter.get(dt, tc.unit(self).field)
+    current.map(tc.matches(self)).getOrElse(false)
   }
 
   /**
@@ -31,7 +29,7 @@ abstract class ExtendedExpr[E[_ <: CronField] <: Expr[_], F <: CronField, DateTi
     * @return the next date-time
     */
   @inline
-  def next(dateTime: DateTime): Option[DateTime] = step(dateTime, 1)
+  def nextIn(dateTime: DateTime): Option[DateTime] = stepIn(dateTime, 1)
 
   /**
     * Calculates the previous date-time to a given one considering only the field
@@ -41,7 +39,7 @@ abstract class ExtendedExpr[E[_ <: CronField] <: Expr[_], F <: CronField, DateTi
     * @return the next date-time
     */
   @inline
-  def prev(dateTime: DateTime): Option[DateTime] = step(dateTime, -1)
+  def prevIn(dateTime: DateTime): Option[DateTime] = stepIn(dateTime, -1)
 
   /**
     * Calculates a date-time that is in either the past or the future relative
@@ -52,11 +50,11 @@ abstract class ExtendedExpr[E[_ <: CronField] <: Expr[_], F <: CronField, DateTi
     * @param step step size
     * @return a date-time that is an amount of given steps from the given one
     */
-  def step(dateTime: DateTime, step: Int): Option[DateTime] = {
+  def stepIn(dateTime: DateTime, step: Int): Option[DateTime] = {
     for {
-      current  <- adapter.get(dateTime, underlying.asInstanceOf[Expr[F]].unit.field)
-      newValue <- ev.step(underlying)(current, step).map(_._1)
-      adjusted <- adapter.set(dateTime, underlying.asInstanceOf[Expr[F]].unit.field, newValue)
+      current  <- adapter.get(dateTime, tc.unit(self).field)
+      newValue <- tc.step(self)(current, step).map(_._1)
+      adjusted <- adapter.set(dateTime, tc.unit(self).field, newValue)
     } yield adjusted
   }
 

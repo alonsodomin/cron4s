@@ -7,24 +7,24 @@ import shapeless._
   */
 package object expr {
 
-  type FieldExpr[F <: CronField] =
+  type FieldExprAST[F <: CronField] =
     EachExpr[F] :+: ConstExpr[F] :+: BetweenExpr[F] :+: SeveralExpr[F] :+: EveryExpr[F] :+: CNil
 
-  type EnumExpr[F <: CronField] =
+  type EnumExprAST[F <: CronField] =
     ConstExpr[F] :+: BetweenExpr[F] :+: CNil
 
-  type DivExpr[F <: CronField] =
+  type DivExprAST[F <: CronField] =
     EachExpr[F] :+: ConstExpr[F] :+: BetweenExpr[F] :+: SeveralExpr[F] :+: CNil
 
-  type SecondsExpr     = FieldExpr[CronField.Second]
-  type MinutesExpr     = FieldExpr[CronField.Minute]
-  type HoursExpr       = FieldExpr[CronField.Hour]
-  type DaysOfMonthExpr = FieldExpr[CronField.DayOfMonth]
-  type MonthsExpr      = FieldExpr[CronField.Month]
-  type DaysOfWeekExpr  = FieldExpr[CronField.DayOfWeek]
+  type SecondsAST     = FieldExprAST[CronField.Second]
+  type MinutesAST     = FieldExprAST[CronField.Minute]
+  type HoursAST       = FieldExprAST[CronField.Hour]
+  type DaysOfMonthAST = FieldExprAST[CronField.DayOfMonth]
+  type MonthsAST      = FieldExprAST[CronField.Month]
+  type DaysOfWeekAST  = FieldExprAST[CronField.DayOfWeek]
 
-  private[cron4s] type TimePartRepr = SecondsExpr :: MinutesExpr :: HoursExpr :: HNil
-  private[cron4s] type DatePartRepr = DaysOfMonthExpr :: MonthsExpr :: DaysOfWeekExpr :: HNil
-  private[cron4s] type CronExprRepr = SecondsExpr :: MinutesExpr :: HoursExpr :: DaysOfMonthExpr :: MonthsExpr :: DaysOfWeekExpr :: HNil
+  private[cron4s] type TimePartAST = SecondsAST :: MinutesAST :: HoursAST :: HNil
+  private[cron4s] type DatePartAST = DaysOfMonthAST :: MonthsAST :: DaysOfWeekAST :: HNil
+  private[cron4s] type CronExprAST = SecondsAST :: MinutesAST :: HoursAST :: DaysOfMonthAST :: MonthsAST :: DaysOfWeekAST :: HNil
 
 }

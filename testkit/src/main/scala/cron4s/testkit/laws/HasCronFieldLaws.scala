@@ -48,5 +48,5 @@ trait HasCronFieldLaws[A[_ <: CronField], F <: CronField] {
 
 object HasCronFieldLaws {
   def apply[A[_ <: CronField], F <: CronField](implicit ev: HasCronField[A, F]) =
-    new HasCronFieldLaws[A, F] { def TC = ev }
+    new HasCronFieldLaws[A, F] { val TC = ev }
 }
