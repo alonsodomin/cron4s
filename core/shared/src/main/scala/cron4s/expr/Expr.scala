@@ -79,7 +79,7 @@ final case class SeveralExpr[F <: CronField] private[expr]
   extends Expr[F] {
 
   override def toString: String =
-    values.map(_.fold(cron4s.util.show)).list.toList.mkString(",")
+    values.map(_.fold(cron4s.generic.show)).list.toList.mkString(",")
 
 }
 
@@ -89,7 +89,7 @@ final case class EveryExpr[F <: CronField]
   extends Expr[F] {
 
   override def toString =
-    s"${value.fold(cron4s.util.show)}/$freq"
+    s"${value.fold(cron4s.generic.show)}/$freq"
 
 }
 
@@ -165,35 +165,35 @@ private[expr] trait LowPriorityExprInstances {
 
   implicit def enumExpr[F <: CronField]: IsFieldExpr[EnumExprAST, F] = new IsFieldExpr[EnumExprAST, F] {
     def matches(e: EnumExprAST[F]): Predicate[Int] =
-      e.fold(cron4s.util.matches)
+      e.fold(cron4s.generic.matches)
 
     def range(e: EnumExprAST[F]): Vector[Int] =
-      e.fold(cron4s.util.range)
+      e.fold(cron4s.generic.range)
 
     def unit(expr: EnumExprAST[F]): CronUnit[F] =
-      expr.fold(cron4s.util.unit)
+      expr.fold(cron4s.generic.unit)
   }
 
   implicit def divExpr[F <: CronField]: IsFieldExpr[DivExprAST, F] = new IsFieldExpr[DivExprAST, F] {
     def matches(e: DivExprAST[F]): Predicate[Int] =
-      e.fold(cron4s.util.matches)
+      e.fold(cron4s.generic.matches)
 
     def range(e: DivExprAST[F]): Vector[Int] =
-      e.fold(cron4s.util.range)
+      e.fold(cron4s.generic.range)
 
     def unit(expr: DivExprAST[F]): CronUnit[F] =
-      expr.fold(cron4s.util.unit)
+      expr.fold(cron4s.generic.unit)
   }
 
   implicit def fieldExpr[F <: CronField]: IsFieldExpr[FieldExprAST, F] = new IsFieldExpr[FieldExprAST, F] {
     def matches(expr: FieldExprAST[F]): Predicate[Int] =
-      expr.fold(cron4s.util.matches)
+      expr.fold(cron4s.generic.matches)
 
     def range(expr: FieldExprAST[F]): Vector[Int] =
-      expr.fold(cron4s.util.range)
+      expr.fold(cron4s.generic.range)
 
     def unit(expr: FieldExprAST[F]): CronUnit[F] =
-      expr.fold(cron4s.util.unit)
+      expr.fold(cron4s.generic.unit)
   }
 
 }

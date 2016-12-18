@@ -51,7 +51,7 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
       new PredicateReducer[DateTime].run(expr)
     }
 
-    val dateWithoutWeekOfDay = expr.datePart.repr.take(2)
+    val dateWithoutWeekOfDay = expr.datePart.ast.take(2)
 
     def stepDatePart(previous: Step): Step =
       dateWithoutWeekOfDay.foldLeft(previous)(stepping).flatMap {
@@ -74,7 +74,7 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
     }
 
     val initial: Step = Some(from -> initialStep)
-    val timeAdjusted: Step = expr.timePart.repr.foldLeft(initial)(stepping)
+    val timeAdjusted: Step = expr.timePart.ast.foldLeft(initial)(stepping)
     val adjusted = dateStepLoop(timeAdjusted)
     adjusted.map(_._1)
   }

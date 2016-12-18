@@ -10,9 +10,9 @@ final case class DatePartExpr(
     daysOfWeek: DaysOfWeekAST
   ) {
 
-  private[cron4s] lazy val repr: DatePartAST = Generic[DatePartExpr].to(this)
+  private[cron4s] lazy val ast: DatePartAST = Generic[DatePartExpr].to(this)
 
-  override def toString = repr.map(cron4s.util.show).toList.mkString(" ")
+  override def toString = ast.map(cron4s.generic.show).toList.mkString(" ")
 
 }
 
@@ -22,8 +22,8 @@ final case class TimePartExpr(
     hours: HoursAST
   ) {
 
-  private[cron4s] lazy val repr: TimePartAST = Generic[TimePartExpr].to(this)
+  private[cron4s] lazy val ast: TimePartAST = Generic[TimePartExpr].to(this)
 
-  override def toString = repr.map(cron4s.util.show).toList.mkString(" ")
+  override def toString = ast.map(cron4s.generic.show).toList.mkString(" ")
 
 }

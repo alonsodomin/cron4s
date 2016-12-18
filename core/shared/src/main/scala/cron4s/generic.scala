@@ -7,15 +7,7 @@ import shapeless._
 /**
   * Created by alonsodomin on 17/12/2016.
   */
-private[cron4s] object util {
-
-  object extract extends Poly1 {
-    implicit def caseEach[F <: CronField]    = at[EachExpr[F]](identity)
-    implicit def caseConst[F <: CronField]   = at[ConstExpr[F]](identity)
-    implicit def caseBetween[F <: CronField] = at[BetweenExpr[F]](identity)
-    implicit def caseSeveral[F <: CronField] = at[SeveralExpr[F]](identity)
-    implicit def caseEvery[F <: CronField]   = at[EveryExpr[F]](identity)
-  }
+private[cron4s] object generic {
 
   object matches extends Poly1 {
     implicit def caseEach[F <: CronField]    = at[EachExpr[F]](_.matches)
