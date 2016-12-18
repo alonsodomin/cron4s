@@ -18,13 +18,13 @@ private[spi] final class PredicateReducer[DateTime]
     import CronField._
 
     private[this] def predicateFor[F <: CronField]
-        (field: F, expr: Expr[F])
-        (implicit ev: IsFieldExpr[Expr, F]): Predicate[DateTime] =
+        (field: F, expr: FieldExpr[F])
+        (implicit ev: Lazy[IsFieldExpr[FieldExpr, F]]): Predicate[DateTime] =
       Predicate { dt =>
-        adapter.get(dt, field).map(ev.matches(expr)).getOrElse(!M.empty[DateTime](dt))
+        adapter.get(dt, field).map(ev.value.matches(expr)).getOrElse(!M.empty[DateTime](dt))
       }
 
-    implicit def caseSeconds     = at[SecondExpr](expr => predicateFor(Second, expr))
+    implicit def caseSeconds     = at[SecondsExpr](expr => predicateFor(Second, expr))
     implicit def caseMinutes     = at[MinutesExpr](expr => predicateFor(Minute, expr))
     implicit def caseHours       = at[HoursExpr](expr => predicateFor(Hour, expr))
     implicit def caseDaysOfMonth = at[DaysOfMonthExpr](expr => predicateFor(DayOfMonth, expr))
@@ -32,15 +32,8 @@ private[spi] final class PredicateReducer[DateTime]
     implicit def caseDaysOfWeek  = at[DaysOfWeekExpr](expr => predicateFor(DayOfWeek, expr))
   }
 
-  object combine extends Poly {
-    private[this] def fuseMatchers(left: Predicate[DateTime], right: Predicate[DateTime]): Predicate[DateTime] =
-      M.plus(left, right)
-
-    implicit def caseAny = use(fuseMatchers _)
-  }
-
-  def run(expr: CronExpr): Predicate[DateTime] = expr.repr.
-    map(exprToMatcher).
-    foldLeft(M.empty[DateTime])(combine)
+  def run(expr: CronExpr): Predicate[DateTime] =
+    expr.repr.map(exprToMatcher).toList
+      .foldLeft(M.empty[DateTime])((lhs, rhs) => M.plus(lhs, rhs))
 
 }

@@ -10,7 +10,7 @@ import shapeless._
   * @author Antonio Alonso Dominguez
   */
 final case class CronExpr(
-    seconds: SecondExpr,
+    seconds: SecondsExpr,
     minutes: MinutesExpr,
     hours: HoursExpr,
     daysOfMonth: DaysOfMonthExpr,
@@ -23,11 +23,12 @@ final case class CronExpr(
   /**
     * Time part of the CRON expression
     */
-  lazy val timePart: TimePartExpr = new TimePartExpr(repr.take(3))
+  lazy val timePart: TimePartExpr = TimePartExpr(seconds, minutes, hours)
+
   /**
     * Date part of the CRON expression
     */
-  lazy val datePart: DatePartExpr = new DatePartExpr(repr.drop(3))
+  lazy val datePart: DatePartExpr = DatePartExpr(daysOfMonth, months, daysOfWeek)
 
   /**
     * Generic field accessor. Given a CronField, this method can be used
@@ -37,15 +38,17 @@ final case class CronExpr(
     * @tparam F CronField type
     * @return field-based expression for given field
     */
-  def field[F <: CronField](implicit unit: CronUnit[F]): Expr[F] = unit.field match {
-    case CronField.Second     => seconds.asInstanceOf[Expr[F]]
-    case CronField.Minute     => minutes.asInstanceOf[Expr[F]]
-    case CronField.Hour       => hours.asInstanceOf[Expr[F]]
-    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[Expr[F]]
-    case CronField.Month      => months.asInstanceOf[Expr[F]]
-    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[Expr[F]]
+  def field[F <: CronField](implicit unit: CronUnit[F]): FieldExpr[F] = unit.field match {
+    case CronField.Second     => seconds.asInstanceOf[FieldExpr[F]]
+    case CronField.Minute     => minutes.asInstanceOf[FieldExpr[F]]
+    case CronField.Hour       => hours.asInstanceOf[FieldExpr[F]]
+    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[FieldExpr[F]]
+    case CronField.Month      => months.asInstanceOf[FieldExpr[F]]
+    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[FieldExpr[F]]
   }
 
-  override def toString = s"$seconds $minutes $hours $daysOfMonth $months $daysOfWeek"
+  def ranges: List[Vector[Int]] = repr.map(cron4s.util.range).toList
+
+  override def toString = repr.map(cron4s.util.show).toList.mkString(" ")
 
 }

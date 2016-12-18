@@ -1,8 +1,8 @@
 package cron4s.expr
 
 import cron4s._
+
 import org.scalatest.{FlatSpec, Matchers}
-import shapeless._
 
 /**
   * Created by alonsodomin on 07/08/2016.
@@ -17,29 +17,29 @@ class CronExprSpec extends FlatSpec with Matchers {
   val monthExpr      = ConstExpr[Month](6)
   val dayOfWeekExpr  = ConstExpr[DayOfWeek](3)
 
-  val timePart = new TimePartExpr(secondExpr :: minuteExpr :: hourExpr :: HNil)
-  val datePart = new DatePartExpr(dayOfMonthExpr :: monthExpr :: dayOfWeekExpr :: HNil)
+  val timePart = TimePartExpr(secondExpr, minuteExpr, hourExpr)
+  val datePart = DatePartExpr(dayOfMonthExpr, monthExpr, dayOfWeekExpr)
 
   val expr = CronExpr(secondExpr, minuteExpr, hourExpr, dayOfMonthExpr, monthExpr, dayOfWeekExpr)
 
   "field" should "return the expression for the correct cron field" in {
-    expr.field[Second] shouldBe secondExpr
-    expr.seconds shouldBe secondExpr
+    expr.field[Second] shouldBe expr.seconds
+    expr.seconds.select[ConstExpr[Second]] shouldBe Some(secondExpr)
 
-    expr.field[Minute] shouldBe minuteExpr
-    expr.minutes shouldBe minuteExpr
+    expr.field[Minute] shouldBe expr.minutes
+    expr.minutes.select[ConstExpr[Minute]] shouldBe Some(minuteExpr)
 
-    expr.field[Hour] shouldBe hourExpr
-    expr.hours shouldBe hourExpr
+    expr.field[Hour] shouldBe expr.hours
+    expr.hours.select[ConstExpr[Hour]] shouldBe Some(hourExpr)
 
-    expr.field[DayOfMonth] shouldBe dayOfMonthExpr
-    expr.daysOfMonth shouldBe dayOfMonthExpr
+    expr.field[DayOfMonth] shouldBe expr.daysOfMonth
+    expr.daysOfMonth.select[ConstExpr[DayOfMonth]] shouldBe Some(dayOfMonthExpr)
 
-    expr.field[Month] shouldBe monthExpr
-    expr.months shouldBe monthExpr
+    expr.field[Month] shouldBe expr.months
+    expr.months.select[ConstExpr[Month]] shouldBe Some(monthExpr)
 
-    expr.field[DayOfWeek] shouldBe dayOfWeekExpr
-    expr.daysOfWeek shouldBe dayOfWeekExpr
+    expr.field[DayOfWeek] shouldBe expr.daysOfWeek
+    expr.daysOfWeek.select[ConstExpr[DayOfWeek]] shouldBe Some(dayOfWeekExpr)
 
     expr.toString shouldBe "15 10 4 12 6 3"
   }
@@ -47,9 +47,9 @@ class CronExprSpec extends FlatSpec with Matchers {
   "timePart" should "return the time relative part of the expression" in {
     expr.timePart shouldBe timePart
 
-    timePart.seconds shouldBe secondExpr
-    timePart.minutes shouldBe minuteExpr
-    timePart.hours shouldBe hourExpr
+    timePart.seconds.select[ConstExpr[Second]] shouldBe Some(secondExpr)
+    timePart.minutes.select[ConstExpr[Minute]] shouldBe Some(minuteExpr)
+    timePart.hours.select[ConstExpr[Hour]] shouldBe Some(hourExpr)
 
     timePart.toString shouldBe "15 10 4"
   }
@@ -57,9 +57,9 @@ class CronExprSpec extends FlatSpec with Matchers {
   "datePart" should "return the date relative part of the expression" in {
     expr.datePart shouldBe datePart
 
-    datePart.daysOfMonth shouldBe dayOfMonthExpr
-    datePart.months shouldBe monthExpr
-    datePart.daysOfWeek shouldBe dayOfWeekExpr
+    datePart.daysOfMonth.select[ConstExpr[DayOfMonth]] shouldBe Some(dayOfMonthExpr)
+    datePart.months.select[ConstExpr[Month]] shouldBe Some(monthExpr)
+    datePart.daysOfWeek.select[ConstExpr[DayOfWeek]] shouldBe Some(dayOfWeekExpr)
 
     datePart.toString shouldBe "12 6 3"
   }

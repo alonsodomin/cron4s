@@ -3,6 +3,7 @@ package cron4s.spi
 import cron4s._
 import cron4s.expr._
 import cron4s.types._
+
 import shapeless._
 
 import scala.annotation.tailrec
@@ -13,12 +14,12 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
   type Step = Option[(DateTime, Int)]
 
   private[this] def stepField[F <: CronField]
-      (expr: Expr[F], step: Int)
-      (implicit ev: IsFieldExpr[Expr, F]): Option[(Int, Int)] =
-    adapter.get(from, expr.unit.field).flatMap(v => ev.step(expr)(v, step))
+      (expr: FieldExpr[F], step: Int): Option[(Int, Int)] =
+    adapter.get(from, expr.unit.field)
+      .flatMap(v => expr.step(v, step))
 
   private[this] def stepAndAdjust[F <: CronField]
-      (dateTimeAndStep: Step, expr: Expr[F]): Step = {
+      (dateTimeAndStep: Step, expr: FieldExpr[F]): Step = {
     for {
       (dateTime, step)  <- dateTimeAndStep
       (value, nextStep) <- stepField(expr, step)
@@ -27,25 +28,21 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
   }
 
   private[this] def stepDayOfWeek
-      (dt: DateTime, expr: Expr[DayOfWeek], stepSize: Int)
-      (implicit ev: IsFieldExpr[Expr, DayOfWeek]): Step = {
+      (dt: DateTime, expr: FieldExpr[DayOfWeek], stepSize: Int): Step = {
     for {
       dayOfWeek         <- adapter.get(dt, DayOfWeek)
-      (value, nextStep) <- ev.step(expr)(dayOfWeek, stepSize)
+      (value, nextStep) <- expr.step(dayOfWeek, stepSize)
       newDateTime       <- adapter.set(dt, DayOfWeek, value)
       newDayOfWeek      <- adapter.get(dt, DayOfWeek)
     } yield newDateTime -> (nextStep + (newDayOfWeek - dayOfWeek))
   }
 
-  object steppingTime extends Poly {
-    implicit def caseSeconds     = use((step: Step, expr: SecondExpr) => stepAndAdjust(step, expr))
-    implicit def caseMinutes     = use((step: Step, expr: MinutesExpr) => stepAndAdjust(step, expr))
-    implicit def caseHours       = use((step: Step, expr: HoursExpr) => stepAndAdjust(step, expr))
-  }
-
-  object steppingDate extends Poly {
-    implicit def caseDaysOfMonth = use((step: Step, expr: DaysOfMonthExpr) => stepAndAdjust(step, expr))
-    implicit def caseMonths      = use((step: Step, expr: MonthsExpr) => stepAndAdjust(step, expr))
+  object stepping extends Poly2 {
+    implicit def caseSeconds     = at[Step, SecondsExpr](stepAndAdjust)
+    implicit def caseMinutes     = at[Step, MinutesExpr](stepAndAdjust)
+    implicit def caseHours       = at[Step, HoursExpr](stepAndAdjust)
+    implicit def caseDaysOfMonth = at[Step, DaysOfMonthExpr](stepAndAdjust)
+    implicit def caseMonths      = at[Step, MonthsExpr](stepAndAdjust)
   }
 
   def run(expr: CronExpr): Option[DateTime] = {
@@ -54,10 +51,10 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
       new PredicateReducer[DateTime].run(expr)
     }
 
-    val dateWithoutWeekOfDay = expr.datePart.underlying.take(2)
+    val dateWithoutWeekOfDay = expr.datePart.repr.take(2)
 
     def stepDatePart(previous: Step): Step =
-      dateWithoutWeekOfDay.foldLeft(previous)(steppingDate).flatMap {
+      dateWithoutWeekOfDay.foldLeft(previous)(stepping).flatMap {
         case (dt, stepSize) => stepDayOfWeek(dt, expr.daysOfWeek, stepSize)
       }
 
@@ -65,7 +62,7 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
     def dateStepLoop(previous: Step): Step = {
       val dateAdjusted = stepDatePart(previous)
       dateAdjusted match {
-        case Some((dateTime, nextStep)) if nextStep != 0 =>
+        case Some((_, nextStep)) if nextStep != 0 =>
           dateStepLoop(stepDatePart(dateAdjusted))
 
         case Some((dateTime, _)) if !matches(dateTime) =>
@@ -77,7 +74,7 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
     }
 
     val initial: Step = Some(from -> initialStep)
-    val timeAdjusted: Step = expr.timePart.underlying.foldLeft(initial)(steppingTime)
+    val timeAdjusted: Step = expr.timePart.repr.foldLeft(initial)(stepping)
     val adjusted = dateStepLoop(timeAdjusted)
     adjusted.map(_._1)
   }

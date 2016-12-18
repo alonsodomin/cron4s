@@ -38,7 +38,7 @@ trait HasCronField[A[_ <: CronField], F <: CronField] {
   def next(a: A[F])(from: Int): Option[Int] = step(a)(from, steppingUnit(a)).map(_._1)
   def prev(a: A[F])(from: Int): Option[Int] = step(a)(from, -steppingUnit(a)).map(_._1)
 
-  def range(a: A[F]): IndexedSeq[Int]
+  def range(a: A[F]): Vector[Int]
 }
 
 object HasCronField {

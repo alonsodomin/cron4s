@@ -3,7 +3,7 @@ package cron4s.testkit.gen
 import cron4s.{CronField, CronUnit}
 import cron4s.testkit.CronFieldValue
 import cron4s.types.HasCronField
-import cron4s.types.syntax.field._
+import cron4s.syntax.field._
 
 import org.scalacheck.{Arbitrary, Gen}
 

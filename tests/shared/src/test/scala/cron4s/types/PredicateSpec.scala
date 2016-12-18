@@ -1,19 +1,20 @@
 package cron4s.types
 
+import cron4s.syntax.predicate._
+
 import org.scalacheck._
 
-import cron4s.types.syntax.predicate._
-
 import scalaz._
+import scalaz.scalacheck._
 import Scalaz._
-import scalaz.scalacheck.ScalazProperties._
 
 /**
   * Created by alonsodomin on 04/08/2016.
   */
 object PredicateSpec extends Properties("Predicate") {
-  import Arbitrary.arbitrary
   import Prop._
+  import Arbitrary._
+  import ScalazProperties._
 
   implicit lazy val arbitraryMatcher = Arbitrary[Predicate[Int]] {
     for { x <- arbitrary[Int] } yield equalTo(x)

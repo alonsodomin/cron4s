@@ -1,4 +1,4 @@
-package cron4s.types.syntax
+package cron4s.syntax
 
 /**
   * Created by alonsodomin on 25/08/2016.
