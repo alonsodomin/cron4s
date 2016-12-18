@@ -1,6 +1,6 @@
 package cron4s.types
 
-import cron4s.types.syntax._
+import cron4s.syntax.predicate._
 
 import scalaz.{Contravariant, PlusEmpty}
 

@@ -10,7 +10,7 @@ import scalaz.PlusEmpty
   *
   * @author Antonio Alonso Dominguez
   */
-abstract class ExtendedCronExpr[DateTime: DateTimeAdapter](expr: CronExpr) {
+abstract class CronDateTimeOps[DateTime: DateTimeAdapter](expr: CronExpr) {
 
   private[this] def matches(implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime]

@@ -3,7 +3,7 @@ package cron4s.parser
 import cron4s._
 import cron4s.expr._
 import cron4s.testkit.gen.{ArbitraryEachExpr, ExprGens}
-import cron4s.types.syntax.expr._
+import cron4s.syntax.expr._
 
 import fastparse.all._
 
@@ -44,10 +44,12 @@ object ParserSpec extends Properties("parser") with InputGenerators with ExprGen
         val matches = expr.values.list.toList.zip(expected).map { case (exprPart, expectedPart) =>
           expectedPart match {
             case Left(value) =>
-              exprPart.isInstanceOf[ConstExpr[F]] && verify(exprPart.asInstanceOf[ConstExpr[F]], value)
+              exprPart.select[ConstExpr[F]].exists(verify(_, value))
+
             case Right((start, end)) =>
-              val betweenPart = exprPart.asInstanceOf[BetweenExpr[F]]
-              verify(betweenPart.begin, start.toString) && verify(betweenPart.end, end.toString)
+              exprPart.select[BetweenExpr[F]].exists { part =>
+                verify(part.begin, start.toString) && verify(part.end, end.toString)
+              }
           }
         }
 

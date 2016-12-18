@@ -1,4 +1,4 @@
-package cron4s.ext
+package cron4s.spi
 
 import cron4s.testkit.DateTimeAdapterTestKit
 import testdummy._

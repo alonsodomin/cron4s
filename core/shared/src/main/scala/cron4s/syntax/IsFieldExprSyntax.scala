@@ -1,6 +1,6 @@
-package cron4s.types.syntax
+package cron4s.syntax
 
-import cron4s.CronField
+import cron4s.{CronField, CronUnit}
 import cron4s.types.{IsFieldExpr, Predicate}
 
 import scala.language.higherKinds
@@ -12,8 +12,11 @@ private[syntax] class IsFieldExprOps[E[_ <: CronField], F <: CronField](self: E[
   extends HasCronFieldOps[E, F](self, tc) {
 
   def matches: Predicate[Int] = tc.matches(self)
+
   def impliedBy[EE[_ <: CronField]](expr: EE[F])(implicit ops: IsFieldExpr[EE, F]): Boolean =
     tc.impliedBy(self)(expr)
+
+  def unit: CronUnit[F] = tc.unit(self)
 
 }
 

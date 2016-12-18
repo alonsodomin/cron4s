@@ -35,7 +35,7 @@ object DateTimeAdapterTests {
       eqEv: Equal[DateTime]
   ): DateTimeAdapterTests[DateTime] =
     new DateTimeAdapterTests[DateTime] {
-      def laws: DateTimeAdapterLaws[DateTime] = DateTimeAdapterLaws[DateTime]
+      val laws: DateTimeAdapterLaws[DateTime] = DateTimeAdapterLaws[DateTime]
     }
 
 }

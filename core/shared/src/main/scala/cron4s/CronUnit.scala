@@ -24,7 +24,7 @@ sealed abstract class CronUnit[+F <: CronField] extends Serializable {
     *
     * @return the range of valid values
     */
-  def range: IndexedSeq[Int]
+  def range: Vector[Int]
 
 }
 
@@ -43,7 +43,7 @@ private[cron4s] trait CronUnits {
     val field: F, val min: Int, val max: Int
   ) extends CronUnit[F] {
 
-    val range: IndexedSeq[Int] = min to max
+    val range: Vector[Int] = (min to max).toVector
 
   }
 
@@ -69,7 +69,7 @@ private[cron4s] trait CronUnitInstances extends CronUnits {
 
   private[this] def hasCronField[F <: CronField](unit: CronUnit[F]): HasCronField[CronUnit, F] =
     new HasCronField[CronUnit, F] {
-      override def range(fL: CronUnit[F]): IndexedSeq[Int] = unit.range
+      override def range(fL: CronUnit[F]): Vector[Int] = unit.range
     }
 
   implicit val secondsInstance     = hasCronField(Seconds)

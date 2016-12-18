@@ -3,7 +3,6 @@ package cron4s.spi
 import cron4s.CronField
 import cron4s.expr._
 import cron4s.types.IsFieldExpr
-
 import org.joda.time.{DateTime, DateTimeFieldType}
 
 import scalaz.Equal
@@ -14,7 +13,7 @@ import scalaz.Equal
 package object joda {
   import CronField._
 
-  implicit val dateTimeInstance = Equal.equalA[DateTime]
+  implicit val dateTimeInstance: Equal[DateTime] = Equal.equalA[DateTime]
 
   implicit object JodaTimeAdapter extends DateTimeAdapter[DateTime] {
 
@@ -44,9 +43,9 @@ package object joda {
     }
   }
 
-  implicit class JodaCronExpr(expr: CronExpr) extends ExtendedCronExpr[DateTime](expr)
-  implicit class JodaExpr[E[_ <: CronField] <: Expr[_], F <: CronField]
+  implicit class JodaCronExpr(expr: CronExpr) extends CronDateTimeOps[DateTime](expr)
+  implicit class JodaExpr[E[_ <: CronField], F <: CronField]
       (expr: E[F])
       (implicit ev: IsFieldExpr[E, F])
-    extends ExtendedExpr[E, F, DateTime](expr)
+    extends ExprDateTimeOps[E, F, DateTime](expr, JodaTimeAdapter, ev)
 }

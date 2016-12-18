@@ -9,7 +9,6 @@ import scala.xml.transform.{RewriteRule, RuleTransformer}
 
 scalaVersion in ThisBuild := "2.11.8"
 
-// TODO The parser combinators lib needs to support multiple Scala/ScalaJS versions to enable this
 crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12.1")
 
 val commonSettings = Def.settings(
@@ -23,7 +22,7 @@ val commonSettings = Def.settings(
     "-Xfuture",
     "-Xlint",
     "-Xfatal-warnings",
-    "-Ywarn-dead-code",
+    //"-Ywarn-dead-code",
     "-language:implicitConversions",
     "-language:higherKinds",
     "-language:existentials"
@@ -119,7 +118,7 @@ lazy val docSettings = Seq(
   addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), docsMappingsAPIDir),
   ghpagesNoJekyll := false,
   git.remoteRepo := "https://github.com/alonsodomin/cron4s.git",
-  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(coreJVM, typesJVM),
+  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(coreJVM),
   scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
     "-Xfatal-warnings",
     "-doc-source-url", scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
@@ -169,8 +168,8 @@ lazy val cron4sJS = (project in file(".js")).
   settings(commonJsSettings: _*).
   settings(publishSettings).
   enablePlugins(ScalaJSPlugin).
-  aggregate(typesJS, testkitJS, coreJS, testsJS).
-  dependsOn(typesJS, testkitJS, coreJS, testsJS)
+  aggregate(coreJS, testkitJS, testsJS).
+  dependsOn(coreJS, testkitJS, testsJS)
 
 lazy val cron4sJVM = (project in file(".jvm")).
   settings(
@@ -179,8 +178,8 @@ lazy val cron4sJVM = (project in file(".jvm")).
   ).
   settings(commonSettings: _*).
   settings(publishSettings).
-  aggregate(typesJVM, testkitJVM, coreJVM, testsJVM).
-  dependsOn(typesJVM, testkitJVM, coreJVM, testsJVM)
+  aggregate(coreJVM, testkitJVM, testsJVM).
+  dependsOn(coreJVM, testkitJVM, testsJVM)
 
 lazy val docs = project.
   enablePlugins(MicrositesPlugin).
@@ -202,8 +201,7 @@ lazy val core = (crossProject in file("core")).
   settings(publishSettings: _*).
   settings(Dependencies.core: _*).
   jvmSettings(Dependencies.coreJVM: _*).
-  jvmSettings(mimaSettings("core"): _*).
-  dependsOn(types)
+  jvmSettings(mimaSettings("core"): _*)
 
 lazy val coreJS = core.js
 lazy val coreJVM = core.jvm
@@ -222,20 +220,6 @@ lazy val testkit = (crossProject.crossType(CrossType.Pure) in file("testkit")).
 
 lazy val testkitJS = testkit.js
 lazy val testkitJVM = testkit.jvm
-
-lazy val types = (crossProject.crossType(CrossType.Pure) in file("types")).
-  settings(
-    name := "types",
-    moduleName := "cron4s-types"
-  ).
-  settings(commonSettings: _*).
-  settings(commonJsSettings: _*).
-  settings(publishSettings: _*).
-  settings(Dependencies.types: _*).
-  jvmSettings(mimaSettings("types"): _*)
-
-lazy val typesJS = types.js
-lazy val typesJVM = types.jvm
 
 lazy val tests = (crossProject in file("tests")).
   settings(

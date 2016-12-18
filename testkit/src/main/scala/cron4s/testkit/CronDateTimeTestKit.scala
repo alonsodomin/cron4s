@@ -2,7 +2,7 @@ package cron4s.testkit
 
 import cron4s.CronField._
 import cron4s.expr.{EachExpr, ConstExpr, CronExpr}
-import cron4s.spi.{DateTimeAdapter, ExtendedCronExpr}
+import cron4s.spi.{DateTimeAdapter, CronDateTimeOps}
 
 import org.scalatest.{Matchers, PropSpec}
 import org.scalatest.prop.TableDrivenPropertyChecks
@@ -12,7 +12,7 @@ import shapeless._
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-abstract class ExtendedCronExprTestKit[DateTime <: AnyRef : DateTimeAdapter]
+abstract class CronDateTimeTestKit[DateTime <: AnyRef : DateTimeAdapter]
   extends PropSpec with TableDrivenPropertyChecks with Matchers { this: ExtensionsTestKitBase[DateTime] =>
 
   val onlyTuesdaysAt12 = CronExpr(
@@ -40,7 +40,7 @@ abstract class ExtendedCronExprTestKit[DateTime <: AnyRef : DateTimeAdapter]
 
   property("step") {
     forAll(samples) { (expr: CronExpr, initial: DateTime, stepSize: Int, expected: DateTime) =>
-      val extCronExpr = new ExtendedCronExpr[DateTime](expr) { }
+      val extCronExpr = new CronDateTimeOps[DateTime](expr) { }
       val returnedDateTime = extCronExpr.step(initial, stepSize)
 
       returnedDateTime shouldBe defined

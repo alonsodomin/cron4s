@@ -1,4 +1,4 @@
-package cron4s.types.syntax
+package cron4s.syntax
 
 import cron4s.types.Predicate
 
@@ -13,12 +13,7 @@ trait PredicateSyntax {
 
   def not[A](m: Predicate[A]): Predicate[A] = Predicate { a => !m(a) }
 
-  @deprecated("Use equalTo instead", "0.2.0")
-  def equal[A: Equal](a: A): Predicate[A] = equalTo[A](a)
   def equalTo[A: Equal](a: A): Predicate[A] = Predicate { b => implicitly[Equal[A]].equal(a, b) }
-
-  @deprecated("Use noneOf instead", "0.2.0")
-  def none[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] = noneOf(c)
 
   def noneOf[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
     not(allOf(c))

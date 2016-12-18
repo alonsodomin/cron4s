@@ -39,7 +39,7 @@ object DateTimeAdapterLaws {
   ): DateTimeAdapterLaws[DateTime] =
     new DateTimeAdapterLaws[DateTime] {
       implicit val eq: Equal[DateTime] = eqEv
-      implicit def adapter: DateTimeAdapter[DateTime] = adapterEv
+      implicit val adapter: DateTimeAdapter[DateTime] = adapterEv
     }
 
 }

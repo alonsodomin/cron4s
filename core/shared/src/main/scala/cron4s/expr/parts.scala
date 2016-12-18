@@ -1,21 +1,29 @@
 package cron4s.expr
 
-class DatePartExpr private[expr] (val underlying: DatePartRepr) extends AnyVal {
+import cron4s.CronField
 
-  def daysOfMonth: DaysOfMonthExpr = underlying.select[DaysOfMonthExpr]
-  def months: MonthsExpr = underlying.select[MonthsExpr]
-  def daysOfWeek: DaysOfWeekExpr = underlying.select[DaysOfWeekExpr]
+import shapeless._
 
-  override def toString = s"$daysOfMonth $months $daysOfWeek"
+final case class DatePartExpr(
+    daysOfMonth: DaysOfMonthAST,
+    months: MonthsAST,
+    daysOfWeek: DaysOfWeekAST
+  ) {
+
+  private[cron4s] lazy val ast: DatePartAST = Generic[DatePartExpr].to(this)
+
+  override def toString = ast.map(cron4s.generic.show).toList.mkString(" ")
 
 }
 
-class TimePartExpr private[expr] (val underlying: TimePartRepr) extends AnyVal {
+final case class TimePartExpr(
+    seconds: SecondsAST,
+    minutes: MinutesAST,
+    hours: HoursAST
+  ) {
 
-  def seconds: SecondExpr = underlying.select[SecondExpr]
-  def minutes: MinutesExpr = underlying.select[MinutesExpr]
-  def hours: HoursExpr = underlying.select[HoursExpr]
+  private[cron4s] lazy val ast: TimePartAST = Generic[TimePartExpr].to(this)
 
-  override def toString = s"$seconds $minutes $hours"
+  override def toString = ast.map(cron4s.generic.show).toList.mkString(" ")
 
 }

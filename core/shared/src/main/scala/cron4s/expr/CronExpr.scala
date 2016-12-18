@@ -10,24 +10,25 @@ import shapeless._
   * @author Antonio Alonso Dominguez
   */
 final case class CronExpr(
-    seconds: SecondExpr,
-    minutes: MinutesExpr,
-    hours: HoursExpr,
-    daysOfMonth: DaysOfMonthExpr,
-    months: MonthsExpr,
-    daysOfWeek: DaysOfWeekExpr
+    seconds: FieldExprAST[CronField.Second],
+    minutes: FieldExprAST[CronField.Minute],
+    hours: FieldExprAST[CronField.Hour],
+    daysOfMonth: FieldExprAST[CronField.DayOfMonth],
+    months: FieldExprAST[CronField.Month],
+    daysOfWeek: FieldExprAST[CronField.DayOfWeek]
   ) {
 
-  private[cron4s] lazy val repr: CronExprRepr = Generic[CronExpr].to(this)
+  private[cron4s] lazy val ast: CronExprAST = Generic[CronExpr].to(this)
 
   /**
     * Time part of the CRON expression
     */
-  lazy val timePart: TimePartExpr = new TimePartExpr(repr.take(3))
+  lazy val timePart: TimePartExpr = TimePartExpr(seconds, minutes, hours)
+
   /**
     * Date part of the CRON expression
     */
-  lazy val datePart: DatePartExpr = new DatePartExpr(repr.drop(3))
+  lazy val datePart: DatePartExpr = DatePartExpr(daysOfMonth, months, daysOfWeek)
 
   /**
     * Generic field accessor. Given a CronField, this method can be used
@@ -37,15 +38,17 @@ final case class CronExpr(
     * @tparam F CronField type
     * @return field-based expression for given field
     */
-  def field[F <: CronField](implicit unit: CronUnit[F]): Expr[F] = unit.field match {
-    case CronField.Second     => seconds.asInstanceOf[Expr[F]]
-    case CronField.Minute     => minutes.asInstanceOf[Expr[F]]
-    case CronField.Hour       => hours.asInstanceOf[Expr[F]]
-    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[Expr[F]]
-    case CronField.Month      => months.asInstanceOf[Expr[F]]
-    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[Expr[F]]
+  def field[F <: CronField](implicit unit: CronUnit[F]): FieldExprAST[F] = unit.field match {
+    case CronField.Second     => seconds.asInstanceOf[FieldExprAST[F]]
+    case CronField.Minute     => minutes.asInstanceOf[FieldExprAST[F]]
+    case CronField.Hour       => hours.asInstanceOf[FieldExprAST[F]]
+    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[FieldExprAST[F]]
+    case CronField.Month      => months.asInstanceOf[FieldExprAST[F]]
+    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[FieldExprAST[F]]
   }
 
-  override def toString = s"$seconds $minutes $hours $daysOfMonth $months $daysOfWeek"
+  def ranges: List[Vector[Int]] = ast.map(cron4s.generic.range).toList
+
+  override def toString = ast.map(cron4s.generic.show).toList.mkString(" ")
 
 }
