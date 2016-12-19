@@ -105,11 +105,11 @@ package object parser {
       each[F].map(v => Coproduct[FieldExprAST[F]](v))
   }
 
-  val cron: Parser[CronExpr] = P(
+  val cron: Parser[CronExprAST] = P(
     Start ~ of(seconds) ~ " " ~/ of(minutes) ~ " " ~/ of(hours) ~ " " ~/
       of(daysOfMonth) ~ " " ~/ of(months) ~ " " ~/ of(daysOfWeek) ~ End
   ).map { case (sec, min, hour, day, month, weekDay) =>
-    CronExpr(sec, min, hour, day, month, weekDay)
+    sec :: min :: hour :: day :: month :: weekDay :: HNil
   }
 
 }

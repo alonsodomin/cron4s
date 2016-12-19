@@ -11,6 +11,13 @@ import Scalaz._
   */
 package object validation {
 
+  def validateCron(ast: CronExprAST): Either[ValidationError, CronExpr] = {
+    val errors = ast.map(generic.validate).toList.flatMap(identity)
+    if (errors.size > 0) {
+      Left(ValidationError(NonEmptyList(errors.head, errors.tail: _*)))
+    } else Right(null)
+  }
+
   type ValidatedExpr[E[_ <: CronField], F <: CronField] = ValidationNel[InvalidFieldExpr[F], E[F]]
 
   /*def validateSeveral[F <: CronField]
