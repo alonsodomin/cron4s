@@ -18,8 +18,6 @@ private[syntax] class IsFieldExprOps[E[_ <: CronField], F <: CronField](self: E[
 
   def unit: CronUnit[F] = tc.unit(self)
 
-  def show: String = tc.show(self)
-
 }
 
 private[syntax] trait IsFieldExprSyntax extends HasCronFieldSyntax {

@@ -6,8 +6,6 @@ import cron4s.syntax._
 
 import shapeless._
 
-import scala.language.{higherKinds, implicitConversions}
-
 import scalaz.NonEmptyList
 import scalaz.std.anyVal._
 import scalaz.std.vector._
@@ -44,14 +42,6 @@ final case class ConstExpr[F <: CronField]
     (implicit val unit: CronUnit[F])
   extends Expr[F] {
 
-  //require(value >= unit.min && value <= unit.max, s"Value $value is out of bounds for field: ${unit.field}")
-
-  /*override def compare(that: EnumerableExpr[F]): Int = {
-    if (value > ops.min(that)) 1
-    else if (value < ops.max(that)) -1
-    else 0
-  }*/
-
   override def toString = textValue.getOrElse(value.toString)
 
 }
@@ -60,14 +50,6 @@ final case class BetweenExpr[F <: CronField]
     (begin: ConstExpr[F], end: ConstExpr[F])
     (implicit val unit: CronUnit[F])
   extends Expr[F] {
-
-  //require(begin.value < end.value, s"$begin should be less than $end")
-
-  /*override def compare(that: EnumerableExpr[F]): Int = {
-    if (ops.min(this) > ops.max(that)) 1
-    else if (ops.max(this) < ops.min(that)) -1
-    else 0
-  }*/
 
   override def toString = s"$begin-$end"
 
@@ -103,7 +85,7 @@ private[expr] trait ExprInstances extends LowPriorityExprInstances {
         x >= min(e) && x <= max(e)
       }
 
-      def show(expr: EachExpr[F]): String = expr.toString
+      override def shows(expr: EachExpr[F]): String = expr.toString
 
       def range(expr: EachExpr[F]): Vector[Int] = expr.unit.range
     }
@@ -113,7 +95,7 @@ private[expr] trait ExprInstances extends LowPriorityExprInstances {
       def unit(expr: ConstExpr[F]): CronUnit[F] = expr.unit
       def matches(e: ConstExpr[F]): Predicate[Int] = equalTo(e.value)
       def range(expr: ConstExpr[F]): Vector[Int] = Vector(expr.value)
-      def show(expr: ConstExpr[F]): String = expr.toString
+      override def shows(expr: ConstExpr[F]): String = expr.toString
     }
 
   implicit def betweenExprInstance[F <: CronField]: IsFieldExpr[BetweenExpr, F] =
@@ -122,13 +104,18 @@ private[expr] trait ExprInstances extends LowPriorityExprInstances {
       def unit(expr: BetweenExpr[F]): CronUnit[F] = expr.unit
 
       def matches(e: BetweenExpr[F]): Predicate[Int] = Predicate { x =>
-        x >= e.begin.value && x <= e.end.value
+        if (e.begin.value < e.end.value)
+          x >= e.begin.value && x <= e.end.value
+        else false
       }
 
-      def range(expr: BetweenExpr[F]): Vector[Int] =
-        (expr.begin.value to expr.end.value).toVector
+      def range(expr: BetweenExpr[F]): Vector[Int] = {
+        if (expr.begin.value < expr.end.value)
+          (expr.begin.value to expr.end.value).toVector
+        else Vector.empty
+      }
 
-      def show(expr: BetweenExpr[F]): String = expr.toString
+      override def shows(expr: BetweenExpr[F]): String = expr.toString
     }
 
   implicit def severalExprInstance[F <: CronField]
@@ -142,7 +129,7 @@ private[expr] trait ExprInstances extends LowPriorityExprInstances {
         def range(expr: SeveralExpr[F]): Vector[Int] =
           expr.values.list.toVector.flatMap(elem.value.range).distinct.sorted
 
-        def show(expr: SeveralExpr[F]): String = expr.toString
+        override def shows(expr: SeveralExpr[F]): String = expr.toString
       }
 
   implicit def everyExprInstance[F <: CronField]
@@ -164,7 +151,7 @@ private[expr] trait ExprInstances extends LowPriorityExprInstances {
         elements.toVector
       }
 
-      def show(expr: EveryExpr[F]): String = expr.toString
+      override def shows(expr: EveryExpr[F]): String = expr.toString
 
     }
 
@@ -182,7 +169,7 @@ private[expr] trait LowPriorityExprInstances {
     def unit(expr: EnumExprAST[F]): CronUnit[F] =
       expr.fold(cron4s.generic.unit)
 
-    def show(expr: EnumExprAST[F]): String =
+    override def shows(expr: EnumExprAST[F]): String =
       expr.fold(cron4s.generic.show)
   }
 
@@ -196,7 +183,7 @@ private[expr] trait LowPriorityExprInstances {
     def unit(expr: DivExprAST[F]): CronUnit[F] =
       expr.fold(cron4s.generic.unit)
 
-    def show(expr: DivExprAST[F]): String =
+    override def shows(expr: DivExprAST[F]): String =
       expr.fold(cron4s.generic.show)
   }
 
@@ -210,7 +197,7 @@ private[expr] trait LowPriorityExprInstances {
     def unit(expr: FieldExprAST[F]): CronUnit[F] =
       expr.fold(cron4s.generic.unit)
 
-    def show(expr: FieldExprAST[F]): String =
+    override def shows(expr: FieldExprAST[F]): String =
       expr.fold(cron4s.generic.show)
   }
 

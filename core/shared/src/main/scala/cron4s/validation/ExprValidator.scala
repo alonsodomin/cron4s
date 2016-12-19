@@ -47,13 +47,14 @@ trait ExprValidatorInstances extends LowPriorityExprValidatorInstances {
       hasCronField: HasCronField[CronUnit, F]
     ): ExprValidator[BetweenExpr, F] = new ExprValidator[BetweenExpr, F] {
       def validate(expr: BetweenExpr[F]): List[FieldError] = {
+        val subValidator = ExprValidator[ConstExpr, F]
         val rangeValid = {
-          if (expr.begin.value <= expr.end.value)
+          if (expr.begin.value >= expr.end.value)
             List(FieldError(expr.unit.field, s"${expr.begin.value} should be less than ${expr.end.value}"))
           else List.empty
         }
 
-        constValidator[F].validate(expr.begin) ++ constValidator[F].validate(expr.end) ++ rangeValid
+        subValidator.validate(expr.begin) ++ subValidator.validate(expr.end) ++ rangeValid
       }
   }
 
@@ -62,7 +63,7 @@ trait ExprValidatorInstances extends LowPriorityExprValidatorInstances {
   ): ExprValidator[SeveralExpr, F] = new ExprValidator[SeveralExpr, F] {
     def validate(expr: SeveralExpr[F]): List[FieldError] = {
       def implicationErrorMsg(that: EnumExprAST[F], impliedBy: EnumExprAST[F]): String =
-        s"Expression '${that.show}' at field ${that.unit.field} is implied by '${impliedBy.show}'"
+        s"Expression '${that.shows}' at field ${that.unit.field} is implied by '${impliedBy.shows}'"
 
       def verifyImplication(seen: List[EnumExprAST[F]], curr: EnumExprAST[F]): Option[FieldError] = {
         val alreadyImplied = seen.find(e => curr.impliedBy(e))
@@ -73,9 +74,11 @@ trait ExprValidatorInstances extends LowPriorityExprValidatorInstances {
         alreadyImplied.orElse(impliesOther)
       }
 
+      val subExprValidator = ExprValidator[EnumExprAST, F]
       val zero = (List.empty[EnumExprAST[F]], List.empty[FieldError])
       val (_, errorResult) = expr.values.foldRight(zero) { case (expr, (seen, errors)) =>
-        val newErrors = verifyImplication(seen, expr).toList ::: errors
+        val subErrors = subExprValidator.validate(expr)
+        val newErrors = verifyImplication(seen, expr).toList ::: subErrors ::: errors
         val newSeen = expr :: seen
         newSeen -> newErrors
       }
@@ -84,9 +87,11 @@ trait ExprValidatorInstances extends LowPriorityExprValidatorInstances {
     }
   }
 
-  implicit def everyValidator[F <: CronField]: ExprValidator[EveryExpr, F] = new ExprValidator[EveryExpr, F] {
-    override def validate(expr: EveryExpr[F]): List[FieldError] = List.empty
-  }
+  implicit def everyValidator[F <: CronField](implicit
+      hasCronField: HasCronField[CronUnit, F]
+    ): ExprValidator[EveryExpr, F] = new ExprValidator[EveryExpr, F] {
+      def validate(expr: EveryExpr[F]): List[FieldError] = ExprValidator[DivExprAST, F].validate(expr.value)
+    }
 
 }
 
