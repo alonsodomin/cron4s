@@ -4,8 +4,6 @@ import cron4s.expr._
 
 import fastparse.all._
 
-import scalaz._
-
 /**
   * Entry point for the CRON parsing operation
   *

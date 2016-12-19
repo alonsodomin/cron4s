@@ -103,6 +103,8 @@ private[expr] trait ExprInstances extends LowPriorityExprInstances {
         x >= min(e) && x <= max(e)
       }
 
+      def show(expr: EachExpr[F]): String = expr.toString
+
       def range(expr: EachExpr[F]): Vector[Int] = expr.unit.range
     }
 
@@ -111,6 +113,7 @@ private[expr] trait ExprInstances extends LowPriorityExprInstances {
       def unit(expr: ConstExpr[F]): CronUnit[F] = expr.unit
       def matches(e: ConstExpr[F]): Predicate[Int] = equalTo(e.value)
       def range(expr: ConstExpr[F]): Vector[Int] = Vector(expr.value)
+      def show(expr: ConstExpr[F]): String = expr.toString
     }
 
   implicit def betweenExprInstance[F <: CronField]: IsFieldExpr[BetweenExpr, F] =
@@ -124,6 +127,8 @@ private[expr] trait ExprInstances extends LowPriorityExprInstances {
 
       def range(expr: BetweenExpr[F]): Vector[Int] =
         (expr.begin.value to expr.end.value).toVector
+
+      def show(expr: BetweenExpr[F]): String = expr.toString
     }
 
   implicit def severalExprInstance[F <: CronField]
@@ -136,6 +141,8 @@ private[expr] trait ExprInstances extends LowPriorityExprInstances {
 
         def range(expr: SeveralExpr[F]): Vector[Int] =
           expr.values.list.toVector.flatMap(elem.value.range).distinct.sorted
+
+        def show(expr: SeveralExpr[F]): String = expr.toString
       }
 
   implicit def everyExprInstance[F <: CronField]
@@ -157,6 +164,8 @@ private[expr] trait ExprInstances extends LowPriorityExprInstances {
         elements.toVector
       }
 
+      def show(expr: EveryExpr[F]): String = expr.toString
+
     }
 
 }
@@ -172,6 +181,9 @@ private[expr] trait LowPriorityExprInstances {
 
     def unit(expr: EnumExprAST[F]): CronUnit[F] =
       expr.fold(cron4s.generic.unit)
+
+    def show(expr: EnumExprAST[F]): String =
+      expr.fold(cron4s.generic.show)
   }
 
   implicit def divExpr[F <: CronField]: IsFieldExpr[DivExprAST, F] = new IsFieldExpr[DivExprAST, F] {
@@ -183,6 +195,9 @@ private[expr] trait LowPriorityExprInstances {
 
     def unit(expr: DivExprAST[F]): CronUnit[F] =
       expr.fold(cron4s.generic.unit)
+
+    def show(expr: DivExprAST[F]): String =
+      expr.fold(cron4s.generic.show)
   }
 
   implicit def fieldExpr[F <: CronField]: IsFieldExpr[FieldExprAST, F] = new IsFieldExpr[FieldExprAST, F] {
@@ -194,6 +209,9 @@ private[expr] trait LowPriorityExprInstances {
 
     def unit(expr: FieldExprAST[F]): CronUnit[F] =
       expr.fold(cron4s.generic.unit)
+
+    def show(expr: FieldExprAST[F]): String =
+      expr.fold(cron4s.generic.show)
   }
 
 }

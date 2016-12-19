@@ -9,16 +9,25 @@ import shapeless._
   *
   * @author Antonio Alonso Dominguez
   */
-final case class CronExpr(
-    seconds: FieldExprAST[CronField.Second],
-    minutes: FieldExprAST[CronField.Minute],
-    hours: FieldExprAST[CronField.Hour],
-    daysOfMonth: FieldExprAST[CronField.DayOfMonth],
-    months: FieldExprAST[CronField.Month],
-    daysOfWeek: FieldExprAST[CronField.DayOfWeek]
-  ) {
+object CronExpr {
+  def apply(
+    seconds: SecondsAST,
+    minutes: MinutesAST,
+    hours: HoursAST,
+    daysOfMonth: DaysOfMonthAST,
+    months: MonthsAST,
+    daysOfWeek: DaysOfWeekAST
+  ): CronExpr = CronExpr(seconds :: minutes :: hours :: daysOfMonth :: months :: daysOfWeek :: HNil)
+}
 
-  private[cron4s] lazy val ast: CronExprAST = Generic[CronExpr].to(this)
+final case class CronExpr(ast: CronExprAST) {
+
+  def seconds: SecondsAST = ast.select[SecondsAST]
+  def minutes: MinutesAST = ast.select[MinutesAST]
+  def hours: HoursAST = ast.select[HoursAST]
+  def daysOfMonth: DaysOfMonthAST = ast.select[DaysOfMonthAST]
+  def months: MonthsAST = ast.select[MonthsAST]
+  def daysOfWeek: DaysOfWeekAST = ast.select[DaysOfWeekAST]
 
   /**
     * Time part of the CRON expression

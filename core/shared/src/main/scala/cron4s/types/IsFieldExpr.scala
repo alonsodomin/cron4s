@@ -15,6 +15,8 @@ trait IsFieldExpr[E[_ <: CronField], F <: CronField] extends HasCronField[E, F] 
   def impliedBy[EE[_ <: CronField]](e: E[F])(expr: EE[F])(implicit ops: IsFieldExpr[EE, F]): Boolean =
     range(e).forall(ops.matches(expr))
 
+  def show(e: E[F]): String
+
   def unit(e: E[F]): CronUnit[F]
 
 }
