@@ -2,6 +2,7 @@ package cron4s.testkit.gen
 
 import cron4s.CronField._
 import cron4s.CronUnit
+
 import org.scalacheck._
 
 /**

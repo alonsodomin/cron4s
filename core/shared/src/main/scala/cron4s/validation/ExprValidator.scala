@@ -19,16 +19,22 @@ trait ExprValidator[E[_ <: CronField], F <: CronField] {
 }
 
 object ExprValidator extends ExprValidatorInstances {
-  def apply[E[_ <: CronField], F <: CronField](implicit ev: ExprValidator[E, F]): ExprValidator[E, F] = ev
+
+  @inline def apply[E[_ <: CronField], F <: CronField](
+    implicit ev: ExprValidator[E, F]
+  ): ExprValidator[E, F] = ev
+
 }
 
-trait ExprValidatorInstances extends LowPriorityExprValidatorInstances {
+private[validation] trait ExprValidatorInstances extends LowPriorityExprValidatorInstances {
 
-  implicit def eachValidator[F <: CronField]: ExprValidator[EachExpr, F] = new ExprValidator[EachExpr, F] {
-    def validate(expr: EachExpr[F]): List[FieldError] = List.empty
-  }
+  implicit def eachValidator[F <: CronField]: ExprValidator[EachExpr, F] =
+    new ExprValidator[EachExpr, F] {
+      def validate(expr: EachExpr[F]): List[FieldError] = List.empty
+    }
 
-  implicit def constValidator[F <: CronField](implicit
+  implicit def constValidator[F <: CronField](
+      implicit
       ev: HasCronField[CronUnit, F]
     ): ExprValidator[ConstExpr, F] = new ExprValidator[ConstExpr, F] {
 
@@ -43,7 +49,8 @@ trait ExprValidatorInstances extends LowPriorityExprValidatorInstances {
 
     }
 
-  implicit def betweenValidator[F <: CronField](implicit
+  implicit def betweenValidator[F <: CronField](
+      implicit
       hasCronField: HasCronField[CronUnit, F]
     ): ExprValidator[BetweenExpr, F] = new ExprValidator[BetweenExpr, F] {
       def validate(expr: BetweenExpr[F]): List[FieldError] = {
@@ -58,7 +65,8 @@ trait ExprValidatorInstances extends LowPriorityExprValidatorInstances {
       }
   }
 
-  implicit def severalValidator[F <: CronField](implicit
+  implicit def severalValidator[F <: CronField](
+    implicit
     hasCronField: HasCronField[CronUnit, F]
   ): ExprValidator[SeveralExpr, F] = new ExprValidator[SeveralExpr, F] {
     def validate(expr: SeveralExpr[F]): List[FieldError] = {
@@ -87,15 +95,17 @@ trait ExprValidatorInstances extends LowPriorityExprValidatorInstances {
     }
   }
 
-  implicit def everyValidator[F <: CronField](implicit
+  implicit def everyValidator[F <: CronField](
+      implicit
       hasCronField: HasCronField[CronUnit, F]
     ): ExprValidator[EveryExpr, F] = new ExprValidator[EveryExpr, F] {
-      def validate(expr: EveryExpr[F]): List[FieldError] = ExprValidator[DivExprAST, F].validate(expr.value)
+      def validate(expr: EveryExpr[F]): List[FieldError] =
+        ExprValidator[DivExprAST, F].validate(expr.value)
     }
 
 }
 
-trait LowPriorityExprValidatorInstances {
+private[validation] trait LowPriorityExprValidatorInstances {
 
   implicit def enumValidator[F <: CronField](
       implicit

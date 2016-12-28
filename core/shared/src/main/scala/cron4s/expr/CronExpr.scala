@@ -10,6 +10,7 @@ import shapeless._
   * @author Antonio Alonso Dominguez
   */
 object CronExpr {
+
   def apply(
     seconds: SecondsAST,
     minutes: MinutesAST,
@@ -17,7 +18,10 @@ object CronExpr {
     daysOfMonth: DaysOfMonthAST,
     months: MonthsAST,
     daysOfWeek: DaysOfWeekAST
-  ): CronExpr = CronExpr(seconds :: minutes :: hours :: daysOfMonth :: months :: daysOfWeek :: HNil)
+  ): CronExpr = CronExpr(
+    seconds :: minutes :: hours :: daysOfMonth :: months :: daysOfWeek :: HNil
+  )
+  
 }
 
 final case class CronExpr(ast: CronExprAST) {

@@ -8,6 +8,7 @@ import cron4s.types.IsFieldExpr
 
 import org.scalacheck.Prop._
 import org.scalacheck._
+
 import org.typelevel.discipline.Laws
 
 import scalaz.Equal

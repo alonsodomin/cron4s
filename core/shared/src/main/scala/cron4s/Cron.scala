@@ -11,9 +11,8 @@ import fastparse.all._
   */
 object Cron {
 
-  def apply(e: String): Either[InvalidCron, CronExpr] = {
+  def apply(e: String): Either[InvalidCron, CronExpr] =
     parse(e).right.flatMap(validation.validateCron)
-  }
 
   private[this] def parse(e: String): Either[ParseFailed, CronExprAST] = {
     parser.cron.parse(e) match {

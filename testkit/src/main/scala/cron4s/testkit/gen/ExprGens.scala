@@ -16,6 +16,7 @@ import scalaz.NonEmptyList
   * Created by alonsodomin on 28/08/2016.
   */
 trait ExprGens extends ArbitraryCronUnits {
+  import Arbitrary._
 
   private[this] def filterImpliedElems[F <: CronField](xs: Vector[EnumExprAST[F]]): Vector[EnumExprAST[F]] = {
     val result = ListBuffer.empty[EnumExprAST[F]]
@@ -41,20 +42,31 @@ trait ExprGens extends ArbitraryCronUnits {
   def constExpr[F <: CronField](unit: CronUnit[F], value: Int) =
     ConstExpr[F](value)(unit)
 
-  def constExprGen[F <: CronField](unit: CronUnit[F])(implicit
+  def constExprGen[F <: CronField](unit: CronUnit[F])(
+      implicit
       ev: HasCronField[CronUnit, F]
   ): Gen[ConstExpr[F]] = for {
     value <- Gen.choose(unit.min, unit.max)
   } yield constExpr(unit, value)
 
-  def betweenExprGen[F <: CronField](unit: CronUnit[F])(implicit
+  def invalidConstExprGen[F <: CronField](unit: CronUnit[F])(
+      implicit
+      ev: HasCronField[CronUnit, F]
+  ): Gen[ConstExpr[F]] = for {
+    value <- arbitrary[Int]
+    if (value < unit.min) || (value > unit.max)
+  } yield constExpr(unit, value)
+
+  def betweenExprGen[F <: CronField](unit: CronUnit[F])(
+      implicit
       ev: HasCronField[CronUnit, F]
   ): Gen[BetweenExpr[F]] = for {
     min  <- Gen.choose(unit.min, unit.max - 1)
     max  <- Gen.choose(min + 1, unit.max)
   } yield BetweenExpr(constExpr(unit, min), constExpr(unit, max))(unit)
 
-  def enumerableExprGen[F <: CronField](unit: CronUnit[F])(implicit
+  def enumerableExprGen[F <: CronField](unit: CronUnit[F])(
+      implicit
       ev: HasCronField[CronUnit, F]
   ): Gen[EnumExprAST[F]] = Gen.oneOf(
     constExprGen[F](unit).map(e => Coproduct[EnumExprAST[F]](e)),
@@ -64,14 +76,16 @@ trait ExprGens extends ArbitraryCronUnits {
   def severalExpr[F <: CronField](unit: CronUnit[F], values: Vector[EnumExprAST[F]]): SeveralExpr[F] =
     SeveralExpr[F](NonEmptyList(values.head, values.tail: _*))(unit)
 
-  def severalExprGen[F <: CronField](unit: CronUnit[F])(implicit
+  def severalExprGen[F <: CronField](unit: CronUnit[F])(
+      implicit
       ev: HasCronField[CronUnit, F]
   ): Gen[SeveralExpr[F]] = for {
     size  <- Gen.posNum[Int] if size > 1
     elems <- Gen.containerOfN[Vector, EnumExprAST[F]](size, enumerableExprGen(unit))
   } yield severalExpr(unit, filterImpliedElems(elems))
 
-  def divisibleExprGen[F <: CronField](unit: CronUnit[F])(implicit
+  def divisibleExprGen[F <: CronField](unit: CronUnit[F])(
+      implicit
       ev: HasCronField[CronUnit, F]
   ): Gen[DivExprAST[F]] =
     Gen.oneOf(
@@ -79,7 +93,8 @@ trait ExprGens extends ArbitraryCronUnits {
       severalExprGen[F](unit).map(e => Coproduct[DivExprAST[F]](e))
     )
 
-  def everyExprGen[F <: CronField](unit: CronUnit[F])(implicit
+  def everyExprGen[F <: CronField](unit: CronUnit[F])(
+      implicit
       ev: HasCronField[CronUnit, F]
   ): Gen[EveryExpr[F]] = for {
     base <- divisibleExprGen(unit)

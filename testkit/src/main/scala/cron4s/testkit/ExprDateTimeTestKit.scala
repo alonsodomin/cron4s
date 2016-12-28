@@ -34,7 +34,7 @@ abstract class ExprDateTimeTestKit[DateTime <: AnyRef : DateTimeAdapter : Equal]
     daysOfWeek  <- Gen.choose(DaysOfWeek.min, DaysOfWeek.max)
   } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, daysOfWeek))
 
-  object any extends ExprCheck with ArbitraryEachExpr {
+  object each extends ExprCheck with ArbitraryEachExpr {
     def check() = {
       checkAll("ExprDateTime[EachExpr, Second]", ExprDateTimeTests[EachExpr, Second, DateTime].extendedExpr)
       checkAll("ExprDateTime[EachExpr, Minute]", ExprDateTimeTests[EachExpr, Minute, DateTime].extendedExpr)
@@ -89,6 +89,6 @@ abstract class ExprDateTimeTestKit[DateTime <: AnyRef : DateTimeAdapter : Equal]
     }
   }
 
-  for (exprType <- Seq(any, const, between, several, every)) exprType.check()
+  for (exprType <- Seq(each, const, between, several, every)) exprType.check()
 
 }
