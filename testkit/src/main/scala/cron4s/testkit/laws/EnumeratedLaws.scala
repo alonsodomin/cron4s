@@ -1,16 +1,16 @@
 package cron4s.testkit.laws
 
 import cron4s.CronField
-import cron4s.types.HasCronField
-import cron4s.syntax.field._
+import cron4s.types.Enumerated
+import cron4s.syntax.enumerated._
 
 import scalaz.Scalaz._
 
 /**
   * Created by alonsodomin on 27/08/2016.
   */
-trait HasCronFieldLaws[A[_ <: CronField], F <: CronField] {
-  implicit def TC: HasCronField[A, F]
+trait EnumeratedLaws[A[_ <: CronField], F <: CronField] {
+  implicit def TC: Enumerated[A, F]
 
   def min(a: A[F]): Boolean =
     a.min === a.range.min
@@ -46,7 +46,7 @@ trait HasCronFieldLaws[A[_ <: CronField], F <: CronField] {
 
 }
 
-object HasCronFieldLaws {
-  def apply[A[_ <: CronField], F <: CronField](implicit ev: HasCronField[A, F]) =
-    new HasCronFieldLaws[A, F] { val TC = ev }
+object EnumeratedLaws {
+  def apply[A[_ <: CronField], F <: CronField](implicit ev: Enumerated[A, F]) =
+    new EnumeratedLaws[A, F] { val TC = ev }
 }

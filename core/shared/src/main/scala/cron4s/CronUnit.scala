@@ -1,6 +1,6 @@
 package cron4s
 
-import cron4s.types.HasCronField
+import cron4s.types.Enumerated
 
 import scala.annotation.implicitNotFound
 import scala.language.higherKinds
@@ -67,16 +67,16 @@ private[cron4s] trait CronUnits {
 
 private[cron4s] trait CronUnitInstances extends CronUnits {
 
-  private[this] def hasCronField[F <: CronField](unit: CronUnit[F]): HasCronField[CronUnit, F] =
-    new HasCronField[CronUnit, F] {
+  private[this] def enumerated[F <: CronField](unit: CronUnit[F]): Enumerated[CronUnit, F] =
+    new Enumerated[CronUnit, F] {
       override def range(fL: CronUnit[F]): Vector[Int] = unit.range
     }
 
-  implicit val secondsInstance     = hasCronField(Seconds)
-  implicit val minutesInstance     = hasCronField(Minutes)
-  implicit val hoursInstance       = hasCronField(Hours)
-  implicit val daysOfMonthInstance = hasCronField(DaysOfMonth)
-  implicit val monthsInstance      = hasCronField(Months)
-  implicit val daysOfWeekInstance  = hasCronField(DaysOfWeek)
+  implicit val secondsInstance     = enumerated(Seconds)
+  implicit val minutesInstance     = enumerated(Minutes)
+  implicit val hoursInstance       = enumerated(Hours)
+  implicit val daysOfMonthInstance = enumerated(DaysOfMonth)
+  implicit val monthsInstance      = enumerated(Months)
+  implicit val daysOfWeekInstance  = enumerated(DaysOfWeek)
 
 }

@@ -1,7 +1,6 @@
 package cron4s.expr
 
-import cron4s.{CronField, CronUnit}
-
+import cron4s.{CronField, CronUnit, generic}
 import shapeless._
 
 /**
@@ -12,12 +11,12 @@ import shapeless._
 object CronExpr {
 
   def apply(
-    seconds: SecondsAST,
-    minutes: MinutesAST,
-    hours: HoursAST,
-    daysOfMonth: DaysOfMonthAST,
-    months: MonthsAST,
-    daysOfWeek: DaysOfWeekAST
+    seconds: SecondsNode,
+    minutes: MinutesNode,
+    hours: HoursNode,
+    daysOfMonth: DaysOfMonthNode,
+    months: MonthsNode,
+    daysOfWeek: DaysOfWeekNode
   ): CronExpr = CronExpr(
     seconds :: minutes :: hours :: daysOfMonth :: months :: daysOfWeek :: HNil
   )
@@ -26,12 +25,12 @@ object CronExpr {
 
 final case class CronExpr(ast: CronExprAST) {
 
-  def seconds: SecondsAST = ast.select[SecondsAST]
-  def minutes: MinutesAST = ast.select[MinutesAST]
-  def hours: HoursAST = ast.select[HoursAST]
-  def daysOfMonth: DaysOfMonthAST = ast.select[DaysOfMonthAST]
-  def months: MonthsAST = ast.select[MonthsAST]
-  def daysOfWeek: DaysOfWeekAST = ast.select[DaysOfWeekAST]
+  def seconds: SecondsNode = ast.select[SecondsNode]
+  def minutes: MinutesNode = ast.select[MinutesNode]
+  def hours: HoursNode = ast.select[HoursNode]
+  def daysOfMonth: DaysOfMonthNode = ast.select[DaysOfMonthNode]
+  def months: MonthsNode = ast.select[MonthsNode]
+  def daysOfWeek: DaysOfWeekNode = ast.select[DaysOfWeekNode]
 
   /**
     * Time part of the CRON expression
@@ -51,17 +50,17 @@ final case class CronExpr(ast: CronExprAST) {
     * @tparam F CronField type
     * @return field-based expression for given field
     */
-  def field[F <: CronField](implicit unit: CronUnit[F]): FieldExprAST[F] = unit.field match {
-    case CronField.Second     => seconds.asInstanceOf[FieldExprAST[F]]
-    case CronField.Minute     => minutes.asInstanceOf[FieldExprAST[F]]
-    case CronField.Hour       => hours.asInstanceOf[FieldExprAST[F]]
-    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[FieldExprAST[F]]
-    case CronField.Month      => months.asInstanceOf[FieldExprAST[F]]
-    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[FieldExprAST[F]]
+  def field[F <: CronField](implicit unit: CronUnit[F]): FieldNode[F] = unit.field match {
+    case CronField.Second     => seconds.asInstanceOf[FieldNode[F]]
+    case CronField.Minute     => minutes.asInstanceOf[FieldNode[F]]
+    case CronField.Hour       => hours.asInstanceOf[FieldNode[F]]
+    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[FieldNode[F]]
+    case CronField.Month      => months.asInstanceOf[FieldNode[F]]
+    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[FieldNode[F]]
   }
 
-  def ranges: List[Vector[Int]] = ast.map(cron4s.generic.range).toList
+  def ranges: List[Vector[Int]] = ast.map(generic.ops.range).toList
 
-  override def toString = ast.map(cron4s.generic.show).toList.mkString(" ")
+  override def toString = ast.map(generic.ops.show).toList.mkString(" ")
 
 }

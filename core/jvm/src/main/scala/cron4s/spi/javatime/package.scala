@@ -5,7 +5,7 @@ import java.time.{LocalDateTime, ZonedDateTime}
 
 import cron4s.CronField
 import cron4s.expr._
-import cron4s.types.IsFieldExpr
+import cron4s.types.Expr
 
 import scalaz.Equal
 
@@ -49,8 +49,8 @@ package object javatime {
   }
 
   implicit class Java8CronExpr[DT <: Temporal](expr: CronExpr) extends CronDateTimeOps[DT](expr)
-  implicit class Java8Expr[E[_ <: CronField], F <: CronField, DT <: Temporal]
-      (expr: E[F])
-      (implicit ev: IsFieldExpr[E, F])
-    extends ExprDateTimeOps[E, F, DT](expr, DateTimeAdapter[DT], ev)
+  implicit class Java8Node[E[_ <: CronField], F <: CronField, DT <: Temporal]
+      (node: E[F])
+      (implicit ev: Expr[E, F])
+    extends NodeDateTimeOps[E, F, DT](node, DateTimeAdapter[DT], ev)
 }

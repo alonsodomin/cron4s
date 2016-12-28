@@ -9,7 +9,7 @@ import org.scalatest.prop._
 
 import org.scalacheck._
 
-object ExprValidatorSpec {
+object NodeValidatorSpec {
 
   // trait ExprTables[F <: CronField] extends Tables {
   //
@@ -26,20 +26,20 @@ object ExprValidatorSpec {
 
 }
 
-class ExprValidatorSpec extends PropSpec with GeneratorDrivenPropertyChecks with ArbitraryEachExpr with ArbitraryConstExpr with Matchers {
+class NodeValidatorSpec extends PropSpec with GeneratorDrivenPropertyChecks with ArbitraryEachNode with ArbitraryConstNode with Matchers {
   import CronField._
 
 
 
   property("each expressions should always pass validation") {
-    forAll { (expr: EachExpr[Second]) =>
-      ExprValidator[EachExpr, Second].validate(expr) shouldBe List.empty[FieldError]
+    forAll { (expr: EachNode[Second]) =>
+      NodeValidator[EachNode, Second].validate(expr) shouldBe List.empty[FieldError]
     }
   }
 
   property("const expressions should pass validation when value is within range") {
-    forAll { (expr: ConstExpr[Second]) =>
-      ExprValidator[ConstExpr, Second].validate(expr) shouldBe List.empty[FieldError]
+    forAll { (expr: ConstNode[Second]) =>
+      NodeValidator[ConstNode, Second].validate(expr) shouldBe List.empty[FieldError]
     }
   }
 

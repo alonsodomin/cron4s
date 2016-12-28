@@ -8,18 +8,20 @@ import shapeless._
 
 import scala.annotation.tailrec
 
-private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(implicit adapter: DateTimeAdapter[DateTime]) {
+private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(
+  implicit adapter: DateTimeAdapter[DateTime]
+) {
   import CronField._
 
   type Step = Option[(DateTime, Int)]
 
   private[this] def stepField[F <: CronField]
-      (expr: FieldExprAST[F], step: Int): Option[(Int, Int)] =
+      (expr: FieldNode[F], step: Int): Option[(Int, Int)] =
     adapter.get(from, expr.unit.field)
       .flatMap(v => expr.step(v, step))
 
   private[this] def stepAndAdjust[F <: CronField]
-      (dateTimeAndStep: Step, expr: FieldExprAST[F]): Step = {
+      (dateTimeAndStep: Step, expr: FieldNode[F]): Step = {
     for {
       (dateTime, step)  <- dateTimeAndStep
       (value, nextStep) <- stepField(expr, step)
@@ -28,7 +30,7 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
   }
 
   private[this] def stepDayOfWeek
-      (dt: DateTime, expr: FieldExprAST[DayOfWeek], stepSize: Int): Step = {
+      (dt: DateTime, expr: FieldNode[DayOfWeek], stepSize: Int): Step = {
     for {
       dayOfWeek         <- adapter.get(dt, DayOfWeek)
       (value, nextStep) <- expr.step(dayOfWeek, stepSize)
@@ -38,11 +40,11 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(imp
   }
 
   object stepping extends Poly2 {
-    implicit def caseSeconds     = at[Step, SecondsAST](stepAndAdjust)
-    implicit def caseMinutes     = at[Step, MinutesAST](stepAndAdjust)
-    implicit def caseHours       = at[Step, HoursAST](stepAndAdjust)
-    implicit def caseDaysOfMonth = at[Step, DaysOfMonthAST](stepAndAdjust)
-    implicit def caseMonths      = at[Step, MonthsAST](stepAndAdjust)
+    implicit def caseSeconds     = at[Step, SecondsNode](stepAndAdjust)
+    implicit def caseMinutes     = at[Step, MinutesNode](stepAndAdjust)
+    implicit def caseHours       = at[Step, HoursNode](stepAndAdjust)
+    implicit def caseDaysOfMonth = at[Step, DaysOfMonthNode](stepAndAdjust)
+    implicit def caseMonths      = at[Step, MonthsNode](stepAndAdjust)
   }
 
   def run(expr: CronExpr): Option[DateTime] = {

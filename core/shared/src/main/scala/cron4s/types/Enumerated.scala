@@ -7,7 +7,7 @@ import scala.language.higherKinds
 /**
   * Created by alonsodomin on 23/08/2016.
   */
-trait HasCronField[A[_ <: CronField], F <: CronField] {
+trait Enumerated[A[_ <: CronField], F <: CronField] {
 
   def min(a: A[F]): Int = range(a).head
   def max(a: A[F]): Int = range(a).last
@@ -41,9 +41,9 @@ trait HasCronField[A[_ <: CronField], F <: CronField] {
   def range(a: A[F]): Vector[Int]
 }
 
-object HasCronField {
+object Enumerated {
 
   @inline def apply[A[_ <: CronField], F <: CronField]
-      (implicit ev: HasCronField[A, F]): HasCronField[A, F] = ev
+      (implicit ev: Enumerated[A, F]): Enumerated[A, F] = ev
 
 }

@@ -2,7 +2,7 @@ package cron4s.spi
 
 import cron4s._
 import cron4s.expr.CronExpr
-import cron4s.types.IsFieldExpr
+import cron4s.types.Expr
 
 import scalaz.Equal
 
@@ -37,9 +37,9 @@ object testdummy {
   }
 
   implicit class DummyCronExpr(expr: CronExpr) extends CronDateTimeOps[DummyDateTime](expr)
-  implicit class DummyExpr[E[_ <: CronField], F <: CronField]
+  implicit class DummyNode[E[_ <: CronField], F <: CronField]
       (expr: E[F])
-      (implicit ev: IsFieldExpr[E, F])
-    extends ExprDateTimeOps[E, F, DummyDateTime](expr, TestDummyAdapter, ev)
+      (implicit ev: Expr[E, F])
+    extends NodeDateTimeOps[E, F, DummyDateTime](expr, TestDummyAdapter, ev)
 
 }

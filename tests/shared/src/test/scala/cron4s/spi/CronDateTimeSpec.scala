@@ -1,7 +1,7 @@
 package cron4s.spi
 
 import cron4s._
-import cron4s.expr.{EachExpr, CronExpr}
+import cron4s.expr.{EachNode, CronExpr}
 
 import org.scalacheck._
 
@@ -27,12 +27,12 @@ class CronDateTimeSpec extends Properties("CronDateTime") with DummyTestBase {
   } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, daysOfWeek))
 
   val eachExpr = CronExpr(
-    EachExpr[Second],
-    EachExpr[Minute],
-    EachExpr[Hour],
-    EachExpr[DayOfMonth],
-    EachExpr[Month],
-    EachExpr[DayOfWeek]
+    EachNode[Second],
+    EachNode[Minute],
+    EachNode[Hour],
+    EachNode[DayOfMonth],
+    EachNode[Month],
+    EachNode[DayOfWeek]
   )
 
   val eachDateCombinations = for {

@@ -2,7 +2,7 @@ package cron4s.spi
 
 import cron4s.CronField
 import cron4s.expr.CronExpr
-import cron4s.types.IsFieldExpr
+import cron4s.types.Expr
 
 import scala.scalajs.js.Date
 import scalaz._
@@ -65,8 +65,8 @@ package object js {
   }
 
   implicit class JSCronExpr(expr: CronExpr) extends CronDateTimeOps[Date](expr)
-  implicit class JSExpr[E[_ <: CronField], F <: CronField]
+  implicit class JSNode[E[_ <: CronField], F <: CronField]
       (expr: E[F])
-      (implicit ev: IsFieldExpr[E, F])
-    extends ExprDateTimeOps[E, F, Date](expr, JsAdapter, ev)
+      (implicit ev: Expr[E, F])
+    extends NodeDateTimeOps[E, F, Date](expr, JsAdapter, ev)
 }

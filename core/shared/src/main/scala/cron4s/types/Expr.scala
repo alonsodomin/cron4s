@@ -10,12 +10,12 @@ import scalaz.Show
 /**
   * Created by alonsodomin on 25/08/2016.
   */
-trait IsFieldExpr[E[_ <: CronField], F <: CronField] extends HasCronField[E, F] with Show[E[F]] {
+trait Expr[E[_ <: CronField], F <: CronField] extends Enumerated[E, F] with Show[E[F]] {
 
   def matches(e: E[F]): Predicate[Int]
 
   def impliedBy[EE[_ <: CronField]](e: E[F])(expr: EE[F])(
-      implicit ops: IsFieldExpr[EE, F]
+      implicit ops: Expr[EE, F]
     ): Boolean = {
       val exprRange = range(e)
       exprRange.size > 0 && exprRange.forall(ops.matches(expr))
@@ -25,6 +25,6 @@ trait IsFieldExpr[E[_ <: CronField], F <: CronField] extends HasCronField[E, F] 
 
 }
 
-object IsFieldExpr {
-  @inline def apply[E[_ <: CronField], F <: CronField](implicit ev: IsFieldExpr[E, F]): IsFieldExpr[E, F] = ev
+object Expr {
+  @inline def apply[E[_ <: CronField], F <: CronField](implicit ev: Expr[E, F]): Expr[E, F] = ev
 }

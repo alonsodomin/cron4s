@@ -33,5 +33,5 @@ trait DateTimeAdapter[DateTime] {
 }
 
 object DateTimeAdapter {
-  def apply[DateTime](implicit ev: DateTimeAdapter[DateTime]): DateTimeAdapter[DateTime] = ev
+  @inline def apply[DateTime](implicit adapter: DateTimeAdapter[DateTime]): DateTimeAdapter[DateTime] = adapter
 }

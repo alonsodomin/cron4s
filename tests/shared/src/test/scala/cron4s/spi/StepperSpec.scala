@@ -1,6 +1,6 @@
 package cron4s.spi
 
-import cron4s._
+import cron4s.CronField
 import cron4s.expr._
 
 import org.scalatest.prop.TableDrivenPropertyChecks
@@ -16,20 +16,20 @@ class StepperSpec extends PropSpec with TableDrivenPropertyChecks with Matchers 
   import testdummy._
 
   val onlyTuesdaysAt12 = CronExpr(
-    ConstExpr[Second](0),
-    ConstExpr[Minute](0),
-    ConstExpr[Hour](12),
-    EachExpr[DayOfMonth],
-    EachExpr[Month],
-    ConstExpr[DayOfWeek](1)
+    ConstNode[Second](0),
+    ConstNode[Minute](0),
+    ConstNode[Hour](12),
+    EachNode[DayOfMonth],
+    EachNode[Month],
+    ConstNode[DayOfWeek](1)
   )
   val everyMinuteBetween2And3 = CronExpr(
-    ConstExpr[Second](0),
-    EachExpr[Minute],
-    BetweenExpr(ConstExpr[Hour](2), ConstExpr[Hour](3)),
-    EachExpr[DayOfMonth],
-    EachExpr[Month],
-    EachExpr[DayOfWeek]
+    ConstNode[Second](0),
+    EachNode[Minute],
+    BetweenNode(ConstNode[Hour](2), ConstNode[Hour](3)),
+    EachNode[DayOfMonth],
+    EachNode[Month],
+    EachNode[DayOfWeek]
   )
 
   val sample = Table(

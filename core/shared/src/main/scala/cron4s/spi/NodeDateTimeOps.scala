@@ -8,8 +8,8 @@ import cron4s.types._
   *
   * @author Antonio Alonso Dominguez
   */
-abstract class ExprDateTimeOps[E[_ <: CronField], F <: CronField, DateTime]
-    (self: E[F], adapter: DateTimeAdapter[DateTime], tc: IsFieldExpr[E, F]) {
+abstract class NodeDateTimeOps[E[_ <: CronField], F <: CronField, DateTime]
+    (self: E[F], adapter: DateTimeAdapter[DateTime], expr: Expr[E, F]) {
 
   /**
     * Tests if this field expressions matches in the given date-time
@@ -17,8 +17,8 @@ abstract class ExprDateTimeOps[E[_ <: CronField], F <: CronField, DateTime]
     * @return true if there is a field in this date-time that matches this expression
     */
   def matchesIn: Predicate[DateTime] = Predicate { dt =>
-    val current = adapter.get(dt, tc.unit(self).field)
-    current.map(tc.matches(self)).getOrElse(false)
+    val current = adapter.get(dt, expr.unit(self).field)
+    current.map(expr.matches(self)).getOrElse(false)
   }
 
   /**
@@ -52,9 +52,9 @@ abstract class ExprDateTimeOps[E[_ <: CronField], F <: CronField, DateTime]
     */
   def stepIn(dateTime: DateTime, step: Int): Option[DateTime] = {
     for {
-      current  <- adapter.get(dateTime, tc.unit(self).field)
-      newValue <- tc.step(self)(current, step).map(_._1)
-      adjusted <- adapter.set(dateTime, tc.unit(self).field, newValue)
+      current  <- adapter.get(dateTime, expr.unit(self).field)
+      newValue <- expr.step(self)(current, step).map(_._1)
+      adjusted <- adapter.set(dateTime, expr.unit(self).field, newValue)
     } yield adjusted
   }
 
