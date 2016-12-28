@@ -11,7 +11,7 @@ import scalaz.NonEmptyList
 
 /**
   * Sample run
-  *    sbt "bench/jmh:run -r 2 -i 20 -w 2 -wi 20 -f 1 -t 1 cron4s.bench.ExprMatcherBenchmark"
+  *    sbt "bench/jmh:run -r 2 -i 20 -w 2 -wi 20 -f 1 -t 1 cron4s.bench.NodeMatcherBenchmark"
   *
   * Which means "20 iterations" of "2 seconds" each, "20 warm-up
   * iterations" of "2 seconds" each, "1 fork", "1 thread".  Please note
@@ -19,59 +19,59 @@ import scalaz.NonEmptyList
   * iterations (as a rule of thumb), but the more is better.
   */
 @State(Scope.Benchmark)
-class ExprMatcherBenchmark {
+class NodeMatcherBenchmark {
 
   final val ValueToMatch = 30
 
-  val eachExpr = EachNode[CronField.Minute]
-  val constExpr = ConstNode[CronField.Minute](30)
-  val betweenExpr = BetweenNode(
+  val eachNode = EachNode[CronField.Minute]
+  val constNode = ConstNode[CronField.Minute](30)
+  val betweenNode = BetweenNode(
     ConstNode[CronField.Minute](CronUnit.Minutes.min),
     ConstNode[CronField.Minute](CronUnit.Minutes.max)
   )
-  val severalEnumeratedExpr = {
+  val severalEnumeratedNode = {
     val minutes = for {
       value <- CronUnit.Minutes.range
     } yield Coproduct[SeveralMemberNode[CronField.Minute]](ConstNode[CronField.Minute](value))
     SeveralNode(NonEmptyList(minutes.head, minutes.tail: _*))
   }
-  val severalBetweenExpr: SeveralNode[CronField.Minute] = {
-    val betweenExpr: BetweenNode[CronField.Minute] = BetweenNode(
+  val severalBetweenNode: SeveralNode[CronField.Minute] = {
+    val betweenNode: BetweenNode[CronField.Minute] = BetweenNode(
       ConstNode[CronField.Minute](CronUnit.Minutes.min),
       ConstNode[CronField.Minute](CronUnit.Minutes.max)
     )
-    SeveralNode(NonEmptyList(betweenExpr))
+    SeveralNode(NonEmptyList(betweenNode))
   }
-  val everyEachExpr = EveryNode(eachExpr, 1)
+  val everyEachNode = EveryNode(eachNode, 1)
 
   @Benchmark
-  def matchEachExpr(): Boolean = {
+  def matchEachNode(): Boolean = {
     EachNode[CronField.Minute].matches(ValueToMatch)
   }
 
   @Benchmark
-  def matchConstExpr(): Boolean = {
-    constExpr.matches(ValueToMatch)
+  def matchConstNode(): Boolean = {
+    constNode.matches(ValueToMatch)
   }
 
   @Benchmark
-  def matchBetweenExpr(): Boolean = {
-    betweenExpr.matches(ValueToMatch)
+  def matchBetweenNode(): Boolean = {
+    betweenNode.matches(ValueToMatch)
   }
 
   @Benchmark
-  def matchSeveralExprEnumerated(): Boolean = {
-    severalEnumeratedExpr.matches(ValueToMatch)
+  def matchSeveralNodeEnumerated(): Boolean = {
+    severalEnumeratedNode.matches(ValueToMatch)
   }
 
   @Benchmark
-  def matchSeveralExprBetween(): Boolean = {
-    severalBetweenExpr.matches(ValueToMatch)
+  def matchSeveralNodeBetween(): Boolean = {
+    severalBetweenNode.matches(ValueToMatch)
   }
 
   @Benchmark
-  def matchEveryEachExpr(): Boolean = {
-    everyEachExpr.matches(ValueToMatch)
+  def matchEveryEachNode(): Boolean = {
+    everyEachNode.matches(ValueToMatch)
   }
 
 }
