@@ -29,8 +29,6 @@ object NodeValidatorSpec {
 class NodeValidatorSpec extends PropSpec with GeneratorDrivenPropertyChecks with ArbitraryEachNode with ArbitraryConstNode with Matchers {
   import CronField._
 
-
-
   property("each expressions should always pass validation") {
     forAll { (expr: EachNode[Second]) =>
       NodeValidator[EachNode, Second].validate(expr) shouldBe List.empty[FieldError]

@@ -26,16 +26,12 @@ sealed trait Node[+F <: CronField] {
 
 object Node extends NodeInstances
 
-sealed trait SpecialChar
-
 final case class EachNode[+F <: CronField](implicit val unit: CronUnit[F])
   extends Node[F] {
 
   override def toString = "*"
 
 }
-
-case object Last extends SpecialChar
 
 final case class ConstNode[F <: CronField]
     (value: Int, textValue: Option[String] = None)

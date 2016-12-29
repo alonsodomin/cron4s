@@ -1,7 +1,7 @@
 package cron4s.testkit.gen
 
 import cron4s.CronField._
-import cron4s.CronUnit
+
 import org.scalacheck.Arbitrary
 
 /**
@@ -9,11 +9,11 @@ import org.scalacheck.Arbitrary
   */
 trait ArbitraryEachNode extends NodeGenerators {
 
-  implicit lazy val arbitraryEachSecond = Arbitrary(eachGen(CronUnit[Second]))
-  implicit lazy val arbitraryEachMinute = Arbitrary(eachGen(CronUnit[Minute]))
-  implicit lazy val arbitraryEachHour = Arbitrary(eachGen(CronUnit[Hour]))
-  implicit lazy val arbitraryEachDayOfMonth = Arbitrary(eachGen(CronUnit[DayOfMonth]))
-  implicit lazy val arbitraryEachMonth = Arbitrary(eachGen(CronUnit[Month]))
-  implicit lazy val arbitraryEachDayOfWeek = Arbitrary(eachGen(CronUnit[DayOfWeek]))
+  implicit lazy val arbitraryEachSecond = Arbitrary(eachGen[Second])
+  implicit lazy val arbitraryEachMinute = Arbitrary(eachGen[Minute])
+  implicit lazy val arbitraryEachHour = Arbitrary(eachGen[Hour])
+  implicit lazy val arbitraryEachDayOfMonth = Arbitrary(eachGen[DayOfMonth])
+  implicit lazy val arbitraryEachMonth = Arbitrary(eachGen[Month])
+  implicit lazy val arbitraryEachDayOfWeek = Arbitrary(eachGen[DayOfWeek])
 
 }
