@@ -70,7 +70,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
   ): NodeValidator[SeveralNode[F]] = new NodeValidator[SeveralNode[F]] {
     def validate(expr: SeveralNode[F]): List[FieldError] = {
       def implicationErrorMsg(that: SeveralMemberNode[F], impliedBy: SeveralMemberNode[F]): String =
-        s"Expression '${that.shows}' at field ${that.unit.field} is implied by '${impliedBy.shows}'"
+        s"Value '${that.shows}' at field ${that.unit.field} is implied by '${impliedBy.shows}'"
 
       def verifyImplication(seen: List[SeveralMemberNode[F]], curr: SeveralMemberNode[F]): Option[FieldError] = {
         val alreadyImplied = seen.find(e => curr.impliedBy(e))

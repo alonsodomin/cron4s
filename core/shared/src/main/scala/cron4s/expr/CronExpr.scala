@@ -59,7 +59,7 @@ final case class CronExpr(ast: CronExprAST) {
     case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[FieldNode[F]]
   }
 
-  def ranges: List[Vector[Int]] = ast.map(generic.ops.range).toList
+  def ranges: List[IndexedSeq[Int]] = ast.map(generic.ops.range).toList
 
   override def toString = ast.map(generic.ops.show).toList.mkString(" ")
 

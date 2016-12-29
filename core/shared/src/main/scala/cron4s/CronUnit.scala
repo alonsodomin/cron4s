@@ -24,7 +24,7 @@ sealed trait CronUnit[+F <: CronField] extends Serializable {
     *
     * @return the range of valid values
     */
-  def range: Vector[Int]
+  def range: IndexedSeq[Int]
 
 }
 
@@ -43,7 +43,7 @@ private[cron4s] trait CronUnits {
     val field: F, val min: Int, val max: Int
   ) extends CronUnit[F] {
 
-    val range: Vector[Int] = (min to max).toVector
+    val range: IndexedSeq[Int] = min to max
 
   }
 
@@ -69,7 +69,7 @@ private[cron4s] trait CronUnitInstances extends CronUnits {
 
   private[this] def enumerated[F <: CronField](unit: CronUnit[F]): Enumerated[CronUnit[F]] =
     new Enumerated[CronUnit[F]] {
-      override def range(fL: CronUnit[F]): Vector[Int] = unit.range
+      override def range(fL: CronUnit[F]): IndexedSeq[Int] = unit.range
     }
 
   implicit val secondsInstance     = enumerated(Seconds)

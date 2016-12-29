@@ -36,7 +36,7 @@ trait Enumerated[A] {
   def next(a: A)(from: Int): Option[Int] = step(a)(from, steppingUnit(a)).map(_._1)
   def prev(a: A)(from: Int): Option[Int] = step(a)(from, -steppingUnit(a)).map(_._1)
 
-  def range(a: A): Vector[Int]
+  def range(a: A): IndexedSeq[Int]
 }
 
 object Enumerated {
