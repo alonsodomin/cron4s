@@ -10,7 +10,7 @@ import scalaz.Show
 /**
   * Created by alonsodomin on 25/08/2016.
   */
-trait Expr[E[_ <: CronField], F <: CronField] extends Enumerated[E, F] with Show[E[F]] {
+trait Expr[E[_ <: CronField], F <: CronField] extends Enumerated[E[F]] with Show[E[F]] {
 
   def matches(e: E[F]): Predicate[Int]
 

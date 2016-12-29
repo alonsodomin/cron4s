@@ -10,7 +10,7 @@ import org.scalacheck.Prop._
 /**
   * Created by alonsodomin on 28/08/2016.
   */
-trait ExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[E, F] {
+trait ExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[E[F]] {
   def laws: ExprLaws[E, F]
 
   def expr[EE[_ <: CronField]](

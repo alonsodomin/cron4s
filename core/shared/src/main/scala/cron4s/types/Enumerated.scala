@@ -1,20 +1,18 @@
 package cron4s.types
 
-import cron4s.CronField
-
 import scala.language.higherKinds
 
 /**
   * Created by alonsodomin on 23/08/2016.
   */
-trait Enumerated[A[_ <: CronField], F <: CronField] {
+trait Enumerated[A] {
 
-  def min(a: A[F]): Int = range(a).head
-  def max(a: A[F]): Int = range(a).last
+  def min(a: A): Int = range(a).head
+  def max(a: A): Int = range(a).last
 
-  def steppingUnit(a: A[F]): Int = 1
+  def steppingUnit(a: A): Int = 1
 
-  def step(a: A[F])(from: Int, stepSize: Int): Option[(Int, Int)] = {
+  def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] = {
     val aRange = range(a)
 
     if (aRange.isEmpty) None
@@ -35,15 +33,14 @@ trait Enumerated[A[_ <: CronField], F <: CronField] {
     }
   }
 
-  def next(a: A[F])(from: Int): Option[Int] = step(a)(from, steppingUnit(a)).map(_._1)
-  def prev(a: A[F])(from: Int): Option[Int] = step(a)(from, -steppingUnit(a)).map(_._1)
+  def next(a: A)(from: Int): Option[Int] = step(a)(from, steppingUnit(a)).map(_._1)
+  def prev(a: A)(from: Int): Option[Int] = step(a)(from, -steppingUnit(a)).map(_._1)
 
-  def range(a: A[F]): Vector[Int]
+  def range(a: A): Vector[Int]
 }
 
 object Enumerated {
 
-  @inline def apply[A[_ <: CronField], F <: CronField]
-      (implicit ev: Enumerated[A, F]): Enumerated[A, F] = ev
+  @inline def apply[A](implicit ev: Enumerated[A]): Enumerated[A] = ev
 
 }

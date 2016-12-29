@@ -9,7 +9,7 @@ import scala.language.higherKinds
   * Created by alonsodomin on 25/08/2016.
   */
 private[syntax] class ExprOps[E[_ <: CronField], F <: CronField](self: E[F], tc: Expr[E, F])
-  extends EnumeratedOps[E, F](self, tc) {
+  extends EnumeratedOps[E[F]](self, tc) {
 
   def matches: Predicate[Int] = tc.matches(self)
 

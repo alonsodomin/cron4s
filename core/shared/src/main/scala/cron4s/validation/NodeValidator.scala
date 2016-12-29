@@ -36,7 +36,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
 
   implicit def constValidator[F <: CronField](
       implicit
-      ev: Enumerated[CronUnit, F]
+      ev: Enumerated[CronUnit[F]]
     ): NodeValidator[ConstNode, F] = new NodeValidator[ConstNode, F] {
 
       def validate(expr: ConstNode[F]): List[FieldError] = {
@@ -52,7 +52,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
 
   implicit def betweenValidator[F <: CronField](
       implicit
-      ev: Enumerated[CronUnit, F]
+      ev: Enumerated[CronUnit[F]]
     ): NodeValidator[BetweenNode, F] = new NodeValidator[BetweenNode, F] {
       def validate(expr: BetweenNode[F]): List[FieldError] = {
         val subValidator = NodeValidator[ConstNode, F]
@@ -68,7 +68,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
 
   implicit def severalValidator[F <: CronField](
     implicit
-    ev: Enumerated[CronUnit, F]
+    ev: Enumerated[CronUnit[F]]
   ): NodeValidator[SeveralNode, F] = new NodeValidator[SeveralNode, F] {
     def validate(expr: SeveralNode[F]): List[FieldError] = {
       def implicationErrorMsg(that: SeveralMemberNode[F], impliedBy: SeveralMemberNode[F]): String =
@@ -98,7 +98,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
 
   implicit def everyValidator[F <: CronField](
       implicit
-      ev: Enumerated[CronUnit, F]
+      ev: Enumerated[CronUnit[F]]
     ): NodeValidator[EveryNode, F] = new NodeValidator[EveryNode, F] {
       def validate(expr: EveryNode[F]): List[FieldError] =
         NodeValidator[FrequencyBaseNode, F].validate(expr.value)
@@ -110,7 +110,7 @@ private[validation] trait LowPriorityNodeValidatorInstances {
 
   implicit def severalMemberNodeValidator[F <: CronField](
       implicit
-      ev: Enumerated[CronUnit, F]
+      ev: Enumerated[CronUnit[F]]
     ): NodeValidator[SeveralMemberNode, F] = new NodeValidator[SeveralMemberNode, F] {
       def validate(expr: SeveralMemberNode[F]): List[FieldError] =
         expr.fold(ops.validate)
@@ -118,7 +118,7 @@ private[validation] trait LowPriorityNodeValidatorInstances {
 
   implicit def frequencyBaseNodeValidator[F <: CronField](
       implicit
-      ev: Enumerated[CronUnit, F]
+      ev: Enumerated[CronUnit[F]]
     ): NodeValidator[FrequencyBaseNode, F] = new NodeValidator[FrequencyBaseNode, F] {
       def validate(expr: FrequencyBaseNode[F]): List[FieldError] =
         expr.fold(ops.validate)
@@ -126,7 +126,7 @@ private[validation] trait LowPriorityNodeValidatorInstances {
 
   implicit def fieldNodeValidator[F <: CronField](
       implicit
-      ev: Enumerated[CronUnit, F]
+      ev: Enumerated[CronUnit[F]]
     ): NodeValidator[FieldNode, F] = new NodeValidator[FieldNode, F] {
       def validate(expr: FieldNode[F]): List[FieldError] =
         expr.fold(ops.validate)

@@ -1,6 +1,5 @@
 package cron4s.syntax
 
-import cron4s.CronField
 import cron4s.types.Enumerated
 
 import scala.language.higherKinds
@@ -8,7 +7,7 @@ import scala.language.higherKinds
 /**
   * Created by alonsodomin on 23/08/2016.
   */
-private[syntax] class EnumeratedOps[A[_ <: CronField], F <: CronField](self: A[F], tc: Enumerated[A, F]) {
+private[syntax] class EnumeratedOps[A](self: A, tc: Enumerated[A]) {
   def max: Int = tc.max(self)
   def min: Int = tc.min(self)
   def step(from: Int, stepSize: Int): Option[(Int, Int)] = tc.step(self)(from, stepSize)
@@ -19,10 +18,9 @@ private[syntax] class EnumeratedOps[A[_ <: CronField], F <: CronField](self: A[F
 
 private[syntax] trait EnumeratedSyntax {
 
-  implicit def toEnumeratedOps[A[_ <: CronField], F <: CronField]
-      (target: A[F])
-      (implicit tc: Enumerated[A, F]): EnumeratedOps[A, F] =
-    new EnumeratedOps[A, F](target, tc)
+  implicit def toEnumeratedOps[A](target: A)
+      (implicit tc: Enumerated[A]): EnumeratedOps[A] =
+    new EnumeratedOps[A](target, tc)
 
 }
 

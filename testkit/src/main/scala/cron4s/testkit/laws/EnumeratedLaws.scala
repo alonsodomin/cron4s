@@ -9,22 +9,22 @@ import scalaz.Scalaz._
 /**
   * Created by alonsodomin on 27/08/2016.
   */
-trait EnumeratedLaws[A[_ <: CronField], F <: CronField] {
-  implicit def TC: Enumerated[A, F]
+trait EnumeratedLaws[A] {
+  implicit def TC: Enumerated[A]
 
-  def min(a: A[F]): Boolean =
+  def min(a: A): Boolean =
     a.min === a.range.min
 
-  def max(a: A[F]): Boolean =
+  def max(a: A): Boolean =
     a.max === a.range.max
 
-  def forward(a: A[F], from: Int): Boolean =
+  def forward(a: A, from: Int): Boolean =
     a.next(from) === a.step(from, TC.steppingUnit(a)).map(_._1)
 
-  def backwards(a: A[F], from: Int): Boolean =
+  def backwards(a: A, from: Int): Boolean =
     a.prev(from) === a.step(from, -TC.steppingUnit(a)).map(_._1)
 
-  def stepable(a: A[F], from: Int, stepSize: Int): Boolean = {
+  def stepable(a: A, from: Int, stepSize: Int): Boolean = {
     if (a.range.isEmpty) {
       a.step(from, stepSize) === None
     } else if (from < a.min && stepSize >= 0) {
@@ -47,6 +47,5 @@ trait EnumeratedLaws[A[_ <: CronField], F <: CronField] {
 }
 
 object EnumeratedLaws {
-  def apply[A[_ <: CronField], F <: CronField](implicit ev: Enumerated[A, F]) =
-    new EnumeratedLaws[A, F] { val TC = ev }
+  def apply[A](implicit ev: Enumerated[A]) = new EnumeratedLaws[A] { val TC = ev }
 }

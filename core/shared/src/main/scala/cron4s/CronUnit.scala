@@ -12,7 +12,7 @@ import scala.language.higherKinds
   * @author Antonio Alonso Dominguez
   */
 @implicitNotFound("Field ${F} is not supported on Cron expressions")
-sealed abstract class CronUnit[+F <: CronField] extends Serializable {
+sealed trait CronUnit[+F <: CronField] extends Serializable {
 
   /**
     * @return the CronField for this unit
@@ -67,8 +67,8 @@ private[cron4s] trait CronUnits {
 
 private[cron4s] trait CronUnitInstances extends CronUnits {
 
-  private[this] def enumerated[F <: CronField](unit: CronUnit[F]): Enumerated[CronUnit, F] =
-    new Enumerated[CronUnit, F] {
+  private[this] def enumerated[F <: CronField](unit: CronUnit[F]): Enumerated[CronUnit[F]] =
+    new Enumerated[CronUnit[F]] {
       override def range(fL: CronUnit[F]): Vector[Int] = unit.range
     }
 

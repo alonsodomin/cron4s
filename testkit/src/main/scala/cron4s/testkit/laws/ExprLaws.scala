@@ -9,7 +9,7 @@ import scalaz.Scalaz._
 /**
   * Created by alonsodomin on 28/08/2016.
   */
-trait ExprLaws[E[_ <: CronField], F <: CronField] extends EnumeratedLaws[E, F] {
+trait ExprLaws[E[_ <: CronField], F <: CronField] extends EnumeratedLaws[E[F]] {
   implicit def TC: Expr[E, F]
 
   def matchable(expr: E[F], value: Int): Boolean = {

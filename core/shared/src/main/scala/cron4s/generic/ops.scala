@@ -55,37 +55,37 @@ private[cron4s] object ops {
     implicit def caseEach[F <: CronField](
         implicit
         validator: NodeValidator[EachNode, F],
-        ev: Enumerated[CronUnit, F]
+        ev: Enumerated[CronUnit[F]]
       ) = at[EachNode[F]](validator.validate)
 
     implicit def caseConst[F <: CronField](
         implicit
         validator: NodeValidator[ConstNode, F],
-        ev: Enumerated[CronUnit, F]
+        ev: Enumerated[CronUnit[F]]
       ) = at[ConstNode[F]](validator.validate)
 
     implicit def caseBetween[F <: CronField](
         implicit
         validator: NodeValidator[BetweenNode, F],
-        ev: Enumerated[CronUnit, F]
+        ev: Enumerated[CronUnit[F]]
       ) = at[BetweenNode[F]](validator.validate)
 
     implicit def caseSeveral[F <: CronField](
         implicit
         validator: NodeValidator[SeveralNode, F],
-        ev: Enumerated[CronUnit, F]
+        ev: Enumerated[CronUnit[F]]
      ) = at[SeveralNode[F]](validator.validate)
 
     implicit def caseEvery[F <: CronField](
         implicit
         validator: NodeValidator[EveryNode, F],
-        ev: Enumerated[CronUnit, F]
+        ev: Enumerated[CronUnit[F]]
       ) = at[EveryNode[F]](validator.validate)
 
     implicit def defaultField[F <: CronField](
         implicit
         validator: NodeValidator[FieldNode, F],
-        ev: Enumerated[CronUnit, F]
+        ev: Enumerated[CronUnit[F]]
       ) = at[FieldNode[F]](validator.validate)
   }
 

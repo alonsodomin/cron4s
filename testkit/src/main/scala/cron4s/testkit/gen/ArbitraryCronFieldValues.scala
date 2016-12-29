@@ -14,7 +14,7 @@ trait ArbitraryCronFieldValues {
   import CronField._
   import CronUnit._
 
-  def cronFieldValueGen[F <: CronField](unit: CronUnit[F])(implicit ev: Enumerated[CronUnit, F]): Gen[CronFieldValue[F]] =
+  def cronFieldValueGen[F <: CronField](unit: CronUnit[F])(implicit ev: Enumerated[CronUnit[F]]): Gen[CronFieldValue[F]] =
     Gen.choose(unit.min, unit.max).map(v => CronFieldValue(unit.field, v))
 
   implicit lazy val arbitrarySecondValue: Arbitrary[CronFieldValue[Second]] =
