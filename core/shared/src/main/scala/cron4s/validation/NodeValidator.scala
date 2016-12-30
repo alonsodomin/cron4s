@@ -15,7 +15,7 @@ import Scalaz._
   */
 sealed trait NodeValidator[A] {
 
-  def validate(expr: A): List[FieldError]
+  def validate(node: A): List[FieldError]
 
 }
 
@@ -29,7 +29,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
 
   implicit def eachValidator[F <: CronField]: NodeValidator[EachNode[F]] =
     new NodeValidator[EachNode[F]] {
-      def validate(expr: EachNode[F]): List[FieldError] = List.empty
+      def validate(node: EachNode[F]): List[FieldError] = List.empty
     }
 
   implicit def constValidator[F <: CronField](
@@ -37,11 +37,11 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[ConstNode[F]] = new NodeValidator[ConstNode[F]] {
 
-      def validate(expr: ConstNode[F]): List[FieldError] = {
-        if (expr.value < expr.unit.min || expr.value > expr.unit.max) {
+      def validate(node: ConstNode[F]): List[FieldError] = {
+        if (node.value < node.unit.min || node.value > node.unit.max) {
           List(FieldError(
-            expr.unit.field,
-            s"Value ${expr.value} is out of bounds for field: ${expr.unit.field}"
+            node.unit.field,
+            s"Value ${node.value} is out of bounds for field: ${node.unit.field}"
           ))
         } else List.empty
       }
@@ -52,15 +52,15 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       implicit
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[BetweenNode[F]] = new NodeValidator[BetweenNode[F]] {
-      def validate(expr: BetweenNode[F]): List[FieldError] = {
+      def validate(node: BetweenNode[F]): List[FieldError] = {
         val subValidator = NodeValidator[ConstNode[F]]
         val rangeValid = {
-          if (expr.begin.value >= expr.end.value)
-            List(FieldError(expr.unit.field, s"${expr.begin.value} should be less than ${expr.end.value}"))
+          if (node.begin.value >= node.end.value)
+            List(FieldError(node.unit.field, s"${node.begin.value} should be less than ${node.end.value}"))
           else List.empty
         }
 
-        subValidator.validate(expr.begin) ++ subValidator.validate(expr.end) ++ rangeValid
+        subValidator.validate(node.begin) ++ subValidator.validate(node.end) ++ rangeValid
       }
   }
 
@@ -68,7 +68,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
     implicit
     ev: Enumerated[CronUnit[F]]
   ): NodeValidator[SeveralNode[F]] = new NodeValidator[SeveralNode[F]] {
-    def validate(expr: SeveralNode[F]): List[FieldError] = {
+    def validate(node: SeveralNode[F]): List[FieldError] = {
       def implicationErrorMsg(that: SeveralMemberNode[F], impliedBy: SeveralMemberNode[F]): String =
         s"Value '${that.shows}' at field ${that.unit.field} is implied by '${impliedBy.shows}'"
 
@@ -83,7 +83,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
 
       val subExprValidator = NodeValidator[SeveralMemberNode[F]]
       val zero = (List.empty[SeveralMemberNode[F]], List.empty[FieldError])
-      val (_, errorResult) = expr.values.foldRight(zero) { case (e, (seen, errors)) =>
+      val (_, errorResult) = node.values.foldRight(zero) { case (e, (seen, errors)) =>
         val subErrors = subExprValidator.validate(e)
         val newErrors = verifyImplication(seen, e).toList ::: subErrors ::: errors
         val newSeen = e :: seen
@@ -98,8 +98,16 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       implicit
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[EveryNode[F]] = new NodeValidator[EveryNode[F]] {
-      def validate(expr: EveryNode[F]): List[FieldError] =
-        NodeValidator[FrequencyBaseNode[F]].validate(expr.value)
+      def validate(node: EveryNode[F]): List[FieldError] = {
+        val baseErrors = NodeValidator[FrequencyBaseNode[F]].validate(node.value)
+        val evenlyDivided = (node.value.range.size % node.freq) == 0
+        if (!evenlyDivided) {
+          baseErrors :+ FieldError(
+            node.unit.field,
+            s"Step '${node.freq}' does not evenly divide the value '${node.value.shows}' in field ${node.unit}"
+          )
+        } else baseErrors
+      }
     }
 
 }
@@ -110,23 +118,23 @@ private[validation] trait LowPriorityNodeValidatorInstances {
       implicit
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[SeveralMemberNode[F]] = new NodeValidator[SeveralMemberNode[F]] {
-      def validate(expr: SeveralMemberNode[F]): List[FieldError] =
-        expr.fold(ops.validate)
+      def validate(node: SeveralMemberNode[F]): List[FieldError] =
+        node.fold(ops.validate)
     }
 
   implicit def frequencyBaseNodeValidator[F <: CronField](
       implicit
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[FrequencyBaseNode[F]] = new NodeValidator[FrequencyBaseNode[F]] {
-      def validate(expr: FrequencyBaseNode[F]): List[FieldError] =
-        expr.fold(ops.validate)
+      def validate(node: FrequencyBaseNode[F]): List[FieldError] =
+        node.fold(ops.validate)
     }
 
   implicit def fieldNodeValidator[F <: CronField](
       implicit
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[FieldNode[F]] = new NodeValidator[FieldNode[F]] {
-      def validate(expr: FieldNode[F]): List[FieldError] =
-        expr.fold(ops.validate)
+      def validate(node: FieldNode[F]): List[FieldError] =
+        node.fold(ops.validate)
     }
 }
