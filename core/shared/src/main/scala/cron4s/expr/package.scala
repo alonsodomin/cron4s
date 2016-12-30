@@ -14,7 +14,7 @@ package object expr extends Conversions {
     ConstNode[F] :+: BetweenNode[F] :+: CNil
 
   type FrequencyBaseNode[F <: CronField] =
-    EachNode[F] :+: ConstNode[F] :+: BetweenNode[F] :+: SeveralNode[F] :+: CNil
+    EachNode[F] :+: BetweenNode[F] :+: SeveralNode[F] :+: CNil
 
   type SecondsNode     = FieldNode[CronField.Second]
   type MinutesNode     = FieldNode[CronField.Minute]
@@ -25,6 +25,7 @@ package object expr extends Conversions {
 
   private[cron4s] type TimePartAST = SecondsNode :: MinutesNode :: HoursNode :: HNil
   private[cron4s] type DatePartAST = DaysOfMonthNode :: MonthsNode :: DaysOfWeekNode :: HNil
-  private[cron4s] type CronExprAST = SecondsNode :: MinutesNode :: HoursNode :: DaysOfMonthNode :: MonthsNode :: DaysOfWeekNode :: HNil
+  private[cron4s] type CronExprAST =
+    SecondsNode :: MinutesNode :: HoursNode :: DaysOfMonthNode :: MonthsNode :: DaysOfWeekNode :: HNil
 
 }

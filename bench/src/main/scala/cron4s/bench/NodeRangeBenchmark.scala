@@ -10,7 +10,13 @@ import shapeless.Coproduct
 import scalaz.NonEmptyList
 
 /**
-  * Created by alonsodomin on 29/12/2016.
+  * Sample run
+  *    sbt "bench/jmh:run -r 2 -i 20 -w 2 -wi 20 -f 1 -t 1 cron4s.bench.NodeRangeBenchmark"
+  *
+  * Which means "20 iterations" of "2 seconds" each, "20 warm-up
+  * iterations" of "2 seconds" each, "1 fork", "1 thread".  Please note
+  * that benchmarks should be usually executed at least in 10
+  * iterations (as a rule of thumb), but the more is better.
   */
 @State(Scope.Benchmark)
 class NodeRangeBenchmark {
@@ -48,7 +54,6 @@ class NodeRangeBenchmark {
   }
 
   val everyEachNode = EveryNode(eachNode, 10)
-  val everyConstNode = EveryNode(constNode, 10)
   val everySeveralConstNode = EveryNode(severalConstNode, 10)
   val everySeveralBetweenNode = EveryNode(severalBetweenNode, 10)
 
@@ -69,9 +74,6 @@ class NodeRangeBenchmark {
 
   @Benchmark
   def everyEachNodeRange() = everyEachNode.range
-
-  @Benchmark
-  def everyConstNodeRange() = everyConstNode.range
 
   @Benchmark
   def everySeveralConstNodeRange() = everySeveralConstNode.range

@@ -44,6 +44,10 @@ we will get the actual reason for the failure in the left side of the `Either`:
 val invalid = Cron("10-65 * * * * *")
 ```
 
+```tut:invisible
+assert(invalid.isLeft)
+```
+
 Assuming that we have successfully parsed an expression, we can extract it out of the `Either[..., ...]`
 with following expression:
 
@@ -53,6 +57,20 @@ val cron = parsed.right.get
 
 **_Note:_** _It is not recommended to use `.right.get` to extract values out of `Either[..., ...]`
 types, we are doing it here as a means of simplifying the types just for the sake of the tutorial._ 
+
+#### Validation errors
+
+The CRON expression will be validated right after parsing all any error found during this stage will be returned
+as well in the left side of the `Either` returned by the `Cron` constructor. For instance, the following expression
+has a sequence that mixes elements that self-imply each other, which is invalid: 
+
+```tut
+val invalid = Cron("12,10-20 * * * * *")
+```
+
+```tut:invisible
+assert(invalid.isLeft)
+```
 
 ### The Cron4s AST
 
@@ -134,14 +152,14 @@ the same field type). To show this, let's work with some simple field expression
 ```tut
 import cron4s.expr._
 
-val eachSecond = EachExpr[CronField.Second]
-val fixedSecond = ConstExpr[CronField.Second](30)
+val eachSecond = EachNode[CronField.Second]
+val fixedSecond = ConstNode[CronField.Second](30)
 
 eachSecond.impliedBy(fixedSecond)
 fixedSecond.impliedBy(eachSecond)
 
-val minutesRange = BetweenExpr[CronField.Minute](ConstExpr(2), ConstExpr(10))
-val fixedMinute = ConstExpr[CronField.Minute](7)
+val minutesRange = BetweenNode[CronField.Minute](ConstNode(2), ConstNode(10))
+val fixedMinute = ConstNode[CronField.Minute](7)
 
 minutesRange.impliedBy(fixedMinute)
 fixedMinute.impliedBy(minutesRange)

@@ -117,6 +117,7 @@ trait NodeGenerators extends ArbitraryCronUnits {
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
   ): Gen[FrequencyBaseNode[F]] = Gen.oneOf(
+    eachGen[F].map(Coproduct[FrequencyBaseNode[F]](_)),
     betweenGen[F].map(Coproduct[FrequencyBaseNode[F]](_)),
     severalGen[F].map(Coproduct[FrequencyBaseNode[F]](_))
   )

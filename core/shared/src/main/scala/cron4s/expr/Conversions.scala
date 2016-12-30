@@ -27,9 +27,6 @@ private[cron4s] trait Conversions {
   implicit def each2FrequencyBase[F <: CronField](expr: EachNode[F]): FrequencyBaseNode[F] =
     Coproduct[FrequencyBaseNode[F]](expr)
 
-  implicit def const2FrequencyBase[F <: CronField](expr: ConstNode[F]): FrequencyBaseNode[F] =
-    Coproduct[FrequencyBaseNode[F]](expr)
-
   implicit def between2FrequencyBase[F <: CronField](expr: BetweenNode[F]): FrequencyBaseNode[F] =
     Coproduct[FrequencyBaseNode[F]](expr)
 
