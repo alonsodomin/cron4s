@@ -1,9 +1,9 @@
 package cron4s.testkit.gen
 
+import cron4s.{CronField, CronUnit}
 import cron4s.expr._
 import cron4s.types._
 import cron4s.syntax._
-import cron4s.{CronField, CronUnit}
 
 import shapeless._
 
@@ -122,14 +122,54 @@ trait NodeGenerators extends ArbitraryCronUnits {
     severalGen[F].map(Coproduct[FrequencyBaseNode[F]](_))
   )
 
-  def everyGen[F <: CronField](
+  def invalidFrequencyBaseGen[F <: CronField](
+      implicit
+      unit: CronUnit[F],
+      ev: Enumerated[CronUnit[F]]
+  ): Gen[FrequencyBaseNode[F]] = Gen.oneOf(
+    eachGen[F].map(Coproduct[FrequencyBaseNode[F]](_)),
+    Gen.oneOf(betweenGen[F], invalidBetweenGen[F]).map(Coproduct[FrequencyBaseNode[F]](_)),
+    Gen.oneOf(severalGen[F], invalidSeveralGen[F]).map(Coproduct[FrequencyBaseNode[F]](_))
+  )
+
+  private[this] def posDivisorGen(base: Int): Gen[Int] =
+    Gen.choose(1, base).retryUntil(v => (base % v) == 0)
+
+  private[this] def posNonDivisorGen(base: Int): Gen[Int] =
+    Gen.const(base * 3)
+
+  private[this] def everyGen0[F <: CronField](
+      baseGen: Gen[FrequencyBaseNode[F]],
+      freqGen: FrequencyBaseNode[F] => Gen[Int]
+  )(
       implicit
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
   ): Gen[EveryNode[F]] = for {
-    base <- frequencyBaseGen
-    freq <- Gen.posNum[Int] if freq > 1
+    base <- baseGen
+    freq <- freqGen(base)
   } yield EveryNode(base, freq)
+
+  def everyGen[F <: CronField](
+      implicit
+      unit: CronUnit[F],
+      ev: Enumerated[CronUnit[F]]
+  ): Gen[EveryNode[F]] =
+    everyGen0(frequencyBaseGen[F], node => posDivisorGen(node.range.size))
+
+  def invalidEveryGen[F <: CronField](
+      implicit
+      unit: CronUnit[F],
+      ev: Enumerated[CronUnit[F]]
+  ): Gen[EveryNode[F]] =
+    everyGen0(invalidFrequencyBaseGen[F], _ => Gen.posNum[Int])
+
+  def invalidFreqEveryGen[F <: CronField](
+      implicit
+      unit: CronUnit[F],
+      ev: Enumerated[CronUnit[F]]
+  ): Gen[EveryNode[F]] =
+    everyGen0(frequencyBaseGen[F], node => posNonDivisorGen(node.range.size))
 
   def nodeGen[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Gen[Node[F]] =
     Gen.oneOf(eachGen[F], constGen[F], severalGen[F], everyGen[F])
