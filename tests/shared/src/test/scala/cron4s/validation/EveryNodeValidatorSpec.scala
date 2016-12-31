@@ -1,6 +1,6 @@
 package cron4s.validation
 
-import cron4s.{CronField, CronUnit, FieldError}
+import cron4s.{CronField, CronUnit}
 import cron4s.expr._
 import cron4s.testkit.gen.NodeGenerators
 import cron4s.types.{Enumerated, Expr}
@@ -21,28 +21,12 @@ class EveryNodeValidatorSpec extends PropSpec
   private[this] def check[F <: CronField](
       implicit unit: CronUnit[F], enum: Enumerated[CronUnit[F]], expr: Expr[FrequencyBaseNode, F]
   ): Unit = {
-    property(s"EveryNode[${unit.field}] with valid components should pass validation") {
-      forAll(everyGen[F]) { node =>
-        NodeValidator[EveryNode[F]].validate(node) shouldBe List.empty[FieldError]
-      }
-    }
-
     property(s"EveryNode[${unit.field}] with invalid base returns the invalid errors of its base") {
       forAll(invalidEveryGen[F]) { node =>
         val expectedErrors = NodeValidator[FrequencyBaseNode[F]].validate(node.value)
         val returnedErrors = NodeValidator[EveryNode[F]].validate(node)
 
         returnedErrors should contain allElementsOf expectedErrors
-      }
-    }
-
-    property(s"EveryNode[${unit.field}] with a non divisible freq is invalid") {
-      forAll(invalidFreqEveryGen[F]) { node =>
-        val expectedError = FieldError(
-          unit.field,
-          s"Step '${node.freq}' does not evenly divide the value '${expr.shows(node.value)}' in field $unit"
-        )
-        NodeValidator[EveryNode[F]].validate(node) should contain(expectedError)
       }
     }
   }

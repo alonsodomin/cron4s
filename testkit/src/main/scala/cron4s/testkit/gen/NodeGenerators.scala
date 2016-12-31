@@ -132,34 +132,15 @@ trait NodeGenerators extends ArbitraryCronUnits {
     Gen.oneOf(severalGen[F], invalidSeveralGen[F]).map(Coproduct[FrequencyBaseNode[F]](_))
   )
 
-  private[this] def posDivisorGen(base: Int): Gen[Int] = {
-    val maxDivisor: Int = {
-      var halved = base / 2
-      while (halved > 0 && (base % halved) != 0) {
-        halved -= 1
-      }
-      halved
-    }
-
-    if ((maxDivisor - 1) <= 1) Gen.const(1)
-    else {
-      Gen.choose(1, maxDivisor).suchThat(v => (base % v) == 0)
-    }
-  }
-
-  private[this] def posNonDivisorGen(base: Int): Gen[Int] =
-    Gen.const(base * 3)
-
   private[this] def everyGen0[F <: CronField](
-      baseGen: Gen[FrequencyBaseNode[F]],
-      freqGen: FrequencyBaseNode[F] => Gen[Int]
+      baseGen: Gen[FrequencyBaseNode[F]]
   )(
       implicit
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
   ): Gen[EveryNode[F]] = for {
     base <- baseGen
-    freq <- freqGen(base)
+    freq <- Gen.posNum[Int]
   } yield EveryNode(base, freq)
 
   def everyGen[F <: CronField](
@@ -167,21 +148,14 @@ trait NodeGenerators extends ArbitraryCronUnits {
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
   ): Gen[EveryNode[F]] =
-    everyGen0(frequencyBaseGen[F], node => posDivisorGen(node.range.size))
+    everyGen0(frequencyBaseGen[F])
 
   def invalidEveryGen[F <: CronField](
       implicit
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
   ): Gen[EveryNode[F]] =
-    everyGen0(invalidFrequencyBaseGen[F], _ => Gen.posNum[Int])
-
-  def invalidFreqEveryGen[F <: CronField](
-      implicit
-      unit: CronUnit[F],
-      ev: Enumerated[CronUnit[F]]
-  ): Gen[EveryNode[F]] =
-    everyGen0(frequencyBaseGen[F], node => posNonDivisorGen(node.range.size))
+    everyGen0(invalidFrequencyBaseGen[F])
 
   def nodeGen[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Gen[Node[F]] =
     Gen.oneOf(eachGen[F], constGen[F], severalGen[F], everyGen[F])
