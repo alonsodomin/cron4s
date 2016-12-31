@@ -63,7 +63,7 @@ final case class BetweenNode[F <: CronField]
 
 }
 
-final case class SeveralNode[F <: CronField] private[expr]
+final case class SeveralNode[F <: CronField]
     (values: NonEmptyList[SeveralMemberNode[F]])
     (implicit val unit: CronUnit[F])
   extends Node[F] {
@@ -74,6 +74,12 @@ final case class SeveralNode[F <: CronField] private[expr]
   override def toString: String =
     values.map(_.fold(generic.ops.show)).list.toList.mkString(",")
 
+}
+
+object SeveralNode {
+  def apply[F <: CronField](head: SeveralMemberNode[F], tail: SeveralMemberNode[F]*)
+                           (implicit unit: CronUnit[F]): SeveralNode[F] =
+    SeveralNode(NonEmptyList(head, tail: _*))
 }
 
 final case class EveryNode[F <: CronField]

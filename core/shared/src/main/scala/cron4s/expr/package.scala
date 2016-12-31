@@ -5,7 +5,7 @@ import shapeless._
 /**
   * Created by alonsodomin on 04/01/2016.
   */
-package object expr extends Conversions {
+package object expr {
 
   type FieldNode[F <: CronField] =
     EachNode[F] :+: ConstNode[F] :+: BetweenNode[F] :+: SeveralNode[F] :+: EveryNode[F] :+: CNil
