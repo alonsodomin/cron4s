@@ -2,7 +2,7 @@ package cron4s.parser
 
 import cron4s._
 import cron4s.expr._
-import cron4s.testkit.gen.{ArbitraryEachExpr, ExprGens}
+import cron4s.testkit.gen.{ArbitraryEachNode, NodeGenerators}
 import cron4s.syntax.expr._
 
 import fastparse.all._
@@ -12,13 +12,13 @@ import org.scalacheck._
 /**
   * Created by alonsodomin on 13/01/2016.
   */
-object ParserSpec extends Properties("parser") with InputGenerators with ExprGens with ArbitraryEachExpr {
+object ParserSpec extends Properties("parser") with InputGenerators with NodeGenerators with ArbitraryEachNode {
   import Prop._
   import Arbitrary._
   import CronField._
   import CronUnit._
 
-  def verifyParsed[F <: CronField, E <: Expr[F]](parser: Parser[E], input: String)(verify: E => Boolean): Boolean = {
+  def verifyParsed[F <: CronField, E <: Node[F]](parser: Parser[E], input: String)(verify: E => Boolean): Boolean = {
     parser.parse(input) match {
       case Parsed.Success(parsed, _) => verify(parsed)
       case err: Parsed.Failure =>
@@ -29,25 +29,25 @@ object ParserSpec extends Properties("parser") with InputGenerators with ExprGen
 
   // Utility methods to help with type inference
 
-  def verifyConst[F <: CronField](parser: Parser[ConstExpr[F]], input: String)(verify: ConstExpr[F] => Boolean): Boolean =
-    verifyParsed[F, ConstExpr[F]](parser, input)(verify)
+  def verifyConst[F <: CronField](parser: Parser[ConstNode[F]], input: String)(verify: ConstNode[F] => Boolean): Boolean =
+    verifyParsed[F, ConstNode[F]](parser, input)(verify)
 
-  def verifyEach(parser: Parser[EachExpr[CronField]], input: String): Boolean =
-    verifyParsed[CronField, EachExpr[CronField]](parser, input)(_ => true)
+  def verifyEach(parser: Parser[EachNode[CronField]], input: String): Boolean =
+    verifyParsed[CronField, EachNode[CronField]](parser, input)(_ => true)
 
-  def verifyBetween[F <: CronField](parser: Parser[BetweenExpr[F]], input: String)(verify: BetweenExpr[F] => Boolean): Boolean =
-    verifyParsed[F, BetweenExpr[F]](parser, input)(verify)
+  def verifyBetween[F <: CronField](parser: Parser[BetweenNode[F]], input: String)(verify: BetweenNode[F] => Boolean): Boolean =
+    verifyParsed[F, BetweenNode[F]](parser, input)(verify)
 
-  def verifySeveral[F <: CronField, A](parser: Parser[SeveralExpr[F]], input: String, expected: List[Either[String, (A, A)]])(verify: (ConstExpr[F], String) => Boolean): Boolean = {
-    verifyParsed[F, SeveralExpr[F]](parser, input) { expr =>
+  def verifySeveral[F <: CronField, A](parser: Parser[SeveralNode[F]], input: String, expected: List[Either[String, (A, A)]])(verify: (ConstNode[F], String) => Boolean): Boolean = {
+    verifyParsed[F, SeveralNode[F]](parser, input) { expr =>
       if (expr.values.size == expected.size) {
         val matches = expr.values.list.toList.zip(expected).map { case (exprPart, expectedPart) =>
           expectedPart match {
             case Left(value) =>
-              exprPart.select[ConstExpr[F]].exists(verify(_, value))
+              exprPart.select[ConstNode[F]].exists(verify(_, value))
 
             case Right((start, end)) =>
-              exprPart.select[BetweenExpr[F]].exists { part =>
+              exprPart.select[BetweenNode[F]].exists { part =>
                 verify(part.begin, start.toString) && verify(part.end, end.toString)
               }
           }
@@ -96,7 +96,7 @@ object ParserSpec extends Properties("parser") with InputGenerators with ExprGen
     }
   }
 
-  val eachParserGen: Gen[Parser[EachExpr[CronField]]] =
+  val eachParserGen: Gen[Parser[EachNode[CronField]]] =
     Gen.oneOf(each[Second], each[Minute], each[Hour], each[DayOfMonth], each[Month], each[DayOfWeek])
 
   property("should be able to parse an asterisk in any field") = forAll(eachParserGen) { parser =>

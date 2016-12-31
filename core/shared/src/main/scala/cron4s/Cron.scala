@@ -4,8 +4,6 @@ import cron4s.expr._
 
 import fastparse.all._
 
-import scalaz._
-
 /**
   * Entry point for the CRON parsing operation
   *
@@ -13,13 +11,10 @@ import scalaz._
   */
 object Cron {
 
-  def apply(e: String): Either[InvalidCron, CronExpr] = {
-    \/.fromEither(parse(e))
-      //.flatMap(validation.validate)
-      .toEither
-  }
+  def apply(e: String): Either[InvalidCron, CronExpr] =
+    parse(e).right.flatMap(validation.validateCron)
 
-  private[this] def parse(e: String): Either[ParseFailed, CronExpr] = {
+  private[this] def parse(e: String): Either[ParseFailed, CronExprAST] = {
     parser.cron.parse(e) match {
       case Parsed.Success(expr, _) =>
         Right(expr)

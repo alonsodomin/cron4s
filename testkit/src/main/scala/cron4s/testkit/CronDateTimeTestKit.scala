@@ -1,7 +1,7 @@
 package cron4s.testkit
 
 import cron4s.CronField._
-import cron4s.expr.{EachExpr, ConstExpr, CronExpr}
+import cron4s.expr._
 import cron4s.spi.{DateTimeAdapter, CronDateTimeOps}
 
 import org.scalatest.{Matchers, PropSpec}
@@ -16,20 +16,20 @@ abstract class CronDateTimeTestKit[DateTime <: AnyRef : DateTimeAdapter]
   extends PropSpec with TableDrivenPropertyChecks with Matchers { this: ExtensionsTestKitBase[DateTime] =>
 
   val onlyTuesdaysAt12 = CronExpr(
-    ConstExpr[Second](0),
-    ConstExpr[Minute](0),
-    ConstExpr[Hour](12),
-    EachExpr[DayOfMonth],
-    EachExpr[Month],
-    ConstExpr[DayOfWeek](1)
+    ConstNode[Second](0),
+    ConstNode[Minute](0),
+    ConstNode[Hour](12),
+    EachNode[DayOfMonth],
+    EachNode[Month],
+    ConstNode[DayOfWeek](1)
   )
   val onlySundays = CronExpr(
-    ConstExpr[Second](0),
-    EachExpr[Minute],
-    EachExpr[Hour],
-    EachExpr[DayOfMonth],
-    EachExpr[Month],
-    ConstExpr[DayOfWeek](6)
+    ConstNode[Second](0),
+    EachNode[Minute],
+    EachNode[Hour],
+    EachNode[DayOfMonth],
+    EachNode[Month],
+    ConstNode[DayOfWeek](6)
   )
 
   lazy val samples = Table(

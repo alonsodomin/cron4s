@@ -5,26 +5,27 @@ import shapeless._
 /**
   * Created by alonsodomin on 04/01/2016.
   */
-package object expr {
+package object expr extends Conversions {
 
-  type FieldExprAST[F <: CronField] =
-    EachExpr[F] :+: ConstExpr[F] :+: BetweenExpr[F] :+: SeveralExpr[F] :+: EveryExpr[F] :+: CNil
+  type FieldNode[F <: CronField] =
+    EachNode[F] :+: ConstNode[F] :+: BetweenNode[F] :+: SeveralNode[F] :+: EveryNode[F] :+: CNil
 
-  type EnumExprAST[F <: CronField] =
-    ConstExpr[F] :+: BetweenExpr[F] :+: CNil
+  type SeveralMemberNode[F <: CronField] =
+    ConstNode[F] :+: BetweenNode[F] :+: CNil
 
-  type DivExprAST[F <: CronField] =
-    EachExpr[F] :+: ConstExpr[F] :+: BetweenExpr[F] :+: SeveralExpr[F] :+: CNil
+  type FrequencyBaseNode[F <: CronField] =
+    EachNode[F] :+: BetweenNode[F] :+: SeveralNode[F] :+: CNil
 
-  type SecondsAST     = FieldExprAST[CronField.Second]
-  type MinutesAST     = FieldExprAST[CronField.Minute]
-  type HoursAST       = FieldExprAST[CronField.Hour]
-  type DaysOfMonthAST = FieldExprAST[CronField.DayOfMonth]
-  type MonthsAST      = FieldExprAST[CronField.Month]
-  type DaysOfWeekAST  = FieldExprAST[CronField.DayOfWeek]
+  type SecondsNode     = FieldNode[CronField.Second]
+  type MinutesNode     = FieldNode[CronField.Minute]
+  type HoursNode       = FieldNode[CronField.Hour]
+  type DaysOfMonthNode = FieldNode[CronField.DayOfMonth]
+  type MonthsNode      = FieldNode[CronField.Month]
+  type DaysOfWeekNode  = FieldNode[CronField.DayOfWeek]
 
-  private[cron4s] type TimePartAST = SecondsAST :: MinutesAST :: HoursAST :: HNil
-  private[cron4s] type DatePartAST = DaysOfMonthAST :: MonthsAST :: DaysOfWeekAST :: HNil
-  private[cron4s] type CronExprAST = SecondsAST :: MinutesAST :: HoursAST :: DaysOfMonthAST :: MonthsAST :: DaysOfWeekAST :: HNil
+  private[cron4s] type TimePartAST = SecondsNode :: MinutesNode :: HoursNode :: HNil
+  private[cron4s] type DatePartAST = DaysOfMonthNode :: MonthsNode :: DaysOfWeekNode :: HNil
+  private[cron4s] type CronExprAST =
+    SecondsNode :: MinutesNode :: HoursNode :: DaysOfMonthNode :: MonthsNode :: DaysOfWeekNode :: HNil
 
 }

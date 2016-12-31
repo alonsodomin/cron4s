@@ -3,7 +3,7 @@ package cron4s.spi
 import cron4s.CronField
 import cron4s.CronField._
 import cron4s.expr.CronExpr
-import cron4s.types.IsFieldExpr
+import cron4s.types.Expr
 
 import org.threeten.bp.temporal.{ChronoField, Temporal, TemporalField}
 import org.threeten.bp.{LocalDateTime, ZonedDateTime}
@@ -47,8 +47,8 @@ package object threetenbp {
   }
 
   implicit class JSR310CronExpr[DT <: Temporal](expr: CronExpr) extends CronDateTimeOps[DT](expr)
-  implicit class JSR310Expr[E[_ <: CronField], F <: CronField, DT <: Temporal]
+  implicit class JSR310Node[E[_ <: CronField], F <: CronField, DT <: Temporal]
       (expr: E[F])
-      (implicit ev: IsFieldExpr[E, F])
-    extends ExprDateTimeOps[E, F, DT](expr, DateTimeAdapter[DT], ev)
+      (implicit ev: Expr[E, F])
+    extends NodeDateTimeOps[E, F, DT](expr, DateTimeAdapter[DT], ev)
 }
