@@ -132,8 +132,20 @@ trait NodeGenerators extends ArbitraryCronUnits {
     Gen.oneOf(severalGen[F], invalidSeveralGen[F]).map(Coproduct[FrequencyBaseNode[F]](_))
   )
 
-  private[this] def posDivisorGen(base: Int): Gen[Int] =
-    Gen.choose(1, base).retryUntil(v => (base % v) == 0)
+  private[this] def posDivisorGen(base: Int): Gen[Int] = {
+    val maxDivisor: Int = {
+      var halved = base / 2
+      while (halved > 0 && (base % halved) != 0) {
+        halved -= 1
+      }
+      halved
+    }
+
+    if ((maxDivisor - 1) <= 1) Gen.const(1)
+    else {
+      Gen.choose(1, maxDivisor).suchThat(v => (base % v) == 0)
+    }
+  }
 
   private[this] def posNonDivisorGen(base: Int): Gen[Int] =
     Gen.const(base * 3)
