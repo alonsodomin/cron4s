@@ -19,9 +19,9 @@ private[cron4s] object ops {
     implicit def caseSeveral[F <: CronField] = at[SeveralNode[F]](_.matches)
     implicit def caseEvery[F <: CronField]   = at[EveryNode[F]](_.matches)
 
-    implicit def defaultF[F <: CronField]  = at[FieldNode[F]](_.fold(matches))
-    implicit def defaultSM[F <: CronField] = at[SeveralMemberNode[F]](_.fold(matches))
-    implicit def defaultFB[F <: CronField] = at[FrequencyBaseNode[F]](_.fold(matches))
+    implicit def caseField[F <: CronField]  = at[FieldNode[F]](_.fold(matches))
+    implicit def caseEnumerable[F <: CronField] = at[EnumerableNode[F]](_.fold(matches))
+    implicit def caseDivisible[F <: CronField] = at[DivisibleNode[F]](_.fold(matches))
   }
 
   object range extends Poly1 {
@@ -82,7 +82,7 @@ private[cron4s] object ops {
         ev: Enumerated[CronUnit[F]]
       ) = at[EveryNode[F]](validator.validate)
 
-    implicit def defaultField[F <: CronField](
+    implicit def caseField[F <: CronField](
         implicit
         validator: NodeValidator[FieldNode[F]],
         ev: Enumerated[CronUnit[F]]

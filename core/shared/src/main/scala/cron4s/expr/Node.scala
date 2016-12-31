@@ -64,7 +64,7 @@ final case class BetweenNode[F <: CronField]
 }
 
 final case class SeveralNode[F <: CronField]
-    (values: NonEmptyList[SeveralMemberNode[F]])
+    (values: NonEmptyList[EnumerableNode[F]])
     (implicit val unit: CronUnit[F])
   extends Node[F] {
 
@@ -77,13 +77,13 @@ final case class SeveralNode[F <: CronField]
 }
 
 object SeveralNode {
-  def apply[F <: CronField](head: SeveralMemberNode[F], tail: SeveralMemberNode[F]*)
+  def apply[F <: CronField](head: EnumerableNode[F], tail: EnumerableNode[F]*)
                            (implicit unit: CronUnit[F]): SeveralNode[F] =
     SeveralNode(NonEmptyList(head, tail: _*))
 }
 
 final case class EveryNode[F <: CronField]
-    (value: FrequencyBaseNode[F], freq: Int)
+    (value: DivisibleNode[F], freq: Int)
     (implicit val unit: CronUnit[F])
   extends Node[F] {
 
@@ -140,7 +140,7 @@ private[expr] trait NodeInstances extends LowPriorityNodeInstances {
     }
 
   implicit def severalNodeInstance[F <: CronField]
-    (implicit elem: Lazy[Expr[SeveralMemberNode, F]]): Expr[SeveralNode, F] =
+    (implicit elem: Lazy[Expr[EnumerableNode, F]]): Expr[SeveralNode, F] =
       new Expr[SeveralNode, F] {
         def unit(node: SeveralNode[F]): CronUnit[F] = node.unit
 
@@ -153,7 +153,7 @@ private[expr] trait NodeInstances extends LowPriorityNodeInstances {
       }
 
   implicit def everyNodeInstance[F <: CronField]
-    (implicit base: Lazy[Expr[FrequencyBaseNode, F]]): Expr[EveryNode, F] =
+    (implicit base: Lazy[Expr[DivisibleNode, F]]): Expr[EveryNode, F] =
     new Expr[EveryNode, F] {
 
       def unit(node: EveryNode[F]): CronUnit[F] = node.unit
@@ -173,33 +173,33 @@ private[expr] trait NodeInstances extends LowPriorityNodeInstances {
 
 private[expr] trait LowPriorityNodeInstances {
 
-  implicit def severalMemberNodeInstance[F <: CronField]: Expr[SeveralMemberNode, F] =
-    new Expr[SeveralMemberNode, F] {
-      def matches(node: SeveralMemberNode[F]): Predicate[Int] =
+  implicit def enumerableNodeInstance[F <: CronField]: Expr[EnumerableNode, F] =
+    new Expr[EnumerableNode, F] {
+      def matches(node: EnumerableNode[F]): Predicate[Int] =
         node.fold(generic.ops.matches)
 
-      def range(node: SeveralMemberNode[F]): IndexedSeq[Int] =
+      def range(node: EnumerableNode[F]): IndexedSeq[Int] =
         node.fold(generic.ops.range)
 
-      def unit(node: SeveralMemberNode[F]): CronUnit[F] =
+      def unit(node: EnumerableNode[F]): CronUnit[F] =
         node.fold(generic.ops.unit)
 
-      override def shows(node: SeveralMemberNode[F]): String =
+      override def shows(node: EnumerableNode[F]): String =
         node.fold(generic.ops.show)
     }
 
-  implicit def frequencyBaseNodeInstance[F <: CronField]: Expr[FrequencyBaseNode, F] =
-    new Expr[FrequencyBaseNode, F] {
-      def matches(node: FrequencyBaseNode[F]): Predicate[Int] =
+  implicit def divisibleNodeInstance[F <: CronField]: Expr[DivisibleNode, F] =
+    new Expr[DivisibleNode, F] {
+      def matches(node: DivisibleNode[F]): Predicate[Int] =
         node.fold(generic.ops.matches)
 
-      def range(node: FrequencyBaseNode[F]): IndexedSeq[Int] =
+      def range(node: DivisibleNode[F]): IndexedSeq[Int] =
         node.fold(generic.ops.range)
 
-      def unit(node: FrequencyBaseNode[F]): CronUnit[F] =
+      def unit(node: DivisibleNode[F]): CronUnit[F] =
         node.fold(generic.ops.unit)
 
-      override def shows(node: FrequencyBaseNode[F]): String =
+      override def shows(node: DivisibleNode[F]): String =
         node.fold(generic.ops.show)
     }
 

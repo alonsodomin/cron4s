@@ -1,7 +1,7 @@
 package cron4s.validation
 
 import cron4s._
-import cron4s.expr.{EachNode, EveryNode, FrequencyBaseNode}
+import cron4s.expr.{EachNode, EveryNode, DivisibleNode}
 import cron4s.types.Expr
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -23,7 +23,7 @@ class EveryNodeValidatorRegressionSpec extends FlatSpec with Matchers {
     val eachNode = EachNode[Second]
     val everyNode = EveryNode[Second](eachNode, 13)
 
-    val expr = Expr[FrequencyBaseNode, Second]
+    val expr = Expr[DivisibleNode, Second]
     val expectedError = FieldError(Second,
       s"Step '${everyNode.freq}' does not evenly divide the value '${expr.shows(everyNode.value)}' in field ${everyNode.unit}"
     )
