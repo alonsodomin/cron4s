@@ -10,7 +10,7 @@ trait Enumerated[A] {
   def min(a: A): Int = range(a).head
   def max(a: A): Int = range(a).last
 
-  protected def baseStepSize(a: A): Int = 1
+  protected[cron4s] def baseStepSize(a: A): Int = 1
 
   def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] = {
     val aRange = range(a)

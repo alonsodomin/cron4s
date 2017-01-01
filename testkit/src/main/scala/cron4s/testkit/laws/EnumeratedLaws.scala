@@ -1,6 +1,5 @@
 package cron4s.testkit.laws
 
-import cron4s.CronField
 import cron4s.types.Enumerated
 import cron4s.syntax.enumerated._
 
