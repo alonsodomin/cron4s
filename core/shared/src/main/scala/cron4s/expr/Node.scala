@@ -151,7 +151,7 @@ private[expr] trait NodeInstances extends LowPriorityNodeInstances {
       def matches(node: EveryNode[F]): Predicate[Int] =
         anyOf(range(node).map(equalTo(_)).toList)
 
-      override def steppingUnit(a: EveryNode[F]): Int = a.freq
+      override protected def stepSize(node: EveryNode[F]): Int = node.freq
 
       def range(node: EveryNode[F]): IndexedSeq[Int] = node.range
 
