@@ -1,7 +1,10 @@
 package cron4s.expr
 
 import cron4s.{CronField, CronUnit, generic}
+
 import shapeless._
+
+import scalaz.Show
 
 /**
   * Representation of a valid CRON expression as an AST
@@ -20,6 +23,10 @@ object CronExpr {
   ): CronExpr = CronExpr(
     seconds :: minutes :: hours :: daysOfMonth :: months :: daysOfWeek :: HNil
   )
+
+  implicit val CronExprShow: Show[CronExpr] = Show.shows { expr =>
+    expr.ast.map(generic.ops.show).toList.mkString(" ")
+  }
   
 }
 
@@ -60,7 +67,5 @@ final case class CronExpr(ast: CronExprAST) {
   }
 
   def ranges: List[IndexedSeq[Int]] = ast.map(generic.ops.range).toList
-
-  override def toString = ast.map(generic.ops.show).toList.mkString(" ")
 
 }
