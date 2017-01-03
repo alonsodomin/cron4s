@@ -1,9 +1,11 @@
 package cron4s.validation
 
 import cron4s._
-import cron4s.expr.{EachNode, EveryNode, DivisibleNode}
-import cron4s.types.Expr
+import cron4s.expr.{EachNode, EveryNode}
+
 import org.scalatest.{FlatSpec, Matchers}
+
+import scalaz.syntax.show._
 
 /**
   * Created by alonsodomin on 31/12/2016.
@@ -23,9 +25,8 @@ class EveryNodeValidatorRegressionSpec extends FlatSpec with Matchers {
     val eachNode = EachNode[Second]
     val everyNode = EveryNode[Second](eachNode, 13)
 
-    val expr = Expr[DivisibleNode, Second]
     val expectedError = FieldError(Second,
-      s"Step '${everyNode.freq}' does not evenly divide the value '${expr.shows(everyNode.value)}' in field ${everyNode.unit}"
+      s"Step '${everyNode.freq}' does not evenly divide the value '${everyNode.value.shows}' in field ${everyNode.unit}"
     )
 
     val returnedErrors = NodeValidator[EveryNode[Second]].validate(everyNode)
