@@ -100,10 +100,23 @@ time.minutes
 date.daysOfMonth
 ```
 
-To convert an AST back into the original string expression we simply use the `toString` method:
+To convert an AST back into the original string expression we simply use the `shows` method:
+
+```tut:fail
+cron.shows
+```
+
+Ooops! We got a compilation error because the `CronExpr` does not define a method named `shows`. To make this work
+we need to import Scalaz's `Show` syntax first:
+
+```tut:silent
+import scalaz.syntax.show._
+```
+
+And now:
 
 ```tut
-cron.toString
+cron.shows
 ```
 
 #### Field expressions
@@ -134,6 +147,14 @@ either the cron field type or the cron unit.
 ```tut
 cron.field[CronField.Minute]
 cron.field(CronUnit.Minutes)
+```
+
+To obtain the string representation of individual fields we use the same `shows` method (remember to have the
+correct imports as shown above):
+
+```tut
+cron.seconds.shows
+cron.field[CronField.Minute].shows
 ```
 
 Other interesting operations are the ones that can be used to test if a given value matches the

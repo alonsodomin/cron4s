@@ -122,16 +122,6 @@ trait NodeGenerators extends ArbitraryCronUnits {
     severalGen[F].map(Coproduct[DivisibleNode[F]](_))
   )
 
-  def invalidDivisibleGen[F <: CronField](
-      implicit
-      unit: CronUnit[F],
-      ev: Enumerated[CronUnit[F]]
-  ): Gen[DivisibleNode[F]] = Gen.oneOf(
-    eachGen[F].map(Coproduct[DivisibleNode[F]](_)),
-    Gen.oneOf(betweenGen[F], invalidBetweenGen[F]).map(Coproduct[DivisibleNode[F]](_)),
-    Gen.oneOf(severalGen[F], invalidSeveralGen[F]).map(Coproduct[DivisibleNode[F]](_))
-  )
-
   private[this] def everyGen0[F <: CronField](
       baseGen: Gen[DivisibleNode[F]]
   )(
@@ -149,13 +139,6 @@ trait NodeGenerators extends ArbitraryCronUnits {
       ev: Enumerated[CronUnit[F]]
   ): Gen[EveryNode[F]] =
     everyGen0(divisibleGen[F])
-
-  def invalidEveryGen[F <: CronField](
-      implicit
-      unit: CronUnit[F],
-      ev: Enumerated[CronUnit[F]]
-  ): Gen[EveryNode[F]] =
-    everyGen0(invalidDivisibleGen[F])
 
   def nodeGen[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Gen[Node[F]] =
     Gen.oneOf(eachGen[F], constGen[F], severalGen[F], everyGen[F])

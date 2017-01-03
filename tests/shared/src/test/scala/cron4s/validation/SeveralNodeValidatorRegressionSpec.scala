@@ -5,6 +5,8 @@ import cron4s.expr.{BetweenNode, ConstNode, SeveralNode}
 
 import org.scalatest._
 
+import scalaz.syntax.show._
+
 /**
   * Created by alonsodomin on 05/08/2016.
   */
@@ -20,7 +22,7 @@ class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
 
     returnedErrors shouldBe List(FieldError(
       Minute,
-      s"Value '$node1' at field Minute is implied by '$node2'"
+      s"Value '${node1.shows}' at field Minute is implied by '${node2.shows}'"
     ))
   }
 

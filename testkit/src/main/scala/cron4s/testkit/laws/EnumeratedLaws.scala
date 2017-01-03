@@ -1,6 +1,5 @@
 package cron4s.testkit.laws
 
-import cron4s.CronField
 import cron4s.types.Enumerated
 import cron4s.syntax.enumerated._
 
@@ -19,21 +18,21 @@ trait EnumeratedLaws[A] {
     a.max === a.range.max
 
   def forward(a: A, from: Int): Boolean =
-    a.next(from) === a.step(from, TC.steppingUnit(a)).map(_._1)
+    a.next(from) === a.step(from, TC.baseStepSize(a)).map(_._1)
 
   def backwards(a: A, from: Int): Boolean =
-    a.prev(from) === a.step(from, -TC.steppingUnit(a)).map(_._1)
+    a.prev(from) === a.step(from, -TC.baseStepSize(a)).map(_._1)
 
   def stepable(a: A, from: Int, stepSize: Int): Boolean = {
     if (a.range.isEmpty) {
       a.step(from, stepSize) === None
     } else if (from < a.min && stepSize >= 0) {
-      a.step(from, stepSize) === Some(a.min -> (stepSize * TC.steppingUnit(a)))
+      a.step(from, stepSize) === Some(a.min -> (stepSize * TC.baseStepSize(a)))
     } else if (from > a.max && stepSize <= 0) {
-      a.step(from, stepSize) === Some(a.max -> (stepSize * TC.steppingUnit(a)))
+      a.step(from, stepSize) === Some(a.max -> (stepSize * TC.baseStepSize(a)))
     } else {
       val index = a.range.lastIndexWhere(from >= _)
-      val cursor = index + (stepSize * TC.steppingUnit(a))
+      val cursor = index + (stepSize * TC.baseStepSize(a))
       val newIdx = {
         val mod = cursor % a.range.size
         if (mod < 0) a.range.size + mod

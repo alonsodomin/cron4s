@@ -9,7 +9,6 @@ import shapeless._
 import scalaz.NonEmptyList
 import scalaz.std.anyVal._
 import scalaz.std.list._
-import scalaz.std.vector._
 
 /**
   * Generic representation of the expression node for a given field
@@ -33,8 +32,6 @@ final case class EachNode[+F <: CronField](implicit val unit: CronUnit[F])
   extends Node[F] {
 
   lazy val range: IndexedSeq[Int] = unit.range
-  
-  override def toString = "*"
 
 }
 
@@ -44,8 +41,6 @@ final case class ConstNode[F <: CronField]
   extends Node[F] {
 
   lazy val range: IndexedSeq[Int] = Vector(value)
-
-  override def toString: String = textValue.getOrElse(value.toString)
 
 }
 
@@ -59,8 +54,6 @@ final case class BetweenNode[F <: CronField]
     else Vector.empty
   }
 
-  override def toString = s"$begin-$end"
-
 }
 
 final case class SeveralNode[F <: CronField]
@@ -70,9 +63,6 @@ final case class SeveralNode[F <: CronField]
 
   lazy val range: IndexedSeq[Int] =
     values.list.toVector.view.flatMap(_.range).distinct.sorted.toIndexedSeq
-
-  override def toString: String =
-    values.map(_.fold(generic.ops.show)).list.toList.mkString(",")
 
 }
 
@@ -95,9 +85,6 @@ final case class EveryNode[F <: CronField]
     elements.toVector
   }
 
-  override def toString =
-    s"${value.fold(generic.ops.show)}/$freq"
-
 }
 
 private[expr] trait NodeInstances extends LowPriorityNodeInstances {
@@ -110,7 +97,7 @@ private[expr] trait NodeInstances extends LowPriorityNodeInstances {
         x >= min(node) && x <= max(node)
       }
 
-      override def shows(node: EachNode[F]): String = node.toString
+      override def shows(node: EachNode[F]): String = "*"
 
       def range(node: EachNode[F]): IndexedSeq[Int] = node.range
     }
@@ -120,24 +107,26 @@ private[expr] trait NodeInstances extends LowPriorityNodeInstances {
       def unit(node: ConstNode[F]): CronUnit[F] = node.unit
       def matches(node: ConstNode[F]): Predicate[Int] = equalTo(node.value)
       def range(node: ConstNode[F]): IndexedSeq[Int] = node.range
-      override def shows(node: ConstNode[F]): String = node.toString
+      override def shows(node: ConstNode[F]): String = node.textValue.getOrElse(node.value.toString)
     }
 
-  implicit def betweenNodeInstance[F <: CronField]: Expr[BetweenNode, F] =
-    new Expr[BetweenNode, F] {
+  implicit def betweenNodeInstance[F <: CronField]
+    (implicit elemExpr: Lazy[Expr[ConstNode, F]]): Expr[BetweenNode, F] =
+      new Expr[BetweenNode, F] {
 
-      def unit(node: BetweenNode[F]): CronUnit[F] = node.unit
+        def unit(node: BetweenNode[F]): CronUnit[F] = node.unit
 
-      def matches(node: BetweenNode[F]): Predicate[Int] = Predicate { x =>
-        if (node.begin.value < node.end.value)
-          x >= node.begin.value && x <= node.end.value
-        else false
+        def matches(node: BetweenNode[F]): Predicate[Int] = Predicate { x =>
+          if (node.begin.value < node.end.value)
+            x >= node.begin.value && x <= node.end.value
+          else false
+        }
+
+        def range(node: BetweenNode[F]): IndexedSeq[Int] = node.range
+
+        override def shows(node: BetweenNode[F]): String =
+          s"${elemExpr.value.shows(node.begin)}-${elemExpr.value.shows(node.end)}"
       }
-
-      def range(node: BetweenNode[F]): IndexedSeq[Int] = node.range
-
-      override def shows(node: BetweenNode[F]): String = node.toString
-    }
 
   implicit def severalNodeInstance[F <: CronField]
     (implicit elem: Lazy[Expr[EnumerableNode, F]]): Expr[SeveralNode, F] =
@@ -149,11 +138,12 @@ private[expr] trait NodeInstances extends LowPriorityNodeInstances {
 
         def range(node: SeveralNode[F]): IndexedSeq[Int] = node.range
 
-        override def shows(node: SeveralNode[F]): String = node.toString
+        override def shows(node: SeveralNode[F]): String =
+          node.values.map(elem.value.shows).list.toList.mkString(",")
       }
 
   implicit def everyNodeInstance[F <: CronField]
-    (implicit base: Lazy[Expr[DivisibleNode, F]]): Expr[EveryNode, F] =
+    (implicit baseExpr: Lazy[Expr[DivisibleNode, F]]): Expr[EveryNode, F] =
     new Expr[EveryNode, F] {
 
       def unit(node: EveryNode[F]): CronUnit[F] = node.unit
@@ -161,11 +151,12 @@ private[expr] trait NodeInstances extends LowPriorityNodeInstances {
       def matches(node: EveryNode[F]): Predicate[Int] =
         anyOf(range(node).map(equalTo(_)).toList)
 
-      override def steppingUnit(a: EveryNode[F]): Int = a.freq
+      override protected[cron4s] def baseStepSize(node: EveryNode[F]): Int = node.freq
 
       def range(node: EveryNode[F]): IndexedSeq[Int] = node.range
 
-      override def shows(node: EveryNode[F]): String = node.toString
+      override def shows(node: EveryNode[F]): String =
+        s"${baseExpr.value.shows(node.value)}/${node.freq}"
 
     }
 

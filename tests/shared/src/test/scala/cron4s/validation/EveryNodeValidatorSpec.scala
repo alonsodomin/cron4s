@@ -22,7 +22,7 @@ class EveryNodeValidatorSpec extends PropSpec
       implicit unit: CronUnit[F], enum: Enumerated[CronUnit[F]], expr: Expr[DivisibleNode, F]
   ): Unit = {
     property(s"EveryNode[${unit.field}] with invalid base returns the invalid errors of its base") {
-      forAll(invalidEveryGen[F]) { node =>
+      forAll(everyGen[F]) { node =>
         val expectedErrors = NodeValidator[DivisibleNode[F]].validate(node.value)
         val returnedErrors = NodeValidator[EveryNode[F]].validate(node)
 
