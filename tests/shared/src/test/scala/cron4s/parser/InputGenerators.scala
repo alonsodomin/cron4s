@@ -41,11 +41,13 @@ trait InputGenerators {
     } yield either
 
     val zero = List.empty[String] -> List.empty[Either[String, (A, A)]]
-    Gen.nonEmptyListOf(eitherConstOrRange).map(_.foldRight(zero) { case ((inputPart, resultPart), (inputList, resultList)) =>
-      (inputPart :: inputList) -> (resultPart :: resultList)
-    }).map {
-      case (input, expected) => input.mkString(",") -> expected
-    }
+    Gen.nonEmptyListOf(eitherConstOrRange)
+      .suchThat(_.size > 1)
+      .map(_.foldRight(zero) { case ((inputPart, resultPart), (inputList, resultList)) =>
+        (inputPart :: inputList) -> (resultPart :: resultList)
+      }).map {
+        case (input, expected) => input.mkString(",") -> expected
+      }
   }
 
   val secondsOrMinutesGen: Gen[String] = Gen.choose(0, 59).flatMap(withLeadingZero)

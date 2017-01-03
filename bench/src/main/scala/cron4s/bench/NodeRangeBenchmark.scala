@@ -37,7 +37,7 @@ class NodeRangeBenchmark {
     val stepSize = Minutes.max / 10
     val minutes = (Minutes.min to Minutes.max by stepSize)
       .map(value => ConstNode[Minute](value))
-      .map(Coproduct[SeveralMemberNode[Minute]](_))
+      .map(Coproduct[EnumerableNode[Minute]](_))
 
     SeveralNode(NonEmptyList(minutes.head, minutes.tail: _*))
   }
@@ -48,7 +48,7 @@ class NodeRangeBenchmark {
 
     val minuteRanges = (unit.min to unit.max by chunkSize).map { lower =>
       BetweenNode[Minute](ConstNode(lower), ConstNode(lower + chunkSize - 1))
-    }.map(Coproduct[SeveralMemberNode[Minute]](_))
+    }.map(Coproduct[EnumerableNode[Minute]](_))
 
     SeveralNode[Minute](NonEmptyList(minuteRanges.head, minuteRanges.tail: _*))
   }

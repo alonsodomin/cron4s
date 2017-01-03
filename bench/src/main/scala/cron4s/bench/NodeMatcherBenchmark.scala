@@ -1,6 +1,6 @@
 package cron4s.bench
 
-import cron4s.{CronField, CronUnit}
+import cron4s._
 import cron4s.expr._
 
 import org.openjdk.jmh.annotations._
@@ -32,15 +32,15 @@ class NodeMatcherBenchmark {
   val severalEnumeratedNode = {
     val minutes = for {
       value <- CronUnit.Minutes.range
-    } yield Coproduct[SeveralMemberNode[CronField.Minute]](ConstNode[CronField.Minute](value))
-    SeveralNode(NonEmptyList(minutes.head, minutes.tail: _*))
+    } yield Coproduct[EnumerableNode[CronField.Minute]](ConstNode[CronField.Minute](value))
+    SeveralNode(minutes.head, minutes.tail: _*)
   }
   val severalBetweenNode: SeveralNode[CronField.Minute] = {
     val betweenNode: BetweenNode[CronField.Minute] = BetweenNode(
       ConstNode[CronField.Minute](CronUnit.Minutes.min),
       ConstNode[CronField.Minute](CronUnit.Minutes.max)
     )
-    SeveralNode(NonEmptyList(betweenNode))
+    SeveralNode(betweenNode)
   }
   val everyEachNode = EveryNode(eachNode, 1)
 

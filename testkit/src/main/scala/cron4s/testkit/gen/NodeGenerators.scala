@@ -17,8 +17,8 @@ import scalaz.NonEmptyList
 trait NodeGenerators extends ArbitraryCronUnits {
   import Arbitrary._
 
-  private[this] def filterImpliedElems[F <: CronField](xs: List[SeveralMemberNode[F]]): List[SeveralMemberNode[F]] = {
-    xs.foldRight(List.empty[SeveralMemberNode[F]]) { (node, result) =>
+  private[this] def filterImpliedElems[F <: CronField](xs: List[EnumerableNode[F]]): List[EnumerableNode[F]] = {
+    xs.foldRight(List.empty[EnumerableNode[F]]) { (node, result) =>
       val alreadyImplied = result.exists(_.impliedBy(node))
       val impliedByOther = result.exists(x => node.impliedBy(x))
 
@@ -67,26 +67,26 @@ trait NodeGenerators extends ArbitraryCronUnits {
     } yield BetweenNode(min, max)
   }
 
-  def severalMemberGen[F <: CronField](
+  def enumerableGen[F <: CronField](
       implicit
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
-  ): Gen[SeveralMemberNode[F]] = Gen.oneOf(
-    constGen[F].map(Coproduct[SeveralMemberNode[F]](_)),
-    betweenGen[F].map(Coproduct[SeveralMemberNode[F]](_))
+  ): Gen[EnumerableNode[F]] = Gen.oneOf(
+    constGen[F].map(Coproduct[EnumerableNode[F]](_)),
+    betweenGen[F].map(Coproduct[EnumerableNode[F]](_))
   )
 
-  def invalidSeveralMemberGen[F <: CronField](
+  def invalidEnumerableGen[F <: CronField](
       implicit
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
-  ): Gen[SeveralMemberNode[F]] = Gen.oneOf(
-    Gen.oneOf(constGen[F], invalidConstGen[F]).map(Coproduct[SeveralMemberNode[F]](_)),
-    Gen.oneOf(betweenGen[F], invalidBetweenGen[F]).map(Coproduct[SeveralMemberNode[F]](_))
+  ): Gen[EnumerableNode[F]] = Gen.oneOf(
+    Gen.oneOf(constGen[F], invalidConstGen[F]).map(Coproduct[EnumerableNode[F]](_)),
+    Gen.oneOf(betweenGen[F], invalidBetweenGen[F]).map(Coproduct[EnumerableNode[F]](_))
   )
 
-  private[this] def severalGen0[F <: CronField](memberGen: Gen[SeveralMemberNode[F]])(
-    inspectElements: List[SeveralMemberNode[F]] => List[SeveralMemberNode[F]]
+  private[this] def severalGen0[F <: CronField](memberGen: Gen[EnumerableNode[F]])(
+    inspectElements: List[EnumerableNode[F]] => List[EnumerableNode[F]]
   )(
     implicit
     unit: CronUnit[F],
@@ -104,36 +104,26 @@ trait NodeGenerators extends ArbitraryCronUnits {
       implicit
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
-  ): Gen[SeveralNode[F]] = severalGen0(severalMemberGen[F])(filterImpliedElems)
+  ): Gen[SeveralNode[F]] = severalGen0(enumerableGen[F])(filterImpliedElems)
 
   def invalidSeveralGen[F <: CronField](
       implicit
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
-  ): Gen[SeveralNode[F]] = severalGen0(invalidSeveralMemberGen[F])(identity)
+  ): Gen[SeveralNode[F]] = severalGen0(invalidEnumerableGen[F])(identity)
 
-  def frequencyBaseGen[F <: CronField](
+  def divisibleGen[F <: CronField](
       implicit
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
-  ): Gen[FrequencyBaseNode[F]] = Gen.oneOf(
-    eachGen[F].map(Coproduct[FrequencyBaseNode[F]](_)),
-    betweenGen[F].map(Coproduct[FrequencyBaseNode[F]](_)),
-    severalGen[F].map(Coproduct[FrequencyBaseNode[F]](_))
-  )
-
-  def invalidFrequencyBaseGen[F <: CronField](
-      implicit
-      unit: CronUnit[F],
-      ev: Enumerated[CronUnit[F]]
-  ): Gen[FrequencyBaseNode[F]] = Gen.oneOf(
-    eachGen[F].map(Coproduct[FrequencyBaseNode[F]](_)),
-    Gen.oneOf(betweenGen[F], invalidBetweenGen[F]).map(Coproduct[FrequencyBaseNode[F]](_)),
-    Gen.oneOf(severalGen[F], invalidSeveralGen[F]).map(Coproduct[FrequencyBaseNode[F]](_))
+  ): Gen[DivisibleNode[F]] = Gen.oneOf(
+    eachGen[F].map(Coproduct[DivisibleNode[F]](_)),
+    betweenGen[F].map(Coproduct[DivisibleNode[F]](_)),
+    severalGen[F].map(Coproduct[DivisibleNode[F]](_))
   )
 
   private[this] def everyGen0[F <: CronField](
-      baseGen: Gen[FrequencyBaseNode[F]]
+      baseGen: Gen[DivisibleNode[F]]
   )(
       implicit
       unit: CronUnit[F],
@@ -148,14 +138,7 @@ trait NodeGenerators extends ArbitraryCronUnits {
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
   ): Gen[EveryNode[F]] =
-    everyGen0(frequencyBaseGen[F])
-
-  def invalidEveryGen[F <: CronField](
-      implicit
-      unit: CronUnit[F],
-      ev: Enumerated[CronUnit[F]]
-  ): Gen[EveryNode[F]] =
-    everyGen0(invalidFrequencyBaseGen[F])
+    everyGen0(divisibleGen[F])
 
   def nodeGen[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Gen[Node[F]] =
     Gen.oneOf(eachGen[F], constGen[F], severalGen[F], everyGen[F])

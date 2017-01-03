@@ -75,21 +75,21 @@ package object parser {
     (p ~ "-" ~ p).map { case (min, max) => BetweenNode[F](min, max) }
 
   def several[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[SeveralNode[F]] = {
-    def compose(p: Parser[SeveralMemberNode[F]])(implicit unit: CronUnit[F]): Parser[SeveralNode[F]] =
-      p.rep(min = 1, sep = ",")
+    def compose(p: Parser[EnumerableNode[F]])(implicit unit: CronUnit[F]): Parser[SeveralNode[F]] =
+      p.rep(min = 2, sep = ",")
         .map(values => SeveralNode[F](NonEmptyList(values.head, values.tail: _*)))
 
-    compose(between(p).map(Coproduct[SeveralMemberNode[F]](_)) | p.map(Coproduct[SeveralMemberNode[F]](_)))
+    compose(between(p).map(Coproduct[EnumerableNode[F]](_)) | p.map(Coproduct[EnumerableNode[F]](_)))
   }
 
   def every[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[EveryNode[F]] = {
-    def compose(p: Parser[FrequencyBaseNode[F]])(implicit unit: CronUnit[F]): Parser[EveryNode[F]] =
+    def compose(p: Parser[DivisibleNode[F]])(implicit unit: CronUnit[F]): Parser[EveryNode[F]] =
       (p ~ "/" ~/ digit.rep(1).!).map { case (base, freq) => EveryNode[F](base, freq.toInt) }
 
     compose(
-      several(p).map(Coproduct[FrequencyBaseNode[F]](_)) |
-      between(p).map(Coproduct[FrequencyBaseNode[F]](_)) |
-      each[F].map(Coproduct[FrequencyBaseNode[F]](_))
+      several(p).map(Coproduct[DivisibleNode[F]](_)) |
+      between(p).map(Coproduct[DivisibleNode[F]](_)) |
+      each[F].map(Coproduct[DivisibleNode[F]](_))
     )
   }
 

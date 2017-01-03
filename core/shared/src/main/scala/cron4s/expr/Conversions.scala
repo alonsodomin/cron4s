@@ -18,18 +18,18 @@ private[cron4s] trait Conversions {
     case e: EveryNode[F]   => Coproduct[FieldNode[F]](e)
   }
 
-  implicit def const2SeveralMember[F <: CronField](expr: ConstNode[F]): SeveralMemberNode[F] =
-    Coproduct[SeveralMemberNode[F]](expr)
+  implicit def const2Enumerable[F <: CronField](expr: ConstNode[F]): EnumerableNode[F] =
+    Coproduct[EnumerableNode[F]](expr)
 
-  implicit def between2SeveralMember[F <: CronField](expr: BetweenNode[F]): SeveralMemberNode[F] =
-    Coproduct[SeveralMemberNode[F]](expr)
+  implicit def between2Enumerable[F <: CronField](expr: BetweenNode[F]): EnumerableNode[F] =
+    Coproduct[EnumerableNode[F]](expr)
 
-  implicit def each2FrequencyBase[F <: CronField](expr: EachNode[F]): FrequencyBaseNode[F] =
-    Coproduct[FrequencyBaseNode[F]](expr)
+  implicit def each2Divisible[F <: CronField](expr: EachNode[F]): DivisibleNode[F] =
+    Coproduct[DivisibleNode[F]](expr)
 
-  implicit def between2FrequencyBase[F <: CronField](expr: BetweenNode[F]): FrequencyBaseNode[F] =
-    Coproduct[FrequencyBaseNode[F]](expr)
+  implicit def between2Divisible[F <: CronField](expr: BetweenNode[F]): DivisibleNode[F] =
+    Coproduct[DivisibleNode[F]](expr)
 
-  implicit def several2FrequencyBase[F <: CronField](expr: SeveralNode[F]): FrequencyBaseNode[F] =
-    Coproduct[FrequencyBaseNode[F]](expr)
+  implicit def several2Divisible[F <: CronField](expr: SeveralNode[F]): DivisibleNode[F] =
+    Coproduct[DivisibleNode[F]](expr)
 }
