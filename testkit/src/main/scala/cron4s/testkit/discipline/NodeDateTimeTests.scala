@@ -10,7 +10,8 @@ import org.scalacheck._
 
 import org.typelevel.discipline.Laws
 
-import scalaz.Equal
+import scalaz._
+import Scalaz._
 
 /**
   * Created by alonsodomin on 28/08/2016.
@@ -21,7 +22,8 @@ trait NodeDateTimeTests[E[_ <: CronField], F <: CronField, DateTime] extends Law
   def dateTime(implicit
     arbNode: Arbitrary[E[F]],
     arbDateTime: Arbitrary[DateTime],
-    expr: Expr[E, F]
+    expr: Expr[E, F],
+    dateTimeEq: Equal[DateTime]
   ): RuleSet = new DefaultRuleSet(
     name = "dateTime",
     parent = None,
@@ -36,7 +38,6 @@ object NodeDateTimeTests {
 
   def apply[E[_ <: CronField], F <: CronField, DateTime](implicit
     adapterEv: DateTimeAdapter[DateTime],
-    eqEv: Equal[DateTime],
     exprEv: Expr[E, F]
   ): NodeDateTimeTests[E, F, DateTime] =
     new NodeDateTimeTests[E, F, DateTime] {
