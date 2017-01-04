@@ -242,3 +242,10 @@ lazy val bench = (project in file("bench")).
   settings(noPublishSettings).
   enablePlugins(JmhPlugin).
   dependsOn(coreJVM)
+
+// Utility command aliases
+
+addCommandAlias("testJVM", "cron4sJVM/test")
+addCommandAlias("testJS", "cron4sJS/test")
+addCommandAlias("validateJVM", ";testJVM;makeMicrosite")
+addCommandAlias("validateJS", "testJS")
