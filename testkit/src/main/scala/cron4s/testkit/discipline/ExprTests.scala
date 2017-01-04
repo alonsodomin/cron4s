@@ -7,6 +7,9 @@ import cron4s.types.Expr
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
 
+import scalaz._
+import Scalaz._
+
 /**
   * Created by alonsodomin on 28/08/2016.
   */

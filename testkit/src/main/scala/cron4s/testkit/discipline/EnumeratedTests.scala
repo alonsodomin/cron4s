@@ -7,6 +7,9 @@ import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
 import org.typelevel.discipline.Laws
 
+import scalaz._
+import Scalaz._
+
 /**
   * Created by alonsodomin on 27/08/2016.
   */
@@ -20,7 +23,13 @@ trait EnumeratedTests[A] extends Laws {
     "max" -> forAll(laws.max _),
     "forward" -> forAll(laws.forward _),
     "backwards" -> forAll(laws.backwards _),
-    "step" -> forAll(laws.stepable _)
+    "zeroStepSize" -> forAll(laws.zeroStepSize _),
+    "fromMinToMinForwards" -> forAll(laws.fromMinToMinForwards _),
+    "fromMaxToMaxForwards" -> forAll(laws.fromMaxToMaxForwards _),
+    "fromMinToMaxForwards" -> forAll(laws.fromMinToMaxForwards _),
+    "fromMinToMaxBackwards" -> forAll(laws.fromMinToMaxBackwards _),
+    "fromMaxToMinForwards" -> forAll(laws.fromMaxToMinForwards _),
+    "fromMaxToMinBackwards" -> forAll(laws.fromMaxToMinBackwards _)
   )
 
 }

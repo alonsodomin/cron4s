@@ -99,12 +99,12 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[EveryNode[F]] = new NodeValidator[EveryNode[F]] {
       def validate(node: EveryNode[F]): List[FieldError] = {
-        val baseErrors = NodeValidator[DivisibleNode[F]].validate(node.value)
-        val evenlyDivided = (node.value.range.size % node.freq) == 0
+        val baseErrors = NodeValidator[DivisibleNode[F]].validate(node.base)
+        val evenlyDivided = (node.base.range.size % node.freq) == 0
         if (!evenlyDivided) {
           baseErrors :+ FieldError(
             node.unit.field,
-            s"Step '${node.freq}' does not evenly divide the value '${node.value.shows}' in field ${node.unit}"
+            s"Step '${node.freq}' does not evenly divide the value '${node.base.shows}' in field ${node.unit}"
           )
         } else baseErrors
       }
