@@ -53,24 +53,21 @@ trait EnumeratedLaws[A] {
   def fromMaxToMinBackwards(a: A): IsEqual[Option[(Int, Int)]] =
     a.step(a.max, -(a.range.size - 1)) <-> Some(a.min -> 0)
 
-  def stepable(a: A, from: Int, stepSize: Int): IsEqual[Option[(Int, Int)]] = {
-    if (a.range.isEmpty) {
-      a.step(from, stepSize) <-> None
-    } else if (from < a.min && stepSize >= 0) {
-      a.step(from, stepSize) <-> Some(a.min -> stepSize)
-    } else if (from > a.max && stepSize <= 0) {
-      a.step(from, stepSize) <-> Some(a.max -> stepSize)
-    } else {
-      val index = a.range.lastIndexWhere(from >= _)
-      val cursor = index + stepSize
-      val newIdx = {
-        val mod = cursor % a.range.size
-        if (mod < 0) a.range.size + mod
-        else mod
-      }
-      val newValue = a.range(newIdx)
-      a.step(from, stepSize) <-> Some(newValue -> cursor / a.range.size)
+  def backAndForth(a: A, from: Int, stepSize: Int): IsEqual[Option[Int]] = {
+    val forth = a.step(from, stepSize).map(_._1)
+    val back = forth.flatMap { from2 =>
+      a.step(from2, stepSize * -1).map(_._1)
     }
+    val expected = forth.map { _ =>
+      if (from < a.min) a.min
+      else if (from > a.max) a.max
+      else {
+        val idx = a.range.lastIndexWhere(from >= _)
+        a.range(idx)
+      }
+    }
+
+    back <-> expected
   }
 
 }

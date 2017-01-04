@@ -20,14 +20,21 @@ trait Enumerated[A] {
       Some(max(a) -> stepSize)
     } else {
       val index = aRange.lastIndexWhere(from >= _)
-      val cursor = index + stepSize
+      val pointer = index + stepSize
+
       val newIdx = {
-        val mod = cursor % aRange.size
+        val mod = pointer % aRange.size
         if (mod < 0) aRange.size + mod
         else mod
       }
+      val offsetPointer = if (pointer < 0) {
+        pointer - (aRange.size - 1)
+      } else {
+        pointer
+      }
+
       val newValue = aRange(newIdx)
-      Some(newValue -> cursor / aRange.size)
+      Some(newValue -> offsetPointer / aRange.size)
     }
   }
 
