@@ -25,7 +25,7 @@ trait ExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[E[F]]
   ): RuleSet = new DefaultRuleSet(
     name = "expr",
     parent = Some(enumerated),
-    "matchable"   -> forAll(laws.matchable _),
+    "matches values inside range" -> forAll(laws.matchable _),
     "implication" -> forAll(laws.implicationEquivalence[EE] _)
   )
 

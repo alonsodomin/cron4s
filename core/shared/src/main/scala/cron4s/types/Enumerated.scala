@@ -2,6 +2,9 @@ package cron4s.types
 
 import scala.language.higherKinds
 
+import scalaz._
+import Scalaz._
+
 /**
   * Created by alonsodomin on 23/08/2016.
   */
@@ -11,30 +14,38 @@ trait Enumerated[A] {
   def max(a: A): Int = range(a).last
 
   def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] = {
-    val aRange = range(a)
-
-    if (aRange.isEmpty) None
-    else if (from < min(a) && stepSize >= 0) {
-      Some(min(a) -> stepSize)
-    } else if (from > max(a) && stepSize <= 0) {
-      Some(max(a) -> stepSize)
+    if (stepSize == Int.MinValue || stepSize == Int.MaxValue) {
+      None
     } else {
-      val index = aRange.lastIndexWhere(from >= _)
-      val pointer = index + stepSize
+      val aRange = range(a)
 
-      val newIdx = {
-        val mod = pointer % aRange.size
-        if (mod < 0) aRange.size + mod
-        else mod
-      }
-      val offsetPointer = if (pointer < 0) {
-        pointer - (aRange.size - 1)
+      val nearestNeighbourIndex = if (stepSize > 0) {
+        aRange.lastIndexWhere(from >= _).some
+      } else if (stepSize < 0) {
+        val idx = aRange.indexWhere(from <= _)
+        if (idx == -1) aRange.size.some
+        else idx.some
       } else {
-        pointer
+        none[Int]
       }
 
-      val newValue = aRange(newIdx)
-      Some(newValue -> offsetPointer / aRange.size)
+      nearestNeighbourIndex.map { idx =>
+        val pointer = idx + stepSize
+        val index = {
+          val mod = pointer % aRange.size
+          if (mod < 0) aRange.size + mod
+          else mod
+        }
+        val offsetPointer = if (pointer < 0) {
+          pointer - (aRange.size - 1)
+        } else {
+          pointer
+        }
+
+        aRange(index) -> offsetPointer / aRange.size
+      } orElse {
+        (from -> 0).some
+      }
     }
   }
 
