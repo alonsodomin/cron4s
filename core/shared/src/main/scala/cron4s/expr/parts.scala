@@ -20,9 +20,9 @@ import cron4s.{CronField, generic}
 import shapeless._
 
 final case class DatePartExpr(
-                               daysOfMonth: DaysOfMonthNode,
-                               months: MonthsNode,
-                               daysOfWeek: DaysOfWeekNode
+    daysOfMonth: DaysOfMonthNode,
+    months: MonthsNode,
+    daysOfWeek: DaysOfWeekNode
   ) {
 
   private[cron4s] lazy val ast: DatePartAST = Generic[DatePartExpr].to(this)
@@ -32,9 +32,9 @@ final case class DatePartExpr(
 }
 
 final case class TimePartExpr(
-                               seconds: SecondsNode,
-                               minutes: MinutesNode,
-                               hours: HoursNode
+    seconds: SecondsNode,
+    minutes: MinutesNode,
+    hours: HoursNode
   ) {
 
   private[cron4s] lazy val ast: TimePartAST = Generic[TimePartExpr].to(this)

@@ -48,8 +48,8 @@ private[spi] final class PredicateReducer[DateTime]
     implicit def caseDaysOfWeek  = at[DaysOfWeekNode](expr => predicateFor(DayOfWeek, expr))
   }
 
-  def run(expr: CronExpr): Predicate[DateTime] =
-    expr.ast.map(exprToMatcher).toList
+  def run(ast: AST): Predicate[DateTime] =
+    ast.fold(extract).map(exprToMatcher).toList
       .foldLeft(M.empty[DateTime])((lhs, rhs) => M.plus(lhs, rhs))
 
 }
