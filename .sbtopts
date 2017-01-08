@@ -6,7 +6,3 @@
 -J-XX:ReservedCodeCacheSize=250M
 -J-XX:+TieredCompilation
 -J-XX:-UseGCOverheadLimit
-# effectively adds GC to Perm space
--J-XX:+CMSClassUnloadingEnabled
-# must be enabled for CMSClassUnloadingEnabled to work
--J-XX:+UseConcMarkSweepGC

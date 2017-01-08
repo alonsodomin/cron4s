@@ -1,7 +1,5 @@
 package cron4s.types
 
-import scala.language.higherKinds
-
 import scalaz._
 import Scalaz._
 
@@ -44,7 +42,12 @@ trait Enumerated[A] {
 
         aRange(index) -> offsetPointer / aRange.size
       } orElse {
-        (from -> 0).some
+        val result = {
+          if (from <= min(a)) min(a)
+          else if (from >= max(a)) max(a)
+          else from
+        }
+        (result -> 0).some
       }
     }
   }
