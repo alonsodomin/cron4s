@@ -20,7 +20,7 @@ At the moment the library should be considered as experimental and APIs might ch
 
 ## License
 
-Copyright 2016 Antonio Alonso Dominguez
+Copyright 2017 Antonio Alonso Dominguez
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

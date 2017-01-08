@@ -28,7 +28,7 @@ val commonSettings = Def.settings(
     "-language:existentials"
   ),
   scmInfo := Some(ScmInfo(url("https://github.com/alonsodomin/cron4s"), "scm:git:git@github.com:alonsodomin/cron4s.git"))
-)
+) ++ Licensing.settings
 
 lazy val commonJsSettings = Seq(
   scalaJSStage in Test := FastOptStage,
@@ -157,7 +157,7 @@ lazy val cron4s = (project in file(".")).
   settings(commonSettings).
   settings(noPublishSettings).
   settings(releaseSettings).
-  aggregate(cron4sJS, cron4sJVM, docs)
+  aggregate(cron4sJS, cron4sJVM, docs, bench)
 
 lazy val cron4sJS = (project in file(".js")).
   settings(
@@ -192,6 +192,7 @@ lazy val docs = project.
   dependsOn(cron4sJVM)
 
 lazy val core = (crossProject in file("core")).
+  enablePlugins(AutomateHeaderPlugin).
   settings(
     name := "core",
     moduleName := "cron4s-core"
@@ -207,6 +208,7 @@ lazy val coreJS = core.js
 lazy val coreJVM = core.jvm
 
 lazy val testkit = (crossProject.crossType(CrossType.Pure) in file("testkit")).
+  enablePlugins(AutomateHeaderPlugin).
   settings(
     name := "testkit",
     moduleName := "cron4s-testkit"
@@ -222,6 +224,7 @@ lazy val testkitJS = testkit.js
 lazy val testkitJVM = testkit.jvm
 
 lazy val tests = (crossProject in file("tests")).
+  enablePlugins(AutomateHeaderPlugin).
   settings(
     name := "tests",
     moduleName := "cron4s-tests"
@@ -237,6 +240,7 @@ lazy val testsJS = tests.js
 lazy val testsJVM = tests.jvm
 
 lazy val bench = (project in file("bench")).
+  enablePlugins(AutomateHeaderPlugin).
   settings(name := "bench").
   settings(commonSettings).
   settings(noPublishSettings).
