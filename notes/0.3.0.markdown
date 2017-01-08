@@ -1,5 +1,5 @@
-[cron4s](https://alonsodomin.github.io/cron4s) 0.3.0 has major enhancements from 0.2.1. This release is not
-binary compatible with previous ones and has several API breaking changes which will make users have to update
+[cron4s](https://alonsodomin.github.io/cron4s) 0.3.0 has an overhaul of its internals from 0.2.1. This release is not
+source compatible with previous ones as it has several API breaking changes which will make users have to update
 their codebases to be able to compile with it. The list of changes in this release are:
 
  * Updated ScalaJS to 0.6.14
@@ -10,5 +10,6 @@ their codebases to be able to compile with it. The list of changes in this relea
  * Full type signatures in the AST are now preserved after parsing the expression [(#24)](https://github.com/alonsodomin/cron4s/pull/24)
  * The parsed expression AST is not fully validated and any error will result returning those errors instead of the actual expression object.
  * Fixed inconsistencies when stepping over enumerated values of the different expression ranges [(#28)](https://github.com/alonsodomin/cron4s/pull/28)
+ * All expression and nodes now implement the `scalaz.Show` typeclass to consistently return the actual CRON string representation.
 
 A [migration guide](https://alonsodomin.github.io/cron4s/docs/migration/0_3_0.html) has been published for anyone that would like to update.
