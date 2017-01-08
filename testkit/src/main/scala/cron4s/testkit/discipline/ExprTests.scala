@@ -7,6 +7,9 @@ import cron4s.types.Expr
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
 
+import scalaz._
+import Scalaz._
+
 /**
   * Created by alonsodomin on 28/08/2016.
   */
@@ -22,7 +25,7 @@ trait ExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[E[F]]
   ): RuleSet = new DefaultRuleSet(
     name = "expr",
     parent = Some(enumerated),
-    "matchable"   -> forAll(laws.matchable _),
+    "matches values inside range" -> forAll(laws.matchable _),
     "implication" -> forAll(laws.implicationEquivalence[EE] _)
   )
 

@@ -26,7 +26,7 @@ class EveryNodeValidatorRegressionSpec extends FlatSpec with Matchers {
     val everyNode = EveryNode[Second](eachNode, 13)
 
     val expectedError = FieldError(Second,
-      s"Step '${everyNode.freq}' does not evenly divide the value '${everyNode.value.shows}' in field ${everyNode.unit}"
+      s"Step '${everyNode.freq}' does not evenly divide the value '${everyNode.base.shows}' in field ${everyNode.unit}"
     )
 
     val returnedErrors = NodeValidator[EveryNode[Second]].validate(everyNode)

@@ -23,7 +23,7 @@ class EveryNodeValidatorSpec extends PropSpec
   ): Unit = {
     property(s"EveryNode[${unit.field}] with invalid base returns the invalid errors of its base") {
       forAll(everyGen[F]) { node =>
-        val expectedErrors = NodeValidator[DivisibleNode[F]].validate(node.value)
+        val expectedErrors = NodeValidator[DivisibleNode[F]].validate(node.base)
         val returnedErrors = NodeValidator[EveryNode[F]].validate(node)
 
         returnedErrors should contain allElementsOf expectedErrors
