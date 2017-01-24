@@ -48,12 +48,12 @@ final case class CronExpr(
   /**
     * Time part of the CRON expression
     */
-  lazy val timePart: TimePartExpr = TimePartExpr(seconds, minutes, hours)
+  lazy val timePart: TimeCronExpr = TimeCronExpr(seconds, minutes, hours)
 
   /**
     * Date part of the CRON expression
     */
-  lazy val datePart: DatePartExpr = DatePartExpr(daysOfMonth, months, daysOfWeek)
+  lazy val datePart: DateCronExpr = DateCronExpr(daysOfMonth, months, daysOfWeek)
 
   /**
     * Generic field accessor. Given a CronField, this method can be used
@@ -63,13 +63,13 @@ final case class CronExpr(
     * @tparam F CronField type
     * @return field-based expression for given field
     */
-  def field[F <: CronField](implicit unit: CronUnit[F]): RawFieldExpr[F] = unit.field match {
-    case CronField.Second     => seconds.asInstanceOf[RawFieldExpr[F]]
-    case CronField.Minute     => minutes.asInstanceOf[RawFieldExpr[F]]
-    case CronField.Hour       => hours.asInstanceOf[RawFieldExpr[F]]
-    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[RawFieldExpr[F]]
-    case CronField.Month      => months.asInstanceOf[RawFieldExpr[F]]
-    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[RawFieldExpr[F]]
+  def field[F <: CronField](implicit unit: CronUnit[F]): RawFieldNode[F] = unit.field match {
+    case CronField.Second     => seconds.asInstanceOf[RawFieldNode[F]]
+    case CronField.Minute     => minutes.asInstanceOf[RawFieldNode[F]]
+    case CronField.Hour       => hours.asInstanceOf[RawFieldNode[F]]
+    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[RawFieldNode[F]]
+    case CronField.Month      => months.asInstanceOf[RawFieldNode[F]]
+    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[RawFieldNode[F]]
   }
 
   def ranges: List[IndexedSeq[Int]] = raw.map(generic.ops.range).toList

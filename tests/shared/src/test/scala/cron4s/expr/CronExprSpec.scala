@@ -19,8 +19,8 @@ class CronExprSpec extends FlatSpec with Matchers {
   val monthExpr      = ConstNode[Month](6)
   val dayOfWeekExpr  = ConstNode[DayOfWeek](3)
 
-  val timePart = TimePartExpr(secondExpr, minuteExpr, hourExpr)
-  val datePart = DatePartExpr(dayOfMonthExpr, monthExpr, dayOfWeekExpr)
+  val timePart = TimeCronExpr(secondExpr, minuteExpr, hourExpr)
+  val datePart = DateCronExpr(dayOfMonthExpr, monthExpr, dayOfWeekExpr)
 
   val expr = CronExpr(secondExpr, minuteExpr, hourExpr, dayOfMonthExpr, monthExpr, dayOfWeekExpr)
 

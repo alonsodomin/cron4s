@@ -91,7 +91,7 @@ package object parser extends NodeConversions {
     (p ~ "-" ~ p).map { case (min, max) => BetweenNode[F](min, max) }
 
   def several[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[SeveralNode[F]] = {
-    def compose(p: Parser[EnumerableExpr[F]])(implicit unit: CronUnit[F]): Parser[SeveralNode[F]] =
+    def compose(p: Parser[EnumerableNode[F]])(implicit unit: CronUnit[F]): Parser[SeveralNode[F]] =
       p.rep(min = 2, sep = ",")
         .map(values => SeveralNode[F](NonEmptyList(values.head, values.tail: _*)))
 
@@ -99,7 +99,7 @@ package object parser extends NodeConversions {
   }
 
   def every[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[EveryNode[F]] = {
-    def compose(p: Parser[DivisibleExpr[F]])(implicit unit: CronUnit[F]): Parser[EveryNode[F]] =
+    def compose(p: Parser[DivisibleNode[F]])(implicit unit: CronUnit[F]): Parser[EveryNode[F]] =
       (p ~ "/" ~/ digit.rep(1).!).map { case (base, freq) => EveryNode[F](base, freq.toInt) }
 
     compose(
@@ -113,7 +113,7 @@ package object parser extends NodeConversions {
   // AST Parsing & Building
   //----------------------------------------
 
-  def of[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[FieldExpr[F]] = {
+  def of[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[FieldNode[F]] = {
     every(p).map(every2Field) |
       several(p).map(several2Field) |
       between(p).map(between2Field) |

@@ -36,8 +36,8 @@ private[spi] final class PredicateReducer[DateTime]
     import CronField._
 
     private[this] def predicateFor[F <: CronField]
-        (field: F, node: FieldExpr[F])
-        (implicit expr: Expr[FieldExpr, F]): Predicate[DateTime] =
+        (field: F, node: FieldNode[F])
+        (implicit expr: Expr[FieldNode, F]): Predicate[DateTime] =
       Predicate { dt =>
         adapter.get(dt, field).map(expr.matches(node)).getOrElse(!M.empty[DateTime](dt))
       }
@@ -50,7 +50,7 @@ private[spi] final class PredicateReducer[DateTime]
     implicit def caseDaysOfWeek  = at[DaysOfWeekNode](expr => predicateFor(DayOfWeek, expr))
   }
 
-  def run(ast: Either3[RawCronExpr, TimePartAST, DatePartAST]): Predicate[DateTime] = {
+  def run(ast: Either3[RawCronExpr, TimePartAST, RawDateCronExpr]): Predicate[DateTime] = {
     val predicateList: List[Predicate[DateTime]] = ast.fold(
       _.map(asPredicate).toList,
       _.map(asPredicate).toList,

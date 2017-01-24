@@ -24,72 +24,72 @@ import scalaz.Show
 /**
   * Created by alonsodomin on 23/01/2017.
   */
-final class FieldExpr[F <: CronField](private[cron4s] val raw: RawFieldExpr[F]) extends AnyVal {
+final class FieldNode[F <: CronField](private[cron4s] val raw: RawFieldNode[F]) extends AnyVal {
 
   override def toString: String = raw.fold(generic.ops.show)
 
 }
 
-object FieldExpr {
-  implicit def fieldNodeInstance[F <: CronField]: Expr[FieldExpr, F] = new Expr[FieldExpr, F] {
-    def matches(node: FieldExpr[F]): Predicate[Int] =
+object FieldNode {
+  implicit def fieldNodeInstance[F <: CronField]: Expr[FieldNode, F] = new Expr[FieldNode, F] {
+    def matches(node: FieldNode[F]): Predicate[Int] =
       node.raw.fold(generic.ops.matches)
 
-    def range(node: FieldExpr[F]): IndexedSeq[Int] =
+    def range(node: FieldNode[F]): IndexedSeq[Int] =
       node.raw.fold(generic.ops.range)
 
-    def unit(node: FieldExpr[F]): CronUnit[F] =
+    def unit(node: FieldNode[F]): CronUnit[F] =
       node.raw.fold(generic.ops.unit)
 
-    override def shows(node: FieldExpr[F]): String =
+    override def shows(node: FieldNode[F]): String =
       node.raw.fold(generic.ops.show)
   }
 }
 
-final class EnumerableExpr[F <: CronField](val raw: RawEnumerableExpr[F]) extends AnyVal {
+final class EnumerableNode[F <: CronField](val raw: RawEnumerableNode[F]) extends AnyVal {
 
   override def toString: String = raw.fold(generic.ops.show)
 
 }
 
-object EnumerableExpr {
+object EnumerableNode {
 
-  implicit def enumerableNodeInstance[F <: CronField]: Expr[EnumerableExpr, F] =
-    new Expr[EnumerableExpr, F] {
-      def matches(node: EnumerableExpr[F]): Predicate[Int] =
+  implicit def enumerableNodeInstance[F <: CronField]: Expr[EnumerableNode, F] =
+    new Expr[EnumerableNode, F] {
+      def matches(node: EnumerableNode[F]): Predicate[Int] =
         node.raw.fold(generic.ops.matches)
 
-      def range(node: EnumerableExpr[F]): IndexedSeq[Int] =
+      def range(node: EnumerableNode[F]): IndexedSeq[Int] =
         node.raw.fold(generic.ops.range)
 
-      def unit(node: EnumerableExpr[F]): CronUnit[F] =
+      def unit(node: EnumerableNode[F]): CronUnit[F] =
         node.raw.fold(generic.ops.unit)
 
-      override def shows(node: EnumerableExpr[F]): String =
+      override def shows(node: EnumerableNode[F]): String =
         node.raw.fold(generic.ops.show)
     }
 
 }
 
-final class DivisibleExpr[F <: CronField](val raw: RawDivisibleExpr[F]) extends AnyVal {
+final class DivisibleNode[F <: CronField](val raw: RawDivisibleNode[F]) extends AnyVal {
 
   override def toString: String = raw.fold(generic.ops.show)
 
 }
 
-object DivisibleExpr {
-  implicit def divisibleNodeInstance[F <: CronField]: Expr[DivisibleExpr, F] =
-    new Expr[DivisibleExpr, F] {
-      def matches(node: DivisibleExpr[F]): Predicate[Int] =
+object DivisibleNode {
+  implicit def divisibleNodeInstance[F <: CronField]: Expr[DivisibleNode, F] =
+    new Expr[DivisibleNode, F] {
+      def matches(node: DivisibleNode[F]): Predicate[Int] =
         node.raw.fold(generic.ops.matches)
 
-      def range(node: DivisibleExpr[F]): IndexedSeq[Int] =
+      def range(node: DivisibleNode[F]): IndexedSeq[Int] =
         node.raw.fold(generic.ops.range)
 
-      def unit(node: DivisibleExpr[F]): CronUnit[F] =
+      def unit(node: DivisibleNode[F]): CronUnit[F] =
         node.raw.fold(generic.ops.unit)
 
-      override def shows(node: DivisibleExpr[F]): String =
+      override def shows(node: DivisibleNode[F]): String =
         node.raw.fold(generic.ops.show)
     }
 }

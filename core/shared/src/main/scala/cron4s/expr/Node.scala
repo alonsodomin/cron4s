@@ -121,7 +121,7 @@ object BetweenNode {
 }
 
 final case class SeveralNode[F <: CronField]
-    (values: NonEmptyList[EnumerableExpr[F]])
+    (values: NonEmptyList[EnumerableNode[F]])
     (implicit val unit: CronUnit[F])
   extends Node[F] {
 
@@ -132,12 +132,12 @@ final case class SeveralNode[F <: CronField]
 
 object SeveralNode {
 
-  def apply[F <: CronField](head: EnumerableExpr[F], tail: EnumerableExpr[F]*)
+  def apply[F <: CronField](head: EnumerableNode[F], tail: EnumerableNode[F]*)
                            (implicit unit: CronUnit[F]): SeveralNode[F] =
     SeveralNode(NonEmptyList(head, tail: _*))
 
   implicit def severalNodeInstance[F <: CronField]
-      (implicit elemExpr: Expr[EnumerableExpr, F]): Expr[SeveralNode, F] =
+      (implicit elemExpr: Expr[EnumerableNode, F]): Expr[SeveralNode, F] =
     new Expr[SeveralNode, F] {
       def unit(node: SeveralNode[F]): CronUnit[F] = node.unit
 
@@ -153,7 +153,7 @@ object SeveralNode {
 }
 
 final case class EveryNode[F <: CronField]
-    (base: DivisibleExpr[F], freq: Int)
+    (base: DivisibleNode[F], freq: Int)
     (implicit val unit: CronUnit[F])
   extends Node[F] {
 
@@ -170,7 +170,7 @@ final case class EveryNode[F <: CronField]
 object EveryNode {
 
   implicit def everyNodeInstance[F <: CronField]
-      (implicit baseExpr: Expr[DivisibleExpr, F]): Expr[EveryNode, F] =
+      (implicit baseExpr: Expr[DivisibleNode, F]): Expr[EveryNode, F] =
     new Expr[EveryNode, F] {
 
       def unit(node: EveryNode[F]): CronUnit[F] = node.unit

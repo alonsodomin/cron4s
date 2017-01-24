@@ -30,33 +30,33 @@ private[cron4s] trait NodeConversions {
   /*implicit def toFieldNode[F <: CronField](ast: RawFieldExpr[F]): FieldNode[F] =
     new FieldNode[F](ast)*/
 
-  implicit def each2Field[F <: CronField](node: EachNode[F]): FieldExpr[F] =
-    new FieldExpr(Coproduct[RawFieldExpr[F]](node))
+  implicit def each2Field[F <: CronField](node: EachNode[F]): FieldNode[F] =
+    new FieldNode(Coproduct[RawFieldNode[F]](node))
 
-  implicit def const2Field[F <: CronField](node: ConstNode[F]): FieldExpr[F] =
-    new FieldExpr(Coproduct[RawFieldExpr[F]](node))
+  implicit def const2Field[F <: CronField](node: ConstNode[F]): FieldNode[F] =
+    new FieldNode(Coproduct[RawFieldNode[F]](node))
 
-  implicit def between2Field[F <: CronField](node: BetweenNode[F]): FieldExpr[F] =
-    new FieldExpr(Coproduct[RawFieldExpr[F]](node))
+  implicit def between2Field[F <: CronField](node: BetweenNode[F]): FieldNode[F] =
+    new FieldNode(Coproduct[RawFieldNode[F]](node))
 
-  implicit def several2Field[F <: CronField](node: SeveralNode[F]): FieldExpr[F] =
-    new FieldExpr(Coproduct[RawFieldExpr[F]](node))
+  implicit def several2Field[F <: CronField](node: SeveralNode[F]): FieldNode[F] =
+    new FieldNode(Coproduct[RawFieldNode[F]](node))
 
-  implicit def every2Field[F <: CronField](node: EveryNode[F]): FieldExpr[F] =
-    new FieldExpr(Coproduct[RawFieldExpr[F]](node))
+  implicit def every2Field[F <: CronField](node: EveryNode[F]): FieldNode[F] =
+    new FieldNode(Coproduct[RawFieldNode[F]](node))
 
-  implicit def const2Enumerable[F <: CronField](node: ConstNode[F]): EnumerableExpr[F] =
-    new EnumerableExpr(Coproduct[RawEnumerableExpr[F]](node))
+  implicit def const2Enumerable[F <: CronField](node: ConstNode[F]): EnumerableNode[F] =
+    new EnumerableNode(Coproduct[RawEnumerableNode[F]](node))
 
-  implicit def between2Enumerable[F <: CronField](node: BetweenNode[F]): EnumerableExpr[F] =
-    new EnumerableExpr(Coproduct[RawEnumerableExpr[F]](node))
+  implicit def between2Enumerable[F <: CronField](node: BetweenNode[F]): EnumerableNode[F] =
+    new EnumerableNode(Coproduct[RawEnumerableNode[F]](node))
 
-  implicit def each2Divisible[F <: CronField](node: EachNode[F]): DivisibleExpr[F] =
-    new DivisibleExpr(Coproduct[RawDivisibleExpr[F]](node))
+  implicit def each2Divisible[F <: CronField](node: EachNode[F]): DivisibleNode[F] =
+    new DivisibleNode(Coproduct[RawDivisibleNode[F]](node))
 
-  implicit def between2Divisible[F <: CronField](node: BetweenNode[F]): DivisibleExpr[F] =
-    new DivisibleExpr(Coproduct[RawDivisibleExpr[F]](node))
+  implicit def between2Divisible[F <: CronField](node: BetweenNode[F]): DivisibleNode[F] =
+    new DivisibleNode(Coproduct[RawDivisibleNode[F]](node))
 
-  implicit def several2Divisible[F <: CronField](node: SeveralNode[F]): DivisibleExpr[F] =
-    new DivisibleExpr(Coproduct[RawDivisibleExpr[F]](node))
+  implicit def several2Divisible[F <: CronField](node: SeveralNode[F]): DivisibleNode[F] =
+    new DivisibleNode(Coproduct[RawDivisibleNode[F]](node))
 }

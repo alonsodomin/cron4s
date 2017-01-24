@@ -16,7 +16,7 @@
 
 package cron4s.spi
 
-import cron4s.expr.{CronExpr, RawCronExpr, TimePartExpr}
+import cron4s.expr.{CronExpr, DateCronExpr, RawCronExpr, TimeCronExpr}
 import cron4s.types.Predicate
 
 import scalaz.{Either3, OneOr, PlusEmpty}
@@ -24,7 +24,7 @@ import scalaz.{Either3, OneOr, PlusEmpty}
 /**
   * Created by alonsodomin on 14/01/2017.
   */
-trait CronDateTime[T, DateTime] {
+trait DateTimeExpr[T, DateTime] {
   implicit def adapter: DateTimeAdapter[DateTime]
 
   protected def matches(expr: T)(implicit M: PlusEmpty[Predicate]): Predicate[DateTime]
@@ -43,11 +43,11 @@ trait CronDateTime[T, DateTime] {
 
 }
 
-object CronDateTime {
-  @inline def apply[T, DateTime](implicit ev: CronDateTime[T, DateTime]): CronDateTime[T, DateTime] = ev
+object DateTimeExpr {
+  @inline def apply[T, DateTime](implicit ev: DateTimeExpr[T, DateTime]): DateTimeExpr[T, DateTime] = ev
 }
 
-trait CronExprDateTime[DateTime] extends CronDateTime[CronExpr, DateTime] {
+trait DateTimeCron[DateTime] extends DateTimeExpr[CronExpr, DateTime] {
 
   protected def matches(expr: CronExpr)(implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime]
@@ -57,11 +57,15 @@ trait CronExprDateTime[DateTime] extends CronDateTime[CronExpr, DateTime] {
   override def step(expr: CronExpr)(from: DateTime, stepSize: Int): Option[DateTime] = ???
 }
 
-object CronExprDateTime {
-  def apply[DateTime](implicit adapter0: DateTimeAdapter[DateTime]): CronExprDateTime[DateTime] =
-    new CronExprDateTime[DateTime] { implicit val adapter = adapter0 }
+object DateTimeCron {
+  def apply[DateTime](implicit adapter0: DateTimeAdapter[DateTime]): DateTimeCron[DateTime] =
+    new DateTimeCron[DateTime] { implicit val adapter = adapter0 }
 }
 
-trait TimePartDateTime[DateTime] extends CronDateTime[TimePartExpr, DateTime] {
+trait TimeCron[DateTime] extends DateTimeExpr[TimeCronExpr, DateTime] {
+
+}
+
+trait DateCron[DateTime] extends DateTimeExpr[DateCronExpr, DateTime] {
 
 }

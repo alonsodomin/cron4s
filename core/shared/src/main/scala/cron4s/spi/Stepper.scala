@@ -32,12 +32,12 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(
   type Step = Option[(DateTime, Int)]
 
   private[this] def stepField[F <: CronField]
-      (expr: FieldExpr[F], step: Int): Option[(Int, Int)] =
+      (expr: FieldNode[F], step: Int): Option[(Int, Int)] =
     adapter.get(from, expr.unit.field)
       .flatMap(v => expr.step(v, step))
 
   private[this] def stepAndAdjust[F <: CronField]
-      (dateTimeAndStep: Step, expr: FieldExpr[F]): Step = {
+      (dateTimeAndStep: Step, expr: FieldNode[F]): Step = {
     for {
       (dateTime, step)  <- dateTimeAndStep
       (value, nextStep) <- stepField(expr, step)
@@ -46,7 +46,7 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(
   }
 
   private[this] def stepDayOfWeek
-      (dt: DateTime, expr: FieldExpr[DayOfWeek], stepSize: Int): Step = {
+      (dt: DateTime, expr: FieldNode[DayOfWeek], stepSize: Int): Step = {
     for {
       dayOfWeek         <- adapter.get(dt, DayOfWeek)
       (value, nextStep) <- expr.step(dayOfWeek, stepSize)
@@ -69,7 +69,7 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(
       new PredicateReducer[DateTime].run(expr.raw)
     }
 
-    val dateWithoutWeekOfDay = expr.datePart.ast.take(2)
+    val dateWithoutWeekOfDay = expr.datePart.raw.take(2)
 
     def stepDatePart(previous: Step): Step =
       dateWithoutWeekOfDay.foldLeft(previous)(stepping).flatMap {
@@ -92,7 +92,7 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(
     }
 
     val initial: Step = Some(from -> initialStep)
-    val timeAdjusted: Step = expr.timePart.ast.foldLeft(initial)(stepping)
+    val timeAdjusted: Step = expr.timePart.raw.foldLeft(initial)(stepping)
     val adjusted = dateStepLoop(timeAdjusted)
     adjusted.map(_._1)
   }
