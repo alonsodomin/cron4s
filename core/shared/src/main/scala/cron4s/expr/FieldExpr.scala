@@ -26,7 +26,7 @@ import scalaz.Show
   */
 final class FieldExpr[F <: CronField](private[cron4s] val raw: RawFieldExpr[F]) extends AnyVal {
 
-  override def toString: String = Show[FieldExpr[F]].shows(this)
+  override def toString: String = raw.fold(generic.ops.show)
 
 }
 
@@ -46,7 +46,11 @@ object FieldExpr {
   }
 }
 
-final class EnumerableExpr[F <: CronField](val raw: RawEnumerableExpr[F]) extends AnyVal
+final class EnumerableExpr[F <: CronField](val raw: RawEnumerableExpr[F]) extends AnyVal {
+
+  override def toString: String = raw.fold(generic.ops.show)
+
+}
 
 object EnumerableExpr {
 
@@ -67,7 +71,11 @@ object EnumerableExpr {
 
 }
 
-final class DivisibleExpr[F <: CronField](val raw: RawDivisibleExpr[F]) extends AnyVal
+final class DivisibleExpr[F <: CronField](val raw: RawDivisibleExpr[F]) extends AnyVal {
+
+  override def toString: String = raw.fold(generic.ops.show)
+
+}
 
 object DivisibleExpr {
   implicit def divisibleNodeInstance[F <: CronField]: Expr[DivisibleExpr, F] =
