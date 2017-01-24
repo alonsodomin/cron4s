@@ -30,7 +30,7 @@ object Cron {
   def apply(e: String): Either[InvalidCron, CronExpr] =
     parse(e).right.flatMap(validation.validateCron)
 
-  private[this] def parse(e: String): Either[ParseFailed, CronExprAST] = {
+  private[this] def parse(e: String): Either[ParseFailed, CronExpr] = {
     parser.cron.parse(e) match {
       case Parsed.Success(expr, _) =>
         Right(expr)

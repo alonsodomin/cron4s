@@ -18,7 +18,7 @@ package cron4s.types
 
 import cron4s.syntax.predicate._
 
-import scalaz.{Contravariant, PlusEmpty}
+import scalaz.{Contravariant, Monoid, PlusEmpty}
 
 /**
   * Created by alonsodomin on 02/01/2016.
@@ -50,16 +50,24 @@ object Predicate {
 
   }
 
-  object conjunction extends PlusEmpty[Predicate] {
-    def empty[A]: Predicate[A] = always(true)
+  object conjunction {
+    implicit val monoidK: PlusEmpty[Predicate] = new PlusEmpty[Predicate] {
+      def empty[A]: Predicate[A] = always(true)
 
-    def plus[A](x: Predicate[A], y: => Predicate[A]): Predicate[A] = x && y
+      def plus[A](x: Predicate[A], y: => Predicate[A]): Predicate[A] = x && y
+    }
+
+    implicit def monoid[A]: Monoid[Predicate[A]] = monoidK.monoid[A]
   }
 
-  object disjunction extends PlusEmpty[Predicate] {
-    def empty[A]: Predicate[A] = always(false)
+  object disjunction {
+    implicit val monoidK: PlusEmpty[Predicate] = new PlusEmpty[Predicate] {
+      def empty[A]: Predicate[A] = always(false)
 
-    def plus[A](x: Predicate[A], y: => Predicate[A]): Predicate[A] = x || y
+      def plus[A](x: Predicate[A], y: => Predicate[A]): Predicate[A] = x || y
+    }
+
+    implicit def monoid[A]: Monoid[Predicate[A]] = monoidK.monoid[A]
   }
 
 }

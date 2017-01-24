@@ -15,6 +15,6 @@
  */
 
 import cron4s.syntax.AllSyntax
-import cron4s.expr.Conversions
+import cron4s.expr.NodeConversions
 
-package object cron4s extends AllSyntax with Conversions
+package object cron4s extends AllSyntax with NodeConversions

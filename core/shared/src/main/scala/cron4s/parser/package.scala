@@ -27,7 +27,7 @@ import scalaz.NonEmptyList
 /**
   * Created by alonsodomin on 15/12/2016.
   */
-package object parser {
+package object parser extends NodeConversions {
   import CronField._
   import CronUnit._
 
@@ -91,21 +91,21 @@ package object parser {
     (p ~ "-" ~ p).map { case (min, max) => BetweenNode[F](min, max) }
 
   def several[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[SeveralNode[F]] = {
-    def compose(p: Parser[EnumerableNode[F]])(implicit unit: CronUnit[F]): Parser[SeveralNode[F]] =
+    def compose(p: Parser[EnumerableExpr[F]])(implicit unit: CronUnit[F]): Parser[SeveralNode[F]] =
       p.rep(min = 2, sep = ",")
         .map(values => SeveralNode[F](NonEmptyList(values.head, values.tail: _*)))
 
-    compose(between(p).map(Coproduct[EnumerableNode[F]](_)) | p.map(Coproduct[EnumerableNode[F]](_)))
+    compose(between(p).map(between2Enumerable) | p.map(const2Enumerable))
   }
 
   def every[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[EveryNode[F]] = {
-    def compose(p: Parser[DivisibleNode[F]])(implicit unit: CronUnit[F]): Parser[EveryNode[F]] =
+    def compose(p: Parser[DivisibleExpr[F]])(implicit unit: CronUnit[F]): Parser[EveryNode[F]] =
       (p ~ "/" ~/ digit.rep(1).!).map { case (base, freq) => EveryNode[F](base, freq.toInt) }
 
     compose(
-      several(p).map(Coproduct[DivisibleNode[F]](_)) |
-      between(p).map(Coproduct[DivisibleNode[F]](_)) |
-      each[F].map(Coproduct[DivisibleNode[F]](_))
+      several(p).map(several2Divisible) |
+      between(p).map(between2Divisible) |
+      each[F].map(each2Divisible)
     )
   }
 
@@ -113,19 +113,19 @@ package object parser {
   // AST Parsing & Building
   //----------------------------------------
 
-  def of[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[FieldNode[F]] = {
-    every(p).map(Coproduct[FieldNode[F]](_)) |
-      several(p).map(Coproduct[FieldNode[F]](_)) |
-      between(p).map(Coproduct[FieldNode[F]](_)) |
-      p.map(Coproduct[FieldNode[F]](_)) |
-      each[F].map(Coproduct[FieldNode[F]](_))
+  def of[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[FieldExpr[F]] = {
+    every(p).map(every2Field) |
+      several(p).map(several2Field) |
+      between(p).map(between2Field) |
+      p.map(const2Field) |
+      each[F].map(each2Field)
   }
 
-  val cron: Parser[CronExprAST] = P(
+  val cron: Parser[CronExpr] = P(
     Start ~ of(seconds) ~ " " ~/ of(minutes) ~ " " ~/ of(hours) ~ " " ~/
       of(daysOfMonth) ~ " " ~/ of(months) ~ " " ~/ of(daysOfWeek) ~ End
   ).map { case (sec, min, hour, day, month, weekDay) =>
-    sec :: min :: hour :: day :: month :: weekDay :: HNil
+    CronExpr(sec, min, hour, day, month, weekDay)
   }
 
 }

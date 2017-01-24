@@ -85,10 +85,10 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
     ev: Enumerated[CronUnit[F]]
   ): NodeValidator[SeveralNode[F]] = new NodeValidator[SeveralNode[F]] {
     def validate(node: SeveralNode[F]): List[FieldError] = {
-      def implicationErrorMsg(that: EnumerableNode[F], impliedBy: EnumerableNode[F]): String =
+      def implicationErrorMsg(that: EnumerableExpr[F], impliedBy: EnumerableExpr[F]): String =
         s"Value '${that.shows}' at field ${that.unit.field} is implied by '${impliedBy.shows}'"
 
-      def verifyImplication(seen: List[EnumerableNode[F]], curr: EnumerableNode[F]): Option[FieldError] = {
+      def verifyImplication(seen: List[EnumerableExpr[F]], curr: EnumerableExpr[F]): Option[FieldError] = {
         val alreadyImplied = seen.find(e => curr.impliedBy(e))
           .map(found => FieldError(curr.unit.field, implicationErrorMsg(curr, found)))
         val impliesOther = seen.find(_.impliedBy(curr))
@@ -97,8 +97,8 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
         alreadyImplied.orElse(impliesOther)
       }
 
-      val subExprValidator = NodeValidator[EnumerableNode[F]]
-      val zero = (List.empty[EnumerableNode[F]], List.empty[FieldError])
+      val subExprValidator = NodeValidator[EnumerableExpr[F]]
+      val zero = (List.empty[EnumerableExpr[F]], List.empty[FieldError])
       val (_, errorResult) = node.values.foldRight(zero) { case (e, (seen, errors)) =>
         val subErrors = subExprValidator.validate(e)
         val newErrors = verifyImplication(seen, e).toList ::: subErrors ::: errors
@@ -115,7 +115,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[EveryNode[F]] = new NodeValidator[EveryNode[F]] {
       def validate(node: EveryNode[F]): List[FieldError] = {
-        val baseErrors = NodeValidator[DivisibleNode[F]].validate(node.base)
+        val baseErrors = NodeValidator[DivisibleExpr[F]].validate(node.base)
         val evenlyDivided = (node.base.range.size % node.freq) == 0
         if (!evenlyDivided) {
           baseErrors :+ FieldError(
@@ -133,24 +133,24 @@ private[validation] trait LowPriorityNodeValidatorInstances {
   implicit def enumerableNodeValidator[F <: CronField](
       implicit
       ev: Enumerated[CronUnit[F]]
-    ): NodeValidator[EnumerableNode[F]] = new NodeValidator[EnumerableNode[F]] {
-      def validate(node: EnumerableNode[F]): List[FieldError] =
-        node.fold(ops.validate)
+    ): NodeValidator[EnumerableExpr[F]] = new NodeValidator[EnumerableExpr[F]] {
+      def validate(node: EnumerableExpr[F]): List[FieldError] =
+        node.raw.fold(ops.validate)
     }
 
   implicit def divisibleNodeValidator[F <: CronField](
       implicit
       ev: Enumerated[CronUnit[F]]
-    ): NodeValidator[DivisibleNode[F]] = new NodeValidator[DivisibleNode[F]] {
-      def validate(node: DivisibleNode[F]): List[FieldError] =
-        node.fold(ops.validate)
+    ): NodeValidator[DivisibleExpr[F]] = new NodeValidator[DivisibleExpr[F]] {
+      def validate(node: DivisibleExpr[F]): List[FieldError] =
+        node.raw.fold(ops.validate)
     }
 
   implicit def fieldNodeValidator[F <: CronField](
       implicit
       ev: Enumerated[CronUnit[F]]
-    ): NodeValidator[FieldNode[F]] = new NodeValidator[FieldNode[F]] {
-      def validate(node: FieldNode[F]): List[FieldError] =
-        node.fold(ops.validate)
+    ): NodeValidator[FieldExpr[F]] = new NodeValidator[FieldExpr[F]] {
+      def validate(node: FieldExpr[F]): List[FieldError] =
+        node.raw.fold(ops.validate)
     }
 }

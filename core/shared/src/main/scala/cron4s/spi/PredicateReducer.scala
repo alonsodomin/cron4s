@@ -16,13 +16,15 @@
 
 package cron4s.spi
 
-import cron4s._
+import cron4s.CronField
 import cron4s.expr._
 import cron4s.types._
+import cron4s.syntax.predicate._
 
 import shapeless._
 
-import scalaz.PlusEmpty
+import scalaz.{Either3, PlusEmpty}
+import scalaz.std.list._
 
 /**
   * Created by domingueza on 29/07/2016.
@@ -30,14 +32,14 @@ import scalaz.PlusEmpty
 private[spi] final class PredicateReducer[DateTime]
     (implicit M: PlusEmpty[Predicate], adapter: DateTimeAdapter[DateTime]) {
 
-  object exprToMatcher extends Poly1 {
+  object asPredicate extends Poly1 {
     import CronField._
 
     private[this] def predicateFor[F <: CronField]
-        (field: F, expr: FieldNode[F])
-        (implicit ev: Lazy[Expr[FieldNode, F]]): Predicate[DateTime] =
+        (field: F, node: FieldExpr[F])
+        (implicit expr: Expr[FieldExpr, F]): Predicate[DateTime] =
       Predicate { dt =>
-        adapter.get(dt, field).map(ev.value.matches(expr)).getOrElse(!M.empty[DateTime](dt))
+        adapter.get(dt, field).map(expr.matches(node)).getOrElse(!M.empty[DateTime](dt))
       }
 
     implicit def caseSeconds     = at[SecondsNode](expr => predicateFor(Second, expr))
@@ -48,8 +50,13 @@ private[spi] final class PredicateReducer[DateTime]
     implicit def caseDaysOfWeek  = at[DaysOfWeekNode](expr => predicateFor(DayOfWeek, expr))
   }
 
-  def run(ast: AST): Predicate[DateTime] =
-    ast.fold(extract).map(exprToMatcher).toList
-      .foldLeft(M.empty[DateTime])((lhs, rhs) => M.plus(lhs, rhs))
+  def run(ast: Either3[RawCronExpr, TimePartAST, DatePartAST]): Predicate[DateTime] = {
+    val predicateList: List[Predicate[DateTime]] = ast.fold(
+      _.map(asPredicate).toList,
+      _.map(asPredicate).toList,
+      _.map(asPredicate).toList
+    )
+    asOf(predicateList)
+  }
 
 }

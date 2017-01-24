@@ -19,9 +19,7 @@ package cron4s.spi
 import cron4s.expr.CronExpr
 import cron4s.types.Predicate
 
-import shapeless.Coproduct
-
-import scalaz.PlusEmpty
+import scalaz.{Either3, PlusEmpty}
 
 /**
   * Base abstraction used to provide support for date-time libraries.
@@ -32,7 +30,7 @@ abstract class CronDateTimeOps[DateTime: DateTimeAdapter](expr: CronExpr) {
 
   private[this] def matches(implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime]
-    reducer.run(Coproduct[AST](expr.ast))
+    reducer.run(Either3.left3(expr.raw))
   }
 
   /**
@@ -41,7 +39,7 @@ abstract class CronDateTimeOps[DateTime: DateTimeAdapter](expr: CronExpr) {
     * @return true if all fields match, false otherwise
     */
   def allOf: Predicate[DateTime] =
-    matches(Predicate.conjunction)
+    matches(Predicate.conjunction.monoidK)
 
   /**
     * Tests whether some of the CRON expression fields matches against a given
@@ -50,7 +48,7 @@ abstract class CronDateTimeOps[DateTime: DateTimeAdapter](expr: CronExpr) {
     * @return true if any of the fields matches, false otherwise
     */
   def anyOf: Predicate[DateTime] =
-    matches(Predicate.disjunction)
+    matches(Predicate.disjunction.monoidK)
 
   /**
     * Calculates the next date-time to a given one according to this expression

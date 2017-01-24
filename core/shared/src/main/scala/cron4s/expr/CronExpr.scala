@@ -29,31 +29,21 @@ import scalaz.Show
   */
 object CronExpr {
 
-  def apply(
+  implicit val CronExprShow: Show[CronExpr] = Show.shows { expr =>
+    expr.raw.map(generic.ops.show).toList.mkString(" ")
+  }
+
+}
+
+final case class CronExpr(
     seconds: SecondsNode,
     minutes: MinutesNode,
     hours: HoursNode,
     daysOfMonth: DaysOfMonthNode,
     months: MonthsNode,
-    daysOfWeek: DaysOfWeekNode
-  ): CronExpr = CronExpr(
-    seconds :: minutes :: hours :: daysOfMonth :: months :: daysOfWeek :: HNil
-  )
+    daysOfWeek: DaysOfWeekNode) {
 
-  implicit val CronExprShow: Show[CronExpr] = Show.shows { expr =>
-    expr.ast.map(generic.ops.show).toList.mkString(" ")
-  }
-  
-}
-
-final case class CronExpr(ast: CronExprAST) {
-
-  def seconds: SecondsNode = ast.select[SecondsNode]
-  def minutes: MinutesNode = ast.select[MinutesNode]
-  def hours: HoursNode = ast.select[HoursNode]
-  def daysOfMonth: DaysOfMonthNode = ast.select[DaysOfMonthNode]
-  def months: MonthsNode = ast.select[MonthsNode]
-  def daysOfWeek: DaysOfWeekNode = ast.select[DaysOfWeekNode]
+  private[cron4s] def raw: RawCronExpr = Generic[CronExpr].to(this)
 
   /**
     * Time part of the CRON expression
@@ -73,15 +63,17 @@ final case class CronExpr(ast: CronExprAST) {
     * @tparam F CronField type
     * @return field-based expression for given field
     */
-  def field[F <: CronField](implicit unit: CronUnit[F]): FieldNode[F] = unit.field match {
-    case CronField.Second     => seconds.asInstanceOf[FieldNode[F]]
-    case CronField.Minute     => minutes.asInstanceOf[FieldNode[F]]
-    case CronField.Hour       => hours.asInstanceOf[FieldNode[F]]
-    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[FieldNode[F]]
-    case CronField.Month      => months.asInstanceOf[FieldNode[F]]
-    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[FieldNode[F]]
+  def field[F <: CronField](implicit unit: CronUnit[F]): RawFieldExpr[F] = unit.field match {
+    case CronField.Second     => seconds.asInstanceOf[RawFieldExpr[F]]
+    case CronField.Minute     => minutes.asInstanceOf[RawFieldExpr[F]]
+    case CronField.Hour       => hours.asInstanceOf[RawFieldExpr[F]]
+    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[RawFieldExpr[F]]
+    case CronField.Month      => months.asInstanceOf[RawFieldExpr[F]]
+    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[RawFieldExpr[F]]
   }
 
-  def ranges: List[IndexedSeq[Int]] = ast.map(generic.ops.range).toList
+  def ranges: List[IndexedSeq[Int]] = raw.map(generic.ops.range).toList
+
+  override def toString: String = Show[CronExpr].shows(this)
 
 }

@@ -19,11 +19,11 @@ class EveryNodeValidatorSpec extends PropSpec
   import CronField._
 
   private[this] def check[F <: CronField](
-      implicit unit: CronUnit[F], enum: Enumerated[CronUnit[F]], expr: Expr[DivisibleNode, F]
+      implicit unit: CronUnit[F], enum: Enumerated[CronUnit[F]], expr: Expr[RawDivisibleExpr, F]
   ): Unit = {
     property(s"EveryNode[${unit.field}] with invalid base returns the invalid errors of its base") {
       forAll(everyGen[F]) { node =>
-        val expectedErrors = NodeValidator[DivisibleNode[F]].validate(node.base)
+        val expectedErrors = NodeValidator[RawDivisibleExpr[F]].validate(node.base)
         val returnedErrors = NodeValidator[EveryNode[F]].validate(node)
 
         returnedErrors should contain allElementsOf expectedErrors

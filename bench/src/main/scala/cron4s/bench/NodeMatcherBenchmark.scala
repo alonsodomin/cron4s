@@ -48,7 +48,7 @@ class NodeMatcherBenchmark {
   val severalEnumeratedNode = {
     val minutes = for {
       value <- CronUnit.Minutes.range
-    } yield Coproduct[EnumerableNode[CronField.Minute]](ConstNode[CronField.Minute](value))
+    } yield Coproduct[RawEnumerableExpr[CronField.Minute]](ConstNode[CronField.Minute](value))
     SeveralNode(minutes.head, minutes.tail: _*)
   }
   val severalBetweenNode: SeveralNode[CronField.Minute] = {
