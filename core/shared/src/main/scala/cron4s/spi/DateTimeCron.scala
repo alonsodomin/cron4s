@@ -16,15 +16,17 @@
 
 package cron4s.spi
 
-import cron4s.expr.{CronExpr, DateCronExpr, RawCronExpr, TimeCronExpr}
+import cron4s.expr.{CronExpr, DateCronExpr, TimeCronExpr}
 import cron4s.types.Predicate
 
-import scalaz.{Either3, OneOr, PlusEmpty}
+import shapeless.Coproduct
+
+import scalaz.PlusEmpty
 
 /**
   * Created by alonsodomin on 14/01/2017.
   */
-trait DateTimeExpr[T, DateTime] {
+trait DateTimeCron[T, DateTime] {
   implicit def adapter: DateTimeAdapter[DateTime]
 
   protected def matches(expr: T)(implicit M: PlusEmpty[Predicate]): Predicate[DateTime]
@@ -43,29 +45,42 @@ trait DateTimeExpr[T, DateTime] {
 
 }
 
-object DateTimeExpr {
-  @inline def apply[T, DateTime](implicit ev: DateTimeExpr[T, DateTime]): DateTimeExpr[T, DateTime] = ev
+object DateTimeCron {
+  @inline def apply[T, DateTime](implicit ev: DateTimeCron[T, DateTime]): DateTimeCron[T, DateTime] = ev
 }
 
-trait DateTimeCron[DateTime] extends DateTimeExpr[CronExpr, DateTime] {
+trait FullCron[DateTime] extends DateTimeCron[CronExpr, DateTime] {
 
   protected def matches(expr: CronExpr)(implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime]
-    reducer.run(Either3.left3(expr.raw))
+    reducer.run(Coproduct[AnyCron](expr))
   }
 
-  override def step(expr: CronExpr)(from: DateTime, stepSize: Int): Option[DateTime] = ???
+  def step(expr: CronExpr)(from: DateTime, amount: Int): Option[DateTime] = {
+    val stepper = new Stepper[DateTime](from, amount)
+    stepper.run(expr)
+  }
 }
 
-object DateTimeCron {
-  def apply[DateTime](implicit adapter0: DateTimeAdapter[DateTime]): DateTimeCron[DateTime] =
-    new DateTimeCron[DateTime] { implicit val adapter = adapter0 }
+object FullCron {
+  implicit def apply[DateTime](implicit adapter0: DateTimeAdapter[DateTime]): FullCron[DateTime] =
+    new FullCron[DateTime] { implicit val adapter = adapter0 }
 }
 
-trait TimeCron[DateTime] extends DateTimeExpr[TimeCronExpr, DateTime] {
+trait TimeCron[DateTime] extends DateTimeCron[TimeCronExpr, DateTime] {
+
+  protected def matches(expr: TimeCronExpr)(implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
+    val reducer = new PredicateReducer[DateTime]
+    reducer.run(Coproduct[AnyCron](expr))
+  }
 
 }
 
-trait DateCron[DateTime] extends DateTimeExpr[DateCronExpr, DateTime] {
+trait DateCron[DateTime] extends DateTimeCron[DateCronExpr, DateTime] {
+
+  protected def matches(expr: DateCronExpr)(implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
+    val reducer = new PredicateReducer[DateTime]
+    reducer.run(Coproduct[AnyCron](expr))
+  }
 
 }

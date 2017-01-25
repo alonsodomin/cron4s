@@ -25,7 +25,7 @@ import shapeless._
 import scala.annotation.tailrec
 
 private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(
-  implicit adapter: DateTimeAdapter[DateTime]
+  implicit adapter: DateTimeAdapter[DateTime], cron: DateTimeCron[CronExpr, DateTime]
 ) {
   import CronField._
 
@@ -64,10 +64,7 @@ private[spi] final class Stepper[DateTime](from: DateTime, initialStep: Int)(
   }
 
   def run(expr: CronExpr): Option[DateTime] = {
-    val matches = {
-      implicit val conjuction = Predicate.conjunction.monoidK
-      new PredicateReducer[DateTime].run(expr.raw)
-    }
+    val matches = cron.allOf(expr)
 
     val dateWithoutWeekOfDay = expr.datePart.raw.take(2)
 

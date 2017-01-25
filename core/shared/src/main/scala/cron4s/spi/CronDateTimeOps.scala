@@ -18,6 +18,7 @@ package cron4s.spi
 
 import cron4s.expr.CronExpr
 import cron4s.types.Predicate
+import shapeless.Coproduct
 
 import scalaz.{Either3, PlusEmpty}
 
@@ -30,7 +31,7 @@ abstract class CronDateTimeOps[DateTime: DateTimeAdapter](expr: CronExpr) {
 
   private[this] def matches(implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime]
-    reducer.run(Either3.left3(expr.raw))
+    reducer.run(Coproduct[AnyCron](expr))
   }
 
   /**

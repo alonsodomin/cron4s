@@ -23,7 +23,7 @@ import cron4s.syntax.predicate._
 
 import shapeless._
 
-import scalaz.{Either3, PlusEmpty}
+import scalaz.PlusEmpty
 import scalaz.std.list._
 
 /**
@@ -37,26 +37,27 @@ private[spi] final class PredicateReducer[DateTime]
 
     private[this] def predicateFor[F <: CronField]
         (field: F, node: FieldNode[F])
-        (implicit expr: Expr[FieldNode, F]): Predicate[DateTime] =
+        (implicit expr: Expr[FieldNode, F]): Predicate[DateTime] = {
       Predicate { dt =>
         adapter.get(dt, field).map(expr.matches(node)).getOrElse(!M.empty[DateTime](dt))
       }
+    }
 
-    implicit def caseSeconds     = at[SecondsNode](expr => predicateFor(Second, expr))
-    implicit def caseMinutes     = at[MinutesNode](expr => predicateFor(Minute, expr))
-    implicit def caseHours       = at[HoursNode](expr => predicateFor(Hour, expr))
-    implicit def caseDaysOfMonth = at[DaysOfMonthNode](expr => predicateFor(DayOfMonth, expr))
-    implicit def caseMonths      = at[MonthsNode](expr => predicateFor(Month, expr))
-    implicit def caseDaysOfWeek  = at[DaysOfWeekNode](expr => predicateFor(DayOfWeek, expr))
+    implicit def caseSeconds     = at[SecondsNode](node => predicateFor(Second, node))
+    implicit def caseMinutes     = at[MinutesNode](node => predicateFor(Minute, node))
+    implicit def caseHours       = at[HoursNode](node => predicateFor(Hour, node))
+    implicit def caseDaysOfMonth = at[DaysOfMonthNode](node => predicateFor(DayOfMonth, node))
+    implicit def caseMonths      = at[MonthsNode](node => predicateFor(Month, node))
+    implicit def caseDaysOfWeek  = at[DaysOfWeekNode](node => predicateFor(DayOfWeek, node))
   }
 
-  def run(ast: Either3[RawCronExpr, TimePartAST, RawDateCronExpr]): Predicate[DateTime] = {
-    val predicateList: List[Predicate[DateTime]] = ast.fold(
-      _.map(asPredicate).toList,
-      _.map(asPredicate).toList,
-      _.map(asPredicate).toList
-    )
-    asOf(predicateList)
+  object fromRaw extends Poly1 {
+    implicit def caseFullExpr = at[CronExpr](_.raw.map(asPredicate).toList)
+    implicit def caseDateExpr = at[DateCronExpr](_.raw.map(asPredicate).toList)
+    implicit def caseTimeExpr = at[TimeCronExpr](_.raw.map(asPredicate).toList)
   }
+
+  def run(cron: AnyCron): Predicate[DateTime] =
+    asOf(cron.fold(fromRaw))
 
 }
