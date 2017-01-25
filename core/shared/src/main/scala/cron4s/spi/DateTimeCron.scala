@@ -47,6 +47,15 @@ trait DateTimeCron[T, DateTime] {
 
 object DateTimeCron {
   @inline def apply[T, DateTime](implicit ev: DateTimeCron[T, DateTime]): DateTimeCron[T, DateTime] = ev
+
+  implicit def fullCronInstance[DateTime](implicit adapter0: DateTimeAdapter[DateTime]): FullCron[DateTime] =
+    new FullCron[DateTime] { implicit val adapter = adapter0 }
+
+  implicit def timeCronInstance[DateTime](implicit adapter0: DateTimeAdapter[DateTime]): TimeCron[DateTime] =
+    new TimeCron[DateTime] { implicit val adapter = adapter0 }
+
+  implicit def dateCronInstance[DateTime](implicit adapter0: DateTimeAdapter[DateTime]): DateCron[DateTime] =
+    new DateCron[DateTime] { implicit val adapter = adapter0 }
 }
 
 trait FullCron[DateTime] extends DateTimeCron[CronExpr, DateTime] {
@@ -62,17 +71,14 @@ trait FullCron[DateTime] extends DateTimeCron[CronExpr, DateTime] {
   }
 }
 
-object FullCron {
-  implicit def apply[DateTime](implicit adapter0: DateTimeAdapter[DateTime]): FullCron[DateTime] =
-    new FullCron[DateTime] { implicit val adapter = adapter0 }
-}
-
 trait TimeCron[DateTime] extends DateTimeCron[TimeCronExpr, DateTime] {
 
   protected def matches(expr: TimeCronExpr)(implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime]
     reducer.run(Coproduct[AnyCron](expr))
   }
+
+  def step(expr: TimeCronExpr)(from: DateTime, stepSize: Int): Option[DateTime] = ???
 
 }
 
@@ -82,5 +88,7 @@ trait DateCron[DateTime] extends DateTimeCron[DateCronExpr, DateTime] {
     val reducer = new PredicateReducer[DateTime]
     reducer.run(Coproduct[AnyCron](expr))
   }
+
+  def step(expr: DateCronExpr)(from: DateTime, stepSize: Int): Option[DateTime] = ???
 
 }
