@@ -1,4 +1,4 @@
-package cron4s.datetime.js
+package cron4s.lib.js
 
 import cron4s.testkit.CronDateTimeTestKit
 import org.scalatest.Ignore

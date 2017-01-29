@@ -31,13 +31,15 @@ trait DateTimeAdapterLaws[DateTime <: AnyRef] {
   implicit val eq: Equal[DateTime]
 
   def immutability[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Boolean = {
-    val currentVal = adapter.get(dt, fieldValue.field)
-    val newDateTime = adapter.set(dt, fieldValue.field, fieldValue.value)
+    val check = for {
+      current     <- adapter.get(dt, fieldValue.field)
+      newDateTime <- adapter.set(dt, fieldValue.field, fieldValue.value)
+    } yield {
+      if (current == fieldValue.value) newDateTime === dt
+      else newDateTime =/= dt
+    }
 
-    currentVal.flatMap(current => newDateTime.map { ndt =>
-      if (current === fieldValue.value) ndt === dt
-      else ndt =/= dt
-    }).exists(identity)
+    check.exists(identity)
   }
 
   def settable[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Boolean = {

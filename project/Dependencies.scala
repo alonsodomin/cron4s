@@ -9,15 +9,15 @@ object Dependencies {
     val shapeless   = "2.3.2"
 
     val momentjs    = "0.1.5"
-    val jodaTime    = "2.9.6"
+    val jodaTime    = "2.9.7"
     val jodaConvert = "1.8.1"
     val fastparse   = "0.4.2"
 
     val scalacheck  = "1.13.4"
     val scalatest   = "3.0.1"
-    val discipline  = "0.7.2"
+    val discipline  = "0.7.3"
 
-    val scalaJavaTime = "2.0.0-M5"
+    val scalaJavaTime = "2.0.0-M7"
   }
 
   val macroParadise = compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full)
@@ -26,10 +26,10 @@ object Dependencies {
 
   lazy val core = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
-      "com.chuusai"    %%% "shapeless"       % version.shapeless,
-      "io.github.soc"  %%% "scala-java-time" % version.scalaJavaTime,
-      "org.scalaz"     %%% "scalaz-core"     % version.scalaz,
-      "com.lihaoyi"    %%% "fastparse"       % version.fastparse
+      "com.chuusai"       %%% "shapeless"       % version.shapeless,
+      "io.github.cquiroz"  %% "scala-java-time" % version.scalaJavaTime,
+      "org.scalaz"        %%% "scalaz-core"     % version.scalaz,
+      "com.lihaoyi"       %%% "fastparse"       % version.fastparse
     )
   }
 

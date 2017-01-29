@@ -22,6 +22,7 @@ import java.time.{LocalDateTime, ZonedDateTime}
 import cron4s.CronField
 import cron4s.datetime.DateTimeAdapter
 
+import scala.util.Try
 import scalaz.Equal
 
 /**
@@ -58,7 +59,7 @@ package object javatime {
 
       val offset = if (field == DayOfWeek) 1 else 0
       if (!dateTime.isSupported(temporalField)) None
-      else Some(dateTime.`with`(temporalField, value.toLong + offset).asInstanceOf[DT])
+      else Try(dateTime.`with`(temporalField, value.toLong + offset).asInstanceOf[DT]).toOption
     }
 
   }

@@ -23,6 +23,7 @@ import cron4s.datetime.DateTimeAdapter
 import org.threeten.bp.temporal.{ChronoField, Temporal, TemporalField}
 import org.threeten.bp.{LocalDateTime, ZonedDateTime}
 
+import scala.util.Try
 import scalaz.Equal
 
 /**
@@ -56,7 +57,7 @@ package object threetenbp {
 
       val offset = if (field == DayOfWeek) 1 else 0
       if (!dateTime.isSupported(temporalField)) None
-      else Some(dateTime.`with`(temporalField, value.toLong + offset).asInstanceOf[DT])
+      else Try(dateTime.`with`(temporalField, value.toLong + offset).asInstanceOf[DT]).toOption
     }
 
   }

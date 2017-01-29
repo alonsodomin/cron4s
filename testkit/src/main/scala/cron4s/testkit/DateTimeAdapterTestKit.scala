@@ -33,7 +33,6 @@ import scalaz.Equal
 abstract class DateTimeAdapterTestKit[DateTime <: AnyRef : DateTimeAdapter : Equal](name: String)
   extends FunSuite with Discipline with ArbitraryCronFieldValues with DateTimeTestKitBase[DateTime] {
   import CronField._
-  import CronUnit._
 
   checkAll(s"DateTimeAdapter[$name, Second]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Second])
   checkAll(s"DateTimeAdapter[$name, Minute]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Minute])

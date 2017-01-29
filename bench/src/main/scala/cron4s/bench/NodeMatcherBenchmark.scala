@@ -23,7 +23,6 @@ import org.openjdk.jmh.annotations._
 
 import shapeless.Coproduct
 
-import scalaz.NonEmptyList
 
 /**
   * Sample run
@@ -48,7 +47,7 @@ class NodeMatcherBenchmark {
   val severalEnumeratedNode = {
     val minutes = for {
       value <- CronUnit.Minutes.range
-    } yield Coproduct[RawEnumerableExpr[CronField.Minute]](ConstNode[CronField.Minute](value))
+    } yield const2Enumerable(ConstNode[CronField.Minute](value))
     SeveralNode(minutes.head, minutes.tail: _*)
   }
   val severalBetweenNode: SeveralNode[CronField.Minute] = {
