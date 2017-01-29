@@ -21,8 +21,6 @@ import cron4s.testkit.DateTimeTestKitBase
 
 import org.scalacheck.{Arbitrary, Gen}
 
-import scalaz.Equal
-
 /**
   * Created by alonsodomin on 29/08/2016.
   */
@@ -37,8 +35,6 @@ trait DummyTestBase extends DateTimeTestKitBase[DummyDateTime] {
     months      <- Gen.choose(Months.min, Months.max)
     daysOfWeek  <- Gen.choose(DaysOfWeek.min, DaysOfWeek.max)
   } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, daysOfWeek))
-
-  implicit val dateTimeEq = Equal.equalA[DummyDateTime]
 
   def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): DummyDateTime =
     DummyDateTime(seconds, minutes, hours, dayOfMonth, month, dayOfWeek)

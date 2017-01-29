@@ -28,7 +28,7 @@ import scalaz._
 package object js {
   import CronField._
 
-  implicit val jsDateInstance = Equal.equal[Date] { (lhs, rhs) =>
+  implicit val jsDateEq: Equal[Date] = Equal.equal[Date] { (lhs, rhs) =>
     lhs.getUTCFullYear() == rhs.getUTCFullYear() &&
       lhs.getUTCMonth() == rhs.getUTCMonth() &&
       lhs.getUTCDate() == rhs.getUTCDate() &&

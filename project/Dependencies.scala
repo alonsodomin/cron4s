@@ -27,7 +27,7 @@ object Dependencies {
   lazy val core = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
       "com.chuusai"       %%% "shapeless"       % version.shapeless,
-      "io.github.cquiroz"  %% "scala-java-time" % version.scalaJavaTime,
+      "io.github.cquiroz" %%% "scala-java-time" % version.scalaJavaTime,
       "org.scalaz"        %%% "scalaz-core"     % version.scalaz,
       "com.lihaoyi"       %%% "fastparse"       % version.fastparse
     )

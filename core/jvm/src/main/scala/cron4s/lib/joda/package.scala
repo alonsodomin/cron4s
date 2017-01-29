@@ -29,7 +29,7 @@ import scalaz.Equal
 package object joda {
   import CronField._
 
-  implicit val dateTimeInstance: Equal[DateTime] = Equal.equalA[DateTime]
+  implicit val dateTimeEq: Equal[DateTime] = Equal.equalA[DateTime]
 
   implicit object JodaTimeAdapter extends DateTimeAdapter[DateTime] {
 

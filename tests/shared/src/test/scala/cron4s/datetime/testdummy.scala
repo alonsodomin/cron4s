@@ -26,7 +26,7 @@ import scalaz.Equal
 object testdummy {
   import CronField._
 
-  implicit val dummyDTInstance = Equal.equalA[DummyDateTime]
+  implicit val dummyDateTimeEq: Equal[DummyDateTime] = Equal.equalA[DummyDateTime]
 
   implicit object TestDummyAdapter extends DateTimeAdapter[DummyDateTime] {
     override def get[F <: CronField](dateTime: DummyDateTime, field: F): Option[Int] = Some(field match {

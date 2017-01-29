@@ -23,10 +23,12 @@ import cron4s.expr._
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatest.{Matchers, PropSpec}
 
+import scalaz.Equal
+
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-abstract class CronDateTimeTestKit[DateTime: DateTimeAdapter]
+abstract class CronDateTimeTestKit[DateTime: DateTimeAdapter: Equal]
   extends PropSpec with TableDrivenPropertyChecks with Matchers { this: DateTimeTestKitBase[DateTime] =>
 
   val onlyTuesdaysAt12 = CronExpr(
@@ -55,9 +57,7 @@ abstract class CronDateTimeTestKit[DateTime: DateTimeAdapter]
   property("step") {
     forAll(samples) { (expr: CronExpr, initial: DateTime, stepSize: Int, expected: DateTime) =>
       val returnedDateTime = expr.step(initial, stepSize)
-
-      returnedDateTime shouldBe defined
-      returnedDateTime.foreach { _ shouldBe expected }
+      returnedDateTime.map(_ ?== expected).getOrElse(falsified)
     }
   }
 

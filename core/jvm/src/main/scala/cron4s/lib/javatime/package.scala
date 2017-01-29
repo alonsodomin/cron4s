@@ -31,9 +31,8 @@ import scalaz.Equal
 package object javatime {
   import CronField._
 
-  implicit val localDateTimeInstance = Equal.equalA[LocalDateTime]
-
-  implicit val zonedDateTimeInstance = Equal.equalA[ZonedDateTime]
+  implicit val localDateTimeInstance: Equal[LocalDateTime] = Equal.equalA[LocalDateTime]
+  implicit val zonedDateTimeInstance: Equal[ZonedDateTime] = Equal.equalA[ZonedDateTime]
 
   implicit def javaTimeAdapter[DT <: Temporal]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
 

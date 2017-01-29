@@ -30,8 +30,9 @@ import scalaz.Equal
   * Created by alonsodomin on 11/12/2016.
   */
 package object threetenbp {
-  implicit val localDateTimeInstance = Equal.equalA[LocalDateTime]
-  implicit val zonedDateTimeInstnce = Equal.equalA[ZonedDateTime]
+
+  implicit val localDateTimeInstance: Equal[LocalDateTime] = Equal.equalA[LocalDateTime]
+  implicit val zonedDateTimeInstnce: Equal[ZonedDateTime] = Equal.equalA[ZonedDateTime]
 
   implicit def jsr310Adapter[DT <: Temporal]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
 

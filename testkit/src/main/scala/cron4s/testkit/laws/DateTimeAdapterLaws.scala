@@ -18,7 +18,9 @@ package cron4s.testkit.laws
 
 import cron4s.CronField
 import cron4s.datetime.DateTimeAdapter
-import cron4s.testkit.CronFieldValue
+import cron4s.testkit._
+
+import org.scalacheck.Prop
 
 import scalaz._
 import Scalaz._
@@ -30,21 +32,25 @@ trait DateTimeAdapterLaws[DateTime <: AnyRef] {
   implicit def adapter: DateTimeAdapter[DateTime]
   implicit val eq: Equal[DateTime]
 
-  def immutability[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Boolean = {
+  def immutability[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Prop = {
     val check = for {
       current     <- adapter.get(dt, fieldValue.field)
       newDateTime <- adapter.set(dt, fieldValue.field, fieldValue.value)
     } yield {
-      if (current == fieldValue.value) newDateTime === dt
-      else newDateTime =/= dt
+      if (current == fieldValue.value) newDateTime ?== dt
+      else newDateTime ?!= dt
     }
 
-    check.exists(identity)
+    check.getOrElse(proved)
   }
 
-  def settable[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Boolean = {
-    val newDateTime = adapter.set(dt, fieldValue.field, fieldValue.value)
-    newDateTime.flatMap(ndt => adapter.get(ndt, fieldValue.field)).exists(_ === fieldValue.value)
+  def settable[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Prop = {
+    val check = for {
+      newDateTime <- adapter.set(dt, fieldValue.field, fieldValue.value)
+      value       <- adapter.get(newDateTime, fieldValue.field)
+    } yield value ?== fieldValue.value
+
+    check.getOrElse(proved)
   }
 
 }

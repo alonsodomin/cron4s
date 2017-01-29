@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package cron4s.lib.javatime
-
-import java.time.{LocalDateTime, ZonedDateTime}
+package cron4s.lib.js
 
 import cron4s.testkit.DateTimeCronTestKit
+
+import scala.scalajs.js.Date
 
 /**
   * Created by alonsodomin on 29/01/2017.
   */
-class JavaLocalDateTimeCronSpec extends DateTimeCronTestKit[LocalDateTime] with LocalDateTimeTestBase
-class JavaZonedDateTimeCronSpec extends DateTimeCronTestKit[ZonedDateTime] with ZonedDateTimeTestBase
+class JSDateTimeCronSpec extends DateTimeCronTestKit[Date] with JSTestBase
