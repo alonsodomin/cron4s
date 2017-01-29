@@ -48,17 +48,23 @@ trait DateTimeCron[T, DateTime] {
 object DateTimeCron {
   @inline def apply[T, DateTime](implicit ev: DateTimeCron[T, DateTime]): DateTimeCron[T, DateTime] = ev
 
-  implicit def fullCronInstance[DateTime](implicit adapter0: DateTimeAdapter[DateTime]): FullCron[DateTime] =
+  implicit def fullCronInstance[DateTime](implicit
+      adapter0: DateTimeAdapter[DateTime]
+  ): DateTimeCron[CronExpr, DateTime] =
     new FullCron[DateTime] { implicit val adapter = adapter0 }
 
-  implicit def timeCronInstance[DateTime](implicit adapter0: DateTimeAdapter[DateTime]): TimeCron[DateTime] =
+  implicit def timeCronInstance[DateTime](implicit
+      adapter0: DateTimeAdapter[DateTime]
+  ): DateTimeCron[TimeCronExpr, DateTime] =
     new TimeCron[DateTime] { implicit val adapter = adapter0 }
 
-  implicit def dateCronInstance[DateTime](implicit adapter0: DateTimeAdapter[DateTime]): DateCron[DateTime] =
+  implicit def dateCronInstance[DateTime](implicit
+      adapter0: DateTimeAdapter[DateTime]
+  ): DateTimeCron[DateCronExpr, DateTime] =
     new DateCron[DateTime] { implicit val adapter = adapter0 }
 }
 
-trait FullCron[DateTime] extends DateTimeCron[CronExpr, DateTime] {
+private[datetime] trait FullCron[DateTime] extends DateTimeCron[CronExpr, DateTime] {
 
   protected def matches(expr: CronExpr)(implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime]
@@ -74,7 +80,7 @@ trait FullCron[DateTime] extends DateTimeCron[CronExpr, DateTime] {
   }
 }
 
-trait TimeCron[DateTime] extends DateTimeCron[TimeCronExpr, DateTime] {
+private[datetime] trait TimeCron[DateTime] extends DateTimeCron[TimeCronExpr, DateTime] {
 
   protected def matches(expr: TimeCronExpr)(implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime]
@@ -88,7 +94,7 @@ trait TimeCron[DateTime] extends DateTimeCron[TimeCronExpr, DateTime] {
 
 }
 
-trait DateCron[DateTime] extends DateTimeCron[DateCronExpr, DateTime] {
+private[datetime] trait DateCron[DateTime] extends DateTimeCron[DateCronExpr, DateTime] {
 
   protected def matches(expr: DateCronExpr)(implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime]
