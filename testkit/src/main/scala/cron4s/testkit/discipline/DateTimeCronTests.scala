@@ -24,7 +24,8 @@ import org.scalacheck._
 
 import org.typelevel.discipline.Laws
 
-import scalaz.Equal
+import scalaz._
+import Scalaz._
 
 /**
   * Created by alonsodomin on 29/01/2017.
@@ -35,7 +36,8 @@ trait DateTimeCronTests[E, DateTime] extends Laws {
   def dateTimeCron(implicit
     arbE: Arbitrary[E],
     arbDateTime: Arbitrary[DateTime],
-    dateTimeEq: Equal[DateTime]): RuleSet = new DefaultRuleSet(
+    dateTimeEq: Equal[DateTime]
+  ): RuleSet = new DefaultRuleSet(
     name = "dateTimeCron",
     parent = None,
     "forwards" -> forAll(laws.forwards _),
