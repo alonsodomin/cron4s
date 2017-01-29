@@ -27,9 +27,6 @@ import scala.language.implicitConversions
   */
 private[cron4s] trait NodeConversions {
 
-  /*implicit def toFieldNode[F <: CronField](ast: RawFieldExpr[F]): FieldNode[F] =
-    new FieldNode[F](ast)*/
-
   implicit def each2Field[F <: CronField](node: EachNode[F]): FieldNode[F] =
     new FieldNode(Coproduct[RawFieldNode[F]](node))
 

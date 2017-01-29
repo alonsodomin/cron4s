@@ -17,8 +17,8 @@
 package cron4s.testkit.discipline
 
 import cron4s.CronField
+import cron4s.expr.Expr
 import cron4s.testkit.laws.ExprLaws
-import cron4s.types.Expr
 
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._

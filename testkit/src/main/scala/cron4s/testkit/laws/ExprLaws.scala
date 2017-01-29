@@ -17,8 +17,8 @@
 package cron4s.testkit.laws
 
 import cron4s.CronField
+import cron4s.expr.Expr
 import cron4s.testkit._
-import cron4s.types.Expr
 import cron4s.syntax.expr._
 
 /**
