@@ -63,13 +63,13 @@ final case class CronExpr(
     * @tparam F CronField type
     * @return field-based expression for given field
     */
-  def field[F <: CronField](implicit unit: CronUnit[F]): RawFieldNode[F] = unit.field match {
-    case CronField.Second     => seconds.asInstanceOf[RawFieldNode[F]]
-    case CronField.Minute     => minutes.asInstanceOf[RawFieldNode[F]]
-    case CronField.Hour       => hours.asInstanceOf[RawFieldNode[F]]
-    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[RawFieldNode[F]]
-    case CronField.Month      => months.asInstanceOf[RawFieldNode[F]]
-    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[RawFieldNode[F]]
+  def field[F <: CronField](implicit unit: CronUnit[F]): FieldNode[F] = unit.field match {
+    case CronField.Second     => seconds.asInstanceOf[FieldNode[F]]
+    case CronField.Minute     => minutes.asInstanceOf[FieldNode[F]]
+    case CronField.Hour       => hours.asInstanceOf[FieldNode[F]]
+    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[FieldNode[F]]
+    case CronField.Month      => months.asInstanceOf[FieldNode[F]]
+    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[FieldNode[F]]
   }
 
   def ranges: List[IndexedSeq[Int]] = raw.map(generic.ops.range).toList
