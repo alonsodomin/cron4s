@@ -14,32 +14,37 @@
  * limitations under the License.
  */
 
-package cron4s.lib.joda
+package cron4s.lib.javatime
+
+import java.time.{YearMonth, ZoneOffset, ZonedDateTime}
 
 import cron4s.CronUnit
 import cron4s.testkit.DateTimeTestKitBase
-import org.joda.time.{DateTime, YearMonth}
-import org.scalacheck.{Arbitrary, Gen}
+
+import org.scalacheck._
+
+import scalaz.Equal
 
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-trait JodaTestBase extends DateTimeTestKitBase[DateTime] {
+trait ZonedDateTimeTestBase extends DateTimeTestKitBase[ZonedDateTime] {
   import CronUnit._
 
-  final val Year = 2014
+  final val Year = 2012
 
-  override implicit lazy val arbitraryDateTime: Arbitrary[DateTime] = Arbitrary {
+  implicit val dateTimeEq: Equal[ZonedDateTime] = Equal.equal((lhs, rhs) => lhs.equals(rhs))
+
+  override implicit lazy val arbitraryDateTime: Arbitrary[ZonedDateTime] = Arbitrary {
     for {
       second     <- Gen.choose(Seconds.min, Seconds.max)
       minute     <- Gen.choose(Minutes.min, Minutes.max)
       hour       <- Gen.choose(Hours.min, Hours.max)
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(Year, _))
-      dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.toLocalDate(1).dayOfMonth().getMaximumValue)
-    } yield new DateTime(Year, yearMonth.getMonthOfYear, dayOfMonth, hour, minute, second)
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(Year, _))
+      dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.lengthOfMonth())
+    } yield ZonedDateTime.of(Year, yearMonth.getMonthValue, dayOfMonth, hour, minute, second, 0, ZoneOffset.UTC)
   }
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): DateTime =
-    new DateTime(Year, month, dayOfMonth, hours, minutes, seconds)
-
+  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): ZonedDateTime =
+    ZonedDateTime.of(Year, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
 }

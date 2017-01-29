@@ -16,7 +16,7 @@
 
 package cron4s.lib.javatime
 
-import java.time.LocalDateTime
+import java.time.{LocalDateTime, ZonedDateTime}
 
 import cron4s.testkit.DateTimeAdapterTestKit
 
@@ -24,3 +24,4 @@ import cron4s.testkit.DateTimeAdapterTestKit
   * Created by alonsodomin on 29/08/2016.
   */
 class LocalDateTimeAdapterSpec extends DateTimeAdapterTestKit[LocalDateTime]("LocalDateTime") with LocalDateTimeTestBase
+class ZonedDateTimeAdapterSpec extends DateTimeAdapterTestKit[ZonedDateTime]("ZonedDateTime") with ZonedDateTimeTestBase

@@ -26,7 +26,7 @@ import org.scalatest.{Matchers, PropSpec}
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-abstract class CronDateTimeTestKit[DateTime <: AnyRef : DateTimeAdapter]
+abstract class CronDateTimeTestKit[DateTime: DateTimeAdapter]
   extends PropSpec with TableDrivenPropertyChecks with Matchers { this: DateTimeTestKitBase[DateTime] =>
 
   val onlyTuesdaysAt12 = CronExpr(

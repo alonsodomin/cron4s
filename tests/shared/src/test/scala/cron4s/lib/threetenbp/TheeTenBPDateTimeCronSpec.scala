@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package cron4s.testkit
+package cron4s.lib.threetenbp
 
-import org.scalacheck.Arbitrary
+import cron4s.testkit.DateTimeCronTestKit
+
+import org.threeten.bp.{LocalDateTime, ZonedDateTime}
 
 /**
-  * Created by alonsodomin on 29/08/2016.
+  * Created by alonsodomin on 29/01/2017.
   */
-trait DateTimeTestKitBase[DateTime] {
-
-  implicit def arbitraryDateTime: Arbitrary[DateTime]
-
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): DateTime
-
-}
+class TheeTenBPLocalDateTimeCronSpec extends DateTimeCronTestKit[LocalDateTime] with ThreeTenBPLocalDateTimeTestBase
+class TheeTenBPZonedDateTimeCronSpec extends DateTimeCronTestKit[ZonedDateTime] with ThreeTenBPZonedDateTimeTestBase

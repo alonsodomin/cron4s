@@ -16,8 +16,11 @@
 
 package cron4s.lib.threetenbp
 
+import cron4s.CronUnit
 import cron4s.testkit.DateTimeTestKitBase
-import org.threeten.bp.{ZoneId, ZonedDateTime}
+
+import org.scalacheck.{Arbitrary, Gen}
+import org.threeten.bp._
 
 import scalaz.Equal
 
@@ -25,8 +28,22 @@ import scalaz.Equal
   * Created by alonsodomin on 29/08/2016.
   */
 trait ThreeTenBPZonedDateTimeTestBase extends DateTimeTestKitBase[ZonedDateTime] {
+  import CronUnit._
+
+  final val Year = 2017
+
+  override implicit lazy val arbitraryDateTime: Arbitrary[ZonedDateTime] = Arbitrary {
+    for {
+      second     <- Gen.choose(Seconds.min, Seconds.max)
+      minute     <- Gen.choose(Minutes.min, Minutes.max)
+      hour       <- Gen.choose(Hours.min, Hours.max)
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(Year, _))
+      dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.lengthOfMonth)
+    } yield ZonedDateTime.of(Year, yearMonth.getMonthValue, dayOfMonth, hour, minute, second, 0, ZoneOffset.UTC)
+  }
+
   def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): ZonedDateTime =
-    ZonedDateTime.of(2016, month, dayOfMonth, hours, minutes, seconds, 0, ZoneId.of("UTC"))
+    ZonedDateTime.of(Year, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
 
   implicit val dateTimeEq: Equal[ZonedDateTime] = Equal.equal((lhs, rhs) => lhs.equals(rhs))
 }

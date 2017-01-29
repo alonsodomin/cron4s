@@ -16,8 +16,11 @@
 
 package cron4s.lib.threetenbp
 
+import cron4s.CronUnit
 import cron4s.testkit.DateTimeTestKitBase
-import org.threeten.bp.LocalDateTime
+
+import org.scalacheck.{Arbitrary, Gen}
+import org.threeten.bp.{LocalDateTime, YearMonth}
 
 import scalaz.Equal
 
@@ -25,10 +28,23 @@ import scalaz.Equal
   * Created by alonsodomin on 29/08/2016.
   */
 trait ThreeTenBPLocalDateTimeTestBase extends DateTimeTestKitBase[LocalDateTime] {
+  import CronUnit._
+
+  final val Year = 2016
+
+  override implicit lazy val arbitraryDateTime: Arbitrary[LocalDateTime] = Arbitrary {
+    for {
+      second     <- Gen.choose(Seconds.min, Seconds.max)
+      minute     <- Gen.choose(Minutes.min, Minutes.max)
+      hour       <- Gen.choose(Hours.min, Hours.max)
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(Year, _))
+      dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.lengthOfMonth)
+    } yield LocalDateTime.of(Year, yearMonth.getMonthValue, dayOfMonth, hour, minute, second)
+  }
 
   implicit val dateTimeEq: Equal[LocalDateTime] = Equal.equal((lhs, rhs) => lhs.equals(rhs))
 
   def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): LocalDateTime =
-    LocalDateTime.of(2016, month, dayOfMonth, hours, minutes, seconds)
+    LocalDateTime.of(Year, month, dayOfMonth, hours, minutes, seconds)
 
 }

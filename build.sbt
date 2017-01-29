@@ -7,9 +7,9 @@ import sbtunidoc.Plugin.UnidocKeys._
 
 import scala.xml.transform.{RewriteRule, RuleTransformer}
 
-scalaVersion in ThisBuild := "2.11.8"
+scalaVersion in ThisBuild := "2.12.1"
 
-crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12.1")
+crossScalaVersions in ThisBuild := Seq(scalaVersion.value, "2.11.8")
 
 val commonSettings = Def.settings(
   name := "cron4s",

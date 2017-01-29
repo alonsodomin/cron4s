@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package cron4s.testkit
+package cron4s.datetime
 
-import org.scalacheck.Arbitrary
+import cron4s.testkit.DateTimeCronTestKit
+
+import testdummy._
 
 /**
-  * Created by alonsodomin on 29/08/2016.
+  * Created by alonsodomin on 29/01/2017.
   */
-trait DateTimeTestKitBase[DateTime] {
-
-  implicit def arbitraryDateTime: Arbitrary[DateTime]
-
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): DateTime
-
-}
+class DateTimeCronSpec extends DateTimeCronTestKit[DummyDateTime] with DummyTestBase
