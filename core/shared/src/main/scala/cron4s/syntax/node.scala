@@ -17,7 +17,7 @@
 package cron4s.syntax
 
 import cron4s.CronField
-import cron4s.spi.DateTimeNode
+import cron4s.datetime.DateTimeNode
 import cron4s.types.Predicate
 
 private[syntax] class DateTimeNodeOps[E[_ <: CronField], F <: CronField, DateTime](self: E[F], tc: DateTimeNode[E, F, DateTime]) {

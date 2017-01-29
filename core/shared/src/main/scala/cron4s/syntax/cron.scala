@@ -16,7 +16,7 @@
 
 package cron4s.syntax
 
-import cron4s.spi.DateTimeCron
+import cron4s.datetime.DateTimeCron
 import cron4s.types.Predicate
 
 /**

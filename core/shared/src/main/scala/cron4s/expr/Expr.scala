@@ -16,29 +16,29 @@
 
 package cron4s.expr
 
-import cron4s.generic
-import shapeless._
+import cron4s.{CronField, CronUnit}
+import cron4s.types.{Enumerated, Predicate}
 
-final case class DateCronExpr(
-    daysOfMonth: DaysOfMonthNode,
-    months: MonthsNode,
-    daysOfWeek: DaysOfWeekNode
-  ) {
+import scalaz.Show
 
-  private[cron4s] lazy val raw: RawDateCronExpr = Generic[DateCronExpr].to(this)
+/**
+  * Created by alonsodomin on 25/08/2016.
+  */
+trait Expr[E[_ <: CronField], F <: CronField] extends Enumerated[E[F]] with Show[E[F]] {
 
-  override def toString = raw.map(generic.ops.show).toList.mkString(" ")
+  def matches(e: E[F]): Predicate[Int]
+
+  def impliedBy[EE[_ <: CronField]](e: E[F])(expr: EE[F])(
+      implicit ops: Expr[EE, F]
+    ): Boolean = {
+      val exprRange = range(e)
+      exprRange.size > 0 && exprRange.forall(ops.matches(expr))
+    }
+
+  def unit(e: E[F]): CronUnit[F]
 
 }
 
-final case class TimeCronExpr(
-    seconds: SecondsNode,
-    minutes: MinutesNode,
-    hours: HoursNode
-  ) {
-
-  private[cron4s] lazy val raw: RawTimeCronExpr = Generic[TimeCronExpr].to(this)
-
-  override def toString = raw.map(generic.ops.show).toList.mkString(" ")
-
+object Expr {
+  @inline def apply[E[_ <: CronField], F <: CronField](implicit ev: Expr[E, F]): Expr[E, F] = ev
 }

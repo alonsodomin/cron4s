@@ -17,7 +17,7 @@
 package cron4s.testkit.laws
 
 import cron4s.CronField
-import cron4s.spi.{DateTimeAdapter, NodeDateTimeOps}
+import cron4s.datetime.{DateTimeAdapter, NodeDateTimeOps}
 import cron4s.testkit._
 import cron4s.types._
 

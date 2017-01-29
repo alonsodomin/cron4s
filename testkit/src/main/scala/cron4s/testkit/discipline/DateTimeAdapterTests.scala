@@ -20,7 +20,7 @@ import cron4s.CronField
 import cron4s.testkit.laws.DateTimeAdapterLaws
 import org.scalacheck._
 import Prop._
-import cron4s.spi.DateTimeAdapter
+import cron4s.datetime.DateTimeAdapter
 import cron4s.testkit.CronFieldValue
 import org.typelevel.discipline.Laws
 

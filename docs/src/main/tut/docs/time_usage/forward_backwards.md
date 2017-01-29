@@ -12,7 +12,7 @@ a given one. To see is in action, let's start with our own basic imports:
 ```tut:silent
 import java.time._
 import cron4s._
-import cron4s.spi.javatime._
+import cron4s.lib.javatime._
 ```
 
 And an already parsed CRON expression:

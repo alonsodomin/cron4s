@@ -14,31 +14,16 @@
  * limitations under the License.
  */
 
-package cron4s.expr
+package cron4s
 
-import cron4s.generic
+import cron4s.expr.{CronExpr, DateCronExpr, TimeCronExpr}
 import shapeless._
 
-final case class DateCronExpr(
-    daysOfMonth: DaysOfMonthNode,
-    months: MonthsNode,
-    daysOfWeek: DaysOfWeekNode
-  ) {
+/**
+  * Created by alonsodomin on 24/01/2017.
+  */
+package object datetime {
 
-  private[cron4s] lazy val raw: RawDateCronExpr = Generic[DateCronExpr].to(this)
-
-  override def toString = raw.map(generic.ops.show).toList.mkString(" ")
-
-}
-
-final case class TimeCronExpr(
-    seconds: SecondsNode,
-    minutes: MinutesNode,
-    hours: HoursNode
-  ) {
-
-  private[cron4s] lazy val raw: RawTimeCronExpr = Generic[TimeCronExpr].to(this)
-
-  override def toString = raw.map(generic.ops.show).toList.mkString(" ")
+  private[datetime] type AnyCron = CronExpr :+: TimeCronExpr :+: DateCronExpr :+: CNil
 
 }

@@ -18,7 +18,7 @@ package cron4s.testkit
 
 import cron4s._
 import cron4s.expr._
-import cron4s.spi.DateTimeAdapter
+import cron4s.datetime.DateTimeAdapter
 import cron4s.testkit.discipline.NodeDateTimeTests
 import cron4s.testkit.gen._
 

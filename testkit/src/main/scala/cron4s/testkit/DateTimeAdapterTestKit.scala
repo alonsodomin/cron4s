@@ -16,7 +16,7 @@
 
 package cron4s.testkit
 
-import cron4s.spi.DateTimeAdapter
+import cron4s.datetime.DateTimeAdapter
 import cron4s.{CronField, CronUnit}
 import cron4s.testkit.discipline.DateTimeAdapterTests
 import cron4s.testkit.gen.ArbitraryCronFieldValues

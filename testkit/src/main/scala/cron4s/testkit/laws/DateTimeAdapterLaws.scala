@@ -17,7 +17,7 @@
 package cron4s.testkit.laws
 
 import cron4s.CronField
-import cron4s.spi.DateTimeAdapter
+import cron4s.datetime.DateTimeAdapter
 import cron4s.testkit.CronFieldValue
 
 import scalaz._
