@@ -22,7 +22,6 @@ import cron4s.datetime.DateTimeAdapter
 import cron4s.testkit.discipline.DateTimeNodeTests
 import cron4s.testkit.gen._
 
-import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
 
 import org.typelevel.discipline.scalatest.Discipline
@@ -33,75 +32,65 @@ import scalaz.Equal
   * Created by alonsodomin on 04/08/2016.
   */
 abstract class DateTimeNodeTestKit[DateTime <: AnyRef : DateTimeAdapter : Equal]
-  extends FunSuite with Discipline with ExtensionsTestKitBase[DateTime] {
+  extends FunSuite with Discipline with DateTimeTestKitBase[DateTime] {
   import CronField._
-  import CronUnit._
 
   trait NodeCheck {
     def check(): Unit
   }
 
-  implicit lazy val arbitraryDateTime = Arbitrary(for {
-    seconds     <- Gen.choose(Seconds.min, Seconds.max)
-    minutes     <- Gen.choose(Minutes.min, Minutes.max)
-    hours       <- Gen.choose(Hours.min, Hours.max)
-    daysOfMonth <- Gen.choose(DaysOfMonth.min, DaysOfMonth.max)
-    months      <- Gen.choose(Months.min, Months.max)
-    daysOfWeek  <- Gen.choose(DaysOfWeek.min, DaysOfWeek.max)
-  } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, daysOfWeek))
-
   object each extends NodeCheck with ArbitraryEachNode {
     def check() = {
-      checkAll("NodeDateTime[EachNode, Second]", DateTimeNodeTests[EachNode, Second, DateTime].dateTime)
-      checkAll("NodeDateTime[EachNode, Minute]", DateTimeNodeTests[EachNode, Minute, DateTime].dateTime)
-      checkAll("NodeDateTime[EachNode, Hour]", DateTimeNodeTests[EachNode, Hour, DateTime].dateTime)
-      checkAll("NodeDateTime[EachNode, DayOfMonth]", DateTimeNodeTests[EachNode, DayOfMonth, DateTime].dateTime)
-      checkAll("NodeDateTime[EachNode, Month]", DateTimeNodeTests[EachNode, Month, DateTime].dateTime)
-      checkAll("NodeDateTime[EachNode, DayOfWeek]", DateTimeNodeTests[EachNode, DayOfWeek, DateTime].dateTime)
+      checkAll("DateTimeNode[EachNode, Second]", DateTimeNodeTests[EachNode, Second, DateTime].dateTime)
+      checkAll("DateTimeNode[EachNode, Minute]", DateTimeNodeTests[EachNode, Minute, DateTime].dateTime)
+      checkAll("DateTimeNode[EachNode, Hour]", DateTimeNodeTests[EachNode, Hour, DateTime].dateTime)
+      checkAll("DateTimeNode[EachNode, DayOfMonth]", DateTimeNodeTests[EachNode, DayOfMonth, DateTime].dateTime)
+      checkAll("DateTimeNode[EachNode, Month]", DateTimeNodeTests[EachNode, Month, DateTime].dateTime)
+      checkAll("DateTimeNode[EachNode, DayOfWeek]", DateTimeNodeTests[EachNode, DayOfWeek, DateTime].dateTime)
     }
   }
 
   object const extends NodeCheck with ArbitraryConstNode {
     def check() = {
-      checkAll("NodeDateTime[ConstNode, Second]", DateTimeNodeTests[ConstNode, Second, DateTime].dateTime)
-      checkAll("NodeDateTime[ConstNode, Minute]", DateTimeNodeTests[ConstNode, Minute, DateTime].dateTime)
-      checkAll("NodeDateTime[ConstNode, Hour]", DateTimeNodeTests[ConstNode, Hour, DateTime].dateTime)
-      checkAll("NodeDateTime[ConstNode, DayOfMonth]", DateTimeNodeTests[ConstNode, DayOfMonth, DateTime].dateTime)
-      checkAll("NodeDateTime[ConstNode, Month]", DateTimeNodeTests[ConstNode, Month, DateTime].dateTime)
-      checkAll("NodeDateTime[ConstNode, DayOfWeek]", DateTimeNodeTests[ConstNode, DayOfWeek, DateTime].dateTime)
+      checkAll("DateTimeNode[ConstNode, Second]", DateTimeNodeTests[ConstNode, Second, DateTime].dateTime)
+      checkAll("DateTimeNode[ConstNode, Minute]", DateTimeNodeTests[ConstNode, Minute, DateTime].dateTime)
+      checkAll("DateTimeNode[ConstNode, Hour]", DateTimeNodeTests[ConstNode, Hour, DateTime].dateTime)
+      checkAll("DateTimeNode[ConstNode, DayOfMonth]", DateTimeNodeTests[ConstNode, DayOfMonth, DateTime].dateTime)
+      checkAll("DateTimeNode[ConstNode, Month]", DateTimeNodeTests[ConstNode, Month, DateTime].dateTime)
+      checkAll("DateTimeNode[ConstNode, DayOfWeek]", DateTimeNodeTests[ConstNode, DayOfWeek, DateTime].dateTime)
     }
   }
 
   object between extends NodeCheck with ArbitraryBetweenNode {
     def check() = {
-      checkAll("NodeDateTime[BetweenNode, Second]", DateTimeNodeTests[BetweenNode, Second, DateTime].dateTime)
-      checkAll("NodeDateTime[BetweenNode, Minute]", DateTimeNodeTests[BetweenNode, Minute, DateTime].dateTime)
-      checkAll("NodeDateTime[BetweenNode, Hour]", DateTimeNodeTests[BetweenNode, Hour, DateTime].dateTime)
-      checkAll("NodeDateTime[BetweenNode, DayOfMonth]", DateTimeNodeTests[BetweenNode, DayOfMonth, DateTime].dateTime)
-      checkAll("NodeDateTime[BetweenNode, Month]", DateTimeNodeTests[BetweenNode, Month, DateTime].dateTime)
-      checkAll("NodeDateTime[BetweenNode, DayOfWeek]", DateTimeNodeTests[BetweenNode, DayOfWeek, DateTime].dateTime)
+      checkAll("DateTimeNode[BetweenNode, Second]", DateTimeNodeTests[BetweenNode, Second, DateTime].dateTime)
+      checkAll("DateTimeNode[BetweenNode, Minute]", DateTimeNodeTests[BetweenNode, Minute, DateTime].dateTime)
+      checkAll("DateTimeNode[BetweenNode, Hour]", DateTimeNodeTests[BetweenNode, Hour, DateTime].dateTime)
+      checkAll("DateTimeNode[BetweenNode, DayOfMonth]", DateTimeNodeTests[BetweenNode, DayOfMonth, DateTime].dateTime)
+      checkAll("DateTimeNode[BetweenNode, Month]", DateTimeNodeTests[BetweenNode, Month, DateTime].dateTime)
+      checkAll("DateTimeNode[BetweenNode, DayOfWeek]", DateTimeNodeTests[BetweenNode, DayOfWeek, DateTime].dateTime)
     }
   }
 
   object several extends NodeCheck with ArbitrarySeveralNode {
     def check() = {
-      checkAll("NodeDateTime[SeveralNode, Second]", DateTimeNodeTests[SeveralNode, Second, DateTime].dateTime)
-      checkAll("NodeDateTime[SeveralNode, Minute]", DateTimeNodeTests[SeveralNode, Minute, DateTime].dateTime)
-      checkAll("NodeDateTime[SeveralNode, Hour]", DateTimeNodeTests[SeveralNode, Hour, DateTime].dateTime)
-      checkAll("NodeDateTime[SeveralNode, DayOfMonth]", DateTimeNodeTests[SeveralNode, DayOfMonth, DateTime].dateTime)
-      checkAll("NodeDateTime[SeveralNode, Month]", DateTimeNodeTests[SeveralNode, Month, DateTime].dateTime)
-      checkAll("NodeDateTime[SeveralNode, DayOfWeek]", DateTimeNodeTests[SeveralNode, DayOfWeek, DateTime].dateTime)
+      checkAll("DateTimeNode[SeveralNode, Second]", DateTimeNodeTests[SeveralNode, Second, DateTime].dateTime)
+      checkAll("DateTimeNode[SeveralNode, Minute]", DateTimeNodeTests[SeveralNode, Minute, DateTime].dateTime)
+      checkAll("DateTimeNode[SeveralNode, Hour]", DateTimeNodeTests[SeveralNode, Hour, DateTime].dateTime)
+      checkAll("DateTimeNode[SeveralNode, DayOfMonth]", DateTimeNodeTests[SeveralNode, DayOfMonth, DateTime].dateTime)
+      checkAll("DateTimeNode[SeveralNode, Month]", DateTimeNodeTests[SeveralNode, Month, DateTime].dateTime)
+      checkAll("DateTimeNode[SeveralNode, DayOfWeek]", DateTimeNodeTests[SeveralNode, DayOfWeek, DateTime].dateTime)
     }
   }
 
   object every extends NodeCheck with ArbitraryEveryNode {
     def check() = {
-      checkAll("NodeDateTime[EveryNode, Second]", DateTimeNodeTests[EveryNode, Second, DateTime].dateTime)
-      checkAll("NodeDateTime[EveryNode, Minute]", DateTimeNodeTests[EveryNode, Minute, DateTime].dateTime)
-      checkAll("NodeDateTime[EveryNode, Hour]", DateTimeNodeTests[EveryNode, Hour, DateTime].dateTime)
-      checkAll("NodeDateTime[EveryNode, DayOfMonth]", DateTimeNodeTests[EveryNode, DayOfMonth, DateTime].dateTime)
-      checkAll("NodeDateTime[EveryNode, Month]", DateTimeNodeTests[EveryNode, Month, DateTime].dateTime)
-      checkAll("NodeDateTime[EveryNode, DayOfWeek]", DateTimeNodeTests[EveryNode, DayOfWeek, DateTime].dateTime)
+      checkAll("DateTimeNode[EveryNode, Second]", DateTimeNodeTests[EveryNode, Second, DateTime].dateTime)
+      checkAll("DateTimeNode[EveryNode, Minute]", DateTimeNodeTests[EveryNode, Minute, DateTime].dateTime)
+      checkAll("DateTimeNode[EveryNode, Hour]", DateTimeNodeTests[EveryNode, Hour, DateTime].dateTime)
+      checkAll("DateTimeNode[EveryNode, DayOfMonth]", DateTimeNodeTests[EveryNode, DayOfMonth, DateTime].dateTime)
+      checkAll("DateTimeNode[EveryNode, Month]", DateTimeNodeTests[EveryNode, Month, DateTime].dateTime)
+      checkAll("DateTimeNode[EveryNode, DayOfWeek]", DateTimeNodeTests[EveryNode, DayOfWeek, DateTime].dateTime)
     }
   }
 

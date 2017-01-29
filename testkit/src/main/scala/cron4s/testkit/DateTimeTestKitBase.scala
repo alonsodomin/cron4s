@@ -16,10 +16,24 @@
 
 package cron4s.testkit
 
+import cron4s.CronUnit
+
+import org.scalacheck.{Gen, Arbitrary}
+
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-trait ExtensionsTestKitBase[DateTime <: AnyRef] {
+trait DateTimeTestKitBase[DateTime] {
+  import CronUnit._
+
+  implicit lazy val arbitraryDateTime = Arbitrary(for {
+    seconds     <- Gen.choose(Seconds.min, Seconds.max)
+    minutes     <- Gen.choose(Minutes.min, Minutes.max)
+    hours       <- Gen.choose(Hours.min, Hours.max)
+    daysOfMonth <- Gen.choose(DaysOfMonth.min, DaysOfMonth.max)
+    months      <- Gen.choose(Months.min, Months.max)
+    daysOfWeek  <- Gen.choose(DaysOfWeek.min, DaysOfWeek.max)
+  } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, daysOfWeek))
 
   protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): DateTime
 

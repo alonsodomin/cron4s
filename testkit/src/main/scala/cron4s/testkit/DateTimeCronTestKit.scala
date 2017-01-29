@@ -14,26 +14,27 @@
  * limitations under the License.
  */
 
-package cron4s.expr
+package cron4s.testkit
 
-import cron4s.CronField._
-import cron4s.testkit.discipline.ExprTests
-import cron4s.testkit.gen.ArbitrarySeveralNode
+import cron4s.datetime.DateTimeAdapter
+import cron4s.expr.{CronExpr, DateCronExpr, TimeCronExpr}
+import cron4s.testkit.discipline.DateTimeCronTests
+import cron4s.testkit.gen.CronGenerators
 
 import org.scalatest.FunSuite
+
 import org.typelevel.discipline.scalatest.Discipline
 
+import scalaz.Equal
 
 /**
-  * Created by alonsodomin on 01/08/2016.
+  * Created by alonsodomin on 29/01/2017.
   */
-class SeveralNodeSpec extends FunSuite with Discipline with ArbitrarySeveralNode {
+abstract class DateTimeCronTestKit[DateTime : DateTimeAdapter : Equal]
+  extends FunSuite with Discipline with DateTimeTestKitBase[DateTime] with CronGenerators {
 
-  checkAll("Several[Second]", ExprTests[SeveralNode, Second].expr)
-  checkAll("Several[Minute]", ExprTests[SeveralNode, Minute].expr)
-  checkAll("Several[Hour]", ExprTests[SeveralNode, Hour].expr)
-  checkAll("Several[DayOfMonth]", ExprTests[SeveralNode, DayOfMonth].expr)
-  checkAll("Several[Month]", ExprTests[SeveralNode, Month].expr)
-  checkAll("Several[DayOfWeek]", ExprTests[SeveralNode, DayOfWeek].expr)
+  checkAll("CronExpr", DateTimeCronTests[CronExpr, DateTime].dateTimeCron)
+  checkAll("TimeCronExpr", DateTimeCronTests[DateCronExpr, DateTime].dateTimeCron)
+  checkAll("DateCronExpr", DateTimeCronTests[TimeCronExpr, DateTime].dateTimeCron)
 
 }

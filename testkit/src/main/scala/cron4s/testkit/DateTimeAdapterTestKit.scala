@@ -31,18 +31,9 @@ import scalaz.Equal
   * Created by alonsodomin on 29/08/2016.
   */
 abstract class DateTimeAdapterTestKit[DateTime <: AnyRef : DateTimeAdapter : Equal](name: String)
-  extends FunSuite with Discipline with ArbitraryCronFieldValues with ExtensionsTestKitBase[DateTime] {
+  extends FunSuite with Discipline with ArbitraryCronFieldValues with DateTimeTestKitBase[DateTime] {
   import CronField._
   import CronUnit._
-
-  implicit lazy val arbitraryDateTime = Arbitrary(for {
-    seconds     <- Gen.choose(Seconds.min, Seconds.max)
-    minutes     <- Gen.choose(Minutes.min, Minutes.max)
-    hours       <- Gen.choose(Hours.min, Hours.max)
-    daysOfMonth <- Gen.choose(DaysOfMonth.min, DaysOfMonth.max)
-    months      <- Gen.const(1)
-    daysOfWeek  <- Gen.choose(DaysOfWeek.min, DaysOfWeek.max)
-  } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, daysOfWeek))
 
   checkAll(s"DateTimeAdapter[$name, Second]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Second])
   checkAll(s"DateTimeAdapter[$name, Minute]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Minute])
