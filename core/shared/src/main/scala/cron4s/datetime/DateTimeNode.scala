@@ -21,16 +21,15 @@ import cron4s.expr.Expr
 import cron4s.types._
 import cron4s.syntax.expr._
 
-trait DateTimeNode[E[_ <: CronField], F <: CronField, DateTime] {
+trait DateTimeNode[E[_ <: CronField], F <: CronField] {
   implicit def E: Expr[E, F]
-  implicit def adapter: DateTimeAdapter[DateTime]
 
   /**
     * Tests if this field expressions matches in the given date-time
     *
     * @return true if there is a field in this date-time that matches this expression
     */
-  def matchesIn(expr: E[F]): Predicate[DateTime] = Predicate { dt =>
+  def matchesIn[DateTime](expr: E[F], adapter: DateTimeAdapter[DateTime]): Predicate[DateTime] = Predicate { dt =>
     val current = adapter.get(dt, expr.unit.field)
     current.map(expr.matches).getOrElse(false)
   }
@@ -43,7 +42,8 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField, DateTime] {
     * @return the next date-time
     */
   @inline
-  def nextIn(expr: E[F])(dateTime: DateTime): Option[DateTime] = stepIn(expr)(dateTime, 1)
+  def nextIn[DateTime](expr: E[F], adapter: DateTimeAdapter[DateTime])(dateTime: DateTime): Option[DateTime] =
+    stepIn(expr, adapter)(dateTime, 1)
 
   /**
     * Calculates the previous date-time to a given one considering only the field
@@ -53,7 +53,8 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField, DateTime] {
     * @return the next date-time
     */
   @inline
-  def prevIn(expr: E[F])(dateTime: DateTime): Option[DateTime] = stepIn(expr)(dateTime, -1)
+  def prevIn[DateTime](expr: E[F], adapter: DateTimeAdapter[DateTime])(dateTime: DateTime): Option[DateTime] =
+    stepIn(expr, adapter)(dateTime, -1)
 
   /**
     * Calculates a date-time that is in either the past or the future relative
@@ -64,7 +65,7 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField, DateTime] {
     * @param step step size
     * @return a date-time that is an amount of given steps from the given one
     */
-  def stepIn(expr: E[F])(dateTime: DateTime, step: Int): Option[DateTime] = {
+  def stepIn[DateTime](expr: E[F], adapter: DateTimeAdapter[DateTime])(dateTime: DateTime, step: Int): Option[DateTime] = {
     for {
       current  <- adapter.get(dateTime, expr.unit.field)
       newValue <- expr.step(current, step).map(_._1)
@@ -77,11 +78,11 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField, DateTime] {
 object DateTimeNode {
 
   @inline def apply[E[_ <: CronField], F <: CronField, DateTime]
-    (implicit ev: DateTimeNode[E, F, DateTime]): DateTimeNode[E, F, DateTime] = ev
+    (implicit ev: DateTimeNode[E, F]): DateTimeNode[E, F] = ev
 
   implicit def derive[E[_ <: CronField], F <: CronField, DateTime](
-      implicit E0: Expr[E, F], adapter0: DateTimeAdapter[DateTime]): DateTimeNode[E, F, DateTime] =
-    new DateTimeNode[E, F, DateTime] {
+      implicit E0: Expr[E, F], adapter0: DateTimeAdapter[DateTime]): DateTimeNode[E, F] =
+    new DateTimeNode[E, F] {
       implicit val E = E0
       implicit val adapter = adapter0
     }

@@ -25,7 +25,7 @@ import cron4s.syntax.cron._
   */
 trait DateTimeCronLaws[E, DateTime] {
   implicit def adapter: DateTimeAdapter[DateTime]
-  implicit def TC: DateTimeCron[E, DateTime]
+  implicit def TC: DateTimeCron[E]
 
   def forwards(e: E, from: DateTime): IsEqual[Option[DateTime]] =
     e.next(from) <-> e.step(from, 1)
@@ -36,12 +36,14 @@ trait DateTimeCronLaws[E, DateTime] {
 }
 
 object DateTimeCronLaws {
+
   def apply[E, DateTime](implicit
     adapter0: DateTimeAdapter[DateTime],
-    TC0: DateTimeCron[E, DateTime]
+    TC0: DateTimeCron[E]
   ): DateTimeCronLaws[E, DateTime] =
     new DateTimeCronLaws[E, DateTime] {
       implicit val adapter = adapter0
       implicit val TC = TC0
     }
+
 }

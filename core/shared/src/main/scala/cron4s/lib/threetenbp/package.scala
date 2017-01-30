@@ -16,14 +16,11 @@
 
 package cron4s.lib
 
-import cron4s.CronField
-import cron4s.CronField._
 import cron4s.datetime.DateTimeAdapter
 
-import org.threeten.bp.temporal.{ChronoField, Temporal, TemporalField}
-import org.threeten.bp.{LocalDateTime, ZonedDateTime}
+import org.threeten.bp._
+import org.threeten.bp.temporal.Temporal
 
-import scala.util.Try
 import scalaz.Equal
 
 /**
@@ -31,36 +28,12 @@ import scalaz.Equal
   */
 package object threetenbp {
 
-  implicit val localDateTimeInstance: Equal[LocalDateTime] = Equal.equalA[LocalDateTime]
-  implicit val zonedDateTimeInstnce: Equal[ZonedDateTime] = Equal.equalA[ZonedDateTime]
+  implicit val localDateEq      : Equal[LocalDate]      = Equal.equalA[LocalDate]
+  implicit val localTimeEq      : Equal[LocalTime]      = Equal.equalA[LocalTime]
+  implicit val localDateTimeEq  : Equal[LocalDateTime]  = Equal.equalA[LocalDateTime]
+  implicit val zonedDateTimeEq  : Equal[ZonedDateTime]  = Equal.equalA[ZonedDateTime]
+  implicit val offsetDateTimeEq : Equal[OffsetDateTime] = Equal.equalA[OffsetDateTime]
 
-  implicit def jsr310Adapter[DT <: Temporal]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
-
-    private[this] def mapField(field: CronField): TemporalField = field match {
-      case Second     => ChronoField.SECOND_OF_MINUTE
-      case Minute     => ChronoField.MINUTE_OF_HOUR
-      case Hour       => ChronoField.HOUR_OF_DAY
-      case DayOfMonth => ChronoField.DAY_OF_MONTH
-      case Month      => ChronoField.MONTH_OF_YEAR
-      case DayOfWeek  => ChronoField.DAY_OF_WEEK
-    }
-
-    override def get[F <: CronField](dateTime: DT, field: F): Option[Int] = {
-      val temporalField = mapField(field)
-
-      val offset = if (field == DayOfWeek) -1 else 0
-      if (!dateTime.isSupported(temporalField)) None
-      else Some(dateTime.get(temporalField) + offset)
-    }
-
-    override def set[F <: CronField](dateTime: DT, field: F, value: Int): Option[DT] = {
-      val temporalField = mapField(field)
-
-      val offset = if (field == DayOfWeek) 1 else 0
-      if (!dateTime.isSupported(temporalField)) None
-      else Try(dateTime.`with`(temporalField, value.toLong + offset).asInstanceOf[DT]).toOption
-    }
-
-  }
+  implicit def jsr310Adapter[DT <: Temporal]: DateTimeAdapter[DT] = new JSR310Adapter[DT]
 
 }

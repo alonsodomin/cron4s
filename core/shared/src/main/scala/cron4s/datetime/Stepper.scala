@@ -23,8 +23,7 @@ import shapeless._
 
 import scala.annotation.tailrec
 
-private[datetime] final class Stepper[DateTime](implicit adapter: DateTimeAdapter[DateTime]
-  ) {
+private[datetime] final class Stepper[DateTime](adapter: DateTimeAdapter[DateTime]) {
   import CronField._
 
   protected type Step = Option[(DateTime, Int)]

@@ -28,7 +28,7 @@ import cron4s.syntax.node._
 trait DateTimeNodeLaws[E[_ <: CronField], F <: CronField, DateTime] {
   implicit def adapter: DateTimeAdapter[DateTime]
   implicit def expr: Expr[E, F]
-  implicit def TC: DateTimeNode[E, F, DateTime]
+  implicit def TC: DateTimeNode[E, F]
 
   def matchable(e: E[F], dt: DateTime): IsEqual[Boolean] = {
     val fieldVal = adapter.get(dt, expr.unit(e).field)
@@ -48,7 +48,7 @@ object DateTimeNodeLaws {
   def apply[E[_ <: CronField], F <: CronField, DateTime](implicit
       adapter0: DateTimeAdapter[DateTime],
       expr0: Expr[E, F],
-      TC0: DateTimeNode[E, F, DateTime]
+      TC0: DateTimeNode[E, F]
   ): DateTimeNodeLaws[E, F, DateTime] =
     new DateTimeNodeLaws[E, F, DateTime] {
       implicit val adapter = adapter0

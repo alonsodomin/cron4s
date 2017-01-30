@@ -49,7 +49,7 @@ trait DateTimeCronTests[E, DateTime] extends Laws {
 object DateTimeCronTests {
   def apply[E, DateTime](implicit
     adapter: DateTimeAdapter[DateTime],
-    cron: DateTimeCron[E, DateTime]
+    cron: DateTimeCron[E]
   ): DateTimeCronTests[E, DateTime] =
     new DateTimeCronTests[E, DateTime] {
       val laws = DateTimeCronLaws[E, DateTime]

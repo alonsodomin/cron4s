@@ -29,8 +29,8 @@ import scalaz.std.list._
 /**
   * Created by domingueza on 29/07/2016.
   */
-private[datetime] final class PredicateReducer[DateTime]
-    (implicit M: PlusEmpty[Predicate], adapter: DateTimeAdapter[DateTime]) {
+private[datetime] final class PredicateReducer[DateTime](adapter: DateTimeAdapter[DateTime])
+    (implicit M: PlusEmpty[Predicate]) {
 
   object asPredicate extends Poly1 {
     import CronField._

@@ -16,23 +16,22 @@
 
 package cron4s.syntax
 
-import cron4s.datetime.DateTimeCron
-import cron4s.types.Predicate
+import cron4s.datetime.{DateTimeAdapter, DateTimeCron}
 
 /**
   * Created by alonsodomin on 25/01/2017.
   */
-private[syntax] class DateTimeCronOps[E, DateTime](self: E, tc: DateTimeCron[E, DateTime]) {
+private[syntax] class DateTimeCronOps[E](self: E, tc: DateTimeCron[E]) {
 
-  def allOf: Predicate[DateTime] = tc.allOf(self)
+  def allOf[DateTime](dt: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Boolean = tc.allOf(self, adapter)(dt)
 
-  def anyOf: Predicate[DateTime] = tc.anyOf(self)
+  def anyOf[DateTime](dt: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Boolean = tc.anyOf(self, adapter)(dt)
 
-  def next(from: DateTime): Option[DateTime] = step(from, 1)
+  def next[DateTime](from: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] = step(from, 1)
 
-  def prev(from: DateTime): Option[DateTime] = step(from, -1)
+  def prev[DateTime](from: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] = step(from, -1)
 
-  def step(from: DateTime, stepSize: Int): Option[DateTime] = tc.step(self)(from, stepSize)
+  def step[DateTime](from: DateTime, stepSize: Int)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] = tc.step(self, adapter)(from, stepSize)
 
 }
 
@@ -40,8 +39,8 @@ private[syntax] trait DateTimeCronSyntax {
 
   implicit def toDateTimeCronOps[E, DateTime]
       (target: E)
-      (implicit tc0: DateTimeCron[E, DateTime]): DateTimeCronOps[E, DateTime] =
-    new DateTimeCronOps[E, DateTime](target, tc0)
+      (implicit tc0: DateTimeCron[E]): DateTimeCronOps[E] =
+    new DateTimeCronOps[E](target, tc0)
 
 }
 

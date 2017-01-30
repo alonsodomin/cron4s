@@ -17,18 +17,21 @@
 package cron4s.syntax
 
 import cron4s.CronField
-import cron4s.datetime.DateTimeNode
-import cron4s.types.Predicate
+import cron4s.datetime.{DateTimeAdapter, DateTimeNode}
 
-private[syntax] class DateTimeNodeOps[E[_ <: CronField], F <: CronField, DateTime](self: E[F], tc: DateTimeNode[E, F, DateTime]) {
+private[syntax] class DateTimeNodeOps[E[_ <: CronField], F <: CronField](self: E[F], tc: DateTimeNode[E, F]) {
 
-  def matchesIn: Predicate[DateTime] = tc.matchesIn(self)
+  def matchesIn[DateTime](dt: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Boolean =
+    tc.matchesIn(self, adapter)(dt)
 
-  def nextIn(dateTime: DateTime): Option[DateTime] = tc.nextIn(self)(dateTime)
+  def nextIn[DateTime](dateTime: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] =
+    tc.nextIn(self, adapter)(dateTime)
 
-  def prevIn(dateTime: DateTime): Option[DateTime] = tc.prevIn(self)(dateTime)
+  def prevIn[DateTime](dateTime: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] =
+    tc.prevIn(self, adapter)(dateTime)
 
-  def stepIn(dateTime: DateTime, step: Int): Option[DateTime] = tc.stepIn(self)(dateTime, step)
+  def stepIn[DateTime](dateTime: DateTime, step: Int)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] =
+    tc.stepIn(self, adapter)(dateTime, step)
 
 }
 
@@ -36,8 +39,8 @@ private[syntax] trait DateTimeNodeSyntax {
 
   implicit def toDateTimeNodeOps[E[_ <: CronField], F <: CronField, DateTime]
       (target: E[F])
-      (implicit tc0: DateTimeNode[E, F, DateTime]): DateTimeNodeOps[E, F, DateTime] =
-    new DateTimeNodeOps[E, F, DateTime](target, tc0)
+      (implicit tc0: DateTimeNode[E, F]): DateTimeNodeOps[E, F] =
+    new DateTimeNodeOps[E, F](target, tc0)
 
 }
 
