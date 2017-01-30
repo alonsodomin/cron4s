@@ -17,7 +17,7 @@
 package cron4s.lib
 
 import java.time.temporal.{ChronoField, Temporal, TemporalField}
-import java.time.{LocalDateTime, ZonedDateTime}
+import java.time._
 
 import cron4s.CronField
 import cron4s.datetime.DateTimeAdapter
@@ -31,36 +31,23 @@ import scalaz.Equal
 package object javatime {
   import CronField._
 
-  implicit val localDateTimeInstance: Equal[LocalDateTime] = Equal.equalA[LocalDateTime]
-  implicit val zonedDateTimeInstance: Equal[ZonedDateTime] = Equal.equalA[ZonedDateTime]
+  implicit lazy val javaLocalDateEq      : Equal[LocalDate]      = Equal.equalA[LocalDate]
+  implicit lazy val javaLocalTimeEq      : Equal[LocalTime]      = Equal.equalA[LocalTime]
+  implicit lazy val javaLocalDateTimeEq  : Equal[LocalDateTime]  = Equal.equalA[LocalDateTime]
+  implicit lazy val javaZonedDateTimeEq  : Equal[ZonedDateTime]  = Equal.equalA[ZonedDateTime]
+  implicit lazy val javaOffsetDateTimeEq : Equal[OffsetDateTime] = Equal.equalA[OffsetDateTime]
 
-  implicit def javaTimeAdapter[DT <: Temporal]: DateTimeAdapter[DT] = new DateTimeAdapter[DT] {
+  //implicit object JavaLocalDateAdapter extends JavaTimeAdapter[LocalDate]
+  //implicit object JavaLocalDateTimeAdapter extends JavaTimeAdapter[LocalDateTime]
+  //implicit object JavaZonedDateTimeAdapter extends JavaTimeAdapter[ZonedDateTime]
 
-    private[this] def mapField(field: CronField): TemporalField = field match {
-      case Second     => ChronoField.SECOND_OF_MINUTE
-      case Minute     => ChronoField.MINUTE_OF_HOUR
-      case Hour       => ChronoField.HOUR_OF_DAY
-      case DayOfMonth => ChronoField.DAY_OF_MONTH
-      case Month      => ChronoField.MONTH_OF_YEAR
-      case DayOfWeek  => ChronoField.DAY_OF_WEEK
-    }
+  private[this] def javaTimeAdapter[DT <: Temporal]: DateTimeAdapter[DT] = new JavaTimeAdapter[DT]
 
-    override def get[F <: CronField](dateTime: DT, field: F): Option[Int] = {
-      val temporalField = mapField(field)
-
-      val offset = if (field == DayOfWeek) -1 else 0
-      if (!dateTime.isSupported(temporalField)) None
-      else Some(dateTime.get(temporalField) + offset)
-    }
-
-    override def set[F <: CronField](dateTime: DT, field: F, value: Int): Option[DT] = {
-      val temporalField = mapField(field)
-
-      val offset = if (field == DayOfWeek) 1 else 0
-      if (!dateTime.isSupported(temporalField)) None
-      else Try(dateTime.`with`(temporalField, value.toLong + offset).asInstanceOf[DT]).toOption
-    }
-
-  }
+  implicit val javaLocalDateAdapter      : DateTimeAdapter[LocalDate]      = javaTimeAdapter[LocalDate]
+  implicit val javaLocalTimeAdapter      : DateTimeAdapter[LocalTime]      = javaTimeAdapter[LocalTime]
+  /*
+  implicit lazy val javaLocalDateTimeAdapter  : DateTimeAdapter[LocalDateTime]  = javaTimeAdapter[LocalDateTime]
+  implicit lazy val javaZonedDateTimeAdapter  : DateTimeAdapter[ZonedDateTime]  = javaTimeAdapter[ZonedDateTime]
+  implicit lazy val javaOffsetDateTimeAdapter : DateTimeAdapter[OffsetDateTime] = javaTimeAdapter[OffsetDateTime]*/
 
 }
