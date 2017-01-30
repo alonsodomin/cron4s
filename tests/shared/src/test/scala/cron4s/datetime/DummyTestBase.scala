@@ -27,7 +27,7 @@ import org.scalacheck.{Arbitrary, Gen}
 trait DummyTestBase extends DateTimeTestKitBase[DummyDateTime] {
   import CronUnit._
 
-  implicit lazy val arbitraryDateTime = Arbitrary(for {
+  implicit lazy val arbitraryDateTime: Arbitrary[DummyDateTime] = Arbitrary(for {
     seconds     <- Gen.choose(Seconds.min, Seconds.max)
     minutes     <- Gen.choose(Minutes.min, Minutes.max)
     hours       <- Gen.choose(Hours.min, Hours.max)
