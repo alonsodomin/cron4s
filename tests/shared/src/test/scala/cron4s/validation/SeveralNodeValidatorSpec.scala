@@ -20,18 +20,13 @@ import cron4s.expr.{EnumerableNode, SeveralNode}
 import cron4s.{CronField, CronUnit, FieldError}
 import cron4s.testkit.gen.NodeGenerators
 import cron4s.base.Enumerated
-
-import org.scalatest.{Matchers, PropSpec}
+import cron4s.testkit.Cron4sPropSpec
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 /**
   * Created by alonsodomin on 29/12/2016.
   */
-class SeveralNodeValidatorSpec extends PropSpec
-  with GeneratorDrivenPropertyChecks
-  with Matchers
-  with NodeGenerators {
-
+class SeveralNodeValidatorSpec extends Cron4sPropSpec with GeneratorDrivenPropertyChecks with NodeGenerators {
   import CronField._
 
   private[this] def check[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Unit = {

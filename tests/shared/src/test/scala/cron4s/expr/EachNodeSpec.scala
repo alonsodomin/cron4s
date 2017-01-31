@@ -17,16 +17,14 @@
 package cron4s.expr
 
 import cron4s.CronField
+import cron4s.testkit.Cron4sLawSuite
 import cron4s.testkit.discipline.ExprTests
 import cron4s.testkit.gen.ArbitraryEachNode
-
-import org.scalatest.FunSuite
-import org.typelevel.discipline.scalatest.Discipline
 
 /**
   * Created by alonsodomin on 31/07/2016.
   */
-class EachNodeSpec extends FunSuite with Discipline with ArbitraryEachNode {
+class EachNodeSpec extends Cron4sLawSuite with ArbitraryEachNode {
   import CronField._
 
   checkAll("Each[Second]", ExprTests[EachNode, Second].expr)

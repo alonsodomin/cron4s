@@ -17,17 +17,15 @@
 package cron4s.expr
 
 import cron4s.CronField._
+import cron4s.testkit.Cron4sLawSuite
 import cron4s.testkit.discipline.ExprTests
 import cron4s.testkit.gen.ArbitrarySeveralNode
-
-import org.scalatest.FunSuite
-import org.typelevel.discipline.scalatest.Discipline
 
 
 /**
   * Created by alonsodomin on 01/08/2016.
   */
-class SeveralNodeSpec extends FunSuite with Discipline with ArbitrarySeveralNode {
+class SeveralNodeSpec extends Cron4sLawSuite with ArbitrarySeveralNode {
 
   checkAll("Several[Second]", ExprTests[SeveralNode, Second].expr)
   checkAll("Several[Minute]", ExprTests[SeveralNode, Minute].expr)

@@ -31,8 +31,7 @@ import scalaz.Equal
   * Created by alonsodomin on 29/08/2016.
   */
 abstract class DateTimeAdapterTestKit[DateTime : DateTimeAdapter : Equal](name: String)
-  extends FunSuite
-    with Discipline
+  extends Cron4sLawSuite
     with ArbitraryCronFieldValues
     with ArbitraryCronField
     with DateTimeTestKitBase[DateTime] {
