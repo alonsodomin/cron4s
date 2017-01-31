@@ -34,10 +34,12 @@ trait DateTimeAdapterTests[DateTime <: AnyRef] extends Laws {
 
   def dateTimeAdapter[F <: CronField](implicit
     arbDateTime: Arbitrary[DateTime],
-    arbFieldValue: Arbitrary[CronFieldValue[F]]
+    arbFieldValue: Arbitrary[CronFieldValue[F]],
+    arbField: Arbitrary[F]
   ): RuleSet = new DefaultRuleSet(
     name = "dateTimeAdapter",
     parent = None,
+    "gettable" -> forAll(laws.gettable[F] _),
     "immutability" -> forAll(laws.immutability[F] _),
     "settable" -> forAll(laws.settable[F] _)
   )

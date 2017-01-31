@@ -27,6 +27,10 @@ trait DateTimeCronLaws[E, DateTime] {
   implicit def adapter: DateTimeAdapter[DateTime]
   implicit def TC: DateTimeCron[E]
 
+  def matchable(e: E, dt: DateTime): Boolean = {
+    e.next(dt).forall(e.allOf)
+  }
+
   def forwards(e: E, from: DateTime): IsEqual[Option[DateTime]] =
     e.next(from) <-> e.step(from, 1)
 

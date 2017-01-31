@@ -38,6 +38,9 @@ private[javatime] final class JavaTimeAdapter[DT <: Temporal] extends DateTimeAd
     case DayOfWeek  => ChronoField.DAY_OF_WEEK
   }
 
+  def supportedFields(dateTime: DT): List[CronField] =
+    CronField.All.filter(f => dateTime.isSupported(mapField(f)))
+
   override def get[F <: CronField](dateTime: DT, field: F): Option[Int] = {
     val temporalField = mapField(field)
 

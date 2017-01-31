@@ -17,12 +17,12 @@
 package cron4s.testkit
 
 import cron4s.datetime.DateTimeAdapter
-import cron4s.{CronField, CronUnit}
+import cron4s.CronField
 import cron4s.testkit.discipline.DateTimeAdapterTests
-import cron4s.testkit.gen.ArbitraryCronFieldValues
+import cron4s.testkit.gen.{ArbitraryCronField, ArbitraryCronFieldValues}
 
-import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.FunSuite
+
 import org.typelevel.discipline.scalatest.Discipline
 
 import scalaz.Equal
@@ -31,7 +31,12 @@ import scalaz.Equal
   * Created by alonsodomin on 29/08/2016.
   */
 abstract class DateTimeAdapterTestKit[DateTime <: AnyRef : DateTimeAdapter : Equal](name: String)
-  extends FunSuite with Discipline with ArbitraryCronFieldValues with DateTimeTestKitBase[DateTime] {
+  extends FunSuite
+    with Discipline
+    with ArbitraryCronFieldValues
+    with ArbitraryCronField
+    with DateTimeTestKitBase[DateTime] {
+
   import CronField._
 
   checkAll(s"DateTimeAdapter[$name, Second]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Second])

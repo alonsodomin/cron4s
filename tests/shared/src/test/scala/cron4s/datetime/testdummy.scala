@@ -29,6 +29,9 @@ object testdummy {
   implicit val dummyDateTimeEq: Equal[DummyDateTime] = Equal.equalA[DummyDateTime]
 
   implicit object TestDummyAdapter extends DateTimeAdapter[DummyDateTime] {
+
+    override def supportedFields(dateTime: DummyDateTime): List[CronField] = CronField.All
+
     override def get[F <: CronField](dateTime: DummyDateTime, field: F): Option[Int] = Some(field match {
       case Second     => dateTime.seconds
       case Minute     => dateTime.minutes

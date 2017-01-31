@@ -27,6 +27,8 @@ import scala.scalajs.js.Date
   */
 private[js] final class JsDateAdapter extends DateTimeAdapter[Date] {
 
+  override def supportedFields(dateTime: Date): List[CronField] = CronField.All
+
   override def get[F <: CronField](dateTime: Date, field: F): Option[Int] = {
     val value = field match {
       case Second     => dateTime.getSeconds()

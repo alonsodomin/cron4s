@@ -37,6 +37,9 @@ private[joda] final class JodaAdapter extends DateTimeAdapter[DateTime] {
     case DayOfWeek  => DateTimeFieldType.dayOfWeek()
   }
 
+  override def supportedFields(dateTime: DateTime): List[CronField] =
+    CronField.All.filter(f => dateTime.isSupported(mapField(f)))
+
   override def get[F <: CronField](dateTime: DateTime, field: F): Option[Int] = {
     val jodaField = mapField(field)
     val offset = if (field == DayOfWeek) -1 else 0

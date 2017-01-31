@@ -32,6 +32,9 @@ trait DateTimeAdapterLaws[DateTime <: AnyRef] {
   implicit def adapter: DateTimeAdapter[DateTime]
   implicit val eq: Equal[DateTime]
 
+  def gettable[F <: CronField](dt: DateTime, field: F): Prop =
+    adapter.get(dt, field).isDefined ?== adapter.supportedFields(dt).contains(field)
+
   def immutability[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Prop = {
     val check = for {
       current     <- adapter.get(dt, fieldValue.field)

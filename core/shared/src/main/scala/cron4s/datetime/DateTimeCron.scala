@@ -17,8 +17,8 @@
 package cron4s.datetime
 
 import cron4s.expr.{CronExpr, DateCronExpr, TimeCronExpr}
+import cron4s.generic
 import cron4s.types.Predicate
-
 import shapeless.Coproduct
 
 import scalaz.PlusEmpty
@@ -41,6 +41,8 @@ trait DateTimeCron[T] {
   def prev[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])(from: DateTime): Option[DateTime] = step(expr, adapter)(from, -1)
 
   def step[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])(from: DateTime, stepSize: Int): Option[DateTime]
+
+  def ranges(expr: T): List[IndexedSeq[Int]]
 
 }
 
@@ -66,6 +68,9 @@ private[datetime] class FullCron extends DateTimeCron[CronExpr] {
       (adjustedDate, _)         <- stepper.stepOverDate(expr.datePart.raw, adjustedTime, carryOver)(allOf(expr, adapter))
     } yield adjustedDate
   }
+
+  def ranges(expr: CronExpr): List[IndexedSeq[Int]] =
+    expr.raw.map(generic.ops.range).toList
 }
 
 private[datetime] class TimeCron extends DateTimeCron[TimeCronExpr] {
@@ -80,6 +85,8 @@ private[datetime] class TimeCron extends DateTimeCron[TimeCronExpr] {
     stepper.stepOverTime(expr.raw, from, stepSize).map(_._1)
   }
 
+  def ranges(expr: TimeCronExpr): List[IndexedSeq[Int]] =
+    expr.raw.map(generic.ops.range).toList
 }
 
 private[datetime] class DateCron extends DateTimeCron[DateCronExpr] {
@@ -93,5 +100,8 @@ private[datetime] class DateCron extends DateTimeCron[DateCronExpr] {
     val stepper = new Stepper[DateTime](adapter)
     stepper.stepOverDate(expr.raw, from, stepSize)(allOf(expr, adapter)).map(_._1)
   }
+
+  def ranges(expr: DateCronExpr): List[IndexedSeq[Int]] =
+    expr.raw.map(generic.ops.range).toList
 
 }

@@ -72,8 +72,6 @@ final case class CronExpr(
     case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[FieldNode[F]]
   }
 
-  def ranges: List[IndexedSeq[Int]] = raw.map(generic.ops.range).toList
-
   override def toString: String = Show[CronExpr].shows(this)
 
 }

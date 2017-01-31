@@ -23,15 +23,23 @@ import cron4s.datetime.{DateTimeAdapter, DateTimeCron}
   */
 private[syntax] class DateTimeCronOps[E](self: E, tc: DateTimeCron[E]) {
 
-  def allOf[DateTime](dt: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Boolean = tc.allOf(self, adapter)(dt)
+  def allOf[DateTime](dt: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Boolean =
+    tc.allOf(self, adapter)(dt)
 
-  def anyOf[DateTime](dt: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Boolean = tc.anyOf(self, adapter)(dt)
+  def anyOf[DateTime](dt: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Boolean =
+    tc.anyOf(self, adapter)(dt)
 
-  def next[DateTime](from: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] = step(from, 1)
+  def next[DateTime](from: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] =
+    step(from, 1)
 
-  def prev[DateTime](from: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] = step(from, -1)
+  def prev[DateTime](from: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] =
+    step(from, -1)
 
-  def step[DateTime](from: DateTime, stepSize: Int)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] = tc.step(self, adapter)(from, stepSize)
+  def step[DateTime](from: DateTime, stepSize: Int)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] =
+    tc.step(self, adapter)(from, stepSize)
+
+  def ranges: List[IndexedSeq[Int]] =
+    tc.ranges(self)
 
 }
 

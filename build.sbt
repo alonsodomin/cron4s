@@ -131,7 +131,6 @@ lazy val releaseSettings = {
   import ReleaseTransformations._
 
   val sonatypeReleaseAll = ReleaseStep(action = Command.process("sonatypeReleaseAll", _))
-  val publishDocs = ReleaseStep(action = Command.process("publishMicrosite", _))
 
   Seq(
     sonatypeProfileName := "com.github.alonsodomin",
@@ -147,8 +146,7 @@ lazy val releaseSettings = {
       setNextVersion,
       commitNextVersion,
       sonatypeReleaseAll,
-      pushChanges,
-      publishDocs
+      pushChanges
     )
   )
 }

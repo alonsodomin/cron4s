@@ -25,6 +25,8 @@ import cron4s.CronField
   */
 trait DateTimeAdapter[DateTime] {
 
+  def supportedFields(dateTime: DateTime): List[CronField]
+
   /**
     * Getter access for a specific field in a date-time
     *
