@@ -27,7 +27,11 @@ val commonSettings = Def.settings(
     "-language:higherKinds",
     "-language:existentials"
   ),
-  scmInfo := Some(ScmInfo(url("https://github.com/alonsodomin/cron4s"), "scm:git:git@github.com:alonsodomin/cron4s.git"))
+  scmInfo := Some(ScmInfo(
+    url("https://github.com/alonsodomin/cron4s"),
+    "scm:git:git@github.com:alonsodomin/cron4s.git"
+  )),
+  parallelExecution in Test := false
 ) ++ Licensing.settings
 
 lazy val commonJsSettings = Seq(
