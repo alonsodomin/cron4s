@@ -19,8 +19,9 @@ package cron4s.lib.joda
 import cron4s.CronField
 import cron4s.CronField._
 import cron4s.datetime.DateTimeAdapter
-
 import org.joda.time.{DateTime, DateTimeFieldType}
+
+import scala.util.Try
 
 /**
   * Created by alonsodomin on 30/01/2017.
@@ -49,7 +50,7 @@ private[joda] final class JodaAdapter extends DateTimeAdapter[DateTime] {
     val offset = if (field == DayOfWeek) 1 else 0
 
     if (!dateTime.isSupported(jodaField)) None
-    else Some(dateTime.withField(jodaField, value + offset))
+    else Try(dateTime.withField(jodaField, value + offset)).toOption
   }
 
 }
