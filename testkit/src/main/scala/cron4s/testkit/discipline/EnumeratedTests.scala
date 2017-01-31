@@ -17,7 +17,7 @@
 package cron4s.testkit.discipline
 
 import cron4s.testkit.laws.EnumeratedLaws
-import cron4s.types.Enumerated
+import cron4s.base.Enumerated
 
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._

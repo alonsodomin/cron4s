@@ -17,7 +17,7 @@
 package cron4s.expr
 
 import cron4s.{CronField, CronUnit}
-import cron4s.types.{Enumerated, Predicate}
+import cron4s.base.{Enumerated, Predicate}
 
 import scalaz.Show
 

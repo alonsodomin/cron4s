@@ -17,8 +17,7 @@
 package cron4s.datetime
 
 import cron4s.expr.{CronExpr, DateCronExpr, TimeCronExpr}
-import cron4s.generic
-import cron4s.types.Predicate
+import cron4s.base.{Predicate, ops}
 import shapeless.Coproduct
 
 import scalaz.PlusEmpty
@@ -70,7 +69,7 @@ private[datetime] class FullCron extends DateTimeCron[CronExpr] {
   }
 
   def ranges(expr: CronExpr): List[IndexedSeq[Int]] =
-    expr.raw.map(generic.ops.range).toList
+    expr.raw.map(ops.range).toList
 }
 
 private[datetime] class TimeCron extends DateTimeCron[TimeCronExpr] {
@@ -86,7 +85,7 @@ private[datetime] class TimeCron extends DateTimeCron[TimeCronExpr] {
   }
 
   def ranges(expr: TimeCronExpr): List[IndexedSeq[Int]] =
-    expr.raw.map(generic.ops.range).toList
+    expr.raw.map(ops.range).toList
 }
 
 private[datetime] class DateCron extends DateTimeCron[DateCronExpr] {
@@ -102,6 +101,6 @@ private[datetime] class DateCron extends DateTimeCron[DateCronExpr] {
   }
 
   def ranges(expr: DateCronExpr): List[IndexedSeq[Int]] =
-    expr.raw.map(generic.ops.range).toList
+    expr.raw.map(ops.range).toList
 
 }

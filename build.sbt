@@ -96,7 +96,7 @@ lazy val coverageSettings = Seq(
   coverageMinimum := 80,
   coverageFailOnMinimum := true,
   coverageHighlighting := true,
-  coverageExcludedPackages := "cron4s\\.bench\\..*"
+  coverageExcludedPackages := "cron4s\\.bench\\..*;cron4s\\.testkit\\..*"
 )
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(

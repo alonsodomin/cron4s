@@ -17,7 +17,7 @@
 package cron4s.testkit.laws
 
 import cron4s.testkit._
-import cron4s.types.Enumerated
+import cron4s.base.Enumerated
 import cron4s.syntax.enumerated._
 
 /**

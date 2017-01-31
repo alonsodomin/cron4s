@@ -16,7 +16,7 @@
 
 package cron4s.syntax
 
-import cron4s.types.Enumerated
+import cron4s.base.Enumerated
 
 import scala.language.higherKinds
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cron4s.types
+package cron4s.base
 
 import scalaz._
 import Scalaz._

@@ -18,8 +18,7 @@ package cron4s.validation
 
 import cron4s.{CronField, CronUnit, FieldError}
 import cron4s.expr._
-import cron4s.generic.ops
-import cron4s.types.Enumerated
+import cron4s.base.{Enumerated, ops}
 import cron4s.syntax.enumerated._
 import cron4s.syntax.expr._
 

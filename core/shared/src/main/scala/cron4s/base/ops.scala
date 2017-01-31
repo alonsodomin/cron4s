@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package cron4s.generic
+package cron4s.base
 
 import cron4s.expr._
-import cron4s.types.Enumerated
 import cron4s.validation.NodeValidator
 import cron4s.{CronField, CronUnit}
-
 import shapeless._
 
 import scalaz.Show

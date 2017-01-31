@@ -16,7 +16,7 @@
 
 package cron4s.syntax
 
-import cron4s.types.Predicate
+import cron4s.base.Predicate
 
 import scalaz.{Equal, Foldable, Monoid, PlusEmpty}
 import scalaz.syntax.foldable._
