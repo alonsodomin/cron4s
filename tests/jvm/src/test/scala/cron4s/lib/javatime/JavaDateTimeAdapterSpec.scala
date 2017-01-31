@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package cron4s.lib.threetenbp
+package cron4s.lib.javatime
+
+import java.time.{LocalDate, LocalDateTime, LocalTime, ZonedDateTime}
 
 import cron4s.testkit.DateTimeAdapterTestKit
-
-import org.threeten.bp.LocalDateTime
-
-import scalaz.Equal
 
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-class ThreeTenBPLocalDateTimeAdapterSpec extends DateTimeAdapterTestKit[LocalDateTime]("ThreeTenBPLocalDateTime")
-  with ThreeTenBPLocalDateTimeTestBase
+class JavaLocalDateAdapterSpec extends DateTimeAdapterTestKit[LocalDate]("JavaLocalDate") with JavaLocalDateTestBase
+class JavaLocalTimeAdapterSpec extends DateTimeAdapterTestKit[LocalTime]("JavaLocalTime") with JavaLocalTimeTestBase
+class JavaLocalDateTimeAdapterSpec extends DateTimeAdapterTestKit[LocalDateTime]("JavaLocalDateTime") with JavaLocalDateTimeTestBase
+class JavaZonedDateTimeAdapterSpec extends DateTimeAdapterTestKit[ZonedDateTime]("JavaZonedDateTime") with JavaZonedDateTimeTestBase

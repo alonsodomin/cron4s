@@ -30,7 +30,7 @@ import scalaz.Equal
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-abstract class DateTimeAdapterTestKit[DateTime <: AnyRef : DateTimeAdapter : Equal](name: String)
+abstract class DateTimeAdapterTestKit[DateTime : DateTimeAdapter : Equal](name: String)
   extends FunSuite
     with Discipline
     with ArbitraryCronFieldValues

@@ -28,7 +28,7 @@ import Scalaz._
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-trait DateTimeAdapterLaws[DateTime <: AnyRef] {
+trait DateTimeAdapterLaws[DateTime] {
   implicit def adapter: DateTimeAdapter[DateTime]
   implicit val eq: Equal[DateTime]
 
@@ -60,7 +60,7 @@ trait DateTimeAdapterLaws[DateTime <: AnyRef] {
 
 object DateTimeAdapterLaws {
 
-  def apply[DateTime <: AnyRef](implicit
+  def apply[DateTime](implicit
       adapterEv: DateTimeAdapter[DateTime],
       eqEv: Equal[DateTime]
   ): DateTimeAdapterLaws[DateTime] =

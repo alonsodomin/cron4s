@@ -29,7 +29,7 @@ import scalaz.Equal
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-trait DateTimeAdapterTests[DateTime <: AnyRef] extends Laws {
+trait DateTimeAdapterTests[DateTime] extends Laws {
   def laws: DateTimeAdapterLaws[DateTime]
 
   def dateTimeAdapter[F <: CronField](implicit
@@ -48,7 +48,7 @@ trait DateTimeAdapterTests[DateTime <: AnyRef] extends Laws {
 
 object DateTimeAdapterTests {
 
-  def apply[DateTime <: AnyRef](implicit
+  def apply[DateTime](implicit
       adapterEv: DateTimeAdapter[DateTime],
       eqEv: Equal[DateTime]
   ): DateTimeAdapterTests[DateTime] =

@@ -11,5 +11,6 @@ their codebases to be able to compile with it. The list of changes in this relea
  * The parsed expression AST is not fully validated and any error will result returning those errors instead of the actual expression object.
  * Fixed inconsistencies when stepping over enumerated values of the different expression ranges [(#28)](https://github.com/alonsodomin/cron4s/pull/28)
  * All expression and nodes now implement the `scalaz.Show` typeclass to consistently return the actual CRON string representation.
+ * Common datetime operations (matching and stepping) are now supported in subexpressions (date or time only)
 
 A [migration guide](https://alonsodomin.github.io/cron4s/docs/migration/0_3_0.html) has been published for anyone that would like to update.
