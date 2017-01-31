@@ -23,13 +23,13 @@ import shapeless._
   */
 package object expr {
 
-  type FieldNode[F <: CronField] =
+  private[expr] type RawFieldNode[F <: CronField] =
     EachNode[F] :+: ConstNode[F] :+: BetweenNode[F] :+: SeveralNode[F] :+: EveryNode[F] :+: CNil
 
-  type EnumerableNode[F <: CronField] =
+  private[expr] type RawEnumerableNode[F <: CronField] =
     ConstNode[F] :+: BetweenNode[F] :+: CNil
 
-  type DivisibleNode[F <: CronField] =
+  private[expr] type RawDivisibleNode[F <: CronField] =
     EachNode[F] :+: BetweenNode[F] :+: SeveralNode[F] :+: CNil
 
   type SecondsNode     = FieldNode[CronField.Second]
@@ -39,9 +39,10 @@ package object expr {
   type MonthsNode      = FieldNode[CronField.Month]
   type DaysOfWeekNode  = FieldNode[CronField.DayOfWeek]
 
-  private[cron4s] type TimePartAST = SecondsNode :: MinutesNode :: HoursNode :: HNil
-  private[cron4s] type DatePartAST = DaysOfMonthNode :: MonthsNode :: DaysOfWeekNode :: HNil
-  private[cron4s] type CronExprAST =
+  private[cron4s] type RawTimeCronExpr = SecondsNode :: MinutesNode :: HoursNode :: HNil
+  private[cron4s] type RawDateCronExpr = DaysOfMonthNode :: MonthsNode :: DaysOfWeekNode :: HNil
+
+  private[cron4s] type RawCronExpr =
     SecondsNode :: MinutesNode :: HoursNode :: DaysOfMonthNode :: MonthsNode :: DaysOfWeekNode :: HNil
 
 }

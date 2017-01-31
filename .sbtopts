@@ -1,8 +1,9 @@
 # see https://weblogs.java.net/blog/kcpeppe/archive/2013/12/11/case-study-jvm-hotspot-flags
 -J-Dfile.encoding=UTF8
--J-Xms1G
+-J-Xms2G
 -J-Xmx4G
--J-XX:MaxPermSize=512M
+-J-XX:MaxMetaspaceSize=1g
 -J-XX:ReservedCodeCacheSize=250M
+-J-XX:+CMSClassUnloadingEnabled
 -J-XX:+TieredCompilation
--J-XX:-UseGCOverheadLimit
+-J-XX:+UseConcMarkSweepGC

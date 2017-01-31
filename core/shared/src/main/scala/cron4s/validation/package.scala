@@ -26,11 +26,11 @@ import scalaz._
   */
 package object validation {
 
-  def validateCron(ast: CronExprAST): Either[ValidationError, CronExpr] = {
-    val errors = ast.map(ops.validate).toList.flatten
+  def validateCron(expr: CronExpr): Either[ValidationError, CronExpr] = {
+    val errors = expr.raw.map(ops.validate).toList.flatten
     if (errors.size > 0) {
       Left(ValidationError(NonEmptyList(errors.head, errors.tail: _*)))
-    } else Right(CronExpr(ast))
+    } else Right(expr)
   }
 
 }

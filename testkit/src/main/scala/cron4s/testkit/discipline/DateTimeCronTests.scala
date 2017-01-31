@@ -1,0 +1,58 @@
+/*
+ * Copyright 2017 Antonio Alonso Dominguez
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package cron4s.testkit.discipline
+
+import cron4s.datetime.{DateTimeAdapter, DateTimeCron}
+import cron4s.testkit.laws.DateTimeCronLaws
+
+import org.scalacheck.Prop._
+import org.scalacheck._
+
+import org.typelevel.discipline.Laws
+
+import scalaz._
+import Scalaz._
+
+/**
+  * Created by alonsodomin on 29/01/2017.
+  */
+trait DateTimeCronTests[E, DateTime] extends Laws {
+  def laws: DateTimeCronLaws[E, DateTime]
+
+  def dateTimeCron(implicit
+    arbE: Arbitrary[E],
+    arbDateTime: Arbitrary[DateTime],
+    dateTimeEq: Equal[DateTime]
+  ): RuleSet = new DefaultRuleSet(
+    name = "dateTimeCron",
+    parent = None,
+    //"matchable" -> forAll(laws.matchable _),
+    "forwards" -> forAll(laws.forwards _),
+    "backwards" -> forAll(laws.backwards _)
+  )
+
+}
+
+object DateTimeCronTests {
+  def apply[E, DateTime](implicit
+    adapter: DateTimeAdapter[DateTime],
+    cron: DateTimeCron[E]
+  ): DateTimeCronTests[E, DateTime] =
+    new DateTimeCronTests[E, DateTime] {
+      val laws = DateTimeCronLaws[E, DateTime]
+    }
+}

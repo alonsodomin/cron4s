@@ -7,9 +7,9 @@ import sbtunidoc.Plugin.UnidocKeys._
 
 import scala.xml.transform.{RewriteRule, RuleTransformer}
 
-scalaVersion in ThisBuild := "2.11.8"
+scalaVersion in ThisBuild := "2.12.1"
 
-crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12.1")
+crossScalaVersions in ThisBuild := Seq(scalaVersion.value, "2.11.8")
 
 val commonSettings = Def.settings(
   name := "cron4s",
@@ -27,7 +27,11 @@ val commonSettings = Def.settings(
     "-language:higherKinds",
     "-language:existentials"
   ),
-  scmInfo := Some(ScmInfo(url("https://github.com/alonsodomin/cron4s"), "scm:git:git@github.com:alonsodomin/cron4s.git"))
+  scmInfo := Some(ScmInfo(
+    url("https://github.com/alonsodomin/cron4s"),
+    "scm:git:git@github.com:alonsodomin/cron4s.git"
+  )),
+  parallelExecution in Test := false
 ) ++ Licensing.settings
 
 lazy val commonJsSettings = Seq(
@@ -131,7 +135,6 @@ lazy val releaseSettings = {
   import ReleaseTransformations._
 
   val sonatypeReleaseAll = ReleaseStep(action = Command.process("sonatypeReleaseAll", _))
-  val publishDocs = ReleaseStep(action = Command.process("publishMicrosite", _))
 
   Seq(
     sonatypeProfileName := "com.github.alonsodomin",
@@ -147,8 +150,7 @@ lazy val releaseSettings = {
       setNextVersion,
       commitNextVersion,
       sonatypeReleaseAll,
-      pushChanges,
-      publishDocs
+      pushChanges
     )
   )
 }

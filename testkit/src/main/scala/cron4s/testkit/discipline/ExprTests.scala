@@ -17,8 +17,8 @@
 package cron4s.testkit.discipline
 
 import cron4s.CronField
+import cron4s.expr.Expr
 import cron4s.testkit.laws.ExprLaws
-import cron4s.types.Expr
 
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
@@ -41,7 +41,7 @@ trait ExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[E[F]]
   ): RuleSet = new DefaultRuleSet(
     name = "expr",
     parent = Some(enumerated),
-    "matches values inside range" -> forAll(laws.matchable _),
+    "matchable" -> forAll(laws.matchable _),
     "implication" -> forAll(laws.implicationEquivalence[EE] _)
   )
 

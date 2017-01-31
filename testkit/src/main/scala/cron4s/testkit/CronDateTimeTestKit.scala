@@ -17,19 +17,19 @@
 package cron4s.testkit
 
 import cron4s.CronField._
+import cron4s.datetime.DateTimeAdapter
 import cron4s.expr._
-import cron4s.spi.{DateTimeAdapter, CronDateTimeOps}
 
-import org.scalatest.{Matchers, PropSpec}
 import org.scalatest.prop.TableDrivenPropertyChecks
+import org.scalatest.{Matchers, PropSpec}
 
-import shapeless._
+import scalaz.Equal
 
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-abstract class CronDateTimeTestKit[DateTime <: AnyRef : DateTimeAdapter]
-  extends PropSpec with TableDrivenPropertyChecks with Matchers { this: ExtensionsTestKitBase[DateTime] =>
+abstract class CronDateTimeTestKit[DateTime: DateTimeAdapter: Equal]
+  extends PropSpec with TableDrivenPropertyChecks with Matchers { this: DateTimeTestKitBase[DateTime] =>
 
   val onlyTuesdaysAt12 = CronExpr(
     ConstNode[Second](0),
@@ -56,11 +56,8 @@ abstract class CronDateTimeTestKit[DateTime <: AnyRef : DateTimeAdapter]
 
   property("step") {
     forAll(samples) { (expr: CronExpr, initial: DateTime, stepSize: Int, expected: DateTime) =>
-      val extCronExpr = new CronDateTimeOps[DateTime](expr) { }
-      val returnedDateTime = extCronExpr.step(initial, stepSize)
-
-      returnedDateTime shouldBe defined
-      returnedDateTime.foreach { _ shouldBe expected }
+      val returnedDateTime = expr.step(initial, stepSize)
+      returnedDateTime.map(_ ?== expected).getOrElse(falsified)
     }
   }
 

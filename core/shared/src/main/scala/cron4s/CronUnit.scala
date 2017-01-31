@@ -48,7 +48,7 @@ object CronUnit extends CronUnitInstances {
 
   @inline def apply[F <: CronField](implicit unit: CronUnit[F]): CronUnit[F] = unit
 
-  final val All: Seq[CronUnit[_ <: CronField]] = Seq(Seconds, Minutes, Hours, DaysOfMonth, Months, DaysOfWeek)
+  final val All: List[CronUnit[_ <: CronField]] = List(Seconds, Minutes, Hours, DaysOfMonth, Months, DaysOfWeek)
 
 }
 

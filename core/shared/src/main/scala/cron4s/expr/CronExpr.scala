@@ -29,41 +29,31 @@ import scalaz.Show
   */
 object CronExpr {
 
-  def apply(
+  implicit val CronExprShow: Show[CronExpr] = Show.shows { expr =>
+    expr.raw.map(generic.ops.show).toList.mkString(" ")
+  }
+
+}
+
+final case class CronExpr(
     seconds: SecondsNode,
     minutes: MinutesNode,
     hours: HoursNode,
     daysOfMonth: DaysOfMonthNode,
     months: MonthsNode,
-    daysOfWeek: DaysOfWeekNode
-  ): CronExpr = CronExpr(
-    seconds :: minutes :: hours :: daysOfMonth :: months :: daysOfWeek :: HNil
-  )
+    daysOfWeek: DaysOfWeekNode) {
 
-  implicit val CronExprShow: Show[CronExpr] = Show.shows { expr =>
-    expr.ast.map(generic.ops.show).toList.mkString(" ")
-  }
-  
-}
-
-final case class CronExpr(ast: CronExprAST) {
-
-  def seconds: SecondsNode = ast.select[SecondsNode]
-  def minutes: MinutesNode = ast.select[MinutesNode]
-  def hours: HoursNode = ast.select[HoursNode]
-  def daysOfMonth: DaysOfMonthNode = ast.select[DaysOfMonthNode]
-  def months: MonthsNode = ast.select[MonthsNode]
-  def daysOfWeek: DaysOfWeekNode = ast.select[DaysOfWeekNode]
+  private[cron4s] lazy val raw: RawCronExpr = Generic[CronExpr].to(this)
 
   /**
     * Time part of the CRON expression
     */
-  lazy val timePart: TimePartExpr = TimePartExpr(seconds, minutes, hours)
+  lazy val timePart: TimeCronExpr = TimeCronExpr(seconds, minutes, hours)
 
   /**
     * Date part of the CRON expression
     */
-  lazy val datePart: DatePartExpr = DatePartExpr(daysOfMonth, months, daysOfWeek)
+  lazy val datePart: DateCronExpr = DateCronExpr(daysOfMonth, months, daysOfWeek)
 
   /**
     * Generic field accessor. Given a CronField, this method can be used
@@ -82,6 +72,6 @@ final case class CronExpr(ast: CronExprAST) {
     case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[FieldNode[F]]
   }
 
-  def ranges: List[IndexedSeq[Int]] = ast.map(generic.ops.range).toList
+  override def toString: String = Show[CronExpr].shows(this)
 
 }

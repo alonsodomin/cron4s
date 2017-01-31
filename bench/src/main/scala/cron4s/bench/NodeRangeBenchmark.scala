@@ -16,12 +16,10 @@
 
 package cron4s.bench
 
-import cron4s.{CronField, CronUnit}
+import cron4s._
 import cron4s.expr._
 
 import org.openjdk.jmh.annotations._
-
-import shapeless.Coproduct
 
 import scalaz.NonEmptyList
 
@@ -51,9 +49,9 @@ class NodeRangeBenchmark {
 
   val severalConstNode: SeveralNode[Minute] = {
     val stepSize = Minutes.max / 10
-    val minutes = (Minutes.min to Minutes.max by stepSize)
+    val minutes: Seq[EnumerableNode[Minute]] = (Minutes.min to Minutes.max by stepSize)
       .map(value => ConstNode[Minute](value))
-      .map(Coproduct[EnumerableNode[Minute]](_))
+      .map(const2Enumerable)
 
     SeveralNode(NonEmptyList(minutes.head, minutes.tail: _*))
   }
@@ -64,7 +62,7 @@ class NodeRangeBenchmark {
 
     val minuteRanges = (unit.min to unit.max by chunkSize).map { lower =>
       BetweenNode[Minute](ConstNode(lower), ConstNode(lower + chunkSize - 1))
-    }.map(Coproduct[EnumerableNode[Minute]](_))
+    }.map(between2Enumerable)
 
     SeveralNode[Minute](NonEmptyList(minuteRanges.head, minuteRanges.tail: _*))
   }

@@ -18,7 +18,8 @@ package cron4s.syntax
 
 import cron4s.types.Predicate
 
-import scalaz.{Equal, Foldable}
+import scalaz.{Equal, Foldable, Monoid, PlusEmpty}
+import scalaz.syntax.foldable._
 
 /**
   * Created by alonsodomin on 29/07/2016.
@@ -39,6 +40,9 @@ trait PredicateSyntax {
 
   def allOf[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
     Predicate { a => ev.all(c)(_(a)) }
+
+  def asOf[C[_]: Foldable, A](c: C[Predicate[A]])(implicit M: PlusEmpty[Predicate]): Predicate[A] =
+    c.foldLeft(M.empty[A])((a, b) => M.plus(a, b))
 
 }
 

@@ -135,7 +135,7 @@ private[validation] trait LowPriorityNodeValidatorInstances {
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[EnumerableNode[F]] = new NodeValidator[EnumerableNode[F]] {
       def validate(node: EnumerableNode[F]): List[FieldError] =
-        node.fold(ops.validate)
+        node.raw.fold(ops.validate)
     }
 
   implicit def divisibleNodeValidator[F <: CronField](
@@ -143,7 +143,7 @@ private[validation] trait LowPriorityNodeValidatorInstances {
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[DivisibleNode[F]] = new NodeValidator[DivisibleNode[F]] {
       def validate(node: DivisibleNode[F]): List[FieldError] =
-        node.fold(ops.validate)
+        node.raw.fold(ops.validate)
     }
 
   implicit def fieldNodeValidator[F <: CronField](
@@ -151,6 +151,6 @@ private[validation] trait LowPriorityNodeValidatorInstances {
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[FieldNode[F]] = new NodeValidator[FieldNode[F]] {
       def validate(node: FieldNode[F]): List[FieldError] =
-        node.fold(ops.validate)
+        node.raw.fold(ops.validate)
     }
 }

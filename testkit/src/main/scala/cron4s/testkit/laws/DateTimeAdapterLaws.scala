@@ -17,8 +17,10 @@
 package cron4s.testkit.laws
 
 import cron4s.CronField
-import cron4s.spi.DateTimeAdapter
-import cron4s.testkit.CronFieldValue
+import cron4s.datetime.DateTimeAdapter
+import cron4s.testkit._
+
+import org.scalacheck.Prop
 
 import scalaz._
 import Scalaz._
@@ -26,30 +28,39 @@ import Scalaz._
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-trait DateTimeAdapterLaws[DateTime <: AnyRef] {
+trait DateTimeAdapterLaws[DateTime] {
   implicit def adapter: DateTimeAdapter[DateTime]
   implicit val eq: Equal[DateTime]
 
-  def immutability[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Boolean = {
-    val currentVal = adapter.get(dt, fieldValue.field)
-    val newDateTime = adapter.set(dt, fieldValue.field, fieldValue.value)
+  def gettable[F <: CronField](dt: DateTime, field: F): Prop =
+    adapter.get(dt, field).isDefined ?== adapter.supportedFields(dt).contains(field)
 
-    currentVal.flatMap(current => newDateTime.map { ndt =>
-      if (current === fieldValue.value) ndt === dt
-      else ndt =/= dt
-    }).exists(identity)
+  def immutability[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Prop = {
+    val check = for {
+      current     <- adapter.get(dt, fieldValue.field)
+      newDateTime <- adapter.set(dt, fieldValue.field, fieldValue.value)
+    } yield {
+      if (current == fieldValue.value) newDateTime ?== dt
+      else newDateTime ?!= dt
+    }
+
+    check.getOrElse(proved)
   }
 
-  def settable[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Boolean = {
-    val newDateTime = adapter.set(dt, fieldValue.field, fieldValue.value)
-    newDateTime.flatMap(ndt => adapter.get(ndt, fieldValue.field)).exists(_ === fieldValue.value)
+  def settable[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Prop = {
+    val check = for {
+      newDateTime <- adapter.set(dt, fieldValue.field, fieldValue.value)
+      value       <- adapter.get(newDateTime, fieldValue.field)
+    } yield value ?== fieldValue.value
+
+    check.getOrElse(proved)
   }
 
 }
 
 object DateTimeAdapterLaws {
 
-  def apply[DateTime <: AnyRef](implicit
+  def apply[DateTime](implicit
       adapterEv: DateTimeAdapter[DateTime],
       eqEv: Equal[DateTime]
   ): DateTimeAdapterLaws[DateTime] =

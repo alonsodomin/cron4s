@@ -19,9 +19,6 @@ package cron4s.testkit.gen
 import cron4s.{CronField, CronUnit}
 import cron4s.expr._
 import cron4s.types._
-import cron4s.syntax._
-
-import shapeless._
 
 import org.scalacheck._
 
@@ -30,8 +27,7 @@ import scalaz.NonEmptyList
 /**
   * Created by alonsodomin on 28/08/2016.
   */
-trait NodeGenerators extends ArbitraryCronUnits {
-  import Arbitrary._
+trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
 
   private[this] def filterImpliedElems[F <: CronField](xs: List[EnumerableNode[F]]): List[EnumerableNode[F]] = {
     xs.foldRight(List.empty[EnumerableNode[F]]) { (node, result) =>
@@ -59,7 +55,7 @@ trait NodeGenerators extends ArbitraryCronUnits {
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
   ): Gen[ConstNode[F]] = for {
-    value <- arbitrary[Int]
+    value <- Gen.choose(0, Int.MaxValue)
     if (value >= 0) && (value < unit.min) || (value > unit.max)
   } yield ConstNode(value)
 
@@ -88,8 +84,8 @@ trait NodeGenerators extends ArbitraryCronUnits {
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
   ): Gen[EnumerableNode[F]] = Gen.oneOf(
-    constGen[F].map(Coproduct[EnumerableNode[F]](_)),
-    betweenGen[F].map(Coproduct[EnumerableNode[F]](_))
+    constGen[F].map(const2Enumerable),
+    betweenGen[F].map(between2Enumerable)
   )
 
   def invalidEnumerableGen[F <: CronField](
@@ -97,8 +93,8 @@ trait NodeGenerators extends ArbitraryCronUnits {
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
   ): Gen[EnumerableNode[F]] = Gen.oneOf(
-    Gen.oneOf(constGen[F], invalidConstGen[F]).map(Coproduct[EnumerableNode[F]](_)),
-    Gen.oneOf(betweenGen[F], invalidBetweenGen[F]).map(Coproduct[EnumerableNode[F]](_))
+    Gen.oneOf(constGen[F], invalidConstGen[F]).map(const2Enumerable),
+    Gen.oneOf(betweenGen[F], invalidBetweenGen[F]).map(between2Enumerable)
   )
 
   private[this] def severalGen0[F <: CronField](memberGen: Gen[EnumerableNode[F]])(
@@ -133,9 +129,9 @@ trait NodeGenerators extends ArbitraryCronUnits {
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
   ): Gen[DivisibleNode[F]] = Gen.oneOf(
-    eachGen[F].map(Coproduct[DivisibleNode[F]](_)),
-    betweenGen[F].map(Coproduct[DivisibleNode[F]](_)),
-    severalGen[F].map(Coproduct[DivisibleNode[F]](_))
+    eachGen[F].map(each2Divisible),
+    betweenGen[F].map(between2Divisible),
+    severalGen[F].map(several2Divisible)
   )
 
   private[this] def everyGen0[F <: CronField](
@@ -156,7 +152,13 @@ trait NodeGenerators extends ArbitraryCronUnits {
   ): Gen[EveryNode[F]] =
     everyGen0(divisibleGen[F])
 
-  def nodeGen[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Gen[Node[F]] =
-    Gen.oneOf(eachGen[F], constGen[F], severalGen[F], everyGen[F])
+  def nodeGen[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Gen[FieldNode[F]] =
+    Gen.oneOf(
+      eachGen[F].map(each2Field),
+      constGen[F].map(const2Field),
+      betweenGen[F].map(between2Field),
+      severalGen[F].map(several2Field),
+      everyGen[F].map(every2Field)
+    )
 
 }

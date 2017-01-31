@@ -20,7 +20,7 @@ import cron4s.CronField
 import cron4s.testkit.laws.DateTimeAdapterLaws
 import org.scalacheck._
 import Prop._
-import cron4s.spi.DateTimeAdapter
+import cron4s.datetime.DateTimeAdapter
 import cron4s.testkit.CronFieldValue
 import org.typelevel.discipline.Laws
 
@@ -29,15 +29,17 @@ import scalaz.Equal
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-trait DateTimeAdapterTests[DateTime <: AnyRef] extends Laws {
+trait DateTimeAdapterTests[DateTime] extends Laws {
   def laws: DateTimeAdapterLaws[DateTime]
 
   def dateTimeAdapter[F <: CronField](implicit
     arbDateTime: Arbitrary[DateTime],
-    arbFieldValue: Arbitrary[CronFieldValue[F]]
+    arbFieldValue: Arbitrary[CronFieldValue[F]],
+    arbField: Arbitrary[F]
   ): RuleSet = new DefaultRuleSet(
     name = "dateTimeAdapter",
     parent = None,
+    "gettable" -> forAll(laws.gettable[F] _),
     "immutability" -> forAll(laws.immutability[F] _),
     "settable" -> forAll(laws.settable[F] _)
   )
@@ -46,7 +48,7 @@ trait DateTimeAdapterTests[DateTime <: AnyRef] extends Laws {
 
 object DateTimeAdapterTests {
 
-  def apply[DateTime <: AnyRef](implicit
+  def apply[DateTime](implicit
       adapterEv: DateTimeAdapter[DateTime],
       eqEv: Equal[DateTime]
   ): DateTimeAdapterTests[DateTime] =
