@@ -18,7 +18,7 @@ package cron4s.expr
 
 import cron4s.{CronField, CronUnit}
 import cron4s.types._
-import cron4s.syntax._
+import cron4s.syntax.predicate._
 
 import scalaz.NonEmptyList
 import scalaz.std.anyVal._

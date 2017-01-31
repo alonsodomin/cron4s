@@ -31,7 +31,7 @@ import scalaz.Equal
 /**
   * Created by alonsodomin on 04/08/2016.
   */
-abstract class DateTimeNodeTestKit[DateTime <: AnyRef : DateTimeAdapter : Equal]
+abstract class DateTimeNodeTestKit[DateTime : DateTimeAdapter : Equal]
   extends FunSuite with Discipline with DateTimeTestKitBase[DateTime] {
   import CronField._
 

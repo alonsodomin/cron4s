@@ -2,7 +2,9 @@
 -J-Dfile.encoding=UTF8
 -J-Xms1G
 -J-Xmx4G
--J-XX:MaxPermSize=512M
+-J-XX:MaxMetaspaceSize=1g
 -J-XX:ReservedCodeCacheSize=250M
+-J-XX:+CMSClassUnloadingEnabled
 -J-XX:+TieredCompilation
 -J-XX:-UseGCOverheadLimit
+-J-XX:+UseConcMarkSweepGC

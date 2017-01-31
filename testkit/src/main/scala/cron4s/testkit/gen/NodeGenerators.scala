@@ -19,7 +19,6 @@ package cron4s.testkit.gen
 import cron4s.{CronField, CronUnit}
 import cron4s.expr._
 import cron4s.types._
-import cron4s.syntax._
 
 import org.scalacheck._
 
@@ -29,7 +28,6 @@ import scalaz.NonEmptyList
   * Created by alonsodomin on 28/08/2016.
   */
 trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
-  import Arbitrary._
 
   private[this] def filterImpliedElems[F <: CronField](xs: List[EnumerableNode[F]]): List[EnumerableNode[F]] = {
     xs.foldRight(List.empty[EnumerableNode[F]]) { (node, result) =>
@@ -57,7 +55,7 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
   ): Gen[ConstNode[F]] = for {
-    value <- arbitrary[Int]
+    value <- Gen.choose(0, Int.MaxValue)
     if (value >= 0) && (value < unit.min) || (value > unit.max)
   } yield ConstNode(value)
 

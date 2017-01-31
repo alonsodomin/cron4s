@@ -24,3 +24,5 @@ private[cron4s] trait AllSyntax
     with DateTimeNodeSyntax
     with ExprSyntax
     with PredicateSyntax
+
+object all extends AllSyntax
