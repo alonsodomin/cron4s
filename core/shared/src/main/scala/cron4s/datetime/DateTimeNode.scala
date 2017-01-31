@@ -18,7 +18,7 @@ package cron4s.datetime
 
 import cron4s.CronField
 import cron4s.expr.Expr
-import cron4s.types._
+import cron4s.base._
 import cron4s.syntax.expr._
 
 trait DateTimeNode[E[_ <: CronField], F <: CronField] {

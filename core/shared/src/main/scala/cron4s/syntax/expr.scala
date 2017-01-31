@@ -18,7 +18,7 @@ package cron4s.syntax
 
 import cron4s.{CronField, CronUnit}
 import cron4s.expr.Expr
-import cron4s.types.Predicate
+import cron4s.base.Predicate
 
 import scala.language.higherKinds
 

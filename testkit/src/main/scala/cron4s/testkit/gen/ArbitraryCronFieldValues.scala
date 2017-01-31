@@ -18,7 +18,7 @@ package cron4s.testkit.gen
 
 import cron4s.{CronField, CronUnit}
 import cron4s.testkit.CronFieldValue
-import cron4s.types.Enumerated
+import cron4s.base.Enumerated
 import cron4s.syntax.enumerated._
 
 import org.scalacheck.{Arbitrary, Gen}

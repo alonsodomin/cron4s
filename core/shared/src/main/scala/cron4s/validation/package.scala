@@ -16,8 +16,8 @@
 
 package cron4s
 
+import cron4s.base.ops
 import cron4s.expr._
-import cron4s.generic.ops
 
 import scalaz._
 

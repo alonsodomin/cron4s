@@ -16,8 +16,7 @@
 
 package cron4s.expr
 
-import cron4s.{CronField, CronUnit, generic}
-
+import cron4s.{CronField, CronUnit, base}
 import shapeless._
 
 import scalaz.Show
@@ -30,7 +29,7 @@ import scalaz.Show
 object CronExpr {
 
   implicit val CronExprShow: Show[CronExpr] = Show.shows { expr =>
-    expr.raw.map(generic.ops.show).toList.mkString(" ")
+    expr.raw.map(base.ops.show).toList.mkString(" ")
   }
 
 }

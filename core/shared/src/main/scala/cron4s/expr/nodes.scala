@@ -17,7 +17,7 @@
 package cron4s.expr
 
 import cron4s.{CronField, CronUnit}
-import cron4s.types._
+import cron4s.base._
 import cron4s.syntax.predicate._
 
 import scalaz.NonEmptyList

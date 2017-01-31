@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cron4s.types
+package cron4s.base
 
 import cron4s.syntax.predicate._
 

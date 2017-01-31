@@ -19,7 +19,7 @@ package cron4s.validation
 import cron4s.{CronField, CronUnit, FieldError}
 import cron4s.expr.ConstNode
 import cron4s.testkit.gen.NodeGenerators
-import cron4s.types.Enumerated
+import cron4s.base.Enumerated
 
 import org.scalatest.{Matchers, PropSpec}
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
