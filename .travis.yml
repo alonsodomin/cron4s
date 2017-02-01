@@ -1,5 +1,9 @@
 language: scala
 
+sudo: required
+
+dist: trusty
+
 jdk:
   - oraclejdk8
 
@@ -10,13 +14,22 @@ scala:
 cache:
   directories:
     - $HOME/.m2
-    - $HOME/.sbt
+    - $HOME/.sbt/0.13/dependency
+    - $HOME/.sbt/boot/scala*
+    - $HOME/.sbt/launchers
     - $HOME/.ivy2
+    - $HOME/.nvm
+
+env:
+  global:
+    - TRAVIS_NODE_VERSION="4"
 
 before_install:
   - export PATH=${PATH}:./vendor/bundle
 
 install:
+  # http://austinpray.com/ops/2015/09/20/change-travis-node-version.html
+  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - rvm use 2.2.3 --install --fuzzy
   - gem update --system
   - gem install sass

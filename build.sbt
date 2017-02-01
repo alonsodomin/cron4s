@@ -31,7 +31,8 @@ val commonSettings = Def.settings(
     url("https://github.com/alonsodomin/cron4s"),
     "scm:git:git@github.com:alonsodomin/cron4s.git"
   )),
-  parallelExecution in Test := false
+  parallelExecution in Test := false,
+  fork in Test := true
 ) ++ Licensing.settings
 
 lazy val commonJsSettings = Seq(
