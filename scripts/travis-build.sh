@@ -2,7 +2,7 @@
 
 sbt_cmd="sbt ++$TRAVIS_SCALA_VERSION"
 
-build_js="$sbt_cmd validateJVM"
+build_js="$sbt_cmd validateJS"
 build_jvm="$sbt_cmd coverage validateJVM"
 
 build_all="$build_js && $build_jvm"
