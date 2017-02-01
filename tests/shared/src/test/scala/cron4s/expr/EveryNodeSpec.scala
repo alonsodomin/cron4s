@@ -17,14 +17,14 @@
 package cron4s.expr
 
 import cron4s.CronField
-import cron4s.testkit.Cron4sLawSuite
+import cron4s.testkit.SlowCron4sLawSuite
 import cron4s.testkit.discipline.ExprTests
 import cron4s.testkit.gen.ArbitraryEveryNode
 
 /**
   * Created by alonsodomin on 01/08/2016.
   */
-class EveryNodeSpec extends Cron4sLawSuite with ArbitraryEveryNode {
+class EveryNodeSpec extends SlowCron4sLawSuite with ArbitraryEveryNode {
   import CronField._
 
   checkAll("Every[Second]", ExprTests[EveryNode, Second].expr)

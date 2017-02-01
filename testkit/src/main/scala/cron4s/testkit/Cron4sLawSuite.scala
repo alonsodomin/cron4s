@@ -53,6 +53,13 @@ trait Cron4sLawSuite extends FunSuite
 
 }
 
+trait SlowCron4sLawSuite extends Cron4sLawSuite {
+
+  override implicit val generatorDrivenConfig: PropertyCheckConfiguration =
+    slowPropertyCheckConfig
+
+}
+
 abstract class Cron4sPropSpec extends PropSpec
   with Matchers
   with TestSettings {
@@ -62,7 +69,9 @@ abstract class Cron4sPropSpec extends PropSpec
 
 }
 
-trait SlowCron4sLawSuite extends Cron4sLawSuite {
+abstract class SlowCron4sPropSpec extends PropSpec
+  with Matchers
+  with TestSettings {
 
   override implicit val generatorDrivenConfig: PropertyCheckConfiguration =
     slowPropertyCheckConfig
