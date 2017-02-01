@@ -31,9 +31,12 @@ val commonSettings = Def.settings(
     url("https://github.com/alonsodomin/cron4s"),
     "scm:git:git@github.com:alonsodomin/cron4s.git"
   )),
-  parallelExecution in Test := false,
-  fork in Test := true
+  parallelExecution in Test := false
 ) ++ Licensing.settings
+
+lazy val commonJvmSettings = Seq(
+  fork in Test := true
+)
 
 lazy val commonJsSettings = Seq(
   scalaJSStage in Test := FastOptStage,
@@ -180,6 +183,7 @@ lazy val cron4sJVM = (project in file(".jvm")).
     moduleName := "cron4s"
   ).
   settings(commonSettings: _*).
+  settings(commonJvmSettings: _*).
   settings(publishSettings).
   aggregate(coreJVM, testkitJVM, testsJVM).
   dependsOn(coreJVM, testkitJVM, testsJVM)
@@ -204,6 +208,7 @@ lazy val core = (crossProject in file("core")).
   settings(commonJsSettings: _*).
   settings(publishSettings: _*).
   settings(Dependencies.core: _*).
+  jvmSettings(commonJvmSettings).
   jvmSettings(Dependencies.coreJVM: _*).
   jvmSettings(mimaSettings("core"): _*)
 
@@ -220,6 +225,7 @@ lazy val testkit = (crossProject.crossType(CrossType.Pure) in file("testkit")).
   settings(commonJsSettings: _*).
   settings(publishSettings: _*).
   settings(Dependencies.testkit: _*).
+  jvmSettings(commonJvmSettings).
   jvmSettings(mimaSettings("testkit"): _*).
   dependsOn(core)
 
@@ -236,6 +242,7 @@ lazy val tests = (crossProject in file("tests")).
   settings(commonJsSettings: _*).
   settings(noPublishSettings: _*).
   settings(Dependencies.tests: _*).
+  jvmSettings(commonJvmSettings).
   jvmSettings(Dependencies.testsJVM: _*).
   dependsOn(testkit % Test)
 
