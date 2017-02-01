@@ -28,6 +28,7 @@ private[cron4s] object ops {
 
   object matches extends Poly1 {
     implicit def caseEach[F <: CronField]    = at[EachNode[F]](_.matches)
+    implicit def caseAny[F <: CronField]     = at[AnyNode[F]](_.matches)
     implicit def caseConst[F <: CronField]   = at[ConstNode[F]](_.matches)
     implicit def caseBetween[F <: CronField] = at[BetweenNode[F]](_.matches)
     implicit def caseSeveral[F <: CronField] = at[SeveralNode[F]](_.matches)
@@ -40,6 +41,7 @@ private[cron4s] object ops {
 
   object range extends Poly1 {
     implicit def caseEach[F <: CronField]    = at[EachNode[F]](_.range)
+    implicit def caseAny[F <: CronField]     = at[AnyNode[F]](_.range)
     implicit def caseConst[F <: CronField]   = at[ConstNode[F]](_.range)
     implicit def caseBetween[F <: CronField] = at[BetweenNode[F]](_.range)
     implicit def caseSeveral[F <: CronField] = at[SeveralNode[F]](_.range)
@@ -51,24 +53,30 @@ private[cron4s] object ops {
   }
 
   object show extends Poly1 {
-    implicit def caseEach[F <: CronField](implicit show: Show[EachNode[F]])
-      = at[EachNode[F]](show.shows)
-    implicit def caseConst[F <: CronField](implicit show: Show[ConstNode[F]])
-      = at[ConstNode[F]](show.shows)
-    implicit def caseBetween[F <: CronField](implicit show: Show[BetweenNode[F]])
-      = at[BetweenNode[F]](show.shows)
-    implicit def caseSeveral[F <: CronField](implicit show: Show[SeveralNode[F]])
-      = at[SeveralNode[F]](show.shows)
-    implicit def caseEvery[F <: CronField](implicit show: Show[EveryNode[F]])
-      = at[EveryNode[F]](show.shows)
+    implicit def caseEach[F <: CronField](implicit show: Show[EachNode[F]]) =
+      at[EachNode[F]](show.shows)
+    implicit def caseAny[F <: CronField](implicit show: Show[AnyNode[F]]) =
+      at[AnyNode[F]](show.shows)
+    implicit def caseConst[F <: CronField](implicit show: Show[ConstNode[F]]) =
+      at[ConstNode[F]](show.shows)
+    implicit def caseBetween[F <: CronField](implicit show: Show[BetweenNode[F]]) =
+      at[BetweenNode[F]](show.shows)
+    implicit def caseSeveral[F <: CronField](implicit show: Show[SeveralNode[F]]) =
+      at[SeveralNode[F]](show.shows)
+    implicit def caseEvery[F <: CronField](implicit show: Show[EveryNode[F]]) =
+      at[EveryNode[F]](show.shows)
 
-    implicit def caseField[F <: CronField](implicit show: Show[FieldNode[F]])      = at[FieldNode[F]](show.shows)
-    implicit def caseEnumerable[F <: CronField](implicit show: Show[EnumerableNode[F]]) = at[EnumerableNode[F]](show.shows)
-    implicit def caseDivisble[F <: CronField](implicit show: Show[DivisibleNode[F]])   = at[DivisibleNode[F]](show.shows)
+    implicit def caseField[F <: CronField](implicit show: Show[FieldNode[F]]) =
+      at[FieldNode[F]](show.shows)
+    implicit def caseEnumerable[F <: CronField](implicit show: Show[EnumerableNode[F]]) =
+      at[EnumerableNode[F]](show.shows)
+    implicit def caseDivisble[F <: CronField](implicit show: Show[DivisibleNode[F]]) =
+      at[DivisibleNode[F]](show.shows)
   }
 
   object unit extends Poly1 {
     implicit def caseEach[F <: CronField]    = at[EachNode[F]](_.unit)
+    implicit def caseAny[F <: CronField]     = at[AnyNode[F]](_.unit)
     implicit def caseConst[F <: CronField]   = at[ConstNode[F]](_.unit)
     implicit def caseBetween[F <: CronField] = at[BetweenNode[F]](_.unit)
     implicit def caseSeveral[F <: CronField] = at[SeveralNode[F]](_.unit)

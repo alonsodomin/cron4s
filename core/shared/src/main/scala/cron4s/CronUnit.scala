@@ -21,6 +21,8 @@ import cron4s.base.Enumerated
 import scala.annotation.implicitNotFound
 import scala.language.higherKinds
 
+import scalaz.{Equal, Show}
+
 /**
   * A Cron Unit is the representation of valid values that are accepted
   * at a given Cron Field.
@@ -54,6 +56,12 @@ object CronUnit extends CronUnitInstances {
 
 private[cron4s] trait CronUnits {
   import CronField._
+
+  implicit def cronUnitEq[F <: CronField]: Equal[CronUnit[F]] =
+    Equal.equalA[CronUnit[F]]
+
+  implicit def cronUnitShow[F <: CronField]: Show[CronUnit[F]] =
+    Show.showFromToString[CronUnit[F]]
 
   private[cron4s] abstract class AbstractCronUnit[F <: CronField](
     val field: F, val min: Int, val max: Int

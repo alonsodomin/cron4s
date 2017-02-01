@@ -72,6 +72,30 @@ object EachNode {
 
 }
 
+final case class AnyNode[+F <: CronField](implicit val unit: CronUnit[F]) extends Node[F] {
+
+  lazy val range: IndexedSeq[Int] = unit.range
+
+  override def toString: String = "?"
+
+}
+
+object AnyNode {
+
+  implicit def anyNodeShow[F <: CronField]: Show[AnyNode[F]] =
+    Show.showFromToString[AnyNode[F]]
+
+  implicit def anyNodeInstance[F <: CronField]: Expr[AnyNode, F] =
+    new Expr[AnyNode, F] {
+      def unit(node: AnyNode[F]): CronUnit[F] = node.unit
+
+      def matches(node: AnyNode[F]): Predicate[Int] = always(true)
+
+      def range(node: AnyNode[F]): IndexedSeq[Int] = node.range
+    }
+
+}
+
 final case class ConstNode[F <: CronField]
     (value: Int, textValue: Option[String] = None)
     (implicit val unit: CronUnit[F])

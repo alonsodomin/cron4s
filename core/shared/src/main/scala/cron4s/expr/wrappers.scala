@@ -57,6 +57,7 @@ object FieldNode {
     def unit(node: FieldNode[F]): CronUnit[F] =
       node.raw.fold(ops.unit)
   }
+
 }
 
 final class EnumerableNode[F <: CronField](val raw: RawEnumerableNode[F]) extends AnyVal {
@@ -123,4 +124,5 @@ object DivisibleNode {
       def unit(node: DivisibleNode[F]): CronUnit[F] =
         node.raw.fold(ops.unit)
     }
+
 }
