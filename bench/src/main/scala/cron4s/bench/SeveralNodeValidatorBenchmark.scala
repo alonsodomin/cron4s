@@ -46,6 +46,7 @@ class SeveralNodeValidatorBenchmark {
   val _rangeInvalidConst = SeveralNode(BetweenNode[Second](ConstNode(-6), ConstNode(61)))
 
   val _constImpliedByRange = SeveralNode(ConstNode[Second](23), BetweenNode[Second](ConstNode(17), ConstNode(30)))
+  val _constImpliedByRangeReverse = SeveralNode(BetweenNode[Second](ConstNode(17), ConstNode(30)), ConstNode[Second](23))
 
   @Benchmark
   def simpleValid(): List[FieldError] = {
@@ -85,6 +86,11 @@ class SeveralNodeValidatorBenchmark {
   @Benchmark
   def constImpliedByRange(): List[FieldError] = {
     NodeValidator[SeveralNode[Second]].validate(_constImpliedByRange)
+  }
+
+  @Benchmark
+  def constImpliedByRangeReverse(): List[FieldError] = {
+    NodeValidator[SeveralNode[Second]].validate(_constImpliedByRangeReverse)
   }
 
 }

@@ -69,22 +69,23 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       implicit
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[BetweenNode[F]] = new NodeValidator[BetweenNode[F]] {
-      def validate(node: BetweenNode[F]): List[FieldError] = {
-        val subValidator = NodeValidator[ConstNode[F]]
-        val rangeValid = {
-          if (node.begin.value >= node.end.value)
-            List(FieldError(
-              node.unit.field,
-              s"${node.begin.value} should be less than ${node.end.value}"
-            ))
-          else List.empty
-        }
+      val subValidator = NodeValidator[ConstNode[F]]
 
-        List(
+      def validate(node: BetweenNode[F]): List[FieldError] = {
+        val baseErrors = List(
           subValidator.validate(node.begin),
-          subValidator.validate(node.end),
-          rangeValid
-        ).flatten
+          subValidator.validate(node.end)
+        )
+
+        if (node.begin.value >= node.end.value) {
+          val error = FieldError(
+            node.unit.field,
+            s"${node.begin.value} should be less than ${node.end.value}"
+          )
+          error :: baseErrors.flatten
+        } else {
+          baseErrors.flatten
+        }
       }
   }
 
@@ -92,29 +93,30 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       implicit
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[SeveralNode[F]] = new NodeValidator[SeveralNode[F]] {
+      val elemValidator = NodeValidator[EnumerableNode[F]]
+
+      def implicationErrorMsg(that: EnumerableNode[F], impliedBy: EnumerableNode[F]): String =
+        s"Value '${that.shows}' at field ${that.unit.field} is implied by '${impliedBy.shows}'"
+
+      def verifyImplication(seen: List[EnumerableNode[F]], curr: EnumerableNode[F]): List[FieldError] = {
+        def alreadyImplied = seen.find(e => curr.impliedBy(e))
+          .map(found => FieldError(curr.unit.field, implicationErrorMsg(curr, found)))
+        def impliesOther = seen.find(_.impliedBy(curr))
+          .map(found => FieldError(curr.unit.field, implicationErrorMsg(found, curr)))
+
+        alreadyImplied.orElse(impliesOther).toList
+      }
+
       def validate(node: SeveralNode[F]): List[FieldError] = {
-        def implicationErrorMsg(that: EnumerableNode[F], impliedBy: EnumerableNode[F]): String =
-          s"Value '${that.shows}' at field ${that.unit.field} is implied by '${impliedBy.shows}'"
-
-        def verifyImplication(seen: List[EnumerableNode[F]], curr: EnumerableNode[F]): Option[FieldError] = {
-          def alreadyImplied = seen.find(e => curr.impliedBy(e))
-            .map(found => FieldError(curr.unit.field, implicationErrorMsg(curr, found)))
-          def impliesOther = seen.find(_.impliedBy(curr))
-            .map(found => FieldError(curr.unit.field, implicationErrorMsg(found, curr)))
-
-          alreadyImplied.orElse(impliesOther)
-        }
-
-        val subExprValidator = NodeValidator[EnumerableNode[F]]
-        val zero = (List.empty[EnumerableNode[F]], List.empty[FieldError])
+        val zero = List.empty[EnumerableNode[F]] -> List.empty[List[FieldError]]
         val (_, errorResult) = node.values.foldRight(zero) { case (e, (seen, errors)) =>
-          val subErrors = subExprValidator.validate(e)
-          val newErrors = verifyImplication(seen, e).toList ::: subErrors ::: errors
+          val subErrors = elemValidator.validate(e)
+          val newErrors = verifyImplication(seen, e) :: subErrors :: errors
           val newSeen = e :: seen
           newSeen -> newErrors
         }
 
-        errorResult
+        errorResult.flatten
       }
     }
 
