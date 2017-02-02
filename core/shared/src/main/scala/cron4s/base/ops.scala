@@ -19,6 +19,7 @@ package cron4s.base
 import cron4s.expr._
 import cron4s.validation.NodeValidator
 import cron4s.{CronField, CronUnit}
+
 import shapeless._
 
 import scalaz.Show
@@ -47,9 +48,17 @@ private[cron4s] object ops {
     implicit def caseSeveral[F <: CronField] = at[SeveralNode[F]](_.range)
     implicit def caseEvery[F <: CronField]   = at[EveryNode[F]](_.range)
 
-    implicit def caseField[F <: CronField]   = at[FieldNode[F]](_.raw.fold(range))
+    implicit def caseField[F <: CronField]      = at[FieldNode[F]](_.raw.fold(range))
     implicit def caseEnumerable[F <: CronField] = at[EnumerableNode[F]](_.raw.fold(range))
     implicit def caseDivisible[F <: CronField]  = at[DivisibleNode[F]](_.raw.fold(range))
+  }
+
+  object toExpr extends Poly1 {
+    implicit def caseEach[F <: CronField](implicit EE: Expr[EachNode, F])    = at[EachNode[F]](_ => EE)
+    implicit def caseConst[F <: CronField](implicit EE: Expr[EachNode, F])   = at[ConstNode[F]](_ => EE)
+    implicit def caseBetween[F <: CronField](implicit EE: Expr[EachNode, F]) = at[BetweenNode[F]](_ => EE)
+    implicit def caseSeveral[F <: CronField](implicit EE: Expr[EachNode, F]) = at[SeveralNode[F]](_ => EE)
+    implicit def caseEvery[F <: CronField](implicit EE: Expr[EachNode, F])   = at[EveryNode[F]](_ => EE)
   }
 
   object show extends Poly1 {

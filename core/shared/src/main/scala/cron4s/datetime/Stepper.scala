@@ -90,35 +90,4 @@ private[datetime] final class Stepper[DateTime](adapter: DateTimeAdapter[DateTim
   def stepOverTime(rawExpr: RawTimeCronExpr, from: DateTime, initial: Int): Step =
     rawExpr.foldLeft(Some(from -> initial): Step)(stepping)
 
-  /*def run(expr: E)(implicit ev: DateTimeCron[E, DateTime]): Option[DateTime] = {
-    val matches = expr.allOf
-
-    val dateWithoutWeekOfDay = expr.datePart.raw.take(2)
-
-    def stepDatePart(previous: Step): Step =
-      dateWithoutWeekOfDay.foldLeft(previous)(stepping).flatMap {
-        case (dt, stepSize) => stepDayOfWeek(dt, expr.daysOfWeek, stepSize)
-      }
-
-    @tailrec
-    def dateStepLoop(previous: Step): Step = {
-      val dateAdjusted = stepDatePart(previous)
-      dateAdjusted match {
-        case Some((_, nextStep)) if nextStep != 0 =>
-          dateStepLoop(stepDatePart(dateAdjusted))
-
-        case Some((dateTime, _)) if !matches(dateTime) =>
-          val nextStep: Step = Some(dateTime -> 1)
-          stepDatePart(nextStep)
-
-        case _ => dateAdjusted
-      }
-    }
-
-    val initial: Step = Some(from -> initialStep)
-    val timeAdjusted: Step = expr.timePart.raw.foldLeft(initial)(stepping)
-    val adjusted = dateStepLoop(timeAdjusted)
-    adjusted.map(_._1)
-  }*/
-
 }
