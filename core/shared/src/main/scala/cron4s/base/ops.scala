@@ -113,9 +113,9 @@ private[cron4s] object ops {
       ) = at[EveryNode[F]](validator.validate)
 
     implicit def caseField[F <: CronField](
-                                            implicit
-                                            validator: NodeValidator[FieldNode[F]],
-                                            ev: Enumerated[CronUnit[F]]
+        implicit
+        validator: NodeValidator[FieldNode[F]],
+        ev: Enumerated[CronUnit[F]]
       ) = at[FieldNode[F]](validator.validate)
   }
 

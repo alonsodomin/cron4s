@@ -38,14 +38,16 @@ object NodeValidator extends NodeValidatorInstances {
 
   @inline def apply[A](implicit validator: NodeValidator[A]): NodeValidator[A] = validator
 
+  def alwaysValid[A]: NodeValidator[A] = new NodeValidator[A] {
+    def validate(node: A): List[FieldError] = List.empty
+  }
+
 }
 
 private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidatorInstances {
 
   implicit def eachValidator[F <: CronField]: NodeValidator[EachNode[F]] =
-    new NodeValidator[EachNode[F]] {
-      def validate(node: EachNode[F]): List[FieldError] = List.empty
-    }
+    NodeValidator.alwaysValid[EachNode[F]]
 
   implicit def constValidator[F <: CronField](
       implicit
@@ -71,43 +73,50 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
         val subValidator = NodeValidator[ConstNode[F]]
         val rangeValid = {
           if (node.begin.value >= node.end.value)
-            List(FieldError(node.unit.field, s"${node.begin.value} should be less than ${node.end.value}"))
+            List(FieldError(
+              node.unit.field,
+              s"${node.begin.value} should be less than ${node.end.value}"
+            ))
           else List.empty
         }
 
-        subValidator.validate(node.begin) ++ subValidator.validate(node.end) ++ rangeValid
+        List(
+          subValidator.validate(node.begin),
+          subValidator.validate(node.end),
+          rangeValid
+        ).flatten
       }
   }
 
   implicit def severalValidator[F <: CronField](
-    implicit
-    ev: Enumerated[CronUnit[F]]
-  ): NodeValidator[SeveralNode[F]] = new NodeValidator[SeveralNode[F]] {
-    def validate(node: SeveralNode[F]): List[FieldError] = {
-      def implicationErrorMsg(that: EnumerableNode[F], impliedBy: EnumerableNode[F]): String =
-        s"Value '${that.shows}' at field ${that.unit.field} is implied by '${impliedBy.shows}'"
+      implicit
+      ev: Enumerated[CronUnit[F]]
+    ): NodeValidator[SeveralNode[F]] = new NodeValidator[SeveralNode[F]] {
+      def validate(node: SeveralNode[F]): List[FieldError] = {
+        def implicationErrorMsg(that: EnumerableNode[F], impliedBy: EnumerableNode[F]): String =
+          s"Value '${that.shows}' at field ${that.unit.field} is implied by '${impliedBy.shows}'"
 
-      def verifyImplication(seen: List[EnumerableNode[F]], curr: EnumerableNode[F]): Option[FieldError] = {
-        val alreadyImplied = seen.find(e => curr.impliedBy(e))
-          .map(found => FieldError(curr.unit.field, implicationErrorMsg(curr, found)))
-        val impliesOther = seen.find(_.impliedBy(curr))
-          .map(found => FieldError(curr.unit.field, implicationErrorMsg(found, curr)))
+        def verifyImplication(seen: List[EnumerableNode[F]], curr: EnumerableNode[F]): Option[FieldError] = {
+          def alreadyImplied = seen.find(e => curr.impliedBy(e))
+            .map(found => FieldError(curr.unit.field, implicationErrorMsg(curr, found)))
+          def impliesOther = seen.find(_.impliedBy(curr))
+            .map(found => FieldError(curr.unit.field, implicationErrorMsg(found, curr)))
 
-        alreadyImplied.orElse(impliesOther)
+          alreadyImplied.orElse(impliesOther)
+        }
+
+        val subExprValidator = NodeValidator[EnumerableNode[F]]
+        val zero = (List.empty[EnumerableNode[F]], List.empty[FieldError])
+        val (_, errorResult) = node.values.foldRight(zero) { case (e, (seen, errors)) =>
+          val subErrors = subExprValidator.validate(e)
+          val newErrors = verifyImplication(seen, e).toList ::: subErrors ::: errors
+          val newSeen = e :: seen
+          newSeen -> newErrors
+        }
+
+        errorResult
       }
-
-      val subExprValidator = NodeValidator[EnumerableNode[F]]
-      val zero = (List.empty[EnumerableNode[F]], List.empty[FieldError])
-      val (_, errorResult) = node.values.foldRight(zero) { case (e, (seen, errors)) =>
-        val subErrors = subExprValidator.validate(e)
-        val newErrors = verifyImplication(seen, e).toList ::: subErrors ::: errors
-        val newSeen = e :: seen
-        newSeen -> newErrors
-      }
-
-      errorResult
     }
-  }
 
   implicit def everyValidator[F <: CronField](
       implicit

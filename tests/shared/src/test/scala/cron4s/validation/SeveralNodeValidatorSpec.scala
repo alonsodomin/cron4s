@@ -22,11 +22,13 @@ import cron4s.testkit.gen.NodeGenerators
 import cron4s.base.Enumerated
 import cron4s.testkit.SlowCron4sPropSpec
 
+import org.scalatest.Ignore
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 /**
   * Created by alonsodomin on 29/12/2016.
   */
+//@Ignore
 class SeveralNodeValidatorSpec extends SlowCron4sPropSpec with GeneratorDrivenPropertyChecks with NodeGenerators {
   import CronField._
 
@@ -39,7 +41,8 @@ class SeveralNodeValidatorSpec extends SlowCron4sPropSpec with GeneratorDrivenPr
 
     property(s"SeveralNode[${unit.field}] with invalid members should contain the errors of its elements") {
       forAll(invalidSeveralGen[F]) { node =>
-        val expectedMemberErrors = node.values.list.toList.view.flatMap(NodeValidator[EnumerableNode[F]].validate)
+        val elemValidator = NodeValidator[EnumerableNode[F]]
+        val expectedMemberErrors = node.values.list.toList.par.flatMap(elemValidator.validate)
         NodeValidator[SeveralNode[F]].validate(node) should contain allElementsOf expectedMemberErrors
       }
     }

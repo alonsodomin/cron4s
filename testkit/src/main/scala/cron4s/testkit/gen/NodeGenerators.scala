@@ -72,8 +72,8 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       ev: Enumerated[CronUnit[F]]
   ): Gen[BetweenNode[F]] = {
     for {
-      min <- invalidConstGen[F]
-      max <- invalidConstGen[F]
+      min <- Gen.oneOf(constGen[F], invalidConstGen[F])
+      max <- Gen.oneOf(constGen[F], invalidConstGen[F])
     } yield BetweenNode(min, max)
   }
 
@@ -91,8 +91,8 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
   ): Gen[EnumerableNode[F]] = Gen.oneOf(
-    invalidConstGen[F].map(const2Enumerable),
-    invalidBetweenGen[F].map(between2Enumerable)
+    Gen.oneOf(constGen[F], invalidConstGen[F]).map(const2Enumerable),
+    Gen.oneOf(betweenGen[F], invalidBetweenGen[F]).map(between2Enumerable)
   )
 
   private[this] def severalGen0[F <: CronField](memberGen: Gen[EnumerableNode[F]])(
