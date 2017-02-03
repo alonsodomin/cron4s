@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-package cron4s.base
+package cron4s.expr
 
-import cron4s.expr._
-import cron4s.validation.NodeValidator
-import cron4s.{CronField, CronUnit}
-
+import cron4s.CronField
 import shapeless._
 
 import scalaz.Show
@@ -53,14 +50,6 @@ private[cron4s] object ops {
     implicit def caseDivisible[F <: CronField]  = at[DivisibleNode[F]](_.raw.fold(range))
   }
 
-  object toExpr extends Poly1 {
-    implicit def caseEach[F <: CronField](implicit EE: Expr[EachNode, F])    = at[EachNode[F]](_ => EE)
-    implicit def caseConst[F <: CronField](implicit EE: Expr[EachNode, F])   = at[ConstNode[F]](_ => EE)
-    implicit def caseBetween[F <: CronField](implicit EE: Expr[EachNode, F]) = at[BetweenNode[F]](_ => EE)
-    implicit def caseSeveral[F <: CronField](implicit EE: Expr[EachNode, F]) = at[SeveralNode[F]](_ => EE)
-    implicit def caseEvery[F <: CronField](implicit EE: Expr[EachNode, F])   = at[EveryNode[F]](_ => EE)
-  }
-
   object show extends Poly1 {
     implicit def caseEach[F <: CronField](implicit show: Show[EachNode[F]])
       = at[EachNode[F]](show.shows)
@@ -90,42 +79,6 @@ private[cron4s] object ops {
     implicit def caseDivisible[F <: CronField]  = at[DivisibleNode[F]](_.raw.fold(unit))
   }
 
-  object validate extends Poly1 {
-    implicit def caseEach[F <: CronField](
-        implicit
-        validator: NodeValidator[EachNode[F]],
-        ev: Enumerated[CronUnit[F]]
-      ) = at[EachNode[F]](validator.validate)
 
-    implicit def caseConst[F <: CronField](
-        implicit
-        validator: NodeValidator[ConstNode[F]],
-        ev: Enumerated[CronUnit[F]]
-      ) = at[ConstNode[F]](validator.validate)
-
-    implicit def caseBetween[F <: CronField](
-        implicit
-        validator: NodeValidator[BetweenNode[F]],
-        ev: Enumerated[CronUnit[F]]
-      ) = at[BetweenNode[F]](validator.validate)
-
-    implicit def caseSeveral[F <: CronField](
-        implicit
-        validator: NodeValidator[SeveralNode[F]],
-        ev: Enumerated[CronUnit[F]]
-     ) = at[SeveralNode[F]](validator.validate)
-
-    implicit def caseEvery[F <: CronField](
-        implicit
-        validator: NodeValidator[EveryNode[F]],
-        ev: Enumerated[CronUnit[F]]
-      ) = at[EveryNode[F]](validator.validate)
-
-    implicit def caseField[F <: CronField](
-        implicit
-        validator: NodeValidator[FieldNode[F]],
-        ev: Enumerated[CronUnit[F]]
-      ) = at[FieldNode[F]](validator.validate)
-  }
 
 }

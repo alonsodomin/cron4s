@@ -33,18 +33,18 @@ val commonSettings = Def.settings(
     url("https://github.com/alonsodomin/cron4s"),
     "scm:git:git@github.com:alonsodomin/cron4s.git"
   )),
+  botBuild := scala.sys.env.get("TRAVIS").isDefined,
   parallelExecution in Test := false
 ) ++ Licensing.settings
 
 lazy val commonJvmSettings = Seq(
-  fork in Test := false
+  fork in Test := true
 )
 
 lazy val commonJsSettings = Seq(
   scalaJSStage in Test := FastOptStage,
   persistLauncher in Test := false,
   requiresDOM := false,
-  botBuild := scala.sys.env.get("TRAVIS").isDefined,
   // batch mode decreases the amount of memory needed to compile scala.js code
   scalaJSOptimizerOptions := scalaJSOptimizerOptions.value.withBatchMode(botBuild.value)
 )

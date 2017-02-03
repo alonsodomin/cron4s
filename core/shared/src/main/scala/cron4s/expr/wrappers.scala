@@ -16,12 +16,10 @@
 
 package cron4s.expr
 
-import cron4s.{CronField, CronUnit, base}
-import cron4s.base.{Predicate, ops}
+import cron4s.{CronField, CronUnit}
+import cron4s.base.Predicate
 
 import shapeless._
-
-import scalaz.Show
 
 /**
   * Created by alonsodomin on 23/01/2017.
@@ -35,10 +33,10 @@ final class FieldNode[F <: CronField](private[cron4s] val raw: RawFieldNode[F]) 
 object FieldNode {
   implicit def fieldNodeInstance[F <: CronField]: Expr[FieldNode, F] = new Expr[FieldNode, F] {
     def matches(node: FieldNode[F]): Predicate[Int] =
-      node.raw.fold(base.ops.matches)
+      node.raw.fold(ops.matches)
 
     def range(node: FieldNode[F]): IndexedSeq[Int] =
-      node.raw.fold(base.ops.range)
+      node.raw.fold(ops.range)
 
     def implies[EE[_ <: CronField]](node: FieldNode[F])(ee: EE[F])
       (implicit EE: Expr[EE, F]): Boolean = node.raw match {
@@ -51,16 +49,16 @@ object FieldNode {
       }
 
     def unit(node: FieldNode[F]): CronUnit[F] =
-      node.raw.fold(base.ops.unit)
+      node.raw.fold(ops.unit)
 
     override def shows(node: FieldNode[F]): String =
-      node.raw.fold(base.ops.show)
+      node.raw.fold(ops.show)
   }
 }
 
 final class EnumerableNode[F <: CronField](val raw: RawEnumerableNode[F]) extends AnyVal {
 
-  override def toString: String = raw.fold(base.ops.show)
+  override def toString: String = raw.fold(ops.show)
 
 }
 
@@ -69,7 +67,7 @@ object EnumerableNode {
   implicit def enumerableNodeInstance[F <: CronField]: Expr[EnumerableNode, F] =
     new Expr[EnumerableNode, F] {
       def matches(node: EnumerableNode[F]): Predicate[Int] =
-        node.raw.fold(base.ops.matches)
+        node.raw.fold(ops.matches)
 
       def implies[EE[_ <: CronField]](node: EnumerableNode[F])(ee: EE[F])
         (implicit EE: Expr[EE, F]): Boolean = {
@@ -81,20 +79,20 @@ object EnumerableNode {
         }
 
       def range(node: EnumerableNode[F]): IndexedSeq[Int] =
-        node.raw.fold(base.ops.range)
+        node.raw.fold(ops.range)
 
       def unit(node: EnumerableNode[F]): CronUnit[F] =
-        node.raw.fold(base.ops.unit)
+        node.raw.fold(ops.unit)
 
       override def shows(node: EnumerableNode[F]): String =
-        node.raw.fold(base.ops.show)
+        node.raw.fold(ops.show)
     }
 
 }
 
 final class DivisibleNode[F <: CronField](val raw: RawDivisibleNode[F]) extends AnyVal {
 
-  override def toString: String = raw.fold(base.ops.show)
+  override def toString: String = raw.fold(ops.show)
 
 }
 
@@ -102,7 +100,7 @@ object DivisibleNode {
   implicit def divisibleNodeInstance[F <: CronField]: Expr[DivisibleNode, F] =
     new Expr[DivisibleNode, F] {
       def matches(node: DivisibleNode[F]): Predicate[Int] =
-        node.raw.fold(base.ops.matches)
+        node.raw.fold(ops.matches)
 
       def implies[EE[_ <: CronField]](node: DivisibleNode[F])(ee: EE[F])
         (implicit EE: Expr[EE, F]): Boolean = node.raw match {
@@ -113,12 +111,12 @@ object DivisibleNode {
         }
 
       def range(node: DivisibleNode[F]): IndexedSeq[Int] =
-        node.raw.fold(base.ops.range)
+        node.raw.fold(ops.range)
 
       def unit(node: DivisibleNode[F]): CronUnit[F] =
-        node.raw.fold(base.ops.unit)
+        node.raw.fold(ops.unit)
 
       override def shows(node: DivisibleNode[F]): String =
-        node.raw.fold(base.ops.show)
+        node.raw.fold(ops.show)
     }
 }

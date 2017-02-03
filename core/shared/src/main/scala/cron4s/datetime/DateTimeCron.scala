@@ -16,8 +16,9 @@
 
 package cron4s.datetime
 
-import cron4s.expr.{CronExpr, DateCronExpr, TimeCronExpr}
-import cron4s.base.{Predicate, ops}
+import cron4s.expr.{CronExpr, DateCronExpr, TimeCronExpr, ops}
+import cron4s.base.Predicate
+
 import shapeless.Coproduct
 
 import scalaz.PlusEmpty

@@ -16,7 +16,6 @@
 
 package cron4s.expr
 
-import cron4s.base
 import shapeless._
 
 final case class DateCronExpr(
@@ -27,7 +26,7 @@ final case class DateCronExpr(
 
   private[cron4s] lazy val raw: RawDateCronExpr = Generic[DateCronExpr].to(this)
 
-  override def toString = raw.map(base.ops.show).toList.mkString(" ")
+  override def toString = raw.map(ops.show).toList.mkString(" ")
 
 }
 
@@ -39,6 +38,6 @@ final case class TimeCronExpr(
 
   private[cron4s] lazy val raw: RawTimeCronExpr = Generic[TimeCronExpr].to(this)
 
-  override def toString = raw.map(base.ops.show).toList.mkString(" ")
+  override def toString = raw.map(ops.show).toList.mkString(" ")
 
 }
