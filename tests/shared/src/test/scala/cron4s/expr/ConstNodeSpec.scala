@@ -17,16 +17,14 @@
 package cron4s.expr
 
 import cron4s.CronField
+import cron4s.testkit.Cron4sLawSuite
 import cron4s.testkit.discipline.ExprTests
 import cron4s.testkit.gen.ArbitraryConstNode
-
-import org.scalatest.FunSuite
-import org.typelevel.discipline.scalatest.Discipline
 
 /**
   * Created by alonsodomin on 31/07/2016.
   */
-class ConstNodeSpec extends FunSuite with Discipline with ArbitraryConstNode {
+class ConstNodeSpec extends Cron4sLawSuite with ArbitraryConstNode {
   import CronField._
 
   checkAll("Const[Second]", ExprTests[ConstNode, Second].expr)

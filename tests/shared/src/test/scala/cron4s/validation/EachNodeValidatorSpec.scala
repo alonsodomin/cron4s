@@ -18,17 +18,15 @@ package cron4s.validation
 
 import cron4s._
 import cron4s.expr._
+import cron4s.testkit.Cron4sPropSpec
 import cron4s.testkit.gen._
 
-import org.scalatest._
 import org.scalatest.prop._
-
 import org.scalacheck._
 
-class EachNodeValidatorSpec extends PropSpec
+class EachNodeValidatorSpec extends Cron4sPropSpec
   with GeneratorDrivenPropertyChecks
-  with ArbitraryEachNode
-  with Matchers {
+  with ArbitraryEachNode {
 
   import CronField._
 

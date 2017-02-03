@@ -19,6 +19,8 @@ package cron4s.expr
 import cron4s.{CronField, CronUnit, base}
 import cron4s.base.{Predicate, ops}
 
+import shapeless._
+
 import scalaz.Show
 
 /**
@@ -37,6 +39,16 @@ object FieldNode {
 
     def range(node: FieldNode[F]): IndexedSeq[Int] =
       node.raw.fold(base.ops.range)
+
+    def implies[EE[_ <: CronField]](node: FieldNode[F])(ee: EE[F])
+      (implicit EE: Expr[EE, F]): Boolean = node.raw match {
+        case Inl(each)                      => each.implies(ee)
+        case Inr(Inl(const))                => const.implies(ee)
+        case Inr(Inr(Inl(between)))         => between.implies(ee)
+        case Inr(Inr(Inr(Inl(several))))    => several.implies(ee)
+        case Inr(Inr(Inr(Inr(Inl(every))))) => every.implies(ee)
+        case _                              => sys.error("Impossible!")
+      }
 
     def unit(node: FieldNode[F]): CronUnit[F] =
       node.raw.fold(base.ops.unit)
@@ -58,6 +70,15 @@ object EnumerableNode {
     new Expr[EnumerableNode, F] {
       def matches(node: EnumerableNode[F]): Predicate[Int] =
         node.raw.fold(base.ops.matches)
+
+      def implies[EE[_ <: CronField]](node: EnumerableNode[F])(ee: EE[F])
+        (implicit EE: Expr[EE, F]): Boolean = {
+          node.raw match {
+            case Inl(const)        => const.implies(ee)
+            case Inr(Inl(between)) => between.implies(ee)
+            case _                 => sys.error("Impossible!")
+          }
+        }
 
       def range(node: EnumerableNode[F]): IndexedSeq[Int] =
         node.raw.fold(base.ops.range)
@@ -82,6 +103,14 @@ object DivisibleNode {
     new Expr[DivisibleNode, F] {
       def matches(node: DivisibleNode[F]): Predicate[Int] =
         node.raw.fold(base.ops.matches)
+
+      def implies[EE[_ <: CronField]](node: DivisibleNode[F])(ee: EE[F])
+        (implicit EE: Expr[EE, F]): Boolean = node.raw match {
+          case Inl(each)              => each.implies(ee)
+          case Inr(Inl(between))      => between.implies(ee)
+          case Inr(Inr(Inl(several))) => several.implies(ee)
+          case _                      => sys.error("Impossible!")
+        }
 
       def range(node: DivisibleNode[F]): IndexedSeq[Int] =
         node.raw.fold(base.ops.range)

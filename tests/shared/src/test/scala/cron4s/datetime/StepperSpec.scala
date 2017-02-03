@@ -18,14 +18,14 @@ package cron4s.datetime
 
 import cron4s.CronField
 import cron4s.expr._
+import cron4s.testkit.Cron4sPropSpec
 
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.{Matchers, PropSpec}
 
 /**
   * Created by alonsodomin on 07/08/2016.
   */
-class StepperSpec extends PropSpec with TableDrivenPropertyChecks with Matchers {
+class StepperSpec extends Cron4sPropSpec with TableDrivenPropertyChecks {
   import CronField._
   import testdummy._
 

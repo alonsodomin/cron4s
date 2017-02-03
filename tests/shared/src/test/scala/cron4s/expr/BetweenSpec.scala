@@ -17,16 +17,14 @@
 package cron4s.expr
 
 import cron4s.CronField._
+import cron4s.testkit.Cron4sLawSuite
 import cron4s.testkit.discipline.ExprTests
 import cron4s.testkit.gen.ArbitraryBetweenNode
-
-import org.scalatest.FunSuite
-import org.typelevel.discipline.scalatest.Discipline
 
 /**
   * Created by alonsodomin on 31/07/2016.
   */
-class BetweenSpec extends FunSuite with Discipline with ArbitraryBetweenNode {
+class BetweenSpec extends Cron4sLawSuite with ArbitraryBetweenNode {
 
   checkAll("Between[Second]", ExprTests[BetweenNode, Second].expr)
   checkAll("Between[Minute]", ExprTests[BetweenNode, Minute].expr)

@@ -30,8 +30,9 @@ import scalaz.Equal
 /**
   * Created by alonsodomin on 29/01/2017.
   */
-abstract class DateTimeCronTestKit[DateTime : DateTimeAdapter : Equal]
-  extends FunSuite with Discipline with DateTimeTestKitBase[DateTime] with CronGenerators {
+abstract class DateTimeCronTestKit[DateTime : DateTimeAdapter : Equal] extends Cron4sLawSuite
+  with DateTimeTestKitBase[DateTime]
+  with CronGenerators {
 
   checkAll("CronExpr", DateTimeCronTests[CronExpr, DateTime].dateTimeCron)
   checkAll("TimeCronExpr", DateTimeCronTests[DateCronExpr, DateTime].dateTimeCron)

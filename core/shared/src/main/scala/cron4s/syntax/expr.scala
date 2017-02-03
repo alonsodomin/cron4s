@@ -30,8 +30,11 @@ private[syntax] class ExprOps[E[_ <: CronField], F <: CronField](self: E[F], tc:
 
   def matches: Predicate[Int] = tc.matches(self)
 
-  def impliedBy[EE[_ <: CronField]](expr: EE[F])(implicit ops: Expr[EE, F]): Boolean =
-    tc.impliedBy(self)(expr)
+  def implies[EE[_ <: CronField]](ee: EE[F])(implicit EE: Expr[EE, F]): Boolean =
+    tc.implies(self)(ee)
+
+  def impliedBy[EE[_ <: CronField]](ee: EE[F])(implicit EE: Expr[EE, F]): Boolean =
+    tc.impliedBy(self)(ee)
 
   def unit: CronUnit[F] = tc.unit(self)
 

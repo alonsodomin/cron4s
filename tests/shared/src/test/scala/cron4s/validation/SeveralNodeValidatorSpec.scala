@@ -16,35 +16,36 @@
 
 package cron4s.validation
 
-import cron4s.expr.{EnumerableNode, SeveralNode}
 import cron4s.{CronField, CronUnit, FieldError}
+import cron4s.expr.{EnumerableNode, SeveralNode}
 import cron4s.testkit.gen.NodeGenerators
 import cron4s.base.Enumerated
+import cron4s.testkit.SlowCron4sPropSpec
 
-import org.scalatest.{Matchers, PropSpec}
+import org.scalatest.Ignore
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 /**
   * Created by alonsodomin on 29/12/2016.
   */
-class SeveralNodeValidatorSpec extends PropSpec
-  with GeneratorDrivenPropertyChecks
-  with Matchers
-  with NodeGenerators {
-
+//@Ignore
+class SeveralNodeValidatorSpec extends SlowCron4sPropSpec with GeneratorDrivenPropertyChecks with NodeGenerators {
   import CronField._
 
   private[this] def check[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Unit = {
+    val severalValidator = NodeValidator[SeveralNode[F]]
+    val elemValidator = NodeValidator[EnumerableNode[F]]
+
     property(s"SeveralNode[${unit.field}] with valid components should pass validation") {
       forAll(severalGen[F]) { node =>
-        NodeValidator[SeveralNode[F]].validate(node) shouldBe List.empty[FieldError]
+        severalValidator.validate(node) shouldBe List.empty[FieldError]
       }
     }
 
     property(s"SeveralNode[${unit.field}] with invalid members should contain the errors of its elements") {
       forAll(invalidSeveralGen[F]) { node =>
-        val expectedMemberErrors = node.values.list.toList.view.flatMap(NodeValidator[EnumerableNode[F]].validate)
-        NodeValidator[SeveralNode[F]].validate(node) should contain allElementsOf expectedMemberErrors
+        val expectedMemberErrors = node.values.list.toList.flatMap(elemValidator.validate)
+        severalValidator.validate(node) should contain allElementsOf expectedMemberErrors
       }
     }
   }

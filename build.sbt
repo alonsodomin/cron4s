@@ -11,6 +11,8 @@ scalaVersion in ThisBuild := "2.12.1"
 
 crossScalaVersions in ThisBuild := Seq(scalaVersion.value, "2.11.8")
 
+lazy val botBuild = settingKey[Boolean]("Build by TravisCI instead of local dev environment")
+
 val commonSettings = Def.settings(
   name := "cron4s",
   organization := "com.github.alonsodomin.cron4s",
@@ -34,10 +36,17 @@ val commonSettings = Def.settings(
   parallelExecution in Test := false
 ) ++ Licensing.settings
 
+lazy val commonJvmSettings = Seq(
+  fork in Test := false
+)
+
 lazy val commonJsSettings = Seq(
   scalaJSStage in Test := FastOptStage,
   persistLauncher in Test := false,
-  requiresDOM := false
+  requiresDOM := false,
+  botBuild := scala.sys.env.get("TRAVIS").isDefined,
+  // batch mode decreases the amount of memory needed to compile scala.js code
+  scalaJSOptimizerOptions := scalaJSOptimizerOptions.value.withBatchMode(botBuild.value)
 )
 
 lazy val noPublishSettings = Seq(
@@ -179,6 +188,7 @@ lazy val cron4sJVM = (project in file(".jvm")).
     moduleName := "cron4s"
   ).
   settings(commonSettings: _*).
+  settings(commonJvmSettings: _*).
   settings(publishSettings).
   aggregate(coreJVM, testkitJVM, testsJVM).
   dependsOn(coreJVM, testkitJVM, testsJVM)
@@ -200,9 +210,10 @@ lazy val core = (crossProject in file("core")).
     moduleName := "cron4s-core"
   ).
   settings(commonSettings: _*).
-  settings(commonJsSettings: _*).
   settings(publishSettings: _*).
   settings(Dependencies.core: _*).
+  jsSettings(commonJsSettings: _*).
+  jvmSettings(commonJvmSettings).
   jvmSettings(Dependencies.coreJVM: _*).
   jvmSettings(mimaSettings("core"): _*)
 
@@ -216,9 +227,10 @@ lazy val testkit = (crossProject.crossType(CrossType.Pure) in file("testkit")).
     moduleName := "cron4s-testkit"
   ).
   settings(commonSettings: _*).
-  settings(commonJsSettings: _*).
   settings(publishSettings: _*).
   settings(Dependencies.testkit: _*).
+  jsSettings(commonJsSettings: _*).
+  jvmSettings(commonJvmSettings).
   jvmSettings(mimaSettings("testkit"): _*).
   dependsOn(core)
 
@@ -232,9 +244,10 @@ lazy val tests = (crossProject in file("tests")).
     moduleName := "cron4s-tests"
   ).
   settings(commonSettings: _*).
-  settings(commonJsSettings: _*).
   settings(noPublishSettings: _*).
   settings(Dependencies.tests: _*).
+  jsSettings(commonJsSettings: _*).
+  jvmSettings(commonJvmSettings).
   jvmSettings(Dependencies.testsJVM: _*).
   dependsOn(testkit % Test)
 

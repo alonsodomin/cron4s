@@ -32,7 +32,7 @@ import scalaz.Equal
   * Created by alonsodomin on 04/08/2016.
   */
 abstract class DateTimeNodeTestKit[DateTime : DateTimeAdapter : Equal]
-  extends FunSuite with Discipline with DateTimeTestKitBase[DateTime] {
+  extends Cron4sLawSuite with DateTimeTestKitBase[DateTime] {
   import CronField._
 
   trait NodeCheck {

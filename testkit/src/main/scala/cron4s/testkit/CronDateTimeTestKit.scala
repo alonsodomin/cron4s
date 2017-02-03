@@ -29,7 +29,7 @@ import scalaz.Equal
   * Created by alonsodomin on 29/08/2016.
   */
 abstract class CronDateTimeTestKit[DateTime: DateTimeAdapter: Equal]
-  extends PropSpec with TableDrivenPropertyChecks with Matchers { this: DateTimeTestKitBase[DateTime] =>
+  extends Cron4sPropSpec with TableDrivenPropertyChecks { this: DateTimeTestKitBase[DateTime] =>
 
   val onlyTuesdaysAt12 = CronExpr(
     ConstNode[Second](0),

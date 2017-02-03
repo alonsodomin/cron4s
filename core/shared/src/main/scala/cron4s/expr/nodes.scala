@@ -18,6 +18,7 @@ package cron4s.expr
 
 import cron4s.{CronField, CronUnit}
 import cron4s.base._
+import cron4s.syntax.expr._
 import cron4s.syntax.predicate._
 
 import scalaz.NonEmptyList
@@ -54,6 +55,9 @@ object EachNode {
     new Expr[EachNode, F] {
       def unit(node: EachNode[F]): CronUnit[F] = node.unit
 
+      def implies[EE[_ <: CronField]](node: EachNode[F])(ee: EE[F])(implicit EE: Expr[EE, F]): Boolean =
+        true
+
       def matches(node: EachNode[F]): Predicate[Int] = Predicate { x =>
         x >= min(node) && x <= max(node)
       }
@@ -79,8 +83,16 @@ object ConstNode {
   implicit def constNodeInstance[F <: CronField]: Expr[ConstNode, F] =
     new Expr[ConstNode, F] {
       def unit(node: ConstNode[F]): CronUnit[F] = node.unit
+
       def matches(node: ConstNode[F]): Predicate[Int] = equalTo(node.value)
+
+      def implies[EE[_ <: CronField]](node: ConstNode[F])(ee: EE[F])(implicit EE: Expr[EE, F]): Boolean = {
+        val range = ee.range
+        (range.size == 1) && (range.contains(node.value))
+      }
+
       def range(node: ConstNode[F]): IndexedSeq[Int] = node.range
+
       override def shows(node: ConstNode[F]): String = node.textValue.getOrElse(node.value.toString)
     }
 
@@ -92,8 +104,9 @@ final case class BetweenNode[F <: CronField]
   extends Node[F] {
 
   lazy val range: IndexedSeq[Int] = {
-    if (begin.value < end.value) begin.value to end.value
-    else Vector.empty
+    val min = Math.min(begin.value, end.value)
+    val max = Math.max(begin.value, end.value)
+    min to max
   }
 
 }
@@ -111,6 +124,9 @@ object BetweenNode {
           x >= node.begin.value && x <= node.end.value
         else false
       }
+
+      def implies[EE[_ <: CronField]](node: BetweenNode[F])(ee: EE[F])(implicit EE: Expr[EE, F]): Boolean =
+        (node.min <= ee.min) && (node.max >= ee.max)
 
       def range(node: BetweenNode[F]): IndexedSeq[Int] = node.range
 
@@ -143,6 +159,9 @@ object SeveralNode {
 
       def matches(node: SeveralNode[F]): Predicate[Int] =
         anyOf(node.values.map(_.matches))
+
+      def implies[EE[_ <: CronField]](node: SeveralNode[F])(ee: EE[F])(implicit EE: Expr[EE, F]): Boolean =
+        range(node).containsSlice(ee.range)
 
       def range(node: SeveralNode[F]): IndexedSeq[Int] = node.range
 
@@ -177,6 +196,9 @@ object EveryNode {
 
       def matches(node: EveryNode[F]): Predicate[Int] =
         anyOf(range(node).map(equalTo(_)).toList)
+
+      def implies[EE[_ <: CronField]](node: EveryNode[F])(ee: EE[F])(implicit EE: Expr[EE, F]): Boolean =
+        range(node).containsSlice(ee.range)
 
       def range(node: EveryNode[F]): IndexedSeq[Int] = node.range
 

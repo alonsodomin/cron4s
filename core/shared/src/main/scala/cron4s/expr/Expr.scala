@@ -28,12 +28,12 @@ trait Expr[E[_ <: CronField], F <: CronField] extends Enumerated[E[F]] with Show
 
   def matches(e: E[F]): Predicate[Int]
 
-  def impliedBy[EE[_ <: CronField]](e: E[F])(expr: EE[F])(
-      implicit ops: Expr[EE, F]
-    ): Boolean = {
-      val exprRange = range(e)
-      exprRange.size > 0 && exprRange.forall(ops.matches(expr))
-    }
+  def implies[EE[_ <: CronField]](e: E[F])(ee: EE[F])(implicit EE: Expr[EE, F]): Boolean
+
+  def impliedBy[EE[_ <: CronField]](e: E[F])(ee: EE[F])(
+      implicit EE: Expr[EE, F]
+    ): Boolean =
+      EE.implies(ee)(e)(this)
 
   def unit(e: E[F]): CronUnit[F]
 

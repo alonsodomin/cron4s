@@ -16,13 +16,11 @@
 
 package cron4s
 
+import cron4s.testkit.Cron4sLawSuite
 import cron4s.testkit.discipline.EnumeratedTests
 import cron4s.testkit.gen.ArbitraryCronUnits
 
-import org.scalatest.FunSuite
-import org.typelevel.discipline.scalatest.Discipline
-
-class CronUnitSpec extends FunSuite with Discipline with ArbitraryCronUnits {
+class CronUnitSpec extends Cron4sLawSuite with ArbitraryCronUnits {
   import CronField._
 
   checkAll("CronUnit[Second]", EnumeratedTests[CronUnit[Second]].enumerated)

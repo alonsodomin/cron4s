@@ -54,10 +54,8 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       implicit
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
-  ): Gen[ConstNode[F]] = for {
-    value <- Gen.choose(0, Int.MaxValue)
-    if (value >= 0) && (value < unit.min) || (value > unit.max)
-  } yield ConstNode(value)
+  ): Gen[ConstNode[F]] =
+    Gen.choose(unit.max + 1, Int.MaxValue).map(ConstNode[F](_))
 
   def betweenGen[F <: CronField](
       implicit
