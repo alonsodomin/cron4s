@@ -39,7 +39,7 @@ private[datetime] final class PredicateReducer[DateTime](adapter: DateTimeAdapte
         (field: F, node: FieldNode[F])
         (implicit expr: Expr[FieldNode, F]): Predicate[DateTime] = {
       Predicate { dt =>
-        adapter.get(dt, field).map(expr.matches(node)).getOrElse(!M.empty[DateTime](dt))
+        adapter.get(dt, field).map(expr.matches(node)).getOrElse(M.empty[DateTime](dt))
       }
     }
 

@@ -32,12 +32,19 @@ trait ExprLaws[E[_ <: CronField], F <: CronField] extends EnumeratedLaws[E[F]] {
     expr.matches(value) <-> withinRange
   }
 
+  def implicationCommutative[EE[_ <: CronField]](left: E[F], right: EE[F])(
+      implicit
+      EE: Expr[EE, F]
+  ): IsEqual[Boolean] = {
+    left.implies(right) <-> right.impliedBy(left)
+  }
+
   def implicationEquivalence[EE[_ <: CronField]](left: E[F], right: EE[F])(
       implicit
-      ev: Expr[EE, F]
-    ): IsEqual[Boolean] = {
-      (left.impliedBy(right) && right.impliedBy(left)) <-> (left.range == right.range)
-    }
+      EE: Expr[EE, F]
+  ): IsEqual[Boolean] = {
+    (left.impliedBy(right) && right.impliedBy(left)) <-> (left.range == right.range)
+  }
 
 }
 

@@ -20,6 +20,10 @@ import cron4s.datetime.{DateTimeAdapter, DateTimeCron}
 import cron4s.testkit._
 import cron4s.syntax.cron._
 
+import org.scalacheck.Prop
+
+import scalaz.std.anyVal._
+
 /**
   * Created by alonsodomin on 29/01/2017.
   */
@@ -27,8 +31,38 @@ trait DateTimeCronLaws[E, DateTime] {
   implicit def adapter: DateTimeAdapter[DateTime]
   implicit def TC: DateTimeCron[E]
 
-  def matchable(e: E, dt: DateTime): Boolean = {
-    e.next(dt).forall(e.allOf)
+  def matchAny(e: E, dt: DateTime): Prop = {
+    val fieldValues = e.supportedFields.flatMap { field =>
+      adapter.get(dt, field)
+    }
+
+    val exprRanges = e.ranges
+    val supportedRanges = adapter.supportedFields(dt).flatMap { field =>
+      exprRanges.get(field)
+    }
+
+    val existsAny = supportedRanges.zip(fieldValues).exists { case (range, value) =>
+      range.contains(value)
+    }
+
+    e.anyOf(dt) ?== existsAny
+  }
+
+  def matchAll(e: E, dt: DateTime): Prop = {
+    val fieldValues = e.supportedFields.flatMap { field =>
+      adapter.get(dt, field)
+    }
+
+    val exprRanges = e.ranges
+    val supportedRanges = adapter.supportedFields(dt).flatMap { field =>
+      exprRanges.get(field)
+    }
+
+    val containsAll = supportedRanges.zip(fieldValues).forall { case (range, value) =>
+      range.contains(value)
+    }
+
+    e.allOf(dt) ?== containsAll
   }
 
   def forwards(e: E, from: DateTime): IsEqual[Option[DateTime]] =

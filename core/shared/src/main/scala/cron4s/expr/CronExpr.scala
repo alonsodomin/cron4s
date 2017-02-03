@@ -16,8 +16,6 @@
 
 package cron4s.expr
 
-import cron4s.{CronField, CronUnit}
-
 import shapeless._
 
 import scalaz.Show
@@ -54,23 +52,6 @@ final case class CronExpr(
     * Date part of the CRON expression
     */
   lazy val datePart: DateCronExpr = DateCronExpr(daysOfMonth, months, daysOfWeek)
-
-  /**
-    * Generic field accessor. Given a CronField, this method can be used
-    * to access the expression on that given field.
-    *
-    * @param unit the CronUnit for the given field
-    * @tparam F CronField type
-    * @return field-based expression for given field
-    */
-  def field[F <: CronField](implicit unit: CronUnit[F]): FieldNode[F] = unit.field match {
-    case CronField.Second     => seconds.asInstanceOf[FieldNode[F]]
-    case CronField.Minute     => minutes.asInstanceOf[FieldNode[F]]
-    case CronField.Hour       => hours.asInstanceOf[FieldNode[F]]
-    case CronField.DayOfMonth => daysOfMonth.asInstanceOf[FieldNode[F]]
-    case CronField.Month      => months.asInstanceOf[FieldNode[F]]
-    case CronField.DayOfWeek  => daysOfWeek.asInstanceOf[FieldNode[F]]
-  }
 
   override def toString: String = Show[CronExpr].shows(this)
 
