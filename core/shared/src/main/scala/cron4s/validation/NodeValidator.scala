@@ -99,12 +99,18 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
         s"Value '${that.shows}' at field ${that.unit.field} is implied by '${impliedBy.shows}'"
 
       def verifyImplication(seen: List[EnumerableNode[F]], curr: EnumerableNode[F]): List[FieldError] = {
-        def alreadyImplied = seen.find(e => curr.impliedBy(e))
-          .map(found => FieldError(curr.unit.field, implicationErrorMsg(curr, found)))
-        def impliesOther = seen.find(_.impliedBy(curr))
-          .map(found => FieldError(curr.unit.field, implicationErrorMsg(found, curr)))
+        seen.flatMap { elem =>
+          val error = {
+            if (curr.impliedBy(elem))
+              Some(FieldError(curr.unit.field, implicationErrorMsg(curr, elem)))
+            else if (curr.implies(elem))
+              Some(FieldError(curr.unit.field, implicationErrorMsg(elem, curr)))
+            else
+              None
+          }
 
-        alreadyImplied.orElse(impliesOther).toList
+          error.toList
+        }
       }
 
       def validate(node: SeveralNode[F]): List[FieldError] = {

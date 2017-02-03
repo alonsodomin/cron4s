@@ -42,7 +42,7 @@ class SeveralNodeValidatorSpec extends SlowCron4sPropSpec with GeneratorDrivenPr
     property(s"SeveralNode[${unit.field}] with invalid members should contain the errors of its elements") {
       forAll(invalidSeveralGen[F]) { node =>
         val elemValidator = NodeValidator[EnumerableNode[F]]
-        val expectedMemberErrors = node.values.list.toList.par.flatMap(elemValidator.validate)
+        val expectedMemberErrors = node.values.list.toList.flatMap(elemValidator.validate)
         NodeValidator[SeveralNode[F]].validate(node) should contain allElementsOf expectedMemberErrors
       }
     }
