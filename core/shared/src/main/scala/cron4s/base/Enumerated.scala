@@ -24,8 +24,8 @@ import Scalaz._
   */
 trait Enumerated[A] {
 
-  def min(a: A): Int = range(a).head
-  def max(a: A): Int = range(a).last
+  def min(a: A): Int = range(a).min
+  def max(a: A): Int = range(a).max
 
   def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] = {
     if (stepSize == Int.MinValue || stepSize == Int.MaxValue) {

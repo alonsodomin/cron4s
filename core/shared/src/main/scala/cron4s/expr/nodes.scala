@@ -104,8 +104,9 @@ final case class BetweenNode[F <: CronField]
   extends Node[F] {
 
   lazy val range: IndexedSeq[Int] = {
-    if (begin.value < end.value) begin.value to end.value
-    else Vector.empty
+    val min = Math.min(begin.value, end.value)
+    val max = Math.max(begin.value, end.value)
+    min to max
   }
 
 }

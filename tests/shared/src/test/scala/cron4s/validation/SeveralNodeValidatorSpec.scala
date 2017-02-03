@@ -33,17 +33,19 @@ class SeveralNodeValidatorSpec extends SlowCron4sPropSpec with GeneratorDrivenPr
   import CronField._
 
   private[this] def check[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Unit = {
+    val severalValidator = NodeValidator[SeveralNode[F]]
+    val elemValidator = NodeValidator[EnumerableNode[F]]
+
     property(s"SeveralNode[${unit.field}] with valid components should pass validation") {
       forAll(severalGen[F]) { node =>
-        NodeValidator[SeveralNode[F]].validate(node) shouldBe List.empty[FieldError]
+        severalValidator.validate(node) shouldBe List.empty[FieldError]
       }
     }
 
     property(s"SeveralNode[${unit.field}] with invalid members should contain the errors of its elements") {
       forAll(invalidSeveralGen[F]) { node =>
-        val elemValidator = NodeValidator[EnumerableNode[F]]
         val expectedMemberErrors = node.values.list.toList.flatMap(elemValidator.validate)
-        NodeValidator[SeveralNode[F]].validate(node) should contain allElementsOf expectedMemberErrors
+        severalValidator.validate(node) should contain allElementsOf expectedMemberErrors
       }
     }
   }

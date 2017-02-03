@@ -37,7 +37,7 @@ val commonSettings = Def.settings(
 ) ++ Licensing.settings
 
 lazy val commonJvmSettings = Seq(
-  fork in Test := true
+  fork in Test := false
 )
 
 lazy val commonJsSettings = Seq(

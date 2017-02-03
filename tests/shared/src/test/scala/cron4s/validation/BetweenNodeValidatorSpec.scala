@@ -57,7 +57,7 @@ class BetweenNodeValidatorSpec extends Cron4sPropSpec
         }
         val expectedErrors = constErrors ::: rangeErrors
 
-        NodeValidator[BetweenNode[F]].validate(node) shouldBe expectedErrors
+        NodeValidator[BetweenNode[F]].validate(node) should contain allElementsOf expectedErrors
       }
     }
   }

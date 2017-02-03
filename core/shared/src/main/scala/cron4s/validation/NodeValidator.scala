@@ -75,16 +75,16 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
         val baseErrors = List(
           subValidator.validate(node.begin),
           subValidator.validate(node.end)
-        )
+        ).flatten
 
         if (node.begin.value >= node.end.value) {
           val error = FieldError(
             node.unit.field,
             s"${node.begin.value} should be less than ${node.end.value}"
           )
-          error :: baseErrors.flatten
+          error :: baseErrors
         } else {
-          baseErrors.flatten
+          baseErrors
         }
       }
   }
