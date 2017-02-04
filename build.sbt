@@ -17,6 +17,10 @@ val commonSettings = Def.settings(
   name := "cron4s",
   organization := "com.github.alonsodomin.cron4s",
   description := "CRON expression parser for Scala",
+  scmInfo := Some(ScmInfo(
+    url("https://github.com/alonsodomin/cron4s"),
+    "scm:git:git@github.com:alonsodomin/cron4s.git"
+  )),
   scalacOptions ++= Seq(
     "-language:postfixOps",
     "-feature",
@@ -25,7 +29,6 @@ val commonSettings = Def.settings(
     "-Xfuture",
     "-Xlint",
     "-Xfatal-warnings",
-    //"-Ywarn-dead-code",
     "-language:implicitConversions",
     "-language:higherKinds",
     "-language:existentials"
@@ -54,10 +57,6 @@ lazy val noPublishSettings = Seq(
 
 lazy val publishSettings = Seq(
   homepage := Some(url("https://github.com/alonsodomin/cron4s")),
-  scmInfo := Some(ScmInfo(
-    url("https://github.com/alonsodomin/cron4s"),
-    "scm:git:git@github.com:alonsodomin/cron4s.git"
-  )),
   licenses := Seq("Apache 2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
   publishMavenStyle := true,
   publishArtifact in Test := false,
@@ -126,8 +125,8 @@ lazy val docSettings = Seq(
   scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
     "-Xfatal-warnings",
     "-doc-source-url", scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
-    "-sourcepath", baseDirectory.in(LocalRootProject).value.getAbsolutePath
-    //"-diagrams"
+    "-sourcepath", baseDirectory.in(LocalRootProject).value.getAbsolutePath,
+    "-diagrams"
   )
 )
 
