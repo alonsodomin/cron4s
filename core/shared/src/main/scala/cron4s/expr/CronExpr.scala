@@ -25,14 +25,6 @@ import scalaz.Show
   *
   * @author Antonio Alonso Dominguez
   */
-object CronExpr {
-
-  implicit val CronExprShow: Show[CronExpr] = Show.shows { expr =>
-    expr.raw.map(ops.show).toList.mkString(" ")
-  }
-
-}
-
 final case class CronExpr(
     seconds: SecondsNode,
     minutes: MinutesNode,
@@ -53,6 +45,14 @@ final case class CronExpr(
     */
   lazy val datePart: DateCronExpr = DateCronExpr(daysOfMonth, months, daysOfWeek)
 
-  override def toString: String = Show[CronExpr].shows(this)
+  override lazy val toString: String =
+    raw.map(ops.show).toList.mkString(" ")
+
+}
+
+object CronExpr {
+
+  implicit val CronExprShow: Show[CronExpr] =
+    Show.showFromToString[CronExpr]
 
 }
