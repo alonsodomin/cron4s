@@ -18,18 +18,13 @@ package cron4s.validation
 
 import cron4s.{CronField, CronUnit, FieldError}
 import cron4s.expr.{EnumerableNode, SeveralNode}
-import cron4s.testkit.gen.NodeGenerators
 import cron4s.base.Enumerated
 import cron4s.testkit.SlowCron4sPropSpec
-
-import org.scalatest.Ignore
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 /**
   * Created by alonsodomin on 29/12/2016.
   */
-//@Ignore
-class SeveralNodeValidatorSpec extends SlowCron4sPropSpec with GeneratorDrivenPropertyChecks with NodeGenerators {
+class SeveralNodeValidatorSpec extends SlowCron4sPropSpec with ValidatorPropSpec {
   import CronField._
 
   private[this] def check[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Unit = {

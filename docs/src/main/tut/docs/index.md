@@ -100,29 +100,56 @@ time.minutes
 date.daysOfMonth
 ```
 
-To convert an AST back into the original string expression we simply use the `shows` method:
-
-```tut:fail
-cron.shows
+Or by means of the `field` method in `CronExpr` and passing either the cron field type or the cron unit.
+   
+```tut
+cron.field[CronField.Minute]
+cron.field(CronUnit.Minutes)
 ```
 
-Ooops! We got a compilation error because the `CronExpr` does not define a method named `shows`. To make this work
-we need to import Scalaz's `Show` syntax first:
-
-```tut:silent
-import scalaz.syntax.show._
-```
-
-And now:
+Some other basic operations at the `CronExpr` level are asking for the list of supported fields of the
+actual value ranges for all the fields in the form of a map:
 
 ```tut
-cron.shows
+cron.supportedFields
+cron.ranges
 ```
 
-#### Field expressions
+To convert an AST back into the original string expression we simply use the `toString` method:
 
-All field expressions have their own type, which is parameterized in the actual field type they
-operate on. We can access that field type definition via the `unit` of field expression:
+```tut
+cron.toString
+```
+
+### Sub-expressions
+
+All the operations possible on a `CronExpr` are also possible in any of its subexpressions (either time or date) so
+you can use them in exactly the same way. For example:
+
+```tut
+cron.supportedFields
+cron.timePart.supportedFields
+cron.datePart.supportedFields
+```
+
+`supportedFields` is not super-interesting at `CronExpr` (we expect it to support all the fields anyway) but when
+is part of the sub-expressions gives us a more particular piece of information about the actual expression itself. The
+`field` method is also interesting and justifies its signature when used with the sub-expressions:
+
+```tut
+cron.timePart.field(CronUnit.Seconds)
+cron.timePart.field[CronField.DayOfMonth]
+cron.datePart.field(CronUnit.Seconds)
+cron.datePart.field[CronField.DayOfWeek]
+```
+
+This is just a teaser, we will see much more interesting operations on cron expressions later but it's good to know
+that all operations possible on a `CronExpr`, are also possible on it's subexpressions.
+
+#### Field nodes
+
+All field nodes have their own type, which is parameterized in the actual field type they operate on. We can
+access that field type definition via the `unit` of field expression:
 
 ```tut
 cron.seconds.unit.field
@@ -141,20 +168,13 @@ Which is different than the range of values accepted by the expression at that g
 cron.seconds.range
 ```
 
-We can also obtain a field expression by means of the `field` method in `CronExpr` and passing
-either the cron field type or the cron unit.
+We can also obtain a field expression 
+
+To obtain the string representation of individual fields we use the same `toString` method:
 
 ```tut
-cron.field[CronField.Minute]
-cron.field(CronUnit.Minutes)
-```
-
-To obtain the string representation of individual fields we use the same `shows` method (remember to have the
-correct imports as shown above):
-
-```tut
-cron.seconds.shows
-cron.field[CronField.Minute].shows
+cron.seconds.toString
+cron.field[CronField.Minute].toString
 ```
 
 Other interesting operations are the ones that can be used to test if a given value matches the
@@ -176,22 +196,29 @@ import cron4s.expr._
 val eachSecond = EachNode[CronField.Second]
 val fixedSecond = ConstNode[CronField.Second](30)
 
-eachSecond.impliedBy(fixedSecond)
+fixedSecond.implies(eachSecond)
 fixedSecond.impliedBy(eachSecond)
+eachSecond.implies(fixedSecond)
 
 val minutesRange = BetweenNode[CronField.Minute](ConstNode(2), ConstNode(10))
 val fixedMinute = ConstNode[CronField.Minute](7)
 
-minutesRange.impliedBy(fixedMinute)
+fixedMinute.implies(minutesRange)
 fixedMinute.impliedBy(minutesRange)
 ```
 
-It's important to notice that when using the `impliedBy` operation, if the two expressions are not
+These two operations allways hold the following property (it looks obvious, but it's important):
+
+```tut
+assert(minutesRange.implies(fixedMinute) == fixedMinute.impliedBy(minutesRange))
+```
+
+It's important to notice that when using either the `implies` or `impliedBy` operation, if the two nodes are not
 parameterized for the same field type, the code won't compile:
  
 ```tut:fail
-minutesRange.impliedBy(eachSecond)
+minutesRange.implies(eachSecond)
 ```
 
-The error looks a bit scary, but in essence is saying to us that the `impliedBy` method was expecting
+The error looks a bit scary, but in essence is saying to us that the `implies` method was expecting
 any kind of expression as long as it was for the `Minute` field (expressed as `EE[cron4s.CronField.Minute]`).

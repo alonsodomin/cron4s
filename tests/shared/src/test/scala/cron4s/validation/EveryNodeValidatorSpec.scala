@@ -18,18 +18,14 @@ package cron4s.validation
 
 import cron4s.{CronField, CronUnit}
 import cron4s.expr._
-import cron4s.testkit.gen.NodeGenerators
 import cron4s.base.Enumerated
 import cron4s.testkit.Cron4sPropSpec
-
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 /**
   * Created by alonsodomin on 30/12/2016.
   */
 class EveryNodeValidatorSpec extends Cron4sPropSpec
-  with GeneratorDrivenPropertyChecks
-  with NodeGenerators {
+  with ValidatorPropSpec {
 
   import CronField._
 

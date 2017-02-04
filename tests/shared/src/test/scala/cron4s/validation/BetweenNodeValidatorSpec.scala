@@ -17,19 +17,15 @@
 package cron4s.validation
 
 import cron4s.{CronField, CronUnit, FieldError}
-import cron4s.expr.{BetweenNode, ConstNode}
-import cron4s.testkit.gen.NodeGenerators
 import cron4s.base.Enumerated
-import cron4s.testkit.Cron4sPropSpec
-
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import cron4s.expr.{BetweenNode, ConstNode}
+import cron4s.testkit.SlowCron4sPropSpec
 
 /**
   * Created by alonsodomin on 29/12/2016.
   */
-class BetweenNodeValidatorSpec extends Cron4sPropSpec
-  with GeneratorDrivenPropertyChecks
-  with NodeGenerators {
+class BetweenNodeValidatorSpec extends SlowCron4sPropSpec
+  with ValidatorPropSpec {
 
   import CronField._
 

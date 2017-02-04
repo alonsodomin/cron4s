@@ -41,8 +41,9 @@ trait ExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[E[F]]
   ): RuleSet = new DefaultRuleSet(
     name = "expr",
     parent = Some(enumerated),
-    "matchable" -> forAll(laws.matchable _),
-    "implication" -> forAll(laws.implicationEquivalence[EE] _)
+    "matchable"              -> forAll(laws.matchable _),
+    "implicationCommutative" -> forAll(laws.implicationCommutative[EE] _),
+    "implicationEquivalence" -> forAll(laws.implicationEquivalence[EE] _)
   )
 
 }

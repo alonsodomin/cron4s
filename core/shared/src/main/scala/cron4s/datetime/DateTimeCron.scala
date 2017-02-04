@@ -16,8 +16,9 @@
 
 package cron4s.datetime
 
-import cron4s.expr.{CronExpr, DateCronExpr, TimeCronExpr, ops}
+import cron4s.{CronField, CronUnit}
 import cron4s.base.Predicate
+import cron4s.expr._
 
 import shapeless.Coproduct
 
@@ -28,7 +29,8 @@ import scalaz.PlusEmpty
   */
 trait DateTimeCron[T] {
 
-  protected def matches[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])(implicit M: PlusEmpty[Predicate]): Predicate[DateTime]
+  protected def matches[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])
+    (implicit M: PlusEmpty[Predicate]): Predicate[DateTime]
 
   def allOf[DateTime](expr: T, adapter: DateTimeAdapter[DateTime]): Predicate[DateTime] =
     matches(expr, adapter)(Predicate.conjunction.monoidK)
@@ -36,13 +38,22 @@ trait DateTimeCron[T] {
   def anyOf[DateTime](expr: T, adapter: DateTimeAdapter[DateTime]): Predicate[DateTime] =
     matches(expr, adapter)(Predicate.disjunction.monoidK)
 
-  def next[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])(from: DateTime): Option[DateTime] = step(expr, adapter)(from, 1)
+  @inline
+  def next[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])
+                    (from: DateTime): Option[DateTime] = step(expr, adapter)(from, 1)
 
-  def prev[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])(from: DateTime): Option[DateTime] = step(expr, adapter)(from, -1)
+  @inline
+  def prev[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])
+                    (from: DateTime): Option[DateTime] = step(expr, adapter)(from, -1)
 
-  def step[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])(from: DateTime, stepSize: Int): Option[DateTime]
+  def step[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])
+                    (from: DateTime, stepSize: Int): Option[DateTime]
 
-  def ranges(expr: T): List[IndexedSeq[Int]]
+  def ranges(expr: T): Map[CronField, IndexedSeq[Int]]
+
+  def supportedFields: List[CronField]
+
+  def field[F <: CronField](expr: T)(implicit unit: CronUnit[F]): Option[FieldNode[F]]
 
 }
 
@@ -56,12 +67,14 @@ object DateTimeCron {
 
 private[datetime] class FullCron extends DateTimeCron[CronExpr] {
 
-  protected def matches[DateTime](expr: CronExpr, adapter: DateTimeAdapter[DateTime])(implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
+  protected def matches[DateTime](expr: CronExpr, adapter: DateTimeAdapter[DateTime])
+      (implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime](adapter)
     reducer.run(Coproduct[AnyCron](expr))
   }
 
-  def step[DateTime](expr: CronExpr, adapter: DateTimeAdapter[DateTime])(from: DateTime, amount: Int): Option[DateTime] = {
+  def step[DateTime](expr: CronExpr, adapter: DateTimeAdapter[DateTime])
+      (from: DateTime, amount: Int): Option[DateTime] = {
     val stepper = new Stepper[DateTime](adapter)
     for {
       (adjustedTime, carryOver) <- stepper.stepOverTime(expr.timePart.raw, from, amount)
@@ -69,39 +82,82 @@ private[datetime] class FullCron extends DateTimeCron[CronExpr] {
     } yield adjustedDate
   }
 
-  def ranges(expr: CronExpr): List[IndexedSeq[Int]] =
-    expr.raw.map(ops.range).toList
+  def ranges(expr: CronExpr): Map[CronField, IndexedSeq[Int]] =
+    supportedFields.zip(expr.raw.map(ops.range).toList).toMap
+
+  @inline
+  val supportedFields: List[CronField] = CronField.All
+
+  def field[F <: CronField](expr: CronExpr)(implicit unit: CronUnit[F]): Option[FieldNode[F]] =
+    Some(unit.field match {
+      case CronField.Second     => expr.seconds.asInstanceOf[FieldNode[F]]
+      case CronField.Minute     => expr.minutes.asInstanceOf[FieldNode[F]]
+      case CronField.Hour       => expr.hours.asInstanceOf[FieldNode[F]]
+      case CronField.DayOfMonth => expr.daysOfMonth.asInstanceOf[FieldNode[F]]
+      case CronField.Month      => expr.months.asInstanceOf[FieldNode[F]]
+      case CronField.DayOfWeek  => expr.daysOfWeek.asInstanceOf[FieldNode[F]]
+    })
+
 }
 
 private[datetime] class TimeCron extends DateTimeCron[TimeCronExpr] {
 
-  protected def matches[DateTime](expr: TimeCronExpr, adapter: DateTimeAdapter[DateTime])(implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
+  protected def matches[DateTime](expr: TimeCronExpr, adapter: DateTimeAdapter[DateTime])
+      (implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime](adapter)
     reducer.run(Coproduct[AnyCron](expr))
   }
 
-  def step[DateTime](expr: TimeCronExpr, adapter: DateTimeAdapter[DateTime])(from: DateTime, stepSize: Int): Option[DateTime] = {
+  def step[DateTime](expr: TimeCronExpr, adapter: DateTimeAdapter[DateTime])
+      (from: DateTime, stepSize: Int): Option[DateTime] = {
     val stepper = new Stepper[DateTime](adapter)
     stepper.stepOverTime(expr.raw, from, stepSize).map(_._1)
   }
 
-  def ranges(expr: TimeCronExpr): List[IndexedSeq[Int]] =
-    expr.raw.map(ops.range).toList
+  def ranges(expr: TimeCronExpr): Map[CronField, IndexedSeq[Int]] =
+    supportedFields.zip(expr.raw.map(ops.range).toList).toMap
+
+  @inline
+  val supportedFields: List[CronField] =
+    List(CronField.Second, CronField.Minute, CronField.Hour)
+
+  def field[F <: CronField](expr: TimeCronExpr)(implicit unit: CronUnit[F]): Option[FieldNode[F]] =
+    unit.field match {
+      case CronField.Second => Some(expr.seconds.asInstanceOf[FieldNode[F]])
+      case CronField.Minute => Some(expr.minutes.asInstanceOf[FieldNode[F]])
+      case CronField.Hour   => Some(expr.hours.asInstanceOf[FieldNode[F]])
+      case _                => None
+    }
+
 }
 
 private[datetime] class DateCron extends DateTimeCron[DateCronExpr] {
 
-  protected def matches[DateTime](expr: DateCronExpr, adapter: DateTimeAdapter[DateTime])(implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
+  protected def matches[DateTime](expr: DateCronExpr, adapter: DateTimeAdapter[DateTime])
+      (implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime](adapter)
     reducer.run(Coproduct[AnyCron](expr))
   }
 
-  def step[DateTime](expr: DateCronExpr, adapter: DateTimeAdapter[DateTime])(from: DateTime, stepSize: Int): Option[DateTime] = {
+  def step[DateTime](expr: DateCronExpr, adapter: DateTimeAdapter[DateTime])
+      (from: DateTime, stepSize: Int): Option[DateTime] = {
     val stepper = new Stepper[DateTime](adapter)
     stepper.stepOverDate(expr.raw, from, stepSize)(allOf(expr, adapter)).map(_._1)
   }
 
-  def ranges(expr: DateCronExpr): List[IndexedSeq[Int]] =
-    expr.raw.map(ops.range).toList
+  def ranges(expr: DateCronExpr): Map[CronField, IndexedSeq[Int]] =
+    supportedFields.zip(expr.raw.map(ops.range).toList).toMap
+
+  @inline
+  val supportedFields: List[CronField] =
+    List(CronField.DayOfMonth, CronField.Month, CronField.DayOfWeek)
+
+  def field[F <: CronField](expr: DateCronExpr)(implicit unit: CronUnit[F]): Option[FieldNode[F]] =
+    unit.field match {
+      case CronField.DayOfMonth => Some(expr.daysOfMonth.asInstanceOf[FieldNode[F]])
+      case CronField.Month      => Some(expr.months.asInstanceOf[FieldNode[F]])
+      case CronField.DayOfWeek  => Some(expr.daysOfWeek.asInstanceOf[FieldNode[F]])
+      case _                    => None
+    }
 
 }

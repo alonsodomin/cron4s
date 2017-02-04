@@ -21,11 +21,10 @@ import cron4s.expr._
 import cron4s.testkit.Cron4sPropSpec
 import cron4s.testkit.gen._
 
-import org.scalatest.prop._
 import org.scalacheck._
 
 class EachNodeValidatorSpec extends Cron4sPropSpec
-  with GeneratorDrivenPropertyChecks
+  with ValidatorPropSpec
   with ArbitraryEachNode {
 
   import CronField._

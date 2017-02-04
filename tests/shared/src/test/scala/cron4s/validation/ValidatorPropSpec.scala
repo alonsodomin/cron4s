@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package cron4s.lib.js
+package cron4s.validation
 
-import cron4s.testkit.CronDateTimeTestKit
-import org.scalatest.Ignore
-
-import scala.scalajs.js.Date
+import cron4s.testkit.gen.NodeGenerators
+import org.scalatest.{Matchers, PropSpecLike}
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 /**
-  * Created by alonsodomin on 29/08/2016.
+  * Created by alonsodomin on 04/02/2017.
   */
-class JSCronDateTimeSpec extends CronDateTimeTestKit[Date] with JSTestBase
+trait ValidatorPropSpec extends GeneratorDrivenPropertyChecks
+  with Matchers
+  with NodeGenerators { this: PropSpecLike => }

@@ -25,7 +25,7 @@ Now the `next` operation is able to return to us the next moment in time accordi
 to the CRON expression:
 
 ```tut
-val now = LocalDateTime.of(2016, 12, 1, 0, 4, 9)
+val now = LocalDateTime.of(2016, 12, 1, 0, 4, 34)
 cron.next(now)
 ```
 
@@ -35,6 +35,13 @@ And of course, we can also get the previous moment in time to a given one:
 cron.prev(now)
 ```
 
+Let's try this with the sub-expressions too:
+
+```tut
+cron.datePart.next(now)
+cron.timePart.prev(now)
+```
+
 If for some reason we do not want the next one, but the following to the next one,
 then we could recursively invoke the `next` operation in any subsequent generated
 time; or we can get it more efficiently using the operation `step` and telling it
@@ -42,6 +49,8 @@ how big is the step size that we want to make:
 
 ```tut
 cron.step(now, 2)
+cron.timePart.step(now, 4)
+cron.datePart.step(now, -3)
 ```
 
 ### Individual fields

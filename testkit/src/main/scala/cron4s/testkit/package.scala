@@ -52,7 +52,7 @@ package object testkit {
     def ?>=(rhs: A): Prop = Ops.run("?>=")(lhs, rhs)(ev.gteqv)
   }*/
 
-  implicit class BooleanOps[A](lhs: Boolean)(implicit pp: Boolean => Pretty) {
+  implicit final class BooleanOps[A](lhs: Boolean)(implicit pp: Boolean => Pretty) {
     def ?&&(rhs: Boolean): Prop = Ops.run("?&&")(lhs, rhs)(_ && _)
     def ?||(rhs: Boolean): Prop = Ops.run("?||")(lhs, rhs)(_ || _)
   }
