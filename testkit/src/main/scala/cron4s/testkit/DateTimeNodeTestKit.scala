@@ -18,20 +18,16 @@ package cron4s.testkit
 
 import cron4s._
 import cron4s.expr._
-import cron4s.datetime.DateTimeAdapter
+import cron4s.datetime.IsDateTime
 import cron4s.testkit.discipline.DateTimeNodeTests
 import cron4s.testkit.gen._
-
-import org.scalatest.FunSuite
-
-import org.typelevel.discipline.scalatest.Discipline
 
 import scalaz.Equal
 
 /**
   * Created by alonsodomin on 04/08/2016.
   */
-abstract class DateTimeNodeTestKit[DateTime : DateTimeAdapter : Equal]
+abstract class DateTimeNodeTestKit[DateTime : IsDateTime : Equal]
   extends Cron4sLawSuite with DateTimeTestKitBase[DateTime] {
   import CronField._
 

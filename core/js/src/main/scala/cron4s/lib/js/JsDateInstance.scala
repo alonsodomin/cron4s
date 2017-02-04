@@ -18,14 +18,14 @@ package cron4s.lib.js
 
 import cron4s.CronField
 import cron4s.CronField._
-import cron4s.datetime.DateTimeAdapter
+import cron4s.datetime.IsDateTime
 
 import scala.scalajs.js.Date
 
 /**
   * Created by alonsodomin on 30/01/2017.
   */
-private[js] final class JsDateAdapter extends DateTimeAdapter[Date] {
+private[js] final class JsDateInstance extends IsDateTime[Date] {
 
   @inline
   override def supportedFields(dateTime: Date): List[CronField] = CronField.All

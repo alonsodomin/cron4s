@@ -29,7 +29,7 @@ import scalaz.std.list._
 /**
   * Created by domingueza on 29/07/2016.
   */
-private[datetime] final class PredicateReducer[DateTime](adapter: DateTimeAdapter[DateTime])
+private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime])
     (implicit M: PlusEmpty[Predicate]) {
 
   object asPredicate extends Poly1 {
@@ -37,9 +37,9 @@ private[datetime] final class PredicateReducer[DateTime](adapter: DateTimeAdapte
 
     private[this] def predicateFor[F <: CronField]
         (field: F, node: FieldNode[F])
-        (implicit expr: Expr[FieldNode, F]): Predicate[DateTime] = {
+        (implicit expr: FieldExpr[FieldNode, F]): Predicate[DateTime] = {
       Predicate { dt =>
-        adapter.get(dt, field).map(expr.matches(node)).getOrElse(M.empty[DateTime](dt))
+        DT.get(dt, field).map(expr.matches(node)).getOrElse(M.empty[DateTime](dt))
       }
     }
 

@@ -23,7 +23,7 @@ import cron4s.CronField
   *
   * @author Antonio Alonso Dominguez
   */
-trait DateTimeAdapter[DateTime] {
+trait IsDateTime[DateTime] {
 
   /**
     * List of the fields supported by this date time representation
@@ -56,6 +56,6 @@ trait DateTimeAdapter[DateTime] {
 
 }
 
-object DateTimeAdapter {
-  @inline def apply[DateTime](implicit adapter: DateTimeAdapter[DateTime]): DateTimeAdapter[DateTime] = adapter
+object IsDateTime {
+  @inline def apply[DateTime](implicit ev: IsDateTime[DateTime]): IsDateTime[DateTime] = ev
 }

@@ -16,21 +16,17 @@
 
 package cron4s.testkit
 
-import cron4s.datetime.DateTimeAdapter
+import cron4s.datetime.IsDateTime
 import cron4s.CronField
-import cron4s.testkit.discipline.DateTimeAdapterTests
+import cron4s.testkit.discipline.IsDateTimeTests
 import cron4s.testkit.gen.{ArbitraryCronField, ArbitraryCronFieldValues}
-
-import org.scalatest.FunSuite
-
-import org.typelevel.discipline.scalatest.Discipline
 
 import scalaz.Equal
 
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-abstract class DateTimeAdapterTestKit[DateTime : DateTimeAdapter : Equal](name: String)
+abstract class IsDateTimeTestKit[DateTime : IsDateTime : Equal](name: String)
   extends Cron4sLawSuite
     with ArbitraryCronFieldValues
     with ArbitraryCronField
@@ -38,11 +34,11 @@ abstract class DateTimeAdapterTestKit[DateTime : DateTimeAdapter : Equal](name: 
 
   import CronField._
 
-  checkAll(s"DateTimeAdapter[$name, Second]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Second])
-  checkAll(s"DateTimeAdapter[$name, Minute]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Minute])
-  checkAll(s"DateTimeAdapter[$name, Hour]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Hour])
-  checkAll(s"DateTimeAdapter[$name, DayOfMonth]", DateTimeAdapterTests[DateTime].dateTimeAdapter[DayOfMonth])
-  checkAll(s"DateTimeAdapter[$name, Month]", DateTimeAdapterTests[DateTime].dateTimeAdapter[Month])
-  checkAll(s"DateTimeAdapter[$name, DayOfWeek]", DateTimeAdapterTests[DateTime].dateTimeAdapter[DayOfWeek])
+  checkAll(s"IsDateTime[$name, Second]", IsDateTimeTests[DateTime].dateTime[Second])
+  checkAll(s"IsDateTime[$name, Minute]", IsDateTimeTests[DateTime].dateTime[Minute])
+  checkAll(s"IsDateTime[$name, Hour]", IsDateTimeTests[DateTime].dateTime[Hour])
+  checkAll(s"IsDateTime[$name, DayOfMonth]", IsDateTimeTests[DateTime].dateTime[DayOfMonth])
+  checkAll(s"IsDateTime[$name, Month]", IsDateTimeTests[DateTime].dateTime[Month])
+  checkAll(s"IsDateTime[$name, DayOfWeek]", IsDateTimeTests[DateTime].dateTime[DayOfWeek])
 
 }

@@ -18,7 +18,7 @@ package cron4s.expr
 
 import cron4s.CronField._
 import cron4s.testkit.Cron4sLawSuite
-import cron4s.testkit.discipline.ExprTests
+import cron4s.testkit.discipline.FieldExprTests
 import cron4s.testkit.gen.ArbitraryBetweenNode
 
 /**
@@ -26,11 +26,11 @@ import cron4s.testkit.gen.ArbitraryBetweenNode
   */
 class BetweenSpec extends Cron4sLawSuite with ArbitraryBetweenNode {
 
-  checkAll("Between[Second]", ExprTests[BetweenNode, Second].expr)
-  checkAll("Between[Minute]", ExprTests[BetweenNode, Minute].expr)
-  checkAll("Between[Hour]", ExprTests[BetweenNode, Hour].expr)
-  checkAll("Between[DayOfMonth]", ExprTests[BetweenNode, DayOfMonth].expr)
-  checkAll("Between[Month]", ExprTests[BetweenNode, Month].expr)
-  checkAll("Between[DayOfWeek]", ExprTests[BetweenNode, DayOfWeek].expr)
+  checkAll("Between[Second]", FieldExprTests[BetweenNode, Second].expr)
+  checkAll("Between[Minute]", FieldExprTests[BetweenNode, Minute].expr)
+  checkAll("Between[Hour]", FieldExprTests[BetweenNode, Hour].expr)
+  checkAll("Between[DayOfMonth]", FieldExprTests[BetweenNode, DayOfMonth].expr)
+  checkAll("Between[Month]", FieldExprTests[BetweenNode, Month].expr)
+  checkAll("Between[DayOfWeek]", FieldExprTests[BetweenNode, DayOfWeek].expr)
 
 }

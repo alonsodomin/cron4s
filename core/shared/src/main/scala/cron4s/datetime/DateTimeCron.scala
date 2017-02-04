@@ -29,24 +29,24 @@ import scalaz.PlusEmpty
   */
 trait DateTimeCron[T] {
 
-  protected def matches[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])
+  protected def matches[DateTime](expr: T, dt: IsDateTime[DateTime])
     (implicit M: PlusEmpty[Predicate]): Predicate[DateTime]
 
-  def allOf[DateTime](expr: T, adapter: DateTimeAdapter[DateTime]): Predicate[DateTime] =
-    matches(expr, adapter)(Predicate.conjunction.monoidK)
+  def allOf[DateTime](expr: T, dt: IsDateTime[DateTime]): Predicate[DateTime] =
+    matches(expr, dt)(Predicate.conjunction.monoidK)
 
-  def anyOf[DateTime](expr: T, adapter: DateTimeAdapter[DateTime]): Predicate[DateTime] =
-    matches(expr, adapter)(Predicate.disjunction.monoidK)
-
-  @inline
-  def next[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])
-                    (from: DateTime): Option[DateTime] = step(expr, adapter)(from, 1)
+  def anyOf[DateTime](expr: T, dt: IsDateTime[DateTime]): Predicate[DateTime] =
+    matches(expr, dt)(Predicate.disjunction.monoidK)
 
   @inline
-  def prev[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])
-                    (from: DateTime): Option[DateTime] = step(expr, adapter)(from, -1)
+  def next[DateTime](expr: T, dt: IsDateTime[DateTime])
+                    (from: DateTime): Option[DateTime] = step(expr, dt)(from, 1)
 
-  def step[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])
+  @inline
+  def prev[DateTime](expr: T, dt: IsDateTime[DateTime])
+                    (from: DateTime): Option[DateTime] = step(expr, dt)(from, -1)
+
+  def step[DateTime](expr: T, dt: IsDateTime[DateTime])
                     (from: DateTime, stepSize: Int): Option[DateTime]
 
   def ranges(expr: T): Map[CronField, IndexedSeq[Int]]
@@ -67,18 +67,18 @@ object DateTimeCron {
 
 private[datetime] class FullCron extends DateTimeCron[CronExpr] {
 
-  protected def matches[DateTime](expr: CronExpr, adapter: DateTimeAdapter[DateTime])
+  protected def matches[DateTime](expr: CronExpr, dt: IsDateTime[DateTime])
       (implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
-    val reducer = new PredicateReducer[DateTime](adapter)
+    val reducer = new PredicateReducer[DateTime](dt)
     reducer.run(Coproduct[AnyCron](expr))
   }
 
-  def step[DateTime](expr: CronExpr, adapter: DateTimeAdapter[DateTime])
+  def step[DateTime](expr: CronExpr, dt: IsDateTime[DateTime])
       (from: DateTime, amount: Int): Option[DateTime] = {
-    val stepper = new Stepper[DateTime](adapter)
+    val stepper = new Stepper[DateTime](dt)
     for {
       (adjustedTime, carryOver) <- stepper.stepOverTime(expr.timePart.raw, from, amount)
-      (adjustedDate, _)         <- stepper.stepOverDate(expr.datePart.raw, adjustedTime, carryOver)(allOf(expr, adapter))
+      (adjustedDate, _)         <- stepper.stepOverDate(expr.datePart.raw, adjustedTime, carryOver)(allOf(expr, dt))
     } yield adjustedDate
   }
 
@@ -102,15 +102,15 @@ private[datetime] class FullCron extends DateTimeCron[CronExpr] {
 
 private[datetime] class TimeCron extends DateTimeCron[TimeCronExpr] {
 
-  protected def matches[DateTime](expr: TimeCronExpr, adapter: DateTimeAdapter[DateTime])
+  protected def matches[DateTime](expr: TimeCronExpr, dt: IsDateTime[DateTime])
       (implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
-    val reducer = new PredicateReducer[DateTime](adapter)
+    val reducer = new PredicateReducer[DateTime](dt)
     reducer.run(Coproduct[AnyCron](expr))
   }
 
-  def step[DateTime](expr: TimeCronExpr, adapter: DateTimeAdapter[DateTime])
+  def step[DateTime](expr: TimeCronExpr, dt: IsDateTime[DateTime])
       (from: DateTime, stepSize: Int): Option[DateTime] = {
-    val stepper = new Stepper[DateTime](adapter)
+    val stepper = new Stepper[DateTime](dt)
     stepper.stepOverTime(expr.raw, from, stepSize).map(_._1)
   }
 
@@ -133,16 +133,16 @@ private[datetime] class TimeCron extends DateTimeCron[TimeCronExpr] {
 
 private[datetime] class DateCron extends DateTimeCron[DateCronExpr] {
 
-  protected def matches[DateTime](expr: DateCronExpr, adapter: DateTimeAdapter[DateTime])
+  protected def matches[DateTime](expr: DateCronExpr, dt: IsDateTime[DateTime])
       (implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
-    val reducer = new PredicateReducer[DateTime](adapter)
+    val reducer = new PredicateReducer[DateTime](dt)
     reducer.run(Coproduct[AnyCron](expr))
   }
 
-  def step[DateTime](expr: DateCronExpr, adapter: DateTimeAdapter[DateTime])
+  def step[DateTime](expr: DateCronExpr, dt: IsDateTime[DateTime])
       (from: DateTime, stepSize: Int): Option[DateTime] = {
-    val stepper = new Stepper[DateTime](adapter)
-    stepper.stepOverDate(expr.raw, from, stepSize)(allOf(expr, adapter)).map(_._1)
+    val stepper = new Stepper[DateTime](dt)
+    stepper.stepOverDate(expr.raw, from, stepSize)(allOf(expr, dt)).map(_._1)
   }
 
   def ranges(expr: DateCronExpr): Map[CronField, IndexedSeq[Int]] =

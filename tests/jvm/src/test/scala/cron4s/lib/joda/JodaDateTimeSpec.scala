@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package cron4s.lib.js
+package cron4s.lib.joda
 
-import cron4s.testkit.DateTimeAdapterTestKit
-
-import scala.scalajs.js.Date
+import cron4s.testkit.IsDateTimeTestKit
+import org.joda.time.DateTime
 
 /**
-  * Created by alonsodomin on 02/09/2016.
+  * Created by alonsodomin on 04/02/2017.
   */
-class JSDateAdapterSpec extends DateTimeAdapterTestKit[Date]("JSDate") with JSTestBase
+class JodaDateTimeSpec extends IsDateTimeTestKit[DateTime]("DateTime") with JodaTestBase

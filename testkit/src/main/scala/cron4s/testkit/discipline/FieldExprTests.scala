@@ -17,8 +17,8 @@
 package cron4s.testkit.discipline
 
 import cron4s.CronField
-import cron4s.expr.Expr
-import cron4s.testkit.laws.ExprLaws
+import cron4s.expr.FieldExpr
+import cron4s.testkit.laws.FieldExprLaws
 
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
@@ -29,15 +29,15 @@ import Scalaz._
 /**
   * Created by alonsodomin on 28/08/2016.
   */
-trait ExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[E[F]] {
-  def laws: ExprLaws[E, F]
+trait FieldExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[E[F]] {
+  def laws: FieldExprLaws[E, F]
 
   def expr[EE[_ <: CronField]](
     implicit
     arbEF: Arbitrary[E[F]],
     arbEEF: Arbitrary[EE[F]],
     arbFrom: Arbitrary[Int],
-    e: Expr[EE, F]
+    e: FieldExpr[EE, F]
   ): RuleSet = new DefaultRuleSet(
     name = "expr",
     parent = Some(enumerated),
@@ -48,7 +48,7 @@ trait ExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[E[F]]
 
 }
 
-object ExprTests {
-  def apply[E[_ <: CronField], F <: CronField](implicit ev: Expr[E, F]): ExprTests[E, F] =
-    new ExprTests[E, F] { val laws = ExprLaws[E, F] }
+object FieldExprTests {
+  def apply[E[_ <: CronField], F <: CronField](implicit ev: FieldExpr[E, F]): FieldExprTests[E, F] =
+    new FieldExprTests[E, F] { val laws = FieldExprLaws[E, F] }
 }

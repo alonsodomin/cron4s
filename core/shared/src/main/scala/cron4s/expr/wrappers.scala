@@ -31,7 +31,7 @@ final class FieldNode[F <: CronField](private[cron4s] val raw: RawFieldNode[F]) 
 }
 
 object FieldNode {
-  implicit def fieldNodeInstance[F <: CronField]: Expr[FieldNode, F] = new Expr[FieldNode, F] {
+  implicit def fieldNodeInstance[F <: CronField]: FieldExpr[FieldNode, F] = new FieldExpr[FieldNode, F] {
     def matches(node: FieldNode[F]): Predicate[Int] =
       node.raw.fold(ops.matches)
 
@@ -39,7 +39,7 @@ object FieldNode {
       node.raw.fold(ops.range)
 
     def implies[EE[_ <: CronField]](node: FieldNode[F])(ee: EE[F])
-      (implicit EE: Expr[EE, F]): Boolean = node.raw match {
+      (implicit EE: FieldExpr[EE, F]): Boolean = node.raw match {
         case Inl(each)                      => each.implies(ee)
         case Inr(Inl(const))                => const.implies(ee)
         case Inr(Inr(Inl(between)))         => between.implies(ee)
@@ -64,13 +64,13 @@ final class EnumerableNode[F <: CronField](val raw: RawEnumerableNode[F]) extend
 
 object EnumerableNode {
 
-  implicit def enumerableNodeInstance[F <: CronField]: Expr[EnumerableNode, F] =
-    new Expr[EnumerableNode, F] {
+  implicit def enumerableNodeInstance[F <: CronField]: FieldExpr[EnumerableNode, F] =
+    new FieldExpr[EnumerableNode, F] {
       def matches(node: EnumerableNode[F]): Predicate[Int] =
         node.raw.fold(ops.matches)
 
       def implies[EE[_ <: CronField]](node: EnumerableNode[F])(ee: EE[F])
-        (implicit EE: Expr[EE, F]): Boolean = {
+        (implicit EE: FieldExpr[EE, F]): Boolean = {
           node.raw match {
             case Inl(const)        => const.implies(ee)
             case Inr(Inl(between)) => between.implies(ee)
@@ -97,13 +97,13 @@ final class DivisibleNode[F <: CronField](val raw: RawDivisibleNode[F]) extends 
 }
 
 object DivisibleNode {
-  implicit def divisibleNodeInstance[F <: CronField]: Expr[DivisibleNode, F] =
-    new Expr[DivisibleNode, F] {
+  implicit def divisibleNodeInstance[F <: CronField]: FieldExpr[DivisibleNode, F] =
+    new FieldExpr[DivisibleNode, F] {
       def matches(node: DivisibleNode[F]): Predicate[Int] =
         node.raw.fold(ops.matches)
 
       def implies[EE[_ <: CronField]](node: DivisibleNode[F])(ee: EE[F])
-        (implicit EE: Expr[EE, F]): Boolean = node.raw match {
+        (implicit EE: FieldExpr[EE, F]): Boolean = node.raw match {
           case Inl(each)              => each.implies(ee)
           case Inr(Inl(between))      => between.implies(ee)
           case Inr(Inr(Inl(several))) => several.implies(ee)

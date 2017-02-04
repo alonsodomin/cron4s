@@ -16,7 +16,7 @@
 
 package cron4s.testkit.discipline
 
-import cron4s.datetime.{DateTimeAdapter, DateTimeCron}
+import cron4s.datetime.{IsDateTime, DateTimeCron}
 import cron4s.testkit.laws.DateTimeCronLaws
 
 import org.scalacheck.Prop._
@@ -50,7 +50,7 @@ trait DateTimeCronTests[E, DateTime] extends Laws {
 
 object DateTimeCronTests {
   def apply[E, DateTime](implicit
-    adapter: DateTimeAdapter[DateTime],
+    dtEv: IsDateTime[DateTime],
     cron: DateTimeCron[E]
   ): DateTimeCronTests[E, DateTime] =
     new DateTimeCronTests[E, DateTime] {

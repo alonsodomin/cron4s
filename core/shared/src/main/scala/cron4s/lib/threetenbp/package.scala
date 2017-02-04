@@ -16,7 +16,7 @@
 
 package cron4s.lib
 
-import cron4s.datetime.DateTimeAdapter
+import cron4s.datetime.IsDateTime
 
 import org.threeten.bp._
 import org.threeten.bp.temporal.Temporal
@@ -34,6 +34,6 @@ package object threetenbp {
   implicit val zonedDateTimeEq  : Equal[ZonedDateTime]  = Equal.equalA[ZonedDateTime]
   implicit val offsetDateTimeEq : Equal[OffsetDateTime] = Equal.equalA[OffsetDateTime]
 
-  implicit def jsr310Adapter[DT <: Temporal]: DateTimeAdapter[DT] = new JSR310Adapter[DT]
+  implicit def jsr310Instance[DT <: Temporal]: IsDateTime[DT] = new JSR310Instance[DT]
 
 }

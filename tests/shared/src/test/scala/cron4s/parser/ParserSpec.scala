@@ -19,7 +19,7 @@ package cron4s.parser
 import cron4s._
 import cron4s.expr._
 import cron4s.testkit.gen.{ArbitraryEachNode, NodeGenerators}
-import cron4s.syntax.expr._
+import cron4s.syntax.field._
 import cron4s.testkit.Cron4sPropSpec
 
 import fastparse.all._

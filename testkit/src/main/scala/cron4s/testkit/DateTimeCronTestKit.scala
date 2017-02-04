@@ -18,7 +18,7 @@ package cron4s.testkit
 
 import catalysts.Platform
 
-import cron4s.datetime.DateTimeAdapter
+import cron4s.datetime.IsDateTime
 import cron4s.expr.{CronExpr, DateCronExpr, TimeCronExpr}
 import cron4s.testkit.discipline.DateTimeCronTests
 import cron4s.testkit.gen.CronGenerators
@@ -28,7 +28,7 @@ import scalaz.Equal
 /**
   * Created by alonsodomin on 29/01/2017.
   */
-abstract class DateTimeCronTestKit[DateTime : DateTimeAdapter : Equal] extends SlowCron4sLawSuite
+abstract class DateTimeCronTestKit[DateTime : IsDateTime : Equal] extends SlowCron4sLawSuite
   with DateTimeTestKitBase[DateTime]
   with CronGenerators {
 

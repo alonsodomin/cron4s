@@ -16,7 +16,7 @@
 
 package cron4s.testkit.laws
 
-import cron4s.datetime.{DateTimeAdapter, DateTimeCron}
+import cron4s.datetime.{IsDateTime, DateTimeCron}
 import cron4s.testkit._
 import cron4s.syntax.cron._
 
@@ -28,16 +28,16 @@ import scalaz.std.anyVal._
   * Created by alonsodomin on 29/01/2017.
   */
 trait DateTimeCronLaws[E, DateTime] {
-  implicit def adapter: DateTimeAdapter[DateTime]
+  implicit def DT: IsDateTime[DateTime]
   implicit def TC: DateTimeCron[E]
 
   def matchAny(e: E, dt: DateTime): Prop = {
     val fieldValues = e.supportedFields.flatMap { field =>
-      adapter.get(dt, field)
+      DT.get(dt, field)
     }
 
     val exprRanges = e.ranges
-    val supportedRanges = adapter.supportedFields(dt).flatMap { field =>
+    val supportedRanges = DT.supportedFields(dt).flatMap { field =>
       exprRanges.get(field)
     }
 
@@ -50,11 +50,11 @@ trait DateTimeCronLaws[E, DateTime] {
 
   def matchAll(e: E, dt: DateTime): Prop = {
     val fieldValues = e.supportedFields.flatMap { field =>
-      adapter.get(dt, field)
+      DT.get(dt, field)
     }
 
     val exprRanges = e.ranges
-    val supportedRanges = adapter.supportedFields(dt).flatMap { field =>
+    val supportedRanges = DT.supportedFields(dt).flatMap { field =>
       exprRanges.get(field)
     }
 
@@ -76,11 +76,11 @@ trait DateTimeCronLaws[E, DateTime] {
 object DateTimeCronLaws {
 
   def apply[E, DateTime](implicit
-    adapter0: DateTimeAdapter[DateTime],
+    dt0: IsDateTime[DateTime],
     TC0: DateTimeCron[E]
   ): DateTimeCronLaws[E, DateTime] =
     new DateTimeCronLaws[E, DateTime] {
-      implicit val adapter = adapter0
+      implicit val DT = dt0
       implicit val TC = TC0
     }
 

@@ -19,7 +19,7 @@ package cron4s.lib
 import java.time._
 import java.time.temporal.Temporal
 
-import cron4s.datetime.DateTimeAdapter
+import cron4s.datetime.IsDateTime
 
 import scalaz.Equal
 
@@ -34,6 +34,6 @@ package object javatime {
   implicit lazy val javaZonedDateTimeEq  : Equal[ZonedDateTime]  = Equal.equalA[ZonedDateTime]
   implicit lazy val javaOffsetDateTimeEq : Equal[OffsetDateTime] = Equal.equalA[OffsetDateTime]
 
-  implicit def javaTimeAdapter[DT <: Temporal]: DateTimeAdapter[DT] = new JavaTimeAdapter[DT]
+  implicit def javaTemporalInstance[DT <: Temporal]: IsDateTime[DT] = new JavaTemporalInstance[DT]
 
 }

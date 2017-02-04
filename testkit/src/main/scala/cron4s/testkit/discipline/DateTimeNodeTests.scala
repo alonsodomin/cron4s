@@ -17,8 +17,8 @@
 package cron4s.testkit.discipline
 
 import cron4s.CronField
-import cron4s.datetime.DateTimeAdapter
-import cron4s.expr.Expr
+import cron4s.datetime.IsDateTime
+import cron4s.expr.FieldExpr
 import cron4s.testkit.laws.DateTimeNodeLaws
 
 import org.scalacheck.Prop._
@@ -35,10 +35,10 @@ trait DateTimeNodeTests[E[_ <: CronField], F <: CronField, DateTime] extends Law
   def laws: DateTimeNodeLaws[E, F, DateTime]
 
   def dateTime(implicit
-    arbNode: Arbitrary[E[F]],
-    arbDateTime: Arbitrary[DateTime],
-    expr: Expr[E, F],
-    dateTimeEq: Equal[DateTime]
+               arbNode: Arbitrary[E[F]],
+               arbDateTime: Arbitrary[DateTime],
+               expr: FieldExpr[E, F],
+               dateTimeEq: Equal[DateTime]
   ): RuleSet = new DefaultRuleSet(
     name = "dateTimeNode",
     parent = None,
@@ -52,8 +52,8 @@ trait DateTimeNodeTests[E[_ <: CronField], F <: CronField, DateTime] extends Law
 object DateTimeNodeTests {
 
   def apply[E[_ <: CronField], F <: CronField, DateTime](implicit
-    adapter: DateTimeAdapter[DateTime],
-    expr: Expr[E, F]
+    dtEv: IsDateTime[DateTime],
+    expr: FieldExpr[E, F]
   ): DateTimeNodeTests[E, F, DateTime] =
     new DateTimeNodeTests[E, F, DateTime] {
       val laws = DateTimeNodeLaws[E, F, DateTime]

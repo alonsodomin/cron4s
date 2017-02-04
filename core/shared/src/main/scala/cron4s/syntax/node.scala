@@ -17,21 +17,21 @@
 package cron4s.syntax
 
 import cron4s.CronField
-import cron4s.datetime.{DateTimeAdapter, DateTimeNode}
+import cron4s.datetime.{IsDateTime, DateTimeNode}
 
 private[syntax] class DateTimeNodeOps[E[_ <: CronField], F <: CronField](self: E[F], tc: DateTimeNode[E, F]) {
 
-  def matchesIn[DateTime](dt: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Boolean =
-    tc.matchesIn(self, adapter)(dt)
+  def matchesIn[DateTime](dt: DateTime)(implicit DT: IsDateTime[DateTime]): Boolean =
+    tc.matchesIn(self, DT)(dt)
 
-  def nextIn[DateTime](dateTime: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] =
-    tc.nextIn(self, adapter)(dateTime)
+  def nextIn[DateTime](dateTime: DateTime)(implicit DT: IsDateTime[DateTime]): Option[DateTime] =
+    tc.nextIn(self, DT)(dateTime)
 
-  def prevIn[DateTime](dateTime: DateTime)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] =
-    tc.prevIn(self, adapter)(dateTime)
+  def prevIn[DateTime](dateTime: DateTime)(implicit DT: IsDateTime[DateTime]): Option[DateTime] =
+    tc.prevIn(self, DT)(dateTime)
 
-  def stepIn[DateTime](dateTime: DateTime, step: Int)(implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] =
-    tc.stepIn(self, adapter)(dateTime, step)
+  def stepIn[DateTime](dateTime: DateTime, step: Int)(implicit DT: IsDateTime[DateTime]): Option[DateTime] =
+    tc.stepIn(self, DT)(dateTime, step)
 
 }
 

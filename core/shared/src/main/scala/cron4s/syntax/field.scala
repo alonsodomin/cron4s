@@ -17,7 +17,7 @@
 package cron4s.syntax
 
 import cron4s.{CronField, CronUnit}
-import cron4s.expr.Expr
+import cron4s.expr.FieldExpr
 import cron4s.base.Predicate
 
 import scala.language.higherKinds
@@ -25,28 +25,28 @@ import scala.language.higherKinds
 /**
   * Created by alonsodomin on 25/08/2016.
   */
-private[syntax] class ExprOps[E[_ <: CronField], F <: CronField](self: E[F], tc: Expr[E, F])
+private[syntax] class FieldExprOps[E[_ <: CronField], F <: CronField](self: E[F], tc: FieldExpr[E, F])
   extends EnumeratedOps[E[F]](self, tc) {
 
   def matches: Predicate[Int] = tc.matches(self)
 
-  def implies[EE[_ <: CronField]](ee: EE[F])(implicit EE: Expr[EE, F]): Boolean =
+  def implies[EE[_ <: CronField]](ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
     tc.implies(self)(ee)
 
-  def impliedBy[EE[_ <: CronField]](ee: EE[F])(implicit EE: Expr[EE, F]): Boolean =
+  def impliedBy[EE[_ <: CronField]](ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
     tc.impliedBy(self)(ee)
 
   def unit: CronUnit[F] = tc.unit(self)
 
 }
 
-private[syntax] trait ExprSyntax extends EnumeratedSyntax {
+private[syntax] trait FieldExprSyntax extends EnumeratedSyntax {
 
   implicit def toExprOps[E[_ <: CronField], F <: CronField]
       (target: E[F])
-      (implicit tc: Expr[E, F]): ExprOps[E, F] =
-    new ExprOps[E, F](target, tc)
+      (implicit tc: FieldExpr[E, F]): FieldExprOps[E, F] =
+    new FieldExprOps[E, F](target, tc)
 
 }
 
-object expr extends ExprSyntax
+object field extends FieldExprSyntax
