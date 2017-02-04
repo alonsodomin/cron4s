@@ -36,12 +36,10 @@ install:
   - gem install jekyll -v 3.2.1
 
 script:
-  #- sbt ++$TRAVIS_SCALA_VERSION clean validateJS coverage validateJVM
   - scripts/travis-build.sh
 
 after_success:
-  - sbt coverageReport && sbt coverageAggregate && sbt codacyCoverage
-  - bash <(curl -s https://codecov.io/bash)
+  - scripts/travis-coverage.sh
 
 branches:
   only:

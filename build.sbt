@@ -16,6 +16,7 @@ lazy val botBuild = settingKey[Boolean]("Build by TravisCI instead of local dev 
 val commonSettings = Def.settings(
   name := "cron4s",
   organization := "com.github.alonsodomin.cron4s",
+  description := "CRON expression parser for Scala",
   scalacOptions ++= Seq(
     "-language:postfixOps",
     "-feature",
@@ -29,10 +30,6 @@ val commonSettings = Def.settings(
     "-language:higherKinds",
     "-language:existentials"
   ),
-  scmInfo := Some(ScmInfo(
-    url("https://github.com/alonsodomin/cron4s"),
-    "scm:git:git@github.com:alonsodomin/cron4s.git"
-  )),
   botBuild := scala.sys.env.get("TRAVIS").isDefined,
   parallelExecution in Test := false
 ) ++ Licensing.settings
@@ -56,6 +53,12 @@ lazy val noPublishSettings = Seq(
 )
 
 lazy val publishSettings = Seq(
+  homepage := Some(url("https://github.com/alonsodomin/cron4s")),
+  scmInfo := Some(ScmInfo(
+    url("https://github.com/alonsodomin/cron4s"),
+    "scm:git:git@github.com:alonsodomin/cron4s.git"
+  )),
+  licenses := Seq("Apache 2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
   publishMavenStyle := true,
   publishArtifact in Test := false,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
@@ -80,18 +83,6 @@ lazy val publishSettings = Seq(
       }).transform(node).head
   },
   pomExtra :=
-    <url>https://github.com/alonsodomin/cron4s</url>
-    <licenses>
-      <license>
-        <name>Apache License, Version 2.0</name>
-        <url>https://www.apache.org/licenses/LICENSE-2.0</url>
-        <distribution>repo</distribution>
-      </license>
-    </licenses>
-    <scm>
-      <url>git@github.com:alonsodomin/cron4s.git</url>
-      <connection>scm:git:git@github.com:alonsodomin/cron4s.git</connection>
-    </scm>
     <developers>
       <developer>
         <id>alonsodomin</id>
@@ -105,7 +96,7 @@ lazy val coverageSettings = Seq(
   coverageMinimum := 80,
   coverageFailOnMinimum := true,
   coverageHighlighting := true,
-  coverageExcludedPackages := "cron4s\\.bench\\..*;cron4s\\.testkit\\..*"
+  coverageExcludedPackages := "cron4s\\.bench\\..*"
 )
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
@@ -143,10 +134,14 @@ lazy val docSettings = Seq(
 lazy val releaseSettings = {
   import ReleaseTransformations._
 
-  val sonatypeReleaseAll = ReleaseStep(action = Command.process("sonatypeReleaseAll", _))
+  val sonatypeReleaseAll = ReleaseStep(
+    action = Command.process("sonatypeReleaseAll", _),
+    enableCrossBuild = true
+  )
 
   Seq(
     sonatypeProfileName := "com.github.alonsodomin",
+    releaseCrossBuild := true,
     releaseProcess := Seq[ReleaseStep](
       checkSnapshotDependencies,
       inquireVersions,
