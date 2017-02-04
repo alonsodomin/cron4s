@@ -18,6 +18,8 @@ package cron4s.expr
 
 import shapeless._
 
+import scalaz.Show
+
 final case class DateCronExpr(
     daysOfMonth: DaysOfMonthNode,
     months: MonthsNode,
@@ -26,7 +28,15 @@ final case class DateCronExpr(
 
   private[cron4s] lazy val raw: RawDateCronExpr = Generic[DateCronExpr].to(this)
 
-  override def toString = raw.map(ops.show).toList.mkString(" ")
+  override lazy val toString: String =
+    raw.map(ops.show).toList.mkString(" ")
+
+}
+
+object DateCronExpr {
+
+  implicit val dateCronShow: Show[DateCronExpr] =
+    Show.showFromToString[DateCronExpr]
 
 }
 
@@ -38,6 +48,14 @@ final case class TimeCronExpr(
 
   private[cron4s] lazy val raw: RawTimeCronExpr = Generic[TimeCronExpr].to(this)
 
-  override def toString = raw.map(ops.show).toList.mkString(" ")
+  override lazy val toString: String =
+    raw.map(ops.show).toList.mkString(" ")
+
+}
+
+object TimeCronExpr {
+
+  implicit val timeCronShow: Show[TimeCronExpr] =
+    Show.showFromToString[TimeCronExpr]
 
 }
