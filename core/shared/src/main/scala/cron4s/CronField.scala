@@ -16,13 +16,15 @@
 
 package cron4s
 
+import scalaz.Equal
+
 /**
   * Each of the different fields supported in CRON expressions
   *
   * @author Antonio Alonso Dominguez
   */
 sealed trait CronField extends Serializable
-object CronField {
+object CronField extends CronFieldInstances {
 
   sealed trait Second extends CronField
   case object Second extends Second
@@ -43,5 +45,11 @@ object CronField {
   case object DayOfWeek extends DayOfWeek
 
   final val All: List[CronField] = List(Second, Minute, Hour, DayOfMonth, Month, DayOfWeek)
+
+}
+
+private[cron4s] trait CronFieldInstances {
+
+  implicit val cronFieldEq: Equal[CronField] = Equal.equalA[CronField]
 
 }

@@ -21,6 +21,8 @@ import cron4s.base.Predicate
 
 import shapeless._
 
+import scalaz.Show
+
 /**
   * Created by alonsodomin on 23/01/2017.
   */
@@ -31,6 +33,10 @@ final class FieldNode[F <: CronField](private[cron4s] val raw: RawFieldNode[F]) 
 }
 
 object FieldNode {
+
+  implicit def fieldNodeShow[F <: CronField]: Show[FieldNode[F]] =
+    Show.shows(_.raw.fold(ops.show))
+
   implicit def fieldNodeInstance[F <: CronField]: FieldExpr[FieldNode, F] = new FieldExpr[FieldNode, F] {
     def matches(node: FieldNode[F]): Predicate[Int] =
       node.raw.fold(ops.matches)
@@ -50,9 +56,6 @@ object FieldNode {
 
     def unit(node: FieldNode[F]): CronUnit[F] =
       node.raw.fold(ops.unit)
-
-    override def shows(node: FieldNode[F]): String =
-      node.raw.fold(ops.show)
   }
 }
 
@@ -63,6 +66,9 @@ final class EnumerableNode[F <: CronField](val raw: RawEnumerableNode[F]) extend
 }
 
 object EnumerableNode {
+
+  implicit def enumerableNodeShow[F <: CronField]: Show[EnumerableNode[F]] =
+    Show.shows(_.raw.fold(ops.show))
 
   implicit def enumerableNodeInstance[F <: CronField]: FieldExpr[EnumerableNode, F] =
     new FieldExpr[EnumerableNode, F] {
@@ -83,9 +89,6 @@ object EnumerableNode {
 
       def unit(node: EnumerableNode[F]): CronUnit[F] =
         node.raw.fold(ops.unit)
-
-      override def shows(node: EnumerableNode[F]): String =
-        node.raw.fold(ops.show)
     }
 
 }
@@ -97,6 +100,10 @@ final class DivisibleNode[F <: CronField](val raw: RawDivisibleNode[F]) extends 
 }
 
 object DivisibleNode {
+
+  implicit def divisibleNodeShow[F <: CronField]: Show[DivisibleNode[F]] =
+    Show.shows(_.raw.fold(ops.show))
+
   implicit def divisibleNodeInstance[F <: CronField]: FieldExpr[DivisibleNode, F] =
     new FieldExpr[DivisibleNode, F] {
       def matches(node: DivisibleNode[F]): Predicate[Int] =
@@ -115,8 +122,5 @@ object DivisibleNode {
 
       def unit(node: DivisibleNode[F]): CronUnit[F] =
         node.raw.fold(ops.unit)
-
-      override def shows(node: DivisibleNode[F]): String =
-        node.raw.fold(ops.show)
     }
 }
