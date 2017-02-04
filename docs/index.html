@@ -1,14 +1,14 @@
-<html><head><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Cron4s</title><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Scala CRON Parser" /><meta name="author" content="Antonio Alonso Dominguez" /><meta name="og:image" content="/cron4s/img/poster.png" /><meta name="og:title" content="Cron4s" /><meta name="og:site_name" content="Cron4s" /><meta name="og:url" content="https://alonsodomin.github.io/cron4s" /><meta name="og:type" content="website" /><meta name="og:description" content="Scala CRON Parser" /><meta name="twitter:image" content="/cron4s/img/poster.png" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:site" content="" /><link rel="icon" type="image/png" href="/cron4s/img/favicon.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/cron4s/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/cron4s/css/style.css" /><link rel="stylesheet" href="/cron4s/css/palette.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/cron4s/" class="brand"><div class="brand-wrapper" style="background:url('/cron4s/img/sidebar_brand.png') no-repeat"><span>Cron4s</span></div></a></li> <li><a href="/cron4s/docs/index.html" class="">First steps</a></li> <li><a href="/cron4s/docs/time_usage.html" class="">Working with Time</a> <ul class="sub_section"> <li><a href="/cron4s/docs/time_usage/matching.html" class="">Matching</a></li> <li><a href="/cron4s/docs/time_usage/forward_backwards.html" class="">Forwards & Backwards</a></li></ul></li> <li><a href="/cron4s/docs/builtin_libs.html" class="">Built-in libs</a></li> <li><a href="/cron4s/api/index.html" class="">API Docs</a></li></ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li class="hidden-xs"><a href="https://github.com/alonsodomin/cron4s"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li class="hidden-xs"><a href="https://github.com/alonsodomin/cron4s"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li><li><a href="#" onclick="shareSiteTwitter('Cron4s Scala CRON Parser');"><i class="fa fa-twitter"></i></a></li><li><a href="#" onclick="shareSiteFacebook('Cron4s Scala CRON Parser');"><i class="fa fa-facebook"></i></a></li><li><a href="#" onclick="shareSiteGoogle();"><i class="fa fa-google-plus"></i></a></li></ul></div></div></div></div><div id="content" data-github-owner="alonsodomin" data-github-repo="cron4s"><div class="content-wrapper"><section><h2 id="first-steps">First Steps</h2>
+<html><head><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>Cron4s</title><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Scala CRON Parser" /><meta name="author" content="Antonio Alonso Dominguez" /><meta name="og:image" content="/cron4s/img/poster.png" /><meta name="og:title" content="Cron4s" /><meta name="og:site_name" content="Cron4s" /><meta name="og:url" content="https://alonsodomin.github.io/cron4s" /><meta name="og:type" content="website" /><meta name="og:description" content="Scala CRON Parser" /><meta name="twitter:image" content="/cron4s/img/poster.png" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:site" content="" /><link rel="icon" type="image/png" href="/cron4s/img/favicon.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/cron4s/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/cron4s/css/style.css" /><link rel="stylesheet" href="/cron4s/css/palette.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/cron4s/" class="brand"><div class="brand-wrapper" style="background:url('/cron4s/img/sidebar_brand.png') no-repeat"><span>Cron4s</span></div></a></li> <li><a href="/cron4s/docs/index.html" class="">First steps</a></li> <li><a href="/cron4s/docs/time_usage.html" class="">Working with Time</a> <ul class="sub_section"> <li><a href="/cron4s/docs/time_usage/matching.html" class="">Matching</a></li> <li><a href="/cron4s/docs/time_usage/forward_backwards.html" class="">Forwards & Backwards</a></li></ul></li> <li><a href="/cron4s/docs/builtin_libs.html" class="">Built-in libs</a></li> <li><a href="/cron4s/docs/custom_datetime.html" class="">Custom DateTime</a></li> <li><a href="/cron4s/api/index.html" class="">API Docs</a></li> <li><a href="/cron4s/" class="">Migration Guides</a> <ul class="sub_section"> <li><a href="/cron4s/docs/migration/0_3_0.html" class="">0.2.x -> 0.3.0</a></li></ul></li></ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li class="hidden-xs"><a href="https://github.com/alonsodomin/cron4s"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li class="hidden-xs"><a href="https://github.com/alonsodomin/cron4s"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li><li><a href="#" onclick="shareSiteTwitter('Cron4s Scala CRON Parser');"><i class="fa fa-twitter"></i></a></li><li><a href="#" onclick="shareSiteFacebook('Cron4s Scala CRON Parser');"><i class="fa fa-facebook"></i></a></li><li><a href="#" onclick="shareSiteGoogle();"><i class="fa fa-google-plus"></i></a></li></ul></div></div></div></div><div id="content" data-github-owner="alonsodomin" data-github-repo="cron4s"><div class="content-wrapper"><section><h2 id="first-steps">First Steps</h2>
 
 <p>To start using <strong>cron4s</strong> in your project just include the library as part of your dependencies:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s-core" % "x.y.z"
+<div class="highlighter-rouge"><pre class="highlight"><code>libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s" % "x.y.z"
 </code></pre>
 </div>
 
 <p>Or in ScalaJS:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s-core" % "x.y.z"
+<div class="highlighter-rouge"><pre class="highlight"><code>libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s" % "x.y.z"
 </code></pre>
 </div>
 
@@ -31,13 +31,21 @@
 <span class="k">import</span> <span class="nn">cron4s._</span>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">parsed</span> <span class="k">=</span> <span class="nc">Cron</span><span class="o">(</span><span class="s">"10-35 2,4,6 * * * *"</span><span class="o">)</span>
-<span class="n">parsed</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">cron4s.ParseError</span>,<span class="kt">cron4s.expr.CronExpr</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Right</span><span class="o">(</span><span class="mi">10</span><span class="o">-</span><span class="mi">35</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*)</span>
+<span class="n">parsed</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">cron4s.InvalidCron</span>,<span class="kt">cron4s.expr.CronExpr</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Right</span><span class="o">(</span><span class="mi">10</span><span class="o">-</span><span class="mi">35</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*)</span>
 </code></pre>
 </div>
 
-<p>We will get an <code class="highlighter-rouge">Either[ParseError, CronExpr]</code>, the right side giving us an error description if
-the parsing has failed. Assuming that we have successfully parsed an expression, we can extract it
-out of the <code class="highlighter-rouge">Either[..., ...]</code> with following expression:</p>
+<p>We will get an <code class="highlighter-rouge">Either[InvalidCron, CronExpr]</code>, the right side giving us an error description if the parsing
+has failed. In the above example the expression parsed successfully but if we pass a wrong or invalid expression
+we will get the actual reason for the failure in the left side of the <code class="highlighter-rouge">Either</code>:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">invalid</span> <span class="k">=</span> <span class="nc">Cron</span><span class="o">(</span><span class="s">"10-65 * * * * *"</span><span class="o">)</span>
+<span class="n">invalid</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">cron4s.InvalidCron</span>,<span class="kt">cron4s.expr.CronExpr</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Left</span><span class="o">(</span><span class="nc">ParseFailed</span><span class="o">(</span><span class="s">" "</span><span class="k">:</span><span class="err">1</span><span class="kt">:</span><span class="err">5</span> <span class="kt">...</span><span class="err">"5</span> <span class="kt">*</span> <span class="kt">*</span> <span class="kt">*</span> <span class="kt">*</span> <span class="err">"</span><span class="o">,</span><span class="mi">4</span><span class="o">))</span>
+</code></pre>
+</div>
+
+<p>Assuming that we have successfully parsed an expression, we can extract it out of the <code class="highlighter-rouge">Either[..., ...]</code>
+with following expression:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">cron</span> <span class="k">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">get</span>
 <span class="n">cron</span><span class="k">:</span> <span class="kt">cron4s.expr.CronExpr</span> <span class="o">=</span> <span class="mi">10</span><span class="o">-</span><span class="mi">35</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>
@@ -47,29 +55,40 @@ out of the <code class="highlighter-rouge">Either[..., ...]</code> with followin
 <p><strong><em>Note:</em></strong> <em>It is not recommended to use <code class="highlighter-rouge">.right.get</code> to extract values out of <code class="highlighter-rouge">Either[..., ...]</code>
 types, we are doing it here as a means of simplifying the types just for the sake of the tutorial.</em></p>
 
-<h3 id="cron-ast">CRON AST</h3>
+<h4 id="validation-errors">Validation errors</h4>
+
+<p>The CRON expression will be validated right after parsing all any error found during this stage will be returned
+as well in the left side of the <code class="highlighter-rouge">Either</code> returned by the <code class="highlighter-rouge">Cron</code> constructor. For instance, the following expression
+has a sequence that mixes elements that self-imply each other, which is invalid:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">invalid</span> <span class="k">=</span> <span class="nc">Cron</span><span class="o">(</span><span class="s">"12,10-20 * * * * *"</span><span class="o">)</span>
+<span class="n">invalid</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">cron4s.InvalidCron</span>,<span class="kt">cron4s.expr.CronExpr</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Left</span><span class="o">(</span><span class="nc">ValidationError</span><span class="o">(</span><span class="nc">NonEmpty</span><span class="o">[</span><span class="kt">FieldError</span><span class="o">(</span><span class="kt">Second</span>,<span class="kt">Value</span> <span class="kt">'</span><span class="err">12</span><span class="kt">'</span> <span class="kt">at</span> <span class="kt">field</span> <span class="kt">Second</span> <span class="kt">is</span> <span class="kt">implied</span> <span class="kt">by</span> <span class="kt">'</span><span class="err">10</span><span class="kt">-</span><span class="err">20</span><span class="kt">'</span><span class="o">)]))</span>
+</code></pre>
+</div>
+
+<h3 id="the-cron4s-ast">The Cron4s AST</h3>
 
 <p>After successfully parsing a CRON expression, the <code class="highlighter-rouge">CronExpr</code> resulting type represents the previously
 parsed expression as an AST, in which we can access all the expression fields individually:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">seconds</span>
-<span class="n">res0</span><span class="k">:</span> <span class="kt">cron4s.expr.SecondExpr</span> <span class="o">=</span> <span class="mi">10</span><span class="o">-</span><span class="mi">35</span>
+<span class="n">res2</span><span class="k">:</span> <span class="kt">cron4s.expr.SecondsNode</span> <span class="o">=</span> <span class="mi">10</span><span class="o">-</span><span class="mi">35</span>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">minutes</span>
-<span class="n">res1</span><span class="k">:</span> <span class="kt">cron4s.expr.MinutesExpr</span> <span class="o">=</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span>
+<span class="n">res3</span><span class="k">:</span> <span class="kt">cron4s.expr.MinutesNode</span> <span class="o">=</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">months</span>
-<span class="n">res2</span><span class="k">:</span> <span class="kt">cron4s.expr.MonthsExpr</span> <span class="o">=</span> <span class="o">*</span>
+<span class="n">res4</span><span class="k">:</span> <span class="kt">cron4s.expr.MonthsNode</span> <span class="o">=</span> <span class="o">*</span>
 </code></pre>
 </div>
 
 <p>We can also take the date or time parts only of the expression using either <code class="highlighter-rouge">timePart</code> or <code class="highlighter-rouge">datePart</code>:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">time</span> <span class="k">=</span> <span class="n">cron</span><span class="o">.</span><span class="n">timePart</span>
-<span class="n">time</span><span class="k">:</span> <span class="kt">cron4s.expr.TimePartExpr</span> <span class="o">=</span> <span class="mi">10</span><span class="o">-</span><span class="mi">35</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span> <span class="o">*</span>
+<span class="n">time</span><span class="k">:</span> <span class="kt">cron4s.expr.TimeCronExpr</span> <span class="o">=</span> <span class="mi">10</span><span class="o">-</span><span class="mi">35</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span> <span class="o">*</span>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">date</span> <span class="k">=</span> <span class="n">cron</span><span class="o">.</span><span class="n">datePart</span>
-<span class="n">date</span><span class="k">:</span> <span class="kt">cron4s.expr.DatePartExpr</span> <span class="o">=</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>
+<span class="n">date</span><span class="k">:</span> <span class="kt">cron4s.expr.DateCronExpr</span> <span class="o">=</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>
 </code></pre>
 </div>
 
@@ -77,22 +96,200 @@ parsed expression as an AST, in which we can access all the expression fields in
 date and time sub expressions:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">time</span><span class="o">.</span><span class="n">seconds</span>
-<span class="n">res3</span><span class="k">:</span> <span class="kt">cron4s.expr.SecondExpr</span> <span class="o">=</span> <span class="mi">10</span><span class="o">-</span><span class="mi">35</span>
+<span class="n">res5</span><span class="k">:</span> <span class="kt">cron4s.expr.SecondsNode</span> <span class="o">=</span> <span class="mi">10</span><span class="o">-</span><span class="mi">35</span>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">time</span><span class="o">.</span><span class="n">minutes</span>
-<span class="n">res4</span><span class="k">:</span> <span class="kt">cron4s.expr.MinutesExpr</span> <span class="o">=</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span>
+<span class="n">res6</span><span class="k">:</span> <span class="kt">cron4s.expr.MinutesNode</span> <span class="o">=</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">date</span><span class="o">.</span><span class="n">daysOfMonth</span>
-<span class="n">res5</span><span class="k">:</span> <span class="kt">cron4s.expr.DaysOfMonthExpr</span> <span class="o">=</span> <span class="o">*</span>
+<span class="n">res7</span><span class="k">:</span> <span class="kt">cron4s.expr.DaysOfMonthNode</span> <span class="o">=</span> <span class="o">*</span>
+</code></pre>
+</div>
+
+<p>Or by means of the <code class="highlighter-rouge">field</code> method in <code class="highlighter-rouge">CronExpr</code> and passing either the cron field type or the cron unit.</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">field</span><span class="o">[</span><span class="kt">CronField.Minute</span><span class="o">]</span>
+<span class="n">res8</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">cron4s.expr.FieldNode</span><span class="o">[</span><span class="kt">cron4s.CronField.Minute</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span><span class="o">)</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">field</span><span class="o">(</span><span class="nc">CronUnit</span><span class="o">.</span><span class="nc">Minutes</span><span class="o">)</span>
+<span class="n">res9</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">cron4s.expr.FieldNode</span><span class="o">[</span><span class="kt">cron4s.CronField.Minute</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span><span class="o">)</span>
+</code></pre>
+</div>
+
+<p>Some other basic operations at the <code class="highlighter-rouge">CronExpr</code> level are asking for the list of supported fields of the
+actual value ranges for all the fields in the form of a map:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">supportedFields</span>
+<span class="n">res10</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">cron4s.CronField</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">Second</span><span class="o">,</span> <span class="nc">Minute</span><span class="o">,</span> <span class="nc">Hour</span><span class="o">,</span> <span class="nc">DayOfMonth</span><span class="o">,</span> <span class="nc">Month</span><span class="o">,</span> <span class="nc">DayOfWeek</span><span class="o">)</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">ranges</span>
+<span class="n">res11</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">cron4s.CronField</span>,<span class="kt">IndexedSeq</span><span class="o">[</span><span class="kt">Int</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="nc">Second</span> <span class="o">-&gt;</span> <span class="nc">Range</span> <span class="mi">10</span> <span class="n">to</span> <span class="mi">35</span><span class="o">,</span> <span class="nc">DayOfMonth</span> <span class="o">-&gt;</span> <span class="nc">Range</span> <span class="mi">1</span> <span class="n">to</span> <span class="mi">31</span><span class="o">,</span> <span class="nc">Month</span> <span class="o">-&gt;</span> <span class="nc">Range</span> <span class="mi">1</span> <span class="n">to</span> <span class="mi">12</span><span class="o">,</span> <span class="nc">DayOfWeek</span> <span class="o">-&gt;</span> <span class="nc">Range</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">6</span><span class="o">,</span> <span class="nc">Hour</span> <span class="o">-&gt;</span> <span class="nc">Range</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">23</span><span class="o">,</span> <span class="nc">Minute</span> <span class="o">-&gt;</span> <span class="nc">Vector</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">6</span><span class="o">))</span>
 </code></pre>
 </div>
 
 <p>To convert an AST back into the original string expression we simply use the <code class="highlighter-rouge">toString</code> method:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">toString</span>
-<span class="n">res6</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="mi">10</span><span class="o">-</span><span class="mi">35</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>
+<span class="n">res12</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="mi">10</span><span class="o">-</span><span class="mi">35</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>
 </code></pre>
 </div>
+
+<h3 id="sub-expressions">Sub-expressions</h3>
+
+<p>All the operations possible on a <code class="highlighter-rouge">CronExpr</code> are also possible in any of its subexpressions (either time or date) so
+you can use them in exactly the same way. For example:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">supportedFields</span>
+<span class="n">res13</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">cron4s.CronField</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">Second</span><span class="o">,</span> <span class="nc">Minute</span><span class="o">,</span> <span class="nc">Hour</span><span class="o">,</span> <span class="nc">DayOfMonth</span><span class="o">,</span> <span class="nc">Month</span><span class="o">,</span> <span class="nc">DayOfWeek</span><span class="o">)</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">timePart</span><span class="o">.</span><span class="n">supportedFields</span>
+<span class="n">res14</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">cron4s.CronField</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">Second</span><span class="o">,</span> <span class="nc">Minute</span><span class="o">,</span> <span class="nc">Hour</span><span class="o">)</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">datePart</span><span class="o">.</span><span class="n">supportedFields</span>
+<span class="n">res15</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">cron4s.CronField</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">DayOfMonth</span><span class="o">,</span> <span class="nc">Month</span><span class="o">,</span> <span class="nc">DayOfWeek</span><span class="o">)</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">supportedFields</code> is not super-interesting at <code class="highlighter-rouge">CronExpr</code> (we expect it to support all the fields anyway) but when
+is part of the sub-expressions gives us a more particular piece of information about the actual expression itself. The
+<code class="highlighter-rouge">field</code> method is also interesting and justifies its signature when used with the sub-expressions:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">timePart</span><span class="o">.</span><span class="n">field</span><span class="o">(</span><span class="nc">CronUnit</span><span class="o">.</span><span class="nc">Seconds</span><span class="o">)</span>
+<span class="n">res16</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">cron4s.expr.FieldNode</span><span class="o">[</span><span class="kt">cron4s.CronField.Second</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">10</span><span class="o">-</span><span class="mi">35</span><span class="o">)</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">timePart</span><span class="o">.</span><span class="n">field</span><span class="o">[</span><span class="kt">CronField.DayOfMonth</span><span class="o">]</span>
+<span class="n">res17</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">cron4s.expr.FieldNode</span><span class="o">[</span><span class="kt">cron4s.CronField.DayOfMonth</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">None</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">datePart</span><span class="o">.</span><span class="n">field</span><span class="o">(</span><span class="nc">CronUnit</span><span class="o">.</span><span class="nc">Seconds</span><span class="o">)</span>
+<span class="n">res18</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">cron4s.expr.FieldNode</span><span class="o">[</span><span class="kt">cron4s.CronField.Second</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">None</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">datePart</span><span class="o">.</span><span class="n">field</span><span class="o">[</span><span class="kt">CronField.DayOfWeek</span><span class="o">]</span>
+<span class="n">res19</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">cron4s.expr.FieldNode</span><span class="o">[</span><span class="kt">cron4s.CronField.DayOfWeek</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(*)</span>
+</code></pre>
+</div>
+
+<p>This is just a teaser, we will see much more interesting operations on cron expressions later but it’s good to know
+that all operations possible on a <code class="highlighter-rouge">CronExpr</code>, are also possible on it’s subexpressions.</p>
+
+<h4 id="field-nodes">Field nodes</h4>
+
+<p>All field nodes have their own type, which is parameterized in the actual field type they operate on. We can
+access that field type definition via the <code class="highlighter-rouge">unit</code> of field expression:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">seconds</span><span class="o">.</span><span class="n">unit</span><span class="o">.</span><span class="n">field</span>
+<span class="n">res20</span><span class="k">:</span> <span class="kt">cron4s.CronField.Second</span> <span class="o">=</span> <span class="nc">Second</span>
+</code></pre>
+</div>
+
+<p>The expression unit can be used to give us information about what values are valid for that
+specific field:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">seconds</span><span class="o">.</span><span class="n">unit</span><span class="o">.</span><span class="n">range</span>
+<span class="n">res21</span><span class="k">:</span> <span class="kt">IndexedSeq</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Range</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">59</span>
+</code></pre>
+</div>
+
+<p>Which is different than the range of values accepted by the expression at that given field:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">seconds</span><span class="o">.</span><span class="n">range</span>
+<span class="n">res22</span><span class="k">:</span> <span class="kt">IndexedSeq</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Range</span> <span class="mi">10</span> <span class="n">to</span> <span class="mi">35</span>
+</code></pre>
+</div>
+
+<p>We can also obtain a field expression</p>
+
+<p>To obtain the string representation of individual fields we use the same <code class="highlighter-rouge">toString</code> method:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">seconds</span><span class="o">.</span><span class="n">toString</span>
+<span class="n">res23</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="mi">10</span><span class="o">-</span><span class="mi">35</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">field</span><span class="o">[</span><span class="kt">CronField.Minute</span><span class="o">].</span><span class="n">toString</span>
+<span class="n">res24</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span><span class="o">)</span>
+</code></pre>
+</div>
+
+<p>Other interesting operations are the ones that can be used to test if a given value matches the
+field expression:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">seconds</span><span class="o">.</span><span class="n">matches</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
+<span class="n">res25</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">false</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">seconds</span><span class="o">.</span><span class="n">matches</span><span class="o">(</span><span class="mi">15</span><span class="o">)</span>
+<span class="n">res26</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">true</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">minutes</span><span class="o">.</span><span class="n">matches</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span>
+<span class="n">res27</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">true</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">minutes</span><span class="o">.</span><span class="n">matches</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
+<span class="n">res28</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">false</span>
+</code></pre>
+</div>
+
+<p>Or to test if a given field expression is implied by another one (that is also parameterized by
+the same field type). To show this, let’s work with some simple field expressions:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">import</span> <span class="nn">cron4s.expr._</span>
+<span class="k">import</span> <span class="nn">cron4s.expr._</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">eachSecond</span> <span class="k">=</span> <span class="nc">EachNode</span><span class="o">[</span><span class="kt">CronField.Second</span><span class="o">]</span>
+<span class="n">eachSecond</span><span class="k">:</span> <span class="kt">cron4s.expr.EachNode</span><span class="o">[</span><span class="kt">cron4s.CronField.Second</span><span class="o">]</span> <span class="k">=</span> <span class="o">*</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">fixedSecond</span> <span class="k">=</span> <span class="nc">ConstNode</span><span class="o">[</span><span class="kt">CronField.Second</span><span class="o">](</span><span class="mi">30</span><span class="o">)</span>
+<span class="n">fixedSecond</span><span class="k">:</span> <span class="kt">cron4s.expr.ConstNode</span><span class="o">[</span><span class="kt">cron4s.CronField.Second</span><span class="o">]</span> <span class="k">=</span> <span class="mi">30</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">fixedSecond</span><span class="o">.</span><span class="n">implies</span><span class="o">(</span><span class="n">eachSecond</span><span class="o">)</span>
+<span class="n">res29</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">false</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">fixedSecond</span><span class="o">.</span><span class="n">impliedBy</span><span class="o">(</span><span class="n">eachSecond</span><span class="o">)</span>
+<span class="n">res30</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">true</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">eachSecond</span><span class="o">.</span><span class="n">implies</span><span class="o">(</span><span class="n">fixedSecond</span><span class="o">)</span>
+<span class="n">res31</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">true</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">minutesRange</span> <span class="k">=</span> <span class="nc">BetweenNode</span><span class="o">[</span><span class="kt">CronField.Minute</span><span class="o">](</span><span class="nc">ConstNode</span><span class="o">(</span><span class="mi">2</span><span class="o">),</span> <span class="nc">ConstNode</span><span class="o">(</span><span class="mi">10</span><span class="o">))</span>
+<span class="n">minutesRange</span><span class="k">:</span> <span class="kt">cron4s.expr.BetweenNode</span><span class="o">[</span><span class="kt">cron4s.CronField.Minute</span><span class="o">]</span> <span class="k">=</span> <span class="mi">2</span><span class="o">-</span><span class="mi">10</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">fixedMinute</span> <span class="k">=</span> <span class="nc">ConstNode</span><span class="o">[</span><span class="kt">CronField.Minute</span><span class="o">](</span><span class="mi">7</span><span class="o">)</span>
+<span class="n">fixedMinute</span><span class="k">:</span> <span class="kt">cron4s.expr.ConstNode</span><span class="o">[</span><span class="kt">cron4s.CronField.Minute</span><span class="o">]</span> <span class="k">=</span> <span class="mi">7</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">fixedMinute</span><span class="o">.</span><span class="n">implies</span><span class="o">(</span><span class="n">minutesRange</span><span class="o">)</span>
+<span class="n">res32</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">false</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">fixedMinute</span><span class="o">.</span><span class="n">impliedBy</span><span class="o">(</span><span class="n">minutesRange</span><span class="o">)</span>
+<span class="n">res33</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">true</span>
+</code></pre>
+</div>
+
+<p>These two operations allways hold the following property (it looks obvious, but it’s important):</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">assert</span><span class="o">(</span><span class="n">minutesRange</span><span class="o">.</span><span class="n">implies</span><span class="o">(</span><span class="n">fixedMinute</span><span class="o">)</span> <span class="o">==</span> <span class="n">fixedMinute</span><span class="o">.</span><span class="n">impliedBy</span><span class="o">(</span><span class="n">minutesRange</span><span class="o">))</span>
+</code></pre>
+</div>
+
+<p>It’s important to notice that when using either the <code class="highlighter-rouge">implies</code> or <code class="highlighter-rouge">impliedBy</code> operation, if the two nodes are not
+parameterized for the same field type, the code won’t compile:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">minutesRange</span><span class="o">.</span><span class="n">implies</span><span class="o">(</span><span class="n">eachSecond</span><span class="o">)</span>
+<span class="o">&lt;</span><span class="n">console</span><span class="k">&gt;:</span><span class="mi">21</span><span class="k">:</span> <span class="kt">error:</span> <span class="kt">no</span> <span class="k">type</span> <span class="kt">parameters</span> <span class="kt">for</span> <span class="kt">method</span> <span class="kt">implies:</span> <span class="o">(</span><span class="kt">ee:</span> <span class="kt">EE</span><span class="o">[</span><span class="kt">cron4s.CronField.Minute</span><span class="o">])(</span><span class="k">implicit</span> <span class="nc">EE</span><span class="k">:</span> <span class="kt">cron4s.expr.FieldExpr</span><span class="o">[</span><span class="kt">EE</span>,<span class="kt">cron4s.CronField.Minute</span><span class="o">])</span><span class="nc">Boolean</span> <span class="n">exist</span> <span class="n">so</span> <span class="n">that</span> <span class="n">it</span> <span class="n">can</span> <span class="n">be</span> <span class="n">applied</span> <span class="n">to</span> <span class="n">arguments</span> <span class="o">(</span><span class="n">cron4s</span><span class="o">.</span><span class="n">expr</span><span class="o">.</span><span class="nc">EachNode</span><span class="o">[</span><span class="kt">cron4s.CronField.Second</span><span class="o">])</span>
+ <span class="o">---</span> <span class="n">because</span> <span class="o">---</span>
+<span class="n">argument</span> <span class="n">expression</span><span class="ss">'s </span><span class="k">type</span> <span class="kt">is</span> <span class="kt">not</span> <span class="kt">compatible</span> <span class="kt">with</span> <span class="kt">formal</span> <span class="kt">parameter</span> <span class="k">type</span><span class="o">;</span>
+ <span class="n">found</span>   <span class="k">:</span> <span class="kt">cron4s.expr.EachNode</span><span class="o">[</span><span class="kt">cron4s.CronField.Second</span><span class="o">]</span>
+ <span class="n">required</span><span class="k">:</span> <span class="kt">?EE</span><span class="o">[</span><span class="kt">cron4s.CronField.Minute</span><span class="o">]</span>
+       <span class="n">minutesRange</span><span class="o">.</span><span class="n">implies</span><span class="o">(</span><span class="n">eachSecond</span><span class="o">)</span>
+                    <span class="o">^</span>
+<span class="o">&lt;</span><span class="n">console</span><span class="k">&gt;:</span><span class="mi">21</span><span class="k">:</span> <span class="kt">error:</span> <span class="k">type</span> <span class="kt">mismatch</span><span class="o">;</span>
+ <span class="n">found</span>   <span class="k">:</span> <span class="kt">cron4s.expr.EachNode</span><span class="o">[</span><span class="kt">cron4s.CronField.Second</span><span class="o">]</span>
+ <span class="n">required</span><span class="k">:</span> <span class="kt">EE</span><span class="o">[</span><span class="kt">cron4s.CronField.Minute</span><span class="o">]</span>
+       <span class="n">minutesRange</span><span class="o">.</span><span class="n">implies</span><span class="o">(</span><span class="n">eachSecond</span><span class="o">)</span>
+                            <span class="o">^</span>
+<span class="o">&lt;</span><span class="n">console</span><span class="k">&gt;:</span><span class="mi">21</span><span class="k">:</span> <span class="kt">error:</span> <span class="kt">could</span> <span class="kt">not</span> <span class="kt">find</span> <span class="kt">implicit</span> <span class="kt">value</span> <span class="kt">for</span> <span class="kt">parameter</span> <span class="kt">EE:</span> <span class="kt">cron4s.expr.FieldExpr</span><span class="o">[</span><span class="kt">EE</span>,<span class="kt">cron4s.CronField.Minute</span><span class="o">]</span>
+       <span class="n">minutesRange</span><span class="o">.</span><span class="n">implies</span><span class="o">(</span><span class="n">eachSecond</span><span class="o">)</span>
+                           <span class="o">^</span>
+</code></pre>
+</div>
+
+<p>The error looks a bit scary, but in essence is saying to us that the <code class="highlighter-rouge">implies</code> method was expecting
+any kind of expression as long as it was for the <code class="highlighter-rouge">Minute</code> field (expressed as <code class="highlighter-rouge">EE[cron4s.CronField.Minute]</code>).</p>
 </section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/cron4s/highlight/highlight.pack.js"></script><script>hljs.configure({
 languages:['scala','java','bash']
 });
