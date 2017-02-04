@@ -16,7 +16,8 @@
 
 package cron4s.testkit.laws
 
-import cron4s.datetime.{IsDateTime, DateTimeCron}
+import cron4s.CronField
+import cron4s.datetime.{DateTimeCron, IsDateTime}
 import cron4s.testkit._
 import cron4s.syntax.cron._
 
@@ -70,6 +71,9 @@ trait DateTimeCronLaws[E, DateTime] {
 
   def backwards(e: E, from: DateTime): IsEqual[Option[DateTime]] =
     e.prev(from) <-> e.step(from, -1)
+
+  def supportedFieldsEquality(e: E): IsEqual[List[CronField]] =
+    supportedFields[E] <-> e.supportedFields
 
 }
 

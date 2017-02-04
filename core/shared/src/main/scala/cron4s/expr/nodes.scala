@@ -21,7 +21,7 @@ import cron4s.base._
 import cron4s.syntax.field._
 import cron4s.syntax.predicate._
 
-import scalaz.NonEmptyList
+import scalaz.{NonEmptyList, Show}
 import scalaz.std.anyVal._
 import scalaz.std.list._
 import scalaz.syntax.show._
@@ -47,9 +47,14 @@ final case class EachNode[+F <: CronField](implicit val unit: CronUnit[F])
 
   lazy val range: IndexedSeq[Int] = unit.range
 
+  override val toString = "*"
+
 }
 
 object EachNode {
+
+  implicit def eachNodeShow[F <: CronField]: Show[EachNode[F]] =
+    Show.showFromToString[EachNode[F]]
 
   implicit def eachNodeInstance[F <: CronField]: FieldExpr[EachNode, F] =
     new FieldExpr[EachNode, F] {
@@ -61,8 +66,6 @@ object EachNode {
       def matches(node: EachNode[F]): Predicate[Int] = Predicate { x =>
         x >= min(node) && x <= max(node)
       }
-
-      override def shows(node: EachNode[F]): String = "*"
 
       def range(node: EachNode[F]): IndexedSeq[Int] = node.range
     }
@@ -76,9 +79,15 @@ final case class ConstNode[F <: CronField]
 
   lazy val range: IndexedSeq[Int] = Vector(value)
 
+  override lazy val toString: String =
+    textValue.getOrElse(value.toString)
+
 }
 
 object ConstNode {
+
+  implicit def constNodeShow[F <: CronField]: Show[ConstNode[F]] =
+    Show.showFromToString[ConstNode[F]]
 
   implicit def constNodeInstance[F <: CronField]: FieldExpr[ConstNode, F] =
     new FieldExpr[ConstNode, F] {
@@ -92,8 +101,6 @@ object ConstNode {
       }
 
       def range(node: ConstNode[F]): IndexedSeq[Int] = node.range
-
-      override def shows(node: ConstNode[F]): String = node.textValue.getOrElse(node.value.toString)
     }
 
 }
@@ -109,9 +116,15 @@ final case class BetweenNode[F <: CronField]
     min to max
   }
 
+  override lazy val toString: String =
+    s"${begin.shows}-${end.shows}"
+
 }
 
 object BetweenNode {
+
+  implicit def betweenNodeShow[F <: CronField]: Show[BetweenNode[F]] =
+    Show.showFromToString[BetweenNode[F]]
 
   implicit def betweenNodeInstance[F <: CronField]
       (implicit elemExpr: FieldExpr[ConstNode, F]): FieldExpr[BetweenNode, F] =
@@ -130,8 +143,6 @@ object BetweenNode {
 
       def range(node: BetweenNode[F]): IndexedSeq[Int] = node.range
 
-      override def shows(node: BetweenNode[F]): String =
-        s"${node.begin.shows}-${node.end.shows}"
     }
 
 }
@@ -144,6 +155,9 @@ final case class SeveralNode[F <: CronField]
   lazy val range: IndexedSeq[Int] =
     values.list.toVector.view.flatMap(_.range).distinct.sorted.toIndexedSeq
 
+  override lazy val toString: String =
+    values.map(_.shows).list.toList.mkString(",")
+
 }
 
 object SeveralNode {
@@ -151,6 +165,9 @@ object SeveralNode {
   def apply[F <: CronField](head: EnumerableNode[F], tail: EnumerableNode[F]*)
                            (implicit unit: CronUnit[F]): SeveralNode[F] =
     SeveralNode(NonEmptyList(head, tail: _*))
+
+  implicit def severalNodeShow[F <: CronField]: Show[SeveralNode[F]] =
+    Show.showFromToString[SeveralNode[F]]
 
   implicit def severalNodeInstance[F <: CronField]
       (implicit elemExpr: FieldExpr[EnumerableNode, F]): FieldExpr[SeveralNode, F] =
@@ -165,8 +182,6 @@ object SeveralNode {
 
       def range(node: SeveralNode[F]): IndexedSeq[Int] = node.range
 
-      override def shows(node: SeveralNode[F]): String =
-        node.values.map(_.shows).list.toList.mkString(",")
     }
 
 }
@@ -184,9 +199,15 @@ final case class EveryNode[F <: CronField]
     elements.toVector
   }
 
+  override lazy val toString: String =
+    s"${base.shows}/$freq"
+
 }
 
 object EveryNode {
+
+  implicit def everyNodeShow[F <: CronField]: Show[EveryNode[F]] =
+    Show.showFromToString[EveryNode[F]]
 
   implicit def everyNodeInstance[F <: CronField]
       (implicit baseExpr: FieldExpr[DivisibleNode, F]): FieldExpr[EveryNode, F] =
@@ -201,9 +222,6 @@ object EveryNode {
         range(node).containsSlice(ee.range)
 
       def range(node: EveryNode[F]): IndexedSeq[Int] = node.range
-
-      override def shows(node: EveryNode[F]): String =
-        s"${node.base.shows}/${node.freq}"
 
     }
 
