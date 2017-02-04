@@ -30,6 +30,15 @@ cron.allOf(now)
 cron.anyOf(now)
 ```
 
+As said before, these two operations are also available at the sub-expression level:
+
+```tut
+cron.datePart.allOf(now)
+cron.datePart.anyOf(now)
+cron.timePart.allOf(now)
+cron.timePart.anyOf(now)
+```
+
 `allOf` will evaluate all the fields of the Cron expression against all the fields
 of the _DateTime_ object and it will return `false` if there is any one that does
 not match the sub-expression corresponding to that field. In the other hand, `anyOf`
