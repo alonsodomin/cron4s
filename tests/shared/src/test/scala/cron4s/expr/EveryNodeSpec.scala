@@ -18,7 +18,7 @@ package cron4s.expr
 
 import cron4s.CronField
 import cron4s.testkit.SlowCron4sLawSuite
-import cron4s.testkit.discipline.ExprTests
+import cron4s.testkit.discipline.FieldExprTests
 import cron4s.testkit.gen.ArbitraryEveryNode
 
 /**
@@ -27,11 +27,11 @@ import cron4s.testkit.gen.ArbitraryEveryNode
 class EveryNodeSpec extends SlowCron4sLawSuite with ArbitraryEveryNode {
   import CronField._
 
-  checkAll("Every[Second]", ExprTests[EveryNode, Second].expr)
-  checkAll("Every[Minute]", ExprTests[EveryNode, Minute].expr)
-  checkAll("Every[Hour]", ExprTests[EveryNode, Hour].expr)
-  checkAll("Every[DayOfMonth]", ExprTests[EveryNode, DayOfMonth].expr)
-  checkAll("Every[Month]", ExprTests[EveryNode, Month].expr)
-  checkAll("Every[DayOfWeek]", ExprTests[EveryNode, DayOfWeek].expr)
+  checkAll("Every[Second]", FieldExprTests[EveryNode, Second].expr)
+  checkAll("Every[Minute]", FieldExprTests[EveryNode, Minute].expr)
+  checkAll("Every[Hour]", FieldExprTests[EveryNode, Hour].expr)
+  checkAll("Every[DayOfMonth]", FieldExprTests[EveryNode, DayOfMonth].expr)
+  checkAll("Every[Month]", FieldExprTests[EveryNode, Month].expr)
+  checkAll("Every[DayOfWeek]", FieldExprTests[EveryNode, DayOfWeek].expr)
 
 }

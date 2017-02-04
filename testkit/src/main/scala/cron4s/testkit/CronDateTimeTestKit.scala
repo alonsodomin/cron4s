@@ -17,18 +17,17 @@
 package cron4s.testkit
 
 import cron4s.CronField._
-import cron4s.datetime.DateTimeAdapter
+import cron4s.datetime.IsDateTime
 import cron4s.expr._
 
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.{Matchers, PropSpec}
 
 import scalaz.Equal
 
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-abstract class CronDateTimeTestKit[DateTime: DateTimeAdapter: Equal]
+abstract class CronDateTimeTestKit[DateTime: IsDateTime: Equal]
   extends Cron4sPropSpec with TableDrivenPropertyChecks { this: DateTimeTestKitBase[DateTime] =>
 
   val onlyTuesdaysAt12 = CronExpr(

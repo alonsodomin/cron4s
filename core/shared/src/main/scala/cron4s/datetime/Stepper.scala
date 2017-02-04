@@ -23,14 +23,14 @@ import shapeless._
 
 import scala.annotation.tailrec
 
-private[datetime] final class Stepper[DateTime](adapter: DateTimeAdapter[DateTime]) {
+private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   import CronField._
 
   protected type Step = Option[(DateTime, Int)]
 
   protected[this] def stepField[F <: CronField]
       (expr: FieldNode[F], from: DateTime, step: Int): Option[(Int, Int)] =
-    adapter.get(from, expr.unit.field)
+    DT.get(from, expr.unit.field)
       .flatMap(v => expr.step(v, step))
 
   protected[this] def stepAndAdjust[F <: CronField]
@@ -38,17 +38,17 @@ private[datetime] final class Stepper[DateTime](adapter: DateTimeAdapter[DateTim
     for {
       (dateTime, step)  <- dateTimeAndStep
       (value, nextStep) <- stepField(expr, dateTime, step)
-      newDateTime       <- adapter.set(dateTime, expr.unit.field, value)
+      newDateTime       <- DT.set(dateTime, expr.unit.field, value)
     } yield (newDateTime, nextStep)
   }
 
   protected[this] def stepDayOfWeek
       (dt: DateTime, expr: FieldNode[DayOfWeek], stepSize: Int): Step = {
     for {
-      dayOfWeek         <- adapter.get(dt, DayOfWeek)
+      dayOfWeek         <- DT.get(dt, DayOfWeek)
       (value, nextStep) <- expr.step(dayOfWeek, stepSize)
-      newDateTime       <- adapter.set(dt, DayOfWeek, value)
-      newDayOfWeek      <- adapter.get(dt, DayOfWeek)
+      newDateTime       <- DT.set(dt, DayOfWeek, value)
+      newDayOfWeek      <- DT.get(dt, DayOfWeek)
     } yield newDateTime -> (nextStep + (newDayOfWeek - dayOfWeek))
   }
 

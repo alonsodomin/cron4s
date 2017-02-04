@@ -17,7 +17,7 @@
 package cron4s.testkit.laws
 
 import cron4s.CronField
-import cron4s.datetime.DateTimeAdapter
+import cron4s.datetime.IsDateTime
 import cron4s.testkit._
 
 import org.scalacheck.Prop
@@ -28,17 +28,17 @@ import Scalaz._
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-trait DateTimeAdapterLaws[DateTime] {
-  implicit def adapter: DateTimeAdapter[DateTime]
-  implicit val eq: Equal[DateTime]
+trait IsDateTimeLaws[DateTime] {
+  implicit def DT: IsDateTime[DateTime]
+  implicit def eq: Equal[DateTime]
 
   def gettable[F <: CronField](dt: DateTime, field: F): Prop =
-    adapter.get(dt, field).isDefined ?== adapter.supportedFields(dt).contains(field)
+    DT.get(dt, field).isDefined ?== DT.supportedFields(dt).contains(field)
 
   def immutability[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Prop = {
     val check = for {
-      current     <- adapter.get(dt, fieldValue.field)
-      newDateTime <- adapter.set(dt, fieldValue.field, fieldValue.value)
+      current     <- DT.get(dt, fieldValue.field)
+      newDateTime <- DT.set(dt, fieldValue.field, fieldValue.value)
     } yield {
       if (current == fieldValue.value) newDateTime ?== dt
       else newDateTime ?!= dt
@@ -49,8 +49,8 @@ trait DateTimeAdapterLaws[DateTime] {
 
   def settable[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Prop = {
     val check = for {
-      newDateTime <- adapter.set(dt, fieldValue.field, fieldValue.value)
-      value       <- adapter.get(newDateTime, fieldValue.field)
+      newDateTime <- DT.set(dt, fieldValue.field, fieldValue.value)
+      value       <- DT.get(newDateTime, fieldValue.field)
     } yield value ?== fieldValue.value
 
     check.getOrElse(proved)
@@ -58,15 +58,15 @@ trait DateTimeAdapterLaws[DateTime] {
 
 }
 
-object DateTimeAdapterLaws {
+object IsDateTimeLaws {
 
   def apply[DateTime](implicit
-      adapterEv: DateTimeAdapter[DateTime],
-      eqEv: Equal[DateTime]
-  ): DateTimeAdapterLaws[DateTime] =
-    new DateTimeAdapterLaws[DateTime] {
+    dtEv: IsDateTime[DateTime],
+    eqEv: Equal[DateTime]
+  ): IsDateTimeLaws[DateTime] =
+    new IsDateTimeLaws[DateTime] {
       implicit val eq: Equal[DateTime] = eqEv
-      implicit val adapter: DateTimeAdapter[DateTime] = adapterEv
+      implicit val DT: IsDateTime[DateTime] = dtEv
     }
 
 }

@@ -18,7 +18,7 @@ package cron4s.lib.threetenbp
 
 import cron4s.CronField
 import cron4s.CronField._
-import cron4s.datetime.DateTimeAdapter
+import cron4s.datetime.IsDateTime
 
 import org.threeten.bp.temporal.{ChronoField, Temporal, TemporalField}
 
@@ -27,7 +27,7 @@ import scala.util.Try
 /**
   * Created by alonsodomin on 30/01/2017.
   */
-private[threetenbp] final class JSR310Adapter[DT <: Temporal] extends DateTimeAdapter[DT] {
+private[threetenbp] final class JSR310Instance[DT <: Temporal] extends IsDateTime[DT] {
 
   private[this] def mapField(field: CronField): TemporalField = field match {
     case Second     => ChronoField.SECOND_OF_MINUTE

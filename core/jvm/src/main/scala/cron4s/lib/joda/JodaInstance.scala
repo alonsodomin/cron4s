@@ -18,7 +18,8 @@ package cron4s.lib.joda
 
 import cron4s.CronField
 import cron4s.CronField._
-import cron4s.datetime.DateTimeAdapter
+import cron4s.datetime.IsDateTime
+
 import org.joda.time.{DateTime, DateTimeFieldType}
 
 import scala.util.Try
@@ -26,7 +27,7 @@ import scala.util.Try
 /**
   * Created by alonsodomin on 30/01/2017.
   */
-private[joda] final class JodaAdapter extends DateTimeAdapter[DateTime] {
+private[joda] final class JodaInstance extends IsDateTime[DateTime] {
 
   private[this] def mapField[F <: CronField](field: F): DateTimeFieldType = field match {
     case Second     => DateTimeFieldType.secondOfMinute()

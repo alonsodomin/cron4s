@@ -17,7 +17,7 @@
 package cron4s.syntax
 
 import cron4s.{CronField, CronUnit}
-import cron4s.datetime.{DateTimeAdapter, DateTimeCron}
+import cron4s.datetime.{IsDateTime, DateTimeCron}
 import cron4s.expr.FieldNode
 
 /**
@@ -26,24 +26,24 @@ import cron4s.expr.FieldNode
 private[syntax] class DateTimeCronOps[E](self: E, tc: DateTimeCron[E]) {
 
   def allOf[DateTime](dt: DateTime)
-      (implicit adapter: DateTimeAdapter[DateTime]): Boolean =
-    tc.allOf(self, adapter)(dt)
+      (implicit DT: IsDateTime[DateTime]): Boolean =
+    tc.allOf(self, DT)(dt)
 
   def anyOf[DateTime](dt: DateTime)
-      (implicit adapter: DateTimeAdapter[DateTime]): Boolean =
-    tc.anyOf(self, adapter)(dt)
+      (implicit DT: IsDateTime[DateTime]): Boolean =
+    tc.anyOf(self, DT)(dt)
 
   def next[DateTime](from: DateTime)
-      (implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] =
+      (implicit DT: IsDateTime[DateTime]): Option[DateTime] =
     step(from, 1)
 
   def prev[DateTime](from: DateTime)
-      (implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] =
+      (implicit DT: IsDateTime[DateTime]): Option[DateTime] =
     step(from, -1)
 
   def step[DateTime](from: DateTime, stepSize: Int)
-      (implicit adapter: DateTimeAdapter[DateTime]): Option[DateTime] =
-    tc.step(self, adapter)(from, stepSize)
+      (implicit DT: IsDateTime[DateTime]): Option[DateTime] =
+    tc.step(self, DT)(from, stepSize)
 
   def ranges: Map[CronField, IndexedSeq[Int]] =
     tc.ranges(self)

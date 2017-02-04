@@ -19,14 +19,14 @@ package cron4s.lib.javatime
 import java.time.temporal.{ChronoField, Temporal, TemporalField}
 
 import cron4s.CronField
-import cron4s.datetime.DateTimeAdapter
+import cron4s.datetime.IsDateTime
 
 import scala.util.Try
 
 /**
   * Created by alonsodomin on 30/01/2017.
   */
-private[javatime] final class JavaTimeAdapter[DT <: Temporal] extends DateTimeAdapter[DT] {
+private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDateTime[DT] {
   import CronField._
 
   private[this] def mapField(field: CronField): TemporalField = field match {

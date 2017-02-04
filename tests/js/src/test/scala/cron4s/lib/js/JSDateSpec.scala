@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package cron4s.datetime
+package cron4s.lib.js
 
-import cron4s.testkit.DateTimeAdapterTestKit
-import testdummy._
+import cron4s.testkit.IsDateTimeTestKit
+
+import scala.scalajs.js.Date
 
 /**
-  * Created by alonsodomin on 29/08/2016.
+  * Created by alonsodomin on 02/09/2016.
   */
-class DummyDateTimeAdapterSpec extends DateTimeAdapterTestKit[DummyDateTime]("DummyDateTime") with DummyTestBase
-
+class JSDateSpec extends IsDateTimeTestKit[Date]("JSDate") with JSTestBase

@@ -16,20 +16,20 @@
 
 package cron4s.lib.threetenbp
 
-import cron4s.testkit.DateTimeAdapterTestKit
+import cron4s.testkit.IsDateTimeTestKit
 import org.threeten.bp.{LocalDate, LocalDateTime, LocalTime, ZonedDateTime}
 
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-class ThreeTenBPLocalDateAdapterSpec extends DateTimeAdapterTestKit[LocalDate]("ThreeTenBPLocalDate")
+class ThreeTenBPLocalDateSpec extends IsDateTimeTestKit[LocalDate]("ThreeTenBPLocalDate")
   with ThreeTenBPLocalDateTestBase
 
-class ThreeTenBPLocalTimeAdapterSpec extends DateTimeAdapterTestKit[LocalTime]("ThreeTenBPLocalTime")
+class ThreeTenBPLocalTimeSpec extends IsDateTimeTestKit[LocalTime]("ThreeTenBPLocalTime")
   with ThreeTenBPLocalTimeTestBase
 
-class ThreeTenBPLocalDateTimeAdapterSpec extends DateTimeAdapterTestKit[LocalDateTime]("ThreeTenBPLocalDateTime")
+class ThreeTenBPLocalDateTimeSpec extends IsDateTimeTestKit[LocalDateTime]("ThreeTenBPLocalDateTime")
   with ThreeTenBPLocalDateTimeTestBase
 
-class ThreeTenBPZonedDateTimeAdapterSpec extends DateTimeAdapterTestKit[ZonedDateTime]("ThreeTenBPZonedDateTime")
+class ThreeTenBPZonedDateTimeSpec extends IsDateTimeTestKit[ZonedDateTime]("ThreeTenBPZonedDateTime")
   with ThreeTenBPZonedDateTimeTestBase

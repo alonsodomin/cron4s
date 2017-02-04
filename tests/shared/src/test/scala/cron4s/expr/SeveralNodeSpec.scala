@@ -18,7 +18,7 @@ package cron4s.expr
 
 import cron4s.CronField._
 import cron4s.testkit.SlowCron4sLawSuite
-import cron4s.testkit.discipline.ExprTests
+import cron4s.testkit.discipline.FieldExprTests
 import cron4s.testkit.gen.ArbitrarySeveralNode
 
 
@@ -27,11 +27,11 @@ import cron4s.testkit.gen.ArbitrarySeveralNode
   */
 class SeveralNodeSpec extends SlowCron4sLawSuite with ArbitrarySeveralNode {
 
-  checkAll("Several[Second]", ExprTests[SeveralNode, Second].expr)
-  checkAll("Several[Minute]", ExprTests[SeveralNode, Minute].expr)
-  checkAll("Several[Hour]", ExprTests[SeveralNode, Hour].expr)
-  checkAll("Several[DayOfMonth]", ExprTests[SeveralNode, DayOfMonth].expr)
-  checkAll("Several[Month]", ExprTests[SeveralNode, Month].expr)
-  checkAll("Several[DayOfWeek]", ExprTests[SeveralNode, DayOfWeek].expr)
+  checkAll("Several[Second]", FieldExprTests[SeveralNode, Second].expr)
+  checkAll("Several[Minute]", FieldExprTests[SeveralNode, Minute].expr)
+  checkAll("Several[Hour]", FieldExprTests[SeveralNode, Hour].expr)
+  checkAll("Several[DayOfMonth]", FieldExprTests[SeveralNode, DayOfMonth].expr)
+  checkAll("Several[Month]", FieldExprTests[SeveralNode, Month].expr)
+  checkAll("Several[DayOfWeek]", FieldExprTests[SeveralNode, DayOfWeek].expr)
 
 }

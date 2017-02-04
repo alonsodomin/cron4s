@@ -16,7 +16,7 @@
 
 package cron4s.lib
 
-import cron4s.datetime.DateTimeAdapter
+import cron4s.datetime.IsDateTime
 
 import org.joda.time.DateTime
 
@@ -29,6 +29,6 @@ package object joda {
 
   implicit val jodaDateTimeEq: Equal[DateTime] = Equal.equalA[DateTime]
 
-  implicit val jodaDateTimeAdapter: DateTimeAdapter[DateTime] = new JodaAdapter
+  implicit val jodaDateTimeInstance: IsDateTime[DateTime] = new JodaInstance
 
 }

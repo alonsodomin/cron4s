@@ -16,7 +16,7 @@
 
 package cron4s.lib
 
-import cron4s.datetime.DateTimeAdapter
+import cron4s.datetime.IsDateTime
 
 import scala.scalajs.js.Date
 
@@ -37,6 +37,6 @@ package object js {
       lhs.getUTCMilliseconds() == rhs.getUTCMilliseconds()
   }
 
-  implicit val jsDateAdapter: DateTimeAdapter[Date] = new JsDateAdapter
+  implicit val jsDateInstance: IsDateTime[Date] = new JsDateInstance
 
 }

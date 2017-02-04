@@ -18,7 +18,7 @@ package cron4s.expr
 
 import cron4s.{CronField, CronUnit}
 import cron4s.base._
-import cron4s.syntax.expr._
+import cron4s.syntax.field._
 import cron4s.syntax.predicate._
 
 import scalaz.NonEmptyList
@@ -51,11 +51,11 @@ final case class EachNode[+F <: CronField](implicit val unit: CronUnit[F])
 
 object EachNode {
 
-  implicit def eachNodeInstance[F <: CronField]: Expr[EachNode, F] =
-    new Expr[EachNode, F] {
+  implicit def eachNodeInstance[F <: CronField]: FieldExpr[EachNode, F] =
+    new FieldExpr[EachNode, F] {
       def unit(node: EachNode[F]): CronUnit[F] = node.unit
 
-      def implies[EE[_ <: CronField]](node: EachNode[F])(ee: EE[F])(implicit EE: Expr[EE, F]): Boolean =
+      def implies[EE[_ <: CronField]](node: EachNode[F])(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
         true
 
       def matches(node: EachNode[F]): Predicate[Int] = Predicate { x =>
@@ -80,13 +80,13 @@ final case class ConstNode[F <: CronField]
 
 object ConstNode {
 
-  implicit def constNodeInstance[F <: CronField]: Expr[ConstNode, F] =
-    new Expr[ConstNode, F] {
+  implicit def constNodeInstance[F <: CronField]: FieldExpr[ConstNode, F] =
+    new FieldExpr[ConstNode, F] {
       def unit(node: ConstNode[F]): CronUnit[F] = node.unit
 
       def matches(node: ConstNode[F]): Predicate[Int] = equalTo(node.value)
 
-      def implies[EE[_ <: CronField]](node: ConstNode[F])(ee: EE[F])(implicit EE: Expr[EE, F]): Boolean = {
+      def implies[EE[_ <: CronField]](node: ConstNode[F])(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean = {
         val range = ee.range
         (range.size == 1) && (range.contains(node.value))
       }
@@ -114,8 +114,8 @@ final case class BetweenNode[F <: CronField]
 object BetweenNode {
 
   implicit def betweenNodeInstance[F <: CronField]
-      (implicit elemExpr: Expr[ConstNode, F]): Expr[BetweenNode, F] =
-    new Expr[BetweenNode, F] {
+      (implicit elemExpr: FieldExpr[ConstNode, F]): FieldExpr[BetweenNode, F] =
+    new FieldExpr[BetweenNode, F] {
 
       def unit(node: BetweenNode[F]): CronUnit[F] = node.unit
 
@@ -125,7 +125,7 @@ object BetweenNode {
         else false
       }
 
-      def implies[EE[_ <: CronField]](node: BetweenNode[F])(ee: EE[F])(implicit EE: Expr[EE, F]): Boolean =
+      def implies[EE[_ <: CronField]](node: BetweenNode[F])(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
         (node.min <= ee.min) && (node.max >= ee.max)
 
       def range(node: BetweenNode[F]): IndexedSeq[Int] = node.range
@@ -153,14 +153,14 @@ object SeveralNode {
     SeveralNode(NonEmptyList(head, tail: _*))
 
   implicit def severalNodeInstance[F <: CronField]
-      (implicit elemExpr: Expr[EnumerableNode, F]): Expr[SeveralNode, F] =
-    new Expr[SeveralNode, F] {
+      (implicit elemExpr: FieldExpr[EnumerableNode, F]): FieldExpr[SeveralNode, F] =
+    new FieldExpr[SeveralNode, F] {
       def unit(node: SeveralNode[F]): CronUnit[F] = node.unit
 
       def matches(node: SeveralNode[F]): Predicate[Int] =
         anyOf(node.values.map(_.matches))
 
-      def implies[EE[_ <: CronField]](node: SeveralNode[F])(ee: EE[F])(implicit EE: Expr[EE, F]): Boolean =
+      def implies[EE[_ <: CronField]](node: SeveralNode[F])(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
         range(node).containsSlice(ee.range)
 
       def range(node: SeveralNode[F]): IndexedSeq[Int] = node.range
@@ -189,15 +189,15 @@ final case class EveryNode[F <: CronField]
 object EveryNode {
 
   implicit def everyNodeInstance[F <: CronField]
-      (implicit baseExpr: Expr[DivisibleNode, F]): Expr[EveryNode, F] =
-    new Expr[EveryNode, F] {
+      (implicit baseExpr: FieldExpr[DivisibleNode, F]): FieldExpr[EveryNode, F] =
+    new FieldExpr[EveryNode, F] {
 
       def unit(node: EveryNode[F]): CronUnit[F] = node.unit
 
       def matches(node: EveryNode[F]): Predicate[Int] =
         anyOf(range(node).map(equalTo(_)).toList)
 
-      def implies[EE[_ <: CronField]](node: EveryNode[F])(ee: EE[F])(implicit EE: Expr[EE, F]): Boolean =
+      def implies[EE[_ <: CronField]](node: EveryNode[F])(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
         range(node).containsSlice(ee.range)
 
       def range(node: EveryNode[F]): IndexedSeq[Int] = node.range

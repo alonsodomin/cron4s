@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package cron4s.syntax
+package cron4s.datetime
+
+import cron4s.testkit.IsDateTimeTestKit
+import testdummy._
 
 /**
-  * Created by alonsodomin on 25/08/2016.
+  * Created by alonsodomin on 29/08/2016.
   */
-private[cron4s] trait AllSyntax
-  extends DateTimeCronSyntax
-    with DateTimeNodeSyntax
-    with FieldExprSyntax
-    with PredicateSyntax
+class DummyDateTimeSpec extends IsDateTimeTestKit[DummyDateTime]("DummyDateTime") with DummyTestBase
 
-object all extends AllSyntax

@@ -18,7 +18,7 @@ package cron4s.expr
 
 import cron4s.CronField
 import cron4s.testkit.Cron4sLawSuite
-import cron4s.testkit.discipline.ExprTests
+import cron4s.testkit.discipline.FieldExprTests
 import cron4s.testkit.gen.ArbitraryConstNode
 
 /**
@@ -27,11 +27,11 @@ import cron4s.testkit.gen.ArbitraryConstNode
 class ConstNodeSpec extends Cron4sLawSuite with ArbitraryConstNode {
   import CronField._
 
-  checkAll("Const[Second]", ExprTests[ConstNode, Second].expr)
-  checkAll("Const[Minute]", ExprTests[ConstNode, Minute].expr)
-  checkAll("Const[Hour]", ExprTests[ConstNode, Hour].expr)
-  checkAll("Const[DayOfMonth]", ExprTests[ConstNode, DayOfMonth].expr)
-  checkAll("Const[Month]", ExprTests[ConstNode, Month].expr)
-  checkAll("Const[DayOfWeek]", ExprTests[ConstNode, DayOfWeek].expr)
+  checkAll("Const[Second]", FieldExprTests[ConstNode, Second].expr)
+  checkAll("Const[Minute]", FieldExprTests[ConstNode, Minute].expr)
+  checkAll("Const[Hour]", FieldExprTests[ConstNode, Hour].expr)
+  checkAll("Const[DayOfMonth]", FieldExprTests[ConstNode, DayOfMonth].expr)
+  checkAll("Const[Month]", FieldExprTests[ConstNode, Month].expr)
+  checkAll("Const[DayOfWeek]", FieldExprTests[ConstNode, DayOfWeek].expr)
 
 }
