@@ -14,10 +14,6 @@ Idiomatic Cron expression parsing in Scala and ScalaJS.
 
 Please, take a look at the [official documentation](https://alonsodomin.github.io/cron4s) for instructions on how to use this library.
 
-## Status
-
-At the moment the library should be considered as experimental and APIs might change.
-
 ## License
 
 Copyright 2017 Antonio Alonso Dominguez
