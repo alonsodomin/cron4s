@@ -17,8 +17,8 @@
 package cron4s.datetime
 
 import cron4s.{CronField, CronUnit}
-import cron4s.expr._
 import cron4s.base.Predicate
+import cron4s.expr._
 
 import shapeless.Coproduct
 
@@ -38,9 +38,11 @@ trait DateTimeCron[T] {
   def anyOf[DateTime](expr: T, adapter: DateTimeAdapter[DateTime]): Predicate[DateTime] =
     matches(expr, adapter)(Predicate.disjunction.monoidK)
 
+  @inline
   def next[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])
                     (from: DateTime): Option[DateTime] = step(expr, adapter)(from, 1)
 
+  @inline
   def prev[DateTime](expr: T, adapter: DateTimeAdapter[DateTime])
                     (from: DateTime): Option[DateTime] = step(expr, adapter)(from, -1)
 
@@ -49,7 +51,7 @@ trait DateTimeCron[T] {
 
   def ranges(expr: T): Map[CronField, IndexedSeq[Int]]
 
-  def supportedFields(expr: T): List[CronField]
+  def supportedFields: List[CronField]
 
   def field[F <: CronField](expr: T)(implicit unit: CronUnit[F]): Option[FieldNode[F]]
 
@@ -81,9 +83,10 @@ private[datetime] class FullCron extends DateTimeCron[CronExpr] {
   }
 
   def ranges(expr: CronExpr): Map[CronField, IndexedSeq[Int]] =
-    supportedFields(expr).zip(expr.raw.map(ops.range).toList).toMap
+    supportedFields.zip(expr.raw.map(ops.range).toList).toMap
 
-  def supportedFields(expr: CronExpr): List[CronField] = CronField.All
+  @inline
+  val supportedFields: List[CronField] = CronField.All
 
   def field[F <: CronField](expr: CronExpr)(implicit unit: CronUnit[F]): Option[FieldNode[F]] =
     Some(unit.field match {
@@ -112,9 +115,10 @@ private[datetime] class TimeCron extends DateTimeCron[TimeCronExpr] {
   }
 
   def ranges(expr: TimeCronExpr): Map[CronField, IndexedSeq[Int]] =
-    supportedFields(expr).zip(expr.raw.map(ops.range).toList).toMap
+    supportedFields.zip(expr.raw.map(ops.range).toList).toMap
 
-  def supportedFields(expr: TimeCronExpr): List[CronField] =
+  @inline
+  val supportedFields: List[CronField] =
     List(CronField.Second, CronField.Minute, CronField.Hour)
 
   def field[F <: CronField](expr: TimeCronExpr)(implicit unit: CronUnit[F]): Option[FieldNode[F]] =
@@ -142,9 +146,10 @@ private[datetime] class DateCron extends DateTimeCron[DateCronExpr] {
   }
 
   def ranges(expr: DateCronExpr): Map[CronField, IndexedSeq[Int]] =
-    supportedFields(expr).zip(expr.raw.map(ops.range).toList).toMap
+    supportedFields.zip(expr.raw.map(ops.range).toList).toMap
 
-  def supportedFields(expr: DateCronExpr): List[CronField] =
+  @inline
+  val supportedFields: List[CronField] =
     List(CronField.DayOfMonth, CronField.Month, CronField.DayOfWeek)
 
   def field[F <: CronField](expr: DateCronExpr)(implicit unit: CronUnit[F]): Option[FieldNode[F]] =

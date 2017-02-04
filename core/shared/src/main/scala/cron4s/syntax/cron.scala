@@ -49,19 +49,26 @@ private[syntax] class DateTimeCronOps[E](self: E, tc: DateTimeCron[E]) {
     tc.ranges(self)
 
   def supportedFields: List[CronField] =
-    tc.supportedFields(self)
+    tc.supportedFields
 
   def field[F <: CronField](implicit unit: CronUnit[F]): Option[FieldNode[F]] =
     tc.field[F](self)
 
 }
 
-private[syntax] trait DateTimeCronSyntax {
+private[syntax] trait DateTimeCronSyntax extends DateTimeCronFunctions {
 
   implicit def toDateTimeCronOps[E, DateTime]
       (target: E)
       (implicit tc0: DateTimeCron[E]): DateTimeCronOps[E] =
     new DateTimeCronOps[E](target, tc0)
+
+}
+
+private[syntax] trait DateTimeCronFunctions {
+
+  def supportedFields[E](implicit E: DateTimeCron[E]): List[CronField] =
+    E.supportedFields
 
 }
 

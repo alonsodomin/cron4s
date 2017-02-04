@@ -20,12 +20,13 @@ import cron4s.CronField
 import cron4s.expr._
 import cron4s.testkit.Cron4sPropSpec
 
+import org.scalatest.Matchers
 import org.scalatest.prop.TableDrivenPropertyChecks
 
 /**
   * Created by alonsodomin on 07/08/2016.
   */
-class StepperSpec extends Cron4sPropSpec with TableDrivenPropertyChecks {
+class StepperSpec extends Cron4sPropSpec with TableDrivenPropertyChecks with Matchers {
   import CronField._
   import testdummy._
 
