@@ -30,7 +30,7 @@ import scalaz.Equal
 /**
   * Created by alonsodomin on 29/01/2017.
   */
-abstract class DateTimeCronTestKit[DateTime : DateTimeAdapter : Equal] extends Cron4sLawSuite
+abstract class DateTimeCronTestKit[DateTime : DateTimeAdapter : Equal] extends SlowCron4sLawSuite
   with DateTimeTestKitBase[DateTime]
   with CronGenerators {
 
