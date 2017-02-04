@@ -18,7 +18,9 @@ package cron4s.lib.threetenbp
 
 import cron4s.CronUnit
 import cron4s.testkit.DateTimeTestKitBase
+
 import org.scalacheck.{Arbitrary, Gen}
+
 import org.threeten.bp._
 
 /**
