@@ -58,7 +58,7 @@ trait DateTimeCron[T] {
 }
 
 object DateTimeCron {
-  @inline def apply[T, DateTime](implicit ev: DateTimeCron[T]): DateTimeCron[T] = ev
+  @inline def apply[T](implicit ev: DateTimeCron[T]): DateTimeCron[T] = ev
 
   implicit val fullCronInstance: DateTimeCron[CronExpr]     = new FullCron
   implicit val timeCronInstance: DateTimeCron[TimeCronExpr] = new TimeCron
