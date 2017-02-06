@@ -16,7 +16,7 @@
 
 package cron4s.lib.javatime
 
-import java.time.{LocalDate, LocalDateTime, LocalTime, ZonedDateTime}
+import java.time._
 
 import cron4s.testkit.IsDateTimeTestKit
 
@@ -27,3 +27,4 @@ class JavaLocalDateSpec extends IsDateTimeTestKit[LocalDate]("JavaLocalDate") wi
 class JavaLocalTimeSpec extends IsDateTimeTestKit[LocalTime]("JavaLocalTime") with JavaLocalTimeTestBase
 class JavaLocalDateTimeSpec extends IsDateTimeTestKit[LocalDateTime]("JavaLocalDateTime") with JavaLocalDateTimeTestBase
 class JavaZonedDateTimeSpec extends IsDateTimeTestKit[ZonedDateTime]("JavaZonedDateTime") with JavaZonedDateTimeTestBase
+class JavaOffsetDateTimeSpec extends IsDateTimeTestKit[OffsetDateTime]("JavaOffsetDateTime") with JavaOffsetDateTimeTestBase

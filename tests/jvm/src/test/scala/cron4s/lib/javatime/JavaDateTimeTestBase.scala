@@ -20,9 +20,8 @@ import java.time._
 
 import cron4s.CronUnit
 import cron4s.testkit.DateTimeTestKitBase
-import org.scalacheck._
 
-import scalaz.Equal
+import org.scalacheck._
 
 /**
   * Created by alonsodomin on 29/08/2016.
@@ -82,8 +81,6 @@ trait JavaZonedDateTimeTestBase extends DateTimeTestKitBase[ZonedDateTime] {
 
   final val Year = 2012
 
-  implicit val dateTimeEq: Equal[ZonedDateTime] = Equal.equal((lhs, rhs) => lhs.equals(rhs))
-
   override implicit lazy val arbitraryDateTime: Arbitrary[ZonedDateTime] = Arbitrary {
     for {
       second     <- Gen.choose(Seconds.min, Seconds.max)
@@ -96,4 +93,23 @@ trait JavaZonedDateTimeTestBase extends DateTimeTestKitBase[ZonedDateTime] {
 
   def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): ZonedDateTime =
     ZonedDateTime.of(Year, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
+}
+
+trait JavaOffsetDateTimeTestBase extends DateTimeTestKitBase[OffsetDateTime] {
+  import CronUnit._
+
+  final val Year = 2012
+
+  override implicit lazy val arbitraryDateTime: Arbitrary[OffsetDateTime] = Arbitrary {
+    for {
+      second     <- Gen.choose(Seconds.min, Seconds.max)
+      minute     <- Gen.choose(Minutes.min, Minutes.max)
+      hour       <- Gen.choose(Hours.min, Hours.max)
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(Year, _))
+      dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.lengthOfMonth())
+    } yield OffsetDateTime.of(Year, yearMonth.getMonthValue, dayOfMonth, hour, minute, second, 0, ZoneOffset.UTC)
+  }
+
+  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): OffsetDateTime =
+    OffsetDateTime.of(Year, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
 }

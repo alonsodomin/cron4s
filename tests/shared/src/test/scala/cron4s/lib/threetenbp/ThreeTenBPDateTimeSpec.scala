@@ -17,7 +17,8 @@
 package cron4s.lib.threetenbp
 
 import cron4s.testkit.IsDateTimeTestKit
-import org.threeten.bp.{LocalDate, LocalDateTime, LocalTime, ZonedDateTime}
+
+import org.threeten.bp._
 
 /**
   * Created by alonsodomin on 29/08/2016.
@@ -33,3 +34,6 @@ class ThreeTenBPLocalDateTimeSpec extends IsDateTimeTestKit[LocalDateTime]("Thre
 
 class ThreeTenBPZonedDateTimeSpec extends IsDateTimeTestKit[ZonedDateTime]("ThreeTenBPZonedDateTime")
   with ThreeTenBPZonedDateTimeTestBase
+
+class ThreeTenBPOffsetDateTimeSpec extends IsDateTimeTestKit[OffsetDateTime]("ThreeTenBPOffsetDateTime")
+  with ThreeTenBPOffsetDateTimeTestBase
