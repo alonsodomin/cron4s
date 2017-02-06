@@ -1,3 +1,4 @@
 [cron4s](https://alonsodomin.github.io/cron4s) 0.3.1 is an incremental upgrade with the following changes:
 
- - Fixed type signature in summon method for type class `DateTimeCron` [(#39)](https://github.com/alonsodomin/cron4s/issues/39)
+ - [(#39)](https://github.com/alonsodomin/cron4s/issues/39) Fixed type signature in summon method for type class `DateTimeCron`
+ - [(#41)](https://github.com/alonsodomin/cron4s/issues/41) Support for Joda's partial date times: LocalDate, LocalTime, LocalDateTime
