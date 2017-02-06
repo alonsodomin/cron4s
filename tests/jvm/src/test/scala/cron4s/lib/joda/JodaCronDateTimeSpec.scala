@@ -22,4 +22,4 @@ import org.joda.time.DateTime
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-class JodaCronDateTimeSpec extends CronDateTimeTestKit[DateTime] with JodaTestBase
+class JodaCronDateTimeSpec extends CronDateTimeTestKit[DateTime] with JodaDateTimeTestBase

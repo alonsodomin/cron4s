@@ -19,14 +19,14 @@ package cron4s.lib.joda
 import cron4s.CronUnit
 import cron4s.testkit.DateTimeTestKitBase
 
-import org.joda.time.{DateTime, YearMonth}
+import org.joda.time._
 
 import org.scalacheck.{Arbitrary, Gen}
 
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-trait JodaTestBase extends DateTimeTestKitBase[DateTime] {
+trait JodaDateTimeTestBase extends DateTimeTestKitBase[DateTime] {
   import CronUnit._
 
   final val Year = 2014
@@ -43,5 +43,58 @@ trait JodaTestBase extends DateTimeTestKitBase[DateTime] {
 
   protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): DateTime =
     new DateTime(Year, month, dayOfMonth, hours, minutes, seconds)
+
+}
+
+trait JodaLocalDateTestBase extends DateTimeTestKitBase[LocalDate] {
+  import CronUnit._
+
+  final val Year = 2014
+
+  override implicit lazy val arbitraryDateTime: Arbitrary[LocalDate] = Arbitrary {
+    for {
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(Year, _))
+      dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.toLocalDate(1).dayOfMonth().getMaximumValue)
+    } yield new LocalDate(Year, yearMonth.getMonthOfYear, dayOfMonth)
+  }
+
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): LocalDate =
+    new LocalDate(Year, month, dayOfMonth)
+
+}
+
+trait JodaLocalTimeTestBase extends DateTimeTestKitBase[LocalTime] {
+  import CronUnit._
+
+  override implicit lazy val arbitraryDateTime: Arbitrary[LocalTime] = Arbitrary {
+    for {
+      second     <- Gen.choose(Seconds.min, Seconds.max)
+      minute     <- Gen.choose(Minutes.min, Minutes.max)
+      hour       <- Gen.choose(Hours.min, Hours.max)
+    } yield new LocalTime(hour, minute, second)
+  }
+
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): LocalTime =
+    new LocalTime(hours, minutes, seconds)
+
+}
+
+trait JodaLocalDateTimeTestBase extends DateTimeTestKitBase[LocalDateTime] {
+  import CronUnit._
+
+  final val Year = 2014
+
+  override implicit lazy val arbitraryDateTime: Arbitrary[LocalDateTime] = Arbitrary {
+    for {
+      second     <- Gen.choose(Seconds.min, Seconds.max)
+      minute     <- Gen.choose(Minutes.min, Minutes.max)
+      hour       <- Gen.choose(Hours.min, Hours.max)
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(Year, _))
+      dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.toLocalDate(1).dayOfMonth().getMaximumValue)
+    } yield new LocalDateTime(Year, yearMonth.getMonthOfYear, dayOfMonth, hour, minute, second)
+  }
+
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): LocalDateTime =
+    new LocalDateTime(Year, month, dayOfMonth, hours, minutes, seconds)
 
 }

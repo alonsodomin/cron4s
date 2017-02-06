@@ -18,7 +18,7 @@ package cron4s.lib
 
 import cron4s.datetime.IsDateTime
 
-import org.joda.time.DateTime
+import org.joda.time.{DateTime, LocalDate, LocalDateTime, LocalTime}
 
 import scalaz.Equal
 
@@ -27,8 +27,14 @@ import scalaz.Equal
   */
 package object joda {
 
-  implicit val jodaDateTimeEq: Equal[DateTime] = Equal.equalA[DateTime]
+  implicit val jodaDateTimeEq      : Equal[DateTime]      = Equal.equalA[DateTime]
+  implicit val jodaLocalDateEq     : Equal[LocalDate]     = Equal.equalA[LocalDate]
+  implicit val jodaLocalTimeEq     : Equal[LocalTime]     = Equal.equalA[LocalTime]
+  implicit val jodaLocalDateTimeEq : Equal[LocalDateTime] = Equal.equalA[LocalDateTime]
 
-  implicit val jodaDateTimeInstance: IsDateTime[DateTime] = new JodaInstance
+  implicit val jodaDateTimeInstance      : IsDateTime[DateTime]      = new JodaDateTimeInstance
+  implicit val jodaLocalDateInstance     : IsDateTime[LocalDate]     = new JodaLocalDateInstance
+  implicit val jodaLocalTimeInstance     : IsDateTime[LocalTime]     = new JodaLocalTimeInstance
+  implicit val jodaLocalDateTimeInstance : IsDateTime[LocalDateTime] = new JodaLocalDateTimeInstance
 
 }
