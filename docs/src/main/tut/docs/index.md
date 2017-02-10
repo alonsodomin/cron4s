@@ -60,7 +60,7 @@ types, we are doing it here as a means of simplifying the types just for the sak
 
 #### Validation errors
 
-The CRON expression will be validated right after parsing all any error found during this stage will be returned
+The CRON expression will be validated right after parsing. Any error found during this stage will be returned
 as well in the left side of the `Either` returned by the `Cron` constructor. For instance, the following expression
 has a sequence that mixes elements that self-imply each other, which is invalid: 
 
