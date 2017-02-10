@@ -57,7 +57,7 @@ types, we are doing it here as a means of simplifying the types just for the sak
 
 <h4 id="validation-errors">Validation errors</h4>
 
-<p>The CRON expression will be validated right after parsing all any error found during this stage will be returned
+<p>The CRON expression will be validated right after parsing. Any error found during this stage will be returned
 as well in the left side of the <code class="highlighter-rouge">Either</code> returned by the <code class="highlighter-rouge">Cron</code> constructor. For instance, the following expression
 has a sequence that mixes elements that self-imply each other, which is invalid:</p>
 
@@ -277,8 +277,9 @@ parameterized for the same field type, the code won’t compile:</p>
  <span class="n">required</span><span class="k">:</span> <span class="kt">?EE</span><span class="o">[</span><span class="kt">cron4s.CronField.Minute</span><span class="o">]</span>
        <span class="n">minutesRange</span><span class="o">.</span><span class="n">implies</span><span class="o">(</span><span class="n">eachSecond</span><span class="o">)</span>
                     <span class="o">^</span>
-<span class="o">&lt;</span><span class="n">console</span><span class="k">&gt;:</span><span class="mi">21</span><span class="k">:</span> <span class="kt">error:</span> <span class="k">type</span> <span class="kt">mismatch</span><span class="o">;</span>
- <span class="n">found</span>   <span class="k">:</span> <span class="kt">cron4s.expr.EachNode</span><span class="o">[</span><span class="kt">cron4s.CronField.Second</span><span class="o">]</span>
+<span class="o">&lt;</span><span class="n">console</span><span class="k">&gt;:</span><span class="mi">21</span><span class="k">:</span> <span class="kt">error:</span>  <span class="k">type</span> <span class="kt">mismatch</span><span class="o">;</span>
+ <span class="nc">Clippy</span> <span class="n">advises</span><span class="o">,</span> <span class="n">pay</span> <span class="n">attention</span> <span class="n">to</span> <span class="n">the</span> <span class="n">marked</span> <span class="n">parts</span><span class="k">:</span>
+ <span class="kt">found</span>   <span class="kt">:</span> <span class="kt">cron4s.expr.EachNode</span><span class="o">[</span><span class="kt">cron4s.CronField.Second</span><span class="o">]</span>
  <span class="n">required</span><span class="k">:</span> <span class="kt">EE</span><span class="o">[</span><span class="kt">cron4s.CronField.Minute</span><span class="o">]</span>
        <span class="n">minutesRange</span><span class="o">.</span><span class="n">implies</span><span class="o">(</span><span class="n">eachSecond</span><span class="o">)</span>
                             <span class="o">^</span>

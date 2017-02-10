@@ -56,8 +56,9 @@ same names that take an <code class="highlighter-rouge">Int</code> as their para
 compiler refused to resolve the implicit that enable to perform such operation in the DateTime object:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">seconds</span><span class="o">.</span><span class="n">next</span><span class="o">(</span><span class="n">dateTime</span><span class="o">)</span>
-<span class="o">&lt;</span><span class="n">console</span><span class="k">&gt;:</span><span class="mi">24</span><span class="k">:</span> <span class="kt">error:</span> <span class="k">type</span> <span class="kt">mismatch</span><span class="o">;</span>
- <span class="n">found</span>   <span class="k">:</span> <span class="kt">java.time.LocalDateTime</span>
+<span class="o">&lt;</span><span class="n">console</span><span class="k">&gt;:</span><span class="mi">24</span><span class="k">:</span> <span class="kt">error:</span>  <span class="k">type</span> <span class="kt">mismatch</span><span class="o">;</span>
+ <span class="nc">Clippy</span> <span class="n">advises</span><span class="o">,</span> <span class="n">pay</span> <span class="n">attention</span> <span class="n">to</span> <span class="n">the</span> <span class="n">marked</span> <span class="n">parts</span><span class="k">:</span>
+ <span class="kt">found</span>   <span class="kt">:</span> <span class="kt">java.time.LocalDateTime</span>
  <span class="n">required</span><span class="k">:</span> <span class="kt">Int</span>
        <span class="n">cron</span><span class="o">.</span><span class="n">seconds</span><span class="o">.</span><span class="n">next</span><span class="o">(</span><span class="n">dateTime</span><span class="o">)</span>
                          <span class="o">^</span>
