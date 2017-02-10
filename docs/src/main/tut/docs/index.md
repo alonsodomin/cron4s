@@ -36,7 +36,7 @@ import cron4s._
 val parsed = Cron("10-35 2,4,6 * * * *")
 ```
 
-We will get an `Either[InvalidCron, CronExpr]`, the right side giving us an error description if the parsing
+We will get an `Either[InvalidCron, CronExpr]`, the left side giving us an error description if the parsing
 has failed. In the above example the expression parsed successfully but if we pass a wrong or invalid expression
 we will get the actual reason for the failure in the left side of the `Either`:
 
