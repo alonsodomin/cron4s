@@ -56,6 +56,9 @@ class ParserSpec extends Cron4sPropSpec
   def verifyEach(parser: Parser[EachNode[CronField]], input: String): Boolean =
     verifyParsed[CronField, EachNode[CronField]](parser, input)(_ => true)
 
+  def verifyAny(parser: Parser[AnyNode[CronField]], input: String): Boolean =
+    verifyParsed[CronField, AnyNode[CronField]](parser, input)(_ => true)
+
   def verifyBetween[F <: CronField](parser: Parser[BetweenNode[F]], input: String)(verify: BetweenNode[F] => Boolean): Boolean =
     verifyParsed[F, BetweenNode[F]](parser, input)(verify)
 
@@ -88,6 +91,24 @@ class ParserSpec extends Cron4sPropSpec
   // --------------------------------------------------------------
   // Properties for the individual parsers
   // --------------------------------------------------------------
+
+  val eachParserGen: Gen[Parser[EachNode[CronField]]] =
+    Gen.oneOf(each[Second], each[Minute], each[Hour], each[DayOfMonth], each[Month], each[DayOfWeek])
+
+  property("should be able to parse an asterisk in any field") {
+    forAll(eachParserGen) { parser =>
+      verifyEach(parser, "*")
+    }
+  }
+
+  val anyParserGen: Gen[Parser[AnyNode[CronField]]] =
+    Gen.oneOf(any[Second], any[DayOfMonth], any[DayOfWeek])
+
+  property("should be able to parse a question mark in any field") {
+    forAll(anyParserGen) { parser =>
+      verifyAny(parser, "?")
+    }
+  }
 
   property("should be able to parse seconds") {
     forAll(secondsOrMinutesGen) {
@@ -136,15 +157,6 @@ class ParserSpec extends Cron4sPropSpec
       x => verifyConst(daysOfWeek, x) { expr =>
         expr.textValue.contains(x) && expr.matches(DaysOfWeek.textValues.indexOf(x))
       }
-    }
-  }
-
-  val eachParserGen: Gen[Parser[EachNode[CronField]]] =
-    Gen.oneOf(each[Second], each[Minute], each[Hour], each[DayOfMonth], each[Month], each[DayOfWeek])
-
-  property("should be able to parse an asterisk in any field") {
-    forAll(eachParserGen) { parser =>
-      verifyEach(parser, "*")
     }
   }
 

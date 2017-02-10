@@ -91,8 +91,10 @@ object AnyNode {
 
       def implies[EE[_ <: CronField]](node: AnyNode[F])(ee: EE[F])
         (implicit EE: FieldExpr[EE, F]): Boolean = true
-      
-      def matches(node: AnyNode[F]): Predicate[Int] = always(true)
+
+      def matches(node: AnyNode[F]): Predicate[Int] = Predicate { x =>
+        x >= min(node) && x <= max(node)
+      }
 
       def range(node: AnyNode[F]): IndexedSeq[Int] = node.range
     }
