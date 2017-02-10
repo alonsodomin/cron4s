@@ -39,6 +39,9 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
     }
   }
 
+  def anyGen[F <: CronField](implicit unit: CronUnit[F]): Gen[AnyNode[F]] =
+    Gen.const(AnyNode[F])
+
   def eachGen[F <: CronField](implicit unit: CronUnit[F]): Gen[EachNode[F]] =
     Gen.const(EachNode[F])
 
@@ -157,6 +160,16 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       betweenGen[F].map(between2Field),
       severalGen[F].map(several2Field),
       everyGen[F].map(every2Field)
+    )
+
+  def nodeWithAnyGen[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Gen[FieldNodeWithAny[F]] =
+    Gen.oneOf(
+      anyGen[F].map(any2FieldWithAny),
+      eachGen[F].map(each2FieldWithAny),
+      constGen[F].map(const2FieldWithAny),
+      betweenGen[F].map(between2FieldWithAny),
+      severalGen[F].map(several2FieldWithAny),
+      everyGen[F].map(every2FieldWithAny)
     )
 
 }
