@@ -35,7 +35,7 @@
 </code></pre>
 </div>
 
-<p>We will get an <code class="highlighter-rouge">Either[InvalidCron, CronExpr]</code>, the right side giving us an error description if the parsing
+<p>We will get an <code class="highlighter-rouge">Either[InvalidCron, CronExpr]</code>, the left side giving us an error description if the parsing
 has failed. In the above example the expression parsed successfully but if we pass a wrong or invalid expression
 we will get the actual reason for the failure in the left side of the <code class="highlighter-rouge">Either</code>:</p>
 
