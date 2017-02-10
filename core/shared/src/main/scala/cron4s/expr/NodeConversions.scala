@@ -42,6 +42,24 @@ private[cron4s] trait NodeConversions {
   implicit def every2Field[F <: CronField](node: EveryNode[F]): FieldNode[F] =
     new FieldNode(Coproduct[RawFieldNode[F]](node))
 
+  implicit def any2FieldWithAny[F <: CronField](node: AnyNode[F]): FieldNodeWithAny[F] =
+    new FieldNodeWithAny(Coproduct[RawFieldNodeWithAny[F]](node))
+
+  implicit def each2FieldWithAny[F <: CronField](node: EachNode[F]): FieldNodeWithAny[F] =
+    new FieldNodeWithAny(Coproduct[RawFieldNodeWithAny[F]](node))
+
+  implicit def const2FieldWithAny[F <: CronField](node: ConstNode[F]): FieldNodeWithAny[F] =
+    new FieldNodeWithAny(Coproduct[RawFieldNodeWithAny[F]](node))
+
+  implicit def between2FieldWithAny[F <: CronField](node: BetweenNode[F]): FieldNodeWithAny[F] =
+    new FieldNodeWithAny(Coproduct[RawFieldNodeWithAny[F]](node))
+
+  implicit def several2FieldWithAny[F <: CronField](node: SeveralNode[F]): FieldNodeWithAny[F] =
+    new FieldNodeWithAny(Coproduct[RawFieldNodeWithAny[F]](node))
+
+  implicit def every2FieldWithAny[F <: CronField](node: EveryNode[F]): FieldNodeWithAny[F] =
+    new FieldNodeWithAny(Coproduct[RawFieldNodeWithAny[F]](node))
+
   implicit def const2Enumerable[F <: CronField](node: ConstNode[F]): EnumerableNode[F] =
     new EnumerableNode(Coproduct[RawEnumerableNode[F]](node))
 

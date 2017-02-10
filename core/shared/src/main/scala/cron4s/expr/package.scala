@@ -25,6 +25,8 @@ package object expr {
 
   private[expr] type RawFieldNode[F <: CronField] =
     EachNode[F] :+: ConstNode[F] :+: BetweenNode[F] :+: SeveralNode[F] :+: EveryNode[F] :+: CNil
+  private[expr] type RawFieldNodeWithAny[F <: CronField] =
+    AnyNode[F] :+: RawFieldNode[F]
 
   private[expr] type RawEnumerableNode[F <: CronField] =
     ConstNode[F] :+: BetweenNode[F] :+: CNil
@@ -32,12 +34,12 @@ package object expr {
   private[expr] type RawDivisibleNode[F <: CronField] =
     EachNode[F] :+: BetweenNode[F] :+: SeveralNode[F] :+: CNil
 
-  type SecondsNode     = FieldNode[CronField.Second]
+  type SecondsNode     = FieldNodeWithAny[CronField.Second]
   type MinutesNode     = FieldNode[CronField.Minute]
   type HoursNode       = FieldNode[CronField.Hour]
-  type DaysOfMonthNode = FieldNode[CronField.DayOfMonth]
+  type DaysOfMonthNode = FieldNodeWithAny[CronField.DayOfMonth]
   type MonthsNode      = FieldNode[CronField.Month]
-  type DaysOfWeekNode  = FieldNode[CronField.DayOfWeek]
+  type DaysOfWeekNode  = FieldNodeWithAny[CronField.DayOfWeek]
 
   private[cron4s] type RawTimeCronExpr = SecondsNode :: MinutesNode :: HoursNode :: HNil
   private[cron4s] type RawDateCronExpr = DaysOfMonthNode :: MonthsNode :: DaysOfWeekNode :: HNil

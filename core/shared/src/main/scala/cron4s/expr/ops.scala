@@ -34,9 +34,10 @@ private[cron4s] object ops {
     implicit def caseSeveral[F <: CronField] = at[SeveralNode[F]](_.matches)
     implicit def caseEvery[F <: CronField]   = at[EveryNode[F]](_.matches)
 
-    implicit def caseField[F <: CronField]      = at[FieldNode[F]](_.raw.fold(matches))
-    implicit def caseEnumerable[F <: CronField] = at[EnumerableNode[F]](_.raw.fold(matches))
-    implicit def caseDivisible[F <: CronField]  = at[DivisibleNode[F]](_.raw.fold(matches))
+    implicit def caseField[F <: CronField]        = at[FieldNode[F]](_.raw.fold(matches))
+    implicit def caseFieldWithAny[F <: CronField] = at[FieldNodeWithAny[F]](_.raw.fold(matches))
+    implicit def caseEnumerable[F <: CronField]   = at[EnumerableNode[F]](_.raw.fold(matches))
+    implicit def caseDivisible[F <: CronField]    = at[DivisibleNode[F]](_.raw.fold(matches))
   }
 
   object range extends Poly1 {
@@ -47,9 +48,10 @@ private[cron4s] object ops {
     implicit def caseSeveral[F <: CronField] = at[SeveralNode[F]](_.range)
     implicit def caseEvery[F <: CronField]   = at[EveryNode[F]](_.range)
 
-    implicit def caseField[F <: CronField]      = at[FieldNode[F]](_.raw.fold(range))
-    implicit def caseEnumerable[F <: CronField] = at[EnumerableNode[F]](_.raw.fold(range))
-    implicit def caseDivisible[F <: CronField]  = at[DivisibleNode[F]](_.raw.fold(range))
+    implicit def caseField[F <: CronField]        = at[FieldNode[F]](_.raw.fold(range))
+    implicit def caseFieldWithAny[F <: CronField] = at[FieldNodeWithAny[F]](_.raw.fold(range))
+    implicit def caseEnumerable[F <: CronField]   = at[EnumerableNode[F]](_.raw.fold(range))
+    implicit def caseDivisible[F <: CronField]    = at[DivisibleNode[F]](_.raw.fold(range))
   }
 
   object show extends Poly1 {
@@ -68,6 +70,8 @@ private[cron4s] object ops {
 
     implicit def caseField[F <: CronField](implicit show: Show[FieldNode[F]]) =
       at[FieldNode[F]](show.shows)
+    implicit def caseFieldWithAny[F <: CronField](implicit show: Show[FieldNodeWithAny[F]]) =
+      at[FieldNodeWithAny[F]](show.shows)
     implicit def caseEnumerable[F <: CronField](implicit show: Show[EnumerableNode[F]]) =
       at[EnumerableNode[F]](show.shows)
     implicit def caseDivisble[F <: CronField](implicit show: Show[DivisibleNode[F]]) =
@@ -82,9 +86,10 @@ private[cron4s] object ops {
     implicit def caseSeveral[F <: CronField] = at[SeveralNode[F]](_.unit)
     implicit def caseEvery[F <: CronField]   = at[EveryNode[F]](_.unit)
 
-    implicit def caseField[F <: CronField]      = at[FieldNode[F]](_.raw.fold(unit))
-    implicit def caseEnumerable[F <: CronField] = at[EnumerableNode[F]](_.raw.fold(unit))
-    implicit def caseDivisible[F <: CronField]  = at[DivisibleNode[F]](_.raw.fold(unit))
+    implicit def caseField[F <: CronField]        = at[FieldNode[F]](_.raw.fold(unit))
+    implicit def caseFieldWithAny[F <: CronField] = at[FieldNodeWithAny[F]](_.raw.fold(unit))
+    implicit def caseEnumerable[F <: CronField]   = at[EnumerableNode[F]](_.raw.fold(unit))
+    implicit def caseDivisible[F <: CronField]    = at[DivisibleNode[F]](_.raw.fold(unit))
   }
 
 

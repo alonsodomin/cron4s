@@ -48,6 +48,9 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
   implicit def eachValidator[F <: CronField]: NodeValidator[EachNode[F]] =
     NodeValidator.alwaysValid[EachNode[F]]
 
+  implicit def anyValidator[F <: CronField]: NodeValidator[AnyNode[F]] =
+    NodeValidator.alwaysValid[AnyNode[F]]
+
   implicit def constValidator[F <: CronField](
       implicit
       ev: Enumerated[CronUnit[F]]
@@ -168,4 +171,13 @@ private[validation] trait LowPriorityNodeValidatorInstances {
       def validate(node: FieldNode[F]): List[FieldError] =
         node.raw.fold(ops.validate)
     }
+
+  implicit def fieldNodeWithAnyValidator[F <: CronField](
+      implicit
+      ev: Enumerated[CronUnit[F]]
+    ): NodeValidator[FieldNodeWithAny[F]] = new NodeValidator[FieldNodeWithAny[F]] {
+    def validate(node: FieldNodeWithAny[F]): List[FieldError] =
+      node.raw.fold(ops.validate)
+  }
+
 }

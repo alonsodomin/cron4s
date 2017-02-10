@@ -87,6 +87,9 @@ package object parser extends NodeConversions {
   def each[F <: CronField](implicit unit: CronUnit[F]): Parser[EachNode[F]] =
     P("*").map(_ => EachNode[F])
 
+  def any[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyNode[F]] =
+    P("?").map(_ => AnyNode[F])
+
   def between[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[BetweenNode[F]] =
     (p ~ "-" ~ p).map { case (min, max) => BetweenNode[F](min, max) }
 
@@ -121,9 +124,18 @@ package object parser extends NodeConversions {
       each[F].map(each2Field)
   }
 
+  def withAny[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[FieldNodeWithAny[F]] = {
+    every(p).map(every2FieldWithAny) |
+      several(p).map(several2FieldWithAny) |
+      between(p).map(between2FieldWithAny) |
+      p.map(const2FieldWithAny) |
+      each[F].map(each2FieldWithAny) |
+      any[F].map(any2FieldWithAny)
+  }
+
   val cron: Parser[CronExpr] = P(
-    Start ~ of(seconds) ~ " " ~/ of(minutes) ~ " " ~/ of(hours) ~ " " ~/
-      of(daysOfMonth) ~ " " ~/ of(months) ~ " " ~/ of(daysOfWeek) ~ End
+    Start ~ withAny(seconds) ~ " " ~/ of(minutes) ~ " " ~/ of(hours) ~ " " ~/
+      withAny(daysOfMonth) ~ " " ~/ of(months) ~ " " ~/ withAny(daysOfWeek) ~ End
   ).map { case (sec, min, hour, day, month, weekDay) =>
     CronExpr(sec, min, hour, day, month, weekDay)
   }
