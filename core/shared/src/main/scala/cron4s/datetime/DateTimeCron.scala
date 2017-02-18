@@ -65,7 +65,7 @@ object DateTimeCron {
   implicit val dateCronInstance: DateTimeCron[DateCronExpr] = new DateCron
 }
 
-private[datetime] class FullCron extends DateTimeCron[CronExpr] {
+private[datetime] final class FullCron extends DateTimeCron[CronExpr] {
 
   protected def matches[DateTime](expr: CronExpr, dt: IsDateTime[DateTime])
       (implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
@@ -89,19 +89,20 @@ private[datetime] class FullCron extends DateTimeCron[CronExpr] {
   @inline
   val supportedFields: List[CronField] = CronField.All
 
-  def field[F <: CronField](expr: CronExpr)(implicit unit: CronUnit[F]): Option[FieldNode[F]] =
+  def field[F <: CronField](expr: CronExpr)(implicit unit: CronUnit[F]): Option[FieldNode[F]] = {
     Some(unit.field match {
-      case CronField.Second     => expr.seconds.asInstanceOf[FieldNode[F]]
-      case CronField.Minute     => expr.minutes.asInstanceOf[FieldNode[F]]
-      case CronField.Hour       => expr.hours.asInstanceOf[FieldNode[F]]
+      case CronField.Second => expr.seconds.asInstanceOf[FieldNode[F]]
+      case CronField.Minute => expr.minutes.asInstanceOf[FieldNode[F]]
+      case CronField.Hour => expr.hours.asInstanceOf[FieldNode[F]]
       case CronField.DayOfMonth => expr.daysOfMonth.asInstanceOf[FieldNode[F]]
-      case CronField.Month      => expr.months.asInstanceOf[FieldNode[F]]
-      case CronField.DayOfWeek  => expr.daysOfWeek.asInstanceOf[FieldNode[F]]
+      case CronField.Month => expr.months.asInstanceOf[FieldNode[F]]
+      case CronField.DayOfWeek => expr.daysOfWeek.asInstanceOf[FieldNode[F]]
     })
+  }
 
 }
 
-private[datetime] class TimeCron extends DateTimeCron[TimeCronExpr] {
+private[datetime] final class TimeCron extends DateTimeCron[TimeCronExpr] {
 
   protected def matches[DateTime](expr: TimeCronExpr, dt: IsDateTime[DateTime])
       (implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
@@ -132,7 +133,7 @@ private[datetime] class TimeCron extends DateTimeCron[TimeCronExpr] {
 
 }
 
-private[datetime] class DateCron extends DateTimeCron[DateCronExpr] {
+private[datetime] final class DateCron extends DateTimeCron[DateCronExpr] {
 
   protected def matches[DateTime](expr: DateCronExpr, dt: IsDateTime[DateTime])
       (implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
