@@ -22,29 +22,36 @@ import Scalaz._
 /**
   * Created by alonsodomin on 23/08/2016.
   */
+
+private[cron4s] sealed trait Direction
+private[cron4s] object Direction {
+  case object Forward extends Direction
+  case object Backwards extends Direction
+}
+
 trait Enumerated[A] {
 
   def min(a: A): Int = range(a).min
   def max(a: A): Int = range(a).max
 
-  def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] = {
+  private[cron4s] def stepInDirection(a: A, from: Int, stepSize: Int, direction: Direction): Option[(Int, Int, Direction)] = {
     if (stepSize == Int.MinValue || stepSize == Int.MaxValue) {
       None
     } else {
       val aRange = range(a)
 
-      val nearestNeighbourIndex = if (stepSize > 0) {
-        aRange.lastIndexWhere(from >= _).some
-      } else if (stepSize < 0) {
-        val idx = aRange.indexWhere(from <= _)
-        if (idx == -1) aRange.size.some
-        else idx.some
-      } else {
-        none[Int]
+      val nearestNeighbourIndex = direction match {
+        case Direction.Forward =>
+          aRange.lastIndexWhere(from >= _)
+
+        case Direction.Backwards =>
+          val idx = aRange.indexWhere(from <= _)
+          if (idx == -1) aRange.size
+          else idx
       }
 
-      nearestNeighbourIndex.map { idx =>
-        val pointer = idx + stepSize
+      if (stepSize != 0) {
+        val pointer = nearestNeighbourIndex + stepSize
         val index = {
           val mod = pointer % aRange.size
           if (mod < 0) aRange.size + mod
@@ -56,15 +63,26 @@ trait Enumerated[A] {
           pointer
         }
 
-        aRange(index) -> offsetPointer / aRange.size
-      } orElse {
+        (aRange(index), offsetPointer / aRange.size, direction).some
+      } else {
         val result = {
           if (from <= min(a)) min(a)
           else if (from >= max(a)) max(a)
           else from
         }
-        (result -> 0).some
+        (result, 0, direction).some
       }
+    }
+  }
+
+  def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] = {
+    val direction = {
+      if (stepSize >= 0) Direction.Forward
+      else Direction.Backwards
+    }
+
+    stepInDirection(a, from, stepSize, direction).map { case (res, co, _) =>
+      res -> co
     }
   }
 

@@ -16,9 +16,14 @@
 
 package cron4s.testkit.laws
 
-import cron4s.testkit._
-import cron4s.base.Enumerated
+import cron4s.base.{Direction, Enumerated}
 import cron4s.syntax.enumerated._
+import cron4s.testkit._
+
+import org.scalacheck.Prop
+
+import scalaz._
+import Scalaz._
 
 /**
   * Created by alonsodomin on 27/08/2016.
@@ -52,6 +57,12 @@ trait EnumeratedLaws[A] {
 
   def zeroStepSize(a: A, from: Int): IsEqual[Option[(Int, Int)]] = {
     a.step(from, 0) <-> zeroStepExpected(a, from)
+  }
+
+  private[cron4s] def zeroStepSize2(a: A, from: Int, direction: Direction): Prop = {
+    val stepped = TC.stepInDirection(a, from, 0, direction).map(_._1)
+
+    stepped.map(a.range.contains).map(_ ?== true).getOrElse(proved)
   }
 
   def fromMinToMinForwards(a: A): IsEqual[Option[(Int, Int)]] =

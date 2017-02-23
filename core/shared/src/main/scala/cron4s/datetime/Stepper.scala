@@ -84,7 +84,8 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       }
     }
 
-    dateStepLoop(Some(from -> step): Step)
+    //dateStepLoop(Some(from -> step): Step)
+    doStep(Some(from -> step): Step)
   }
 
   def stepOverTime(rawExpr: RawTimeCronExpr, from: DateTime, initial: Int): Step =

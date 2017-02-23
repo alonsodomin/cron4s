@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-package cron4s.testkit
+package cron4s.lib.threetenbp
 
-import cron4s.base.Direction
-import org.scalacheck.{Arbitrary, Gen, Prop}
-
-import scala.language.implicitConversions
-import scalaz.Equal
+import org.scalatest.{FlatSpec, Matchers}
 
 /**
-  * Created by alonsodomin on 03/01/2017.
+  * Created by domingueza on 20/02/2017.
   */
-package object discipline {
+class RegressionSpec extends FlatSpec with Matchers {
 
-  implicit def isEqualToProp[A: Equal](isEqual: IsEqual[A]): Prop =
-    isEqual.lhs ?== isEqual.rhs
 
-  private[cron4s] val directionGen: Gen[Direction] = Gen.oneOf(Direction.Forward, Direction.Backwards)
-  private[cron4s] implicit lazy val arbitraryDirection: Arbitrary[Direction] = Arbitrary(directionGen)
 
 }
