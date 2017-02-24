@@ -16,13 +16,25 @@
 
 package cron4s.lib.threetenbp
 
+import cron4s._
+
 import org.scalatest.{FlatSpec, Matchers}
+
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.temporal.ChronoUnit
 
 /**
   * Created by domingueza on 20/02/2017.
   */
-class RegressionSpec extends FlatSpec with Matchers {
+class CronDateTimeRegressionSpec extends FlatSpec with Matchers {
 
+  "Cron" should "not advance to the next day" in {
+    val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
 
+    val Right(cron) = Cron("* */10 * * * *")
+    val Some(next) = cron.next(from)
+
+    from.until(next, ChronoUnit.SECONDS) <= 600 shouldBe true
+  }
 
 }

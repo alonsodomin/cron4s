@@ -43,26 +43,9 @@ trait EnumeratedLaws[A] {
   def backwards(a: A, from: Int): IsEqual[Option[Int]] =
     a.prev(from) <-> a.step(from, -1).map(_._1)
 
-  private def zeroStepExpected(a: A, from: Int): Option[(Int, Int)] = {
-    val expected = if (from <= a.min) {
-      a.min
-    } else if (from >= a.max) {
-      a.max
-    } else {
-      from
-    }
-
-    Some(expected -> 0)
-  }
-
-  def zeroStepSize(a: A, from: Int): IsEqual[Option[(Int, Int)]] = {
-    a.step(from, 0) <-> zeroStepExpected(a, from)
-  }
-
-  private[cron4s] def zeroStepSize2(a: A, from: Int, direction: Direction): Boolean = {
+  private[cron4s] def zeroStepSize(a: A, from: Int, direction: Direction): Boolean = {
     val stepped = TC.step0(a, from, 0, direction)
-
-    stepped.forall { case (result, carryOver, _) => a.range.contains(result) && carryOver == 0 }
+    stepped.forall { case (result, _) => a.range.contains(result) }
   }
 
   def fromMinToMinForwards(a: A): IsEqual[Option[(Int, Int)]] =
@@ -83,10 +66,9 @@ trait EnumeratedLaws[A] {
   def fromMaxToMinBackwards(a: A): IsEqual[Option[(Int, Int)]] =
     a.step(a.max, -(a.range.size - 1)) <-> Some(a.min -> 0)
 
-  def backAndForth(a: A, from: Int, stepSize: Int): IsEqual[Option[Int]] = {
-    if (stepSize == 0) {
-      a.step(from, 0).map(_._1) <-> zeroStepExpected(a, from).map(_._1)
-    } else {
+  def backAndForth(a: A, from: Int, stepSize: Int): Prop = {
+    if (stepSize == 0) proved
+    else {
       val moved = a.step(from, stepSize).map(_._1)
       val returned = moved.flatMap { from2 =>
         a.step(from2, stepSize * -1).map(_._1)
@@ -108,7 +90,7 @@ trait EnumeratedLaws[A] {
         }
       }
 
-      returned <-> expected
+      returned ?== expected
     }
   }
 

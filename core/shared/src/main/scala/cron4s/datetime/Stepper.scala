@@ -27,6 +27,8 @@ import scala.annotation.tailrec
 private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   import CronField._
 
+  val MaxIterationCount = 3
+
   protected type Step = Option[(DateTime, Int, Direction)]
 
   protected[this] def stepField[F <: CronField]
@@ -71,22 +73,23 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       }
 
     @tailrec
-    def dateStepLoop(previous: Step): Step = {
+    def dateStepLoop(previous: Step, iterationCount: Int): Step = {
       val dateAdjusted = doStep(previous)
-      dateAdjusted match {
-        case Some((_, nextStep, _)) if nextStep != 0 =>
-          dateStepLoop(doStep(dateAdjusted))
 
-        case Some((dateTime, _, dir)) if !matches(dateTime) =>
+      dateAdjusted match {
+        case Some((_, nextStep, _)) if nextStep != 0 && iterationCount < MaxIterationCount =>
+          dateStepLoop(doStep(dateAdjusted), iterationCount + 1)
+
+        case Some((dateTime, _, dir)) if !matches(dateTime) && iterationCount < MaxIterationCount =>
           val nextStep: Step = Some((dateTime, 1, dir))
-          doStep(nextStep)
+          dateStepLoop(doStep(nextStep), iterationCount + 1)
 
         case _ => dateAdjusted
       }
     }
 
     val initialStep: Step = Some((from, step, direction))
-    dateStepLoop(initialStep)
+    dateStepLoop(initialStep, 0)
   }
 
   def stepOverTime(rawExpr: RawTimeCronExpr, from: DateTime, initial: Int, dir: Direction): Step =
