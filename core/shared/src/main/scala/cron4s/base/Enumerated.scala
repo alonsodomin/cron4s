@@ -34,7 +34,9 @@ trait Enumerated[A] {
   def min(a: A): Int = range(a).min
   def max(a: A): Int = range(a).max
 
-  private[cron4s] def stepInDirection(a: A, from: Int, stepSize: Int, direction: Direction): Option[(Int, Int, Direction)] = {
+  private[cron4s] def stepInDirection(
+      a: A, from: Int, stepSize: Int, direction: Direction
+  ): Option[(Int, Int, Direction)] = {
     if (stepSize == Int.MinValue || stepSize == Int.MaxValue) {
       None
     } else {
@@ -42,36 +44,27 @@ trait Enumerated[A] {
 
       val nearestNeighbourIndex = direction match {
         case Direction.Forward =>
-          aRange.lastIndexWhere(from >= _)
-
-        case Direction.Backwards =>
           val idx = aRange.indexWhere(from <= _)
           if (idx == -1) aRange.size
           else idx
+
+        case Direction.Backwards =>
+          aRange.lastIndexWhere(from >= _)
       }
 
-      if (stepSize != 0) {
-        val pointer = nearestNeighbourIndex + stepSize
-        val index = {
-          val mod = pointer % aRange.size
-          if (mod < 0) aRange.size + mod
-          else mod
-        }
-        val offsetPointer = if (pointer < 0) {
-          pointer - (aRange.size - 1)
-        } else {
-          pointer
-        }
-
-        (aRange(index), offsetPointer / aRange.size, direction).some
+      val pointer = nearestNeighbourIndex + stepSize
+      val index = {
+        val mod = pointer % aRange.size
+        if (mod < 0) aRange.size + mod
+        else mod
+      }
+      val offsetPointer = if (pointer < 0) {
+        pointer - (aRange.size - 1)
       } else {
-        val result = {
-          if (from <= min(a)) min(a)
-          else if (from >= max(a)) max(a)
-          else from
-        }
-        (result, 0, direction).some
+        pointer
       }
+
+      (aRange(index), offsetPointer / aRange.size, direction).some
     }
   }
 

@@ -59,10 +59,10 @@ trait EnumeratedLaws[A] {
     a.step(from, 0) <-> zeroStepExpected(a, from)
   }
 
-  private[cron4s] def zeroStepSize2(a: A, from: Int, direction: Direction): Prop = {
-    val stepped = TC.stepInDirection(a, from, 0, direction).map(_._1)
+  private[cron4s] def zeroStepSize2(a: A, from: Int, direction: Direction): Boolean = {
+    val stepped = TC.stepInDirection(a, from, 0, direction)
 
-    stepped.map(a.range.contains).map(_ ?== true).getOrElse(proved)
+    stepped.forall { case (result, carryOver, _) => a.range.contains(result) && carryOver == 0 }
   }
 
   def fromMinToMinForwards(a: A): IsEqual[Option[(Int, Int)]] =

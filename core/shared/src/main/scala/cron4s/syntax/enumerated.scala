@@ -16,7 +16,7 @@
 
 package cron4s.syntax
 
-import cron4s.base.Enumerated
+import cron4s.base.{Direction, Enumerated}
 
 import scala.language.higherKinds
 
@@ -27,6 +27,8 @@ private[syntax] class EnumeratedOps[A](self: A, tc: Enumerated[A]) {
   def max: Int = tc.max(self)
   def min: Int = tc.min(self)
   def step(from: Int, stepSize: Int): Option[(Int, Int)] = tc.step(self)(from, stepSize)
+  private[cron4s] def stepInDirection(from: Int, stepSize: Int, direction: Direction): Option[(Int, Int, Direction)] =
+    tc.stepInDirection(self, from, stepSize, direction)
   def next(from: Int): Option[Int] = tc.next(self)(from)
   def prev(from: Int): Option[Int] = tc.prev(self)(from)
   def range: IndexedSeq[Int] = tc.range(self)

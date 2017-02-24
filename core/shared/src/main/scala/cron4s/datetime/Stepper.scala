@@ -17,6 +17,7 @@
 package cron4s.datetime
 
 import cron4s._
+import cron4s.base.Direction
 import cron4s.expr._
 
 import shapeless._
@@ -26,27 +27,27 @@ import scala.annotation.tailrec
 private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   import CronField._
 
-  protected type Step = Option[(DateTime, Int)]
+  protected type Step = Option[(DateTime, Int, Direction)]
 
   protected[this] def stepField[F <: CronField]
-      (expr: FieldNode[F], from: DateTime, step: Int): Option[(Int, Int)] =
+      (expr: FieldNode[F], from: DateTime, step: Int, direction: Direction): Option[(Int, Int, Direction)] =
     DT.get(from, expr.unit.field)
-      .flatMap(v => expr.step(v, step))
+      .flatMap(expr.stepInDirection(_, step, direction))
 
   protected[this] def stepAndAdjust[F <: CronField]
       (dateTimeAndStep: Step, expr: FieldNode[F]): Step = {
     for {
-      (dateTime, step)  <- dateTimeAndStep
-      (value, nextStep) <- stepField(expr, dateTime, step)
-      newDateTime       <- DT.set(dateTime, expr.unit.field, value)
-    } yield (newDateTime, nextStep)
+      (dateTime, step, dir)  <- dateTimeAndStep
+      (value, nextStep, _)   <- stepField(expr, dateTime, step, dir)
+      newDateTime            <- DT.set(dateTime, expr.unit.field, value)
+    } yield (newDateTime, nextStep, dir)
   }
 
   protected[this] def stepDayOfWeek
-      (dt: DateTime, expr: FieldNode[DayOfWeek], stepSize: Int): Step = {
+      (dt: DateTime, expr: FieldNode[DayOfWeek], stepSize: Int, direction: Direction): Step = {
     for {
       dayOfWeek         <- DT.get(dt, DayOfWeek)
-      (value, nextStep) <- expr.step(dayOfWeek, stepSize)
+      (value, nextStep, dir) <- expr.stepInDirection(dayOfWeek, stepSize, direction)
       newDateTime       <- DT.set(dt, DayOfWeek, value)
       newDayOfWeek      <- DT.get(dt, DayOfWeek)
     } yield newDateTime -> (nextStep + (newDayOfWeek - dayOfWeek))
@@ -84,8 +85,8 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       }
     }
 
-    //dateStepLoop(Some(from -> step): Step)
-    doStep(Some(from -> step): Step)
+    dateStepLoop(Some(from -> step): Step)
+    //doStep(Some(from -> step): Step)
   }
 
   def stepOverTime(rawExpr: RawTimeCronExpr, from: DateTime, initial: Int): Step =
