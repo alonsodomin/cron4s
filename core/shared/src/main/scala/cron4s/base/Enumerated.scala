@@ -23,15 +23,22 @@ import Scalaz._
   * Created by alonsodomin on 23/08/2016.
   */
 
-private[cron4s] sealed trait Direction
+private[cron4s] sealed abstract class Direction(val sign: Int) {
+  def reverse: Direction
+}
 private[cron4s] object Direction {
+
   def of(step: Int): Direction = {
     if (step >= 0) Forward
     else Backwards
   }
 
-  case object Forward extends Direction
-  case object Backwards extends Direction
+  case object Forward extends Direction(1) {
+    def reverse: Direction = Backwards
+  }
+  case object Backwards extends Direction(-1) {
+    def reverse: Direction = Forward
+  }
 }
 
 trait Enumerated[A] {
@@ -47,24 +54,24 @@ trait Enumerated[A] {
     } else {
       val aRange = range(a)
 
-      val nearestNeighbourIndex = direction match {
+      def nearestNeighbourIndex = direction match {
         case Direction.Forward =>
-          val idx = aRange.indexWhere(from <= _)
+          val idx = aRange.indexWhere(from < _)
           if (idx == -1) aRange.size
           else idx
 
         case Direction.Backwards =>
-          aRange.lastIndexWhere(from >= _)
+          aRange.lastIndexWhere(from > _)
       }
 
-      val currentIndex = if (aRange.contains(a)) {
-        aRange.indexOf(a)
-      } else direction match {
-        case Direction.Forward   => nearestNeighbourIndex - 1
-        case Direction.Backwards => nearestNeighbourIndex + 1
+      def currentIdx = if (aRange.contains(from)) {
+        aRange.indexOf(from)
+      } else {
+        val correction = if (stepSize != 0) direction.reverse.sign else 0
+        nearestNeighbourIndex + correction
       }
 
-      val pointer = nearestNeighbourIndex + stepSize
+      val pointer = currentIdx + stepSize
       val index = {
         val mod = pointer % aRange.size
         if (mod < 0) aRange.size + mod
