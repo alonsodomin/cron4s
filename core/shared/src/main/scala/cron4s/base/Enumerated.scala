@@ -57,6 +57,13 @@ trait Enumerated[A] {
           aRange.lastIndexWhere(from >= _)
       }
 
+      val currentIndex = if (aRange.contains(a)) {
+        aRange.indexOf(a)
+      } else direction match {
+        case Direction.Forward   => nearestNeighbourIndex - 1
+        case Direction.Backwards => nearestNeighbourIndex + 1
+      }
+
       val pointer = nearestNeighbourIndex + stepSize
       val index = {
         val mod = pointer % aRange.size
