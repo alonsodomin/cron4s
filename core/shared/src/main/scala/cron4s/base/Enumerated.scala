@@ -25,6 +25,11 @@ import Scalaz._
 
 private[cron4s] sealed trait Direction
 private[cron4s] object Direction {
+  def of(step: Int): Direction = {
+    if (step >= 0) Forward
+    else Backwards
+  }
+
   case object Forward extends Direction
   case object Backwards extends Direction
 }
@@ -34,9 +39,9 @@ trait Enumerated[A] {
   def min(a: A): Int = range(a).min
   def max(a: A): Int = range(a).max
 
-  private[cron4s] def stepInDirection(
+  private[cron4s] def step0(
       a: A, from: Int, stepSize: Int, direction: Direction
-  ): Option[(Int, Int, Direction)] = {
+  ): Option[(Int, Int)] = {
     if (stepSize == Int.MinValue || stepSize == Int.MaxValue) {
       None
     } else {
@@ -64,20 +69,12 @@ trait Enumerated[A] {
         pointer
       }
 
-      (aRange(index), offsetPointer / aRange.size, direction).some
+      (aRange(index), offsetPointer / aRange.size).some
     }
   }
 
-  def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] = {
-    val direction = {
-      if (stepSize >= 0) Direction.Forward
-      else Direction.Backwards
-    }
-
-    stepInDirection(a, from, stepSize, direction).map { case (res, co, _) =>
-      res -> co
-    }
-  }
+  def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] =
+    step0(a, from, stepSize, Direction.of(stepSize))
 
   def next(a: A)(from: Int): Option[Int] = step(a)(from, 1).map(_._1)
   def prev(a: A)(from: Int): Option[Int] = step(a)(from, -1).map(_._1)

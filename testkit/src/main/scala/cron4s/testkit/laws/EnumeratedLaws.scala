@@ -60,7 +60,7 @@ trait EnumeratedLaws[A] {
   }
 
   private[cron4s] def zeroStepSize2(a: A, from: Int, direction: Direction): Boolean = {
-    val stepped = TC.stepInDirection(a, from, 0, direction)
+    val stepped = TC.step0(a, from, 0, direction)
 
     stepped.forall { case (result, carryOver, _) => a.range.contains(result) && carryOver == 0 }
   }
