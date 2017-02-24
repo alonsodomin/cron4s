@@ -22,51 +22,73 @@ import Scalaz._
 /**
   * Created by alonsodomin on 23/08/2016.
   */
+
+private[cron4s] sealed abstract class Direction(val sign: Int) {
+  def reverse: Direction
+}
+private[cron4s] object Direction {
+
+  def of(step: Int): Direction = {
+    if (step >= 0) Forward
+    else Backwards
+  }
+
+  case object Forward extends Direction(1) {
+    def reverse: Direction = Backwards
+  }
+  case object Backwards extends Direction(-1) {
+    def reverse: Direction = Forward
+  }
+}
+
 trait Enumerated[A] {
 
   def min(a: A): Int = range(a).min
   def max(a: A): Int = range(a).max
 
-  def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] = {
+  private[cron4s] def step0(
+      a: A, from: Int, stepSize: Int, direction: Direction
+  ): Option[(Int, Int)] = {
     if (stepSize == Int.MinValue || stepSize == Int.MaxValue) {
       None
     } else {
       val aRange = range(a)
 
-      val nearestNeighbourIndex = if (stepSize > 0) {
-        aRange.lastIndexWhere(from >= _).some
-      } else if (stepSize < 0) {
-        val idx = aRange.indexWhere(from <= _)
-        if (idx == -1) aRange.size.some
-        else idx.some
+      def nearestNeighbourIndex = direction match {
+        case Direction.Forward =>
+          val idx = aRange.indexWhere(from < _)
+          if (idx == -1) aRange.size
+          else idx
+
+        case Direction.Backwards =>
+          aRange.lastIndexWhere(from > _)
+      }
+
+      def currentIdx = if (aRange.contains(from)) {
+        aRange.indexOf(from)
       } else {
-        none[Int]
+        val correction = if (stepSize != 0) direction.reverse.sign else 0
+        nearestNeighbourIndex + correction
       }
 
-      nearestNeighbourIndex.map { idx =>
-        val pointer = idx + stepSize
-        val index = {
-          val mod = pointer % aRange.size
-          if (mod < 0) aRange.size + mod
-          else mod
-        }
-        val offsetPointer = if (pointer < 0) {
-          pointer - (aRange.size - 1)
-        } else {
-          pointer
-        }
-
-        aRange(index) -> offsetPointer / aRange.size
-      } orElse {
-        val result = {
-          if (from <= min(a)) min(a)
-          else if (from >= max(a)) max(a)
-          else from
-        }
-        (result -> 0).some
+      val pointer = currentIdx + stepSize
+      val index = {
+        val mod = pointer % aRange.size
+        if (mod < 0) aRange.size + mod
+        else mod
       }
+      val offsetPointer = if (pointer < 0) {
+        pointer - (aRange.size - 1)
+      } else {
+        pointer
+      }
+
+      (aRange(index), offsetPointer / aRange.size).some
     }
   }
+
+  def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] =
+    step0(a, from, stepSize, Direction.of(stepSize))
 
   def next(a: A)(from: Int): Option[Int] = step(a)(from, 1).map(_._1)
   def prev(a: A)(from: Int): Option[Int] = step(a)(from, -1).map(_._1)
