@@ -58,7 +58,7 @@ private[threetenbp] final class JSR310Instance[DT <: Temporal] extends IsDateTim
       val newDate = Try(dateTime.`with`(temporalField, value.toLong + offset).asInstanceOf[DT]).toOption
       if (dateTime.isSupported(ChronoField.MILLI_OF_SECOND) && field == Second) {
         newDate.map(_.`with`(ChronoField.MILLI_OF_SECOND, 0).asInstanceOf[DT])
-      }
+      } else newDate
     }
   }
 
