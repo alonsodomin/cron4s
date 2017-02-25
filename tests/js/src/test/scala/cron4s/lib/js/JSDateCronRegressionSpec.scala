@@ -14,27 +14,35 @@
  * limitations under the License.
  */
 
-package cron4s.lib.threetenbp
-
-import cron4s._
+package cron4s.lib.js
 
 import org.scalatest.{FlatSpec, Matchers}
 
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.temporal.ChronoUnit
+import cron4s._
+
+import scala.scalajs.js.Date
 
 /**
-  * Created by domingueza on 20/02/2017.
+  * Created by alonsodomin on 25/02/2017.
   */
-class CronDateTimeRegressionSpec extends FlatSpec with Matchers {
+class JSDateCronRegressionSpec extends FlatSpec with Matchers {
 
   "Cron" should "not advance to the next day" in {
-    val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
+    val from = new Date("2017-02-18T16:39:42.541")
 
     val Right(cron) = Cron("* */10 * * * *")
     val Some(next) = cron.next(from)
 
-    from.until(next, ChronoUnit.SECONDS) <= 600 shouldBe true
+    (next.getTime() - from.getTime()) <= 600000 shouldBe true
+  }
+
+  it should "reset the milli seconds field" in {
+    val from = new Date("2017-02-18T16:39:42.541")
+
+    val Right(cron) = Cron("* */10 * * * *")
+    val Some(next) = cron.next(from)
+
+    next.getMilliseconds() shouldBe 0
   }
 
 }

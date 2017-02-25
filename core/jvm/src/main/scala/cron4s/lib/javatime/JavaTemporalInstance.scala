@@ -54,7 +54,11 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
 
     val offset = if (field == DayOfWeek) 1 else 0
     if (!dateTime.isSupported(temporalField)) None
-    else Try(dateTime.`with`(temporalField, value.toLong + offset).asInstanceOf[DT]).toOption
+    else {
+      val newDate = Try(dateTime.`with`(temporalField, value.toLong + offset).asInstanceOf[DT]).toOption
+      if (field == Second) newDate.map(_.`with`(ChronoField.MILLI_OF_SECOND, 0).asInstanceOf[DT])
+      else newDate
+    }
   }
 
 }

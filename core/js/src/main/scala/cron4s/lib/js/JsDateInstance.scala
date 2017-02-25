@@ -57,7 +57,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
     }
 
     Some(field match {
-      case Second     => setter(_.setSeconds(value))
+      case Second     => setter(_.setSeconds(value, 0))
       case Minute     => setter(_.setMinutes(value))
       case Hour       => setter(_.setHours(value))
       case DayOfMonth => setter(_.setDate(value))
