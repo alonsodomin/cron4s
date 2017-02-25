@@ -56,7 +56,9 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
     if (!dateTime.isSupported(temporalField)) None
     else {
       val newDate = Try(dateTime.`with`(temporalField, value.toLong + offset).asInstanceOf[DT]).toOption
-      if (field == Second) newDate.map(_.`with`(ChronoField.MILLI_OF_SECOND, 0).asInstanceOf[DT])
+      if (dateTime.isSupported(ChronoField.MILLI_OF_SECOND) && field == Second) {
+        newDate.map(_.`with`(ChronoField.MILLI_OF_SECOND, 0).asInstanceOf[DT])
+      }
       else newDate
     }
   }
