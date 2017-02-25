@@ -99,7 +99,10 @@ private[joda] final class JodaDateTimeInstance extends JodaInstance[DateTime] {
 
   override protected def setField(dateTime: DateTime, field: DateTimeFieldType, value: Int): Option[DateTime] = {
     if (dateTime.isSupported(field)) {
-      Try(dateTime.withField(field, value)).toOption
+      val newDate = Try(dateTime.withField(field, value)).toOption
+      if (field.equals(DateTimeFieldType.secondOfMinute()))
+        newDate.map(_.withMillisOfSecond(0))
+      else newDate
     } else None
   }
 
@@ -120,7 +123,10 @@ private[joda] final class JodaLocalTimeInstance extends JodaLocalBaseInstance[Lo
 
   override protected def setField(dateTime: LocalTime, field: DateTimeFieldType, value: Int): Option[LocalTime] = {
     if (dateTime.isSupported(field)) {
-      Try(dateTime.withField(field, value)).toOption
+      val newDate = Try(dateTime.withField(field, value)).toOption
+      if (field.equals(DateTimeFieldType.secondOfMinute()))
+        newDate.map(_.withMillisOfSecond(0))
+      else newDate
     } else None
   }
 
@@ -140,7 +146,10 @@ private[joda] final class JodaLocalDateTimeInstance extends JodaLocalBaseInstanc
 
   override protected def setField(dateTime: LocalDateTime, field: DateTimeFieldType, value: Int): Option[LocalDateTime] = {
     if (dateTime.isSupported(field)) {
-      Try(dateTime.withField(field, value)).toOption
+      val newDate = Try(dateTime.withField(field, value)).toOption
+      if (field.equals(DateTimeFieldType.secondOfMinute()))
+        newDate.map(_.withMillisOfSecond(0))
+      else newDate
     } else None
   }
 
