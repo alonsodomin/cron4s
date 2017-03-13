@@ -46,7 +46,16 @@ lazy val commonJsSettings = Seq(
   persistLauncher in Test := false,
   requiresDOM := false,
   // batch mode decreases the amount of memory needed to compile scala.js code
-  scalaJSOptimizerOptions := scalaJSOptimizerOptions.value.withBatchMode(botBuild.value)
+  scalaJSOptimizerOptions := scalaJSOptimizerOptions.value.withBatchMode(botBuild.value),
+  scalacOptions += {
+    val tagOrHash = {
+      if (isSnapshot.value) sys.process.Process("git rev-parse HEAD").lines_!.head
+      else version.value
+    }
+    val a = (baseDirectory in LocalRootProject).value.toURI.toString
+    val g = "https://raw.githubusercontent.com/alonsodomin/cron4s/" + tagOrHash
+    s"-P:scalajs:mapSourceURI:$a->$g/"
+  }
 )
 
 lazy val noPublishSettings = Seq(
