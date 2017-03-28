@@ -53,7 +53,8 @@ trait DateTimeCron[T] {
 
   def supportedFields: List[CronField]
 
-  def field[F <: CronField](expr: T)(implicit unit: CronUnit[F]): Option[FieldNode[F]]
+  def field[F <: CronField](expr: T)(implicit selector: FieldSelector[T, F]): selector.Out[F] =
+    selector.selectFrom(expr)
 
 }
 
@@ -89,17 +90,6 @@ private[datetime] final class FullCron extends DateTimeCron[CronExpr] {
   @inline
   val supportedFields: List[CronField] = CronField.All
 
-  def field[F <: CronField](expr: CronExpr)(implicit unit: CronUnit[F]): Option[FieldNode[F]] = {
-    Some(unit.field match {
-      case CronField.Second => expr.seconds.asInstanceOf[FieldNode[F]]
-      case CronField.Minute => expr.minutes.asInstanceOf[FieldNode[F]]
-      case CronField.Hour => expr.hours.asInstanceOf[FieldNode[F]]
-      case CronField.DayOfMonth => expr.daysOfMonth.asInstanceOf[FieldNode[F]]
-      case CronField.Month => expr.months.asInstanceOf[FieldNode[F]]
-      case CronField.DayOfWeek => expr.daysOfWeek.asInstanceOf[FieldNode[F]]
-    })
-  }
-
 }
 
 private[datetime] final class TimeCron extends DateTimeCron[TimeCronExpr] {
@@ -123,14 +113,6 @@ private[datetime] final class TimeCron extends DateTimeCron[TimeCronExpr] {
   val supportedFields: List[CronField] =
     List(CronField.Second, CronField.Minute, CronField.Hour)
 
-  def field[F <: CronField](expr: TimeCronExpr)(implicit unit: CronUnit[F]): Option[FieldNode[F]] =
-    unit.field match {
-      case CronField.Second => Some(expr.seconds.asInstanceOf[FieldNode[F]])
-      case CronField.Minute => Some(expr.minutes.asInstanceOf[FieldNode[F]])
-      case CronField.Hour   => Some(expr.hours.asInstanceOf[FieldNode[F]])
-      case _                => None
-    }
-
 }
 
 private[datetime] final class DateCron extends DateTimeCron[DateCronExpr] {
@@ -153,13 +135,5 @@ private[datetime] final class DateCron extends DateTimeCron[DateCronExpr] {
   @inline
   val supportedFields: List[CronField] =
     List(CronField.DayOfMonth, CronField.Month, CronField.DayOfWeek)
-
-  def field[F <: CronField](expr: DateCronExpr)(implicit unit: CronUnit[F]): Option[FieldNode[F]] =
-    unit.field match {
-      case CronField.DayOfMonth => Some(expr.daysOfMonth.asInstanceOf[FieldNode[F]])
-      case CronField.Month      => Some(expr.months.asInstanceOf[FieldNode[F]])
-      case CronField.DayOfWeek  => Some(expr.daysOfWeek.asInstanceOf[FieldNode[F]])
-      case _                    => None
-    }
 
 }
