@@ -92,6 +92,4 @@ private[cron4s] object ops {
     implicit def caseDivisible[F <: CronField]    = at[DivisibleNode[F]](_.raw.fold(unit))
   }
 
-
-
 }

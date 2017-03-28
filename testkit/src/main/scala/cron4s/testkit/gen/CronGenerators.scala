@@ -27,7 +27,7 @@ import org.scalacheck._
 trait CronGenerators extends NodeGenerators {
 
   private[this] val fullCronGen = for {
-    seconds     <- nodeWithAnyGen[CronField.Second]
+    seconds     <- nodeGen[CronField.Second]
     minutes     <- nodeGen[CronField.Minute]
     hours       <- nodeGen[CronField.Hour]
     daysOfMonth <- nodeWithAnyGen[CronField.DayOfMonth]
@@ -36,7 +36,7 @@ trait CronGenerators extends NodeGenerators {
   } yield CronExpr(seconds, minutes, hours, daysOfMonth, months, daysOfWeek)
 
   private[this] val timeCronGen = for {
-    seconds     <- nodeWithAnyGen[CronField.Second]
+    seconds     <- nodeGen[CronField.Second]
     minutes     <- nodeGen[CronField.Minute]
     hours       <- nodeGen[CronField.Hour]
   } yield TimeCronExpr(seconds, minutes, hours)

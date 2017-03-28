@@ -34,7 +34,7 @@ package object expr {
   private[expr] type RawDivisibleNode[F <: CronField] =
     EachNode[F] :+: BetweenNode[F] :+: SeveralNode[F] :+: CNil
 
-  type SecondsNode     = FieldNodeWithAny[CronField.Second]
+  type SecondsNode     = FieldNode[CronField.Second]
   type MinutesNode     = FieldNode[CronField.Minute]
   type HoursNode       = FieldNode[CronField.Hour]
   type DaysOfMonthNode = FieldNodeWithAny[CronField.DayOfMonth]
