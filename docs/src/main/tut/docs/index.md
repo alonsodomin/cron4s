@@ -100,11 +100,10 @@ time.minutes
 date.daysOfMonth
 ```
 
-Or by means of the `field` method in `CronExpr` and passing either the cron field type or the cron unit.
+Or by means of the `field` method in `CronExpr` and passing either the cron field type.
    
 ```tut
 cron.field[CronField.Minute]
-cron.field(CronUnit.Minutes)
 ```
 
 Some other basic operations at the `CronExpr` level are asking for the list of supported fields of the
@@ -134,13 +133,19 @@ cron.datePart.supportedFields
 
 `supportedFields` is not super-interesting at `CronExpr` (we expect it to support all the fields anyway) but when
 is part of the sub-expressions gives us a more particular piece of information about the actual expression itself. The
-`field` method is also interesting and justifies its signature when used with the sub-expressions:
+`field` method is also interesting, it can return the field node expression given a specific field type:
 
 ```tut
-cron.timePart.field(CronUnit.Seconds)
-cron.timePart.field[CronField.DayOfMonth]
-cron.datePart.field(CronUnit.Seconds)
+cron.field[CronField.DayOfMonth]
+cron.timePart.field[CronField.Hour]
 cron.datePart.field[CronField.DayOfWeek]
+```
+
+It's important to note that when we pass a field type that is not supported by the given expression, we get a compile
+ error:
+
+```tut:fail
+cron.timePart.field[CronField.DayOfMonth]
 ```
 
 This is just a teaser, we will see much more interesting operations on cron expressions later but it's good to know
