@@ -27,7 +27,7 @@ import scala.annotation.implicitNotFound
   * Created by alonsodomin on 10/02/2017.
   */
 @implicitNotFound("Field ${F} is not a member of expression ${A}")
-trait FieldSelector[A, F <: CronField] {
+sealed trait FieldSelector[A, F <: CronField] {
   type Raw <: HList
   type Out[X <: CronField]
 
