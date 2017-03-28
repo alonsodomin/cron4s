@@ -57,11 +57,13 @@ object CronUnit extends CronUnitInstances {
 private[cron4s] trait CronUnits {
   import CronField._
 
+  // $COVERAGE-OFF$
   implicit def cronUnitEq[F <: CronField]: Equal[CronUnit[F]] =
     Equal.equalA[CronUnit[F]]
 
   implicit def cronUnitShow[F <: CronField]: Show[CronUnit[F]] =
     Show.showFromToString[CronUnit[F]]
+  // $COVERAGE-ON$
 
   private[cron4s] abstract class AbstractCronUnit[F <: CronField](
     val field: F, val min: Int, val max: Int
