@@ -60,14 +60,43 @@ object EachNode {
     new FieldExpr[EachNode, F] {
       def unit(node: EachNode[F]): CronUnit[F] = node.unit
 
-      def implies[EE[_ <: CronField]](node: EachNode[F])(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
-        true
+      def implies[EE[_ <: CronField]](node: EachNode[F])(ee: EE[F])
+          (implicit EE: FieldExpr[EE, F]): Boolean = true
 
       def matches(node: EachNode[F]): Predicate[Int] = Predicate { x =>
         x >= min(node) && x <= max(node)
       }
 
       def range(node: EachNode[F]): IndexedSeq[Int] = node.range
+    }
+
+}
+
+final case class AnyNode[+F <: CronField](implicit val unit: CronUnit[F]) extends Node[F] {
+
+  lazy val range: IndexedSeq[Int] = unit.range
+
+  override def toString: String = "?"
+
+}
+
+object AnyNode {
+
+  implicit def anyNodeShow[F <: CronField]: Show[AnyNode[F]] =
+    Show.showFromToString[AnyNode[F]]
+
+  implicit def anyNodeInstance[F <: CronField]: FieldExpr[AnyNode, F] =
+    new FieldExpr[AnyNode, F] {
+      def unit(node: AnyNode[F]): CronUnit[F] = node.unit
+
+      def implies[EE[_ <: CronField]](node: AnyNode[F])(ee: EE[F])
+        (implicit EE: FieldExpr[EE, F]): Boolean = true
+
+      def matches(node: AnyNode[F]): Predicate[Int] = Predicate { x =>
+        x >= min(node) && x <= max(node)
+      }
+
+      def range(node: AnyNode[F]): IndexedSeq[Int] = node.range
     }
 
 }

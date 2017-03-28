@@ -24,7 +24,6 @@ import org.scalacheck._
   * Created by alonsodomin on 13/01/2016.
   */
 trait InputGenerators {
-  import Gen._
   import Arbitrary._
   import CronUnit._
 

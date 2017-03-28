@@ -16,9 +16,9 @@
 
 package cron4s.syntax
 
-import cron4s.{CronField, CronUnit}
-import cron4s.datetime.{IsDateTime, DateTimeCron}
-import cron4s.expr.FieldNode
+import cron4s.CronField
+import cron4s.datetime.{DateTimeCron, IsDateTime}
+import cron4s.expr.FieldSelector
 
 /**
   * Created by alonsodomin on 25/01/2017.
@@ -51,7 +51,7 @@ private[syntax] class DateTimeCronOps[E](self: E, tc: DateTimeCron[E]) {
   def supportedFields: List[CronField] =
     tc.supportedFields
 
-  def field[F <: CronField](implicit unit: CronUnit[F]): Option[FieldNode[F]] =
+  def field[F <: CronField](implicit selector: FieldSelector[E, F]): selector.Out[F] =
     tc.field[F](self)
 
 }

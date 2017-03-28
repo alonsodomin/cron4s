@@ -31,13 +31,13 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
 
   protected type Step = Option[(DateTime, Int, Direction)]
 
-  protected[this] def stepField[F <: CronField]
-      (expr: FieldNode[F], from: DateTime, step: Int, direction: Direction): Option[(Int, Int)] =
+  protected[this] def stepField[N[_ <: CronField], F <: CronField]
+      (expr: N[F], from: DateTime, step: Int, direction: Direction)(implicit N: FieldExpr[N, F]): Option[(Int, Int)] =
     DT.get(from, expr.unit.field)
       .flatMap(expr.step0(_, step, direction))
 
-  protected[this] def stepAndAdjust[F <: CronField]
-      (dateTimeAndStep: Step, expr: FieldNode[F]): Step = {
+  protected[this] def stepAndAdjust[N[_ <: CronField], F <: CronField]
+      (dateTimeAndStep: Step, expr: N[F])(implicit N: FieldExpr[N, F]): Step = {
     for {
       (dateTime, step, dir) <- dateTimeAndStep
       (value, nextStep)     <- stepField(expr, dateTime, step, dir)
@@ -46,7 +46,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   }
 
   protected[this] def stepDayOfWeek
-      (dt: DateTime, expr: FieldNode[DayOfWeek], stepSize: Int, direction: Direction): Step = {
+      (dt: DateTime, expr: FieldNodeWithAny[DayOfWeek], stepSize: Int, direction: Direction): Step = {
     for {
       dayOfWeek         <- DT.get(dt, DayOfWeek)
       (value, nextStep) <- expr.step0(dayOfWeek, stepSize, direction)
@@ -56,11 +56,11 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   }
 
   object stepping extends Poly2 {
-    implicit def caseSeconds     = at[Step, SecondsNode](stepAndAdjust)
-    implicit def caseMinutes     = at[Step, MinutesNode](stepAndAdjust)
-    implicit def caseHours       = at[Step, HoursNode](stepAndAdjust)
-    implicit def caseDaysOfMonth = at[Step, DaysOfMonthNode](stepAndAdjust)
-    implicit def caseMonths      = at[Step, MonthsNode](stepAndAdjust)
+    implicit def caseSeconds     = at[Step, SecondsNode]((step, node) => stepAndAdjust(step, node))
+    implicit def caseMinutes     = at[Step, MinutesNode]((step, node) => stepAndAdjust(step, node))
+    implicit def caseHours       = at[Step, HoursNode]((step, node) => stepAndAdjust(step, node))
+    implicit def caseDaysOfMonth = at[Step, DaysOfMonthNode]((step, node) => stepAndAdjust(step, node))
+    implicit def caseMonths      = at[Step, MonthsNode]((step, node) => stepAndAdjust(step, node))
   }
 
   def stepOverDate(rawExpr: RawDateCronExpr, from: DateTime, step: Int, direction: Direction)(matches: DateTime => Boolean): Step = {

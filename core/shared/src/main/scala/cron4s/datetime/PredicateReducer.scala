@@ -35,9 +35,9 @@ private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime
   object asPredicate extends Poly1 {
     import CronField._
 
-    private[this] def predicateFor[F <: CronField]
-        (field: F, node: FieldNode[F])
-        (implicit expr: FieldExpr[FieldNode, F]): Predicate[DateTime] = {
+    private[this] def predicateFor[N[_ <: CronField], F <: CronField]
+        (field: F, node: N[F])
+        (implicit expr: FieldExpr[N, F]): Predicate[DateTime] = {
       Predicate { dt =>
         DT.get(dt, field).map(expr.matches(node)).getOrElse(M.empty[DateTime](dt))
       }
