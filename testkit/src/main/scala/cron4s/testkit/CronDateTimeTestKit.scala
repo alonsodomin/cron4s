@@ -59,11 +59,11 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Equal]
   )
 
   lazy val samples = Table(
-    ("expr", "from", "stepSize", "expected"),
-    (onlyTuesdaysAt12, createDateTime(0, 0, 0, 1, 8), 1, createDateTime(0, 0, 12, 2, 8)),
-    (onlySundays, createDateTime(0, 0, 0, 1, 8), 1, createDateTime(0, 1, 0, 7, 8)),
-    (betweenDayOfWeekWithconstantTime, createDateTime(0, 0, 2, 11, 3), 1, createDateTime(0, 0, 0, 15, 3)),
-    (betweenDayOfWeekWithconstantTime, createDateTime(0, 0, 2, 7, 3), -1, createDateTime(0, 0, 0, 3, 3))
+    ("expr",                           "from",                        "stepSize", "expected"),
+    (onlyTuesdaysAt12,                 createDateTime(0, 0, 0, 1, 8),          1, createDateTime(0, 0, 12, 2, 8)),
+    (onlySundays,                      createDateTime(0, 0, 0, 1, 8),          1, createDateTime(0, 1, 0, 7, 8)),
+    (betweenDayOfWeekWithconstantTime, createDateTime(0, 0, 2, 11, 3),         1, createDateTime(0, 0, 0, 15, 3)),
+    (betweenDayOfWeekWithconstantTime, createDateTime(0, 0, 2, 7, 3),         -1, createDateTime(0, 0, 0, 3, 3))
   )
 
   property("step") {
