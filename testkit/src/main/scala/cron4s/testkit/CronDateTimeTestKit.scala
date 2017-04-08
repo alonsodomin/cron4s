@@ -47,10 +47,21 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Equal]
     ConstNode[DayOfWeek](6)
   )
 
+  // https://github.com/alonsodomin/cron4s/issues/59
+  val betweenDayOfWeekWithconstantTime = CronExpr(
+    ConstNode[Second](0),
+    ConstNode[Minute](0),
+    ConstNode[Hour](0),
+    EachNode[DayOfMonth],
+    EachNode[Month],
+    BetweenNode[DayOfWeek](ConstNode(1), ConstNode(3))
+  )
+
   lazy val samples = Table(
     ("expr", "from", "stepSize", "expected"),
-    (onlyTuesdaysAt12, createDateTime(0, 0, 0, 1, 8, 0), 1, createDateTime(0, 0, 12, 2, 8, 1)),
-    (onlySundays, createDateTime(0, 0, 0, 1, 8, 0), 1, createDateTime(0, 1, 0, 7, 8, 6))
+    (onlyTuesdaysAt12, createDateTime(0, 0, 0, 1, 8), 1, createDateTime(0, 0, 12, 2, 8)),
+    (onlySundays, createDateTime(0, 0, 0, 1, 8), 1, createDateTime(0, 1, 0, 7, 8)),
+    (betweenDayOfWeekWithconstantTime, createDateTime(0, 0, 2, 11, 3), 1, createDateTime(0, 0, 0, 15, 3))
   )
 
   property("step") {

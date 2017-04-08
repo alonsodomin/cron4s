@@ -30,17 +30,15 @@ import org.threeten.bp._
 trait ThreeTenBPLocalDateTestBase extends DateTimeTestKitBase[LocalDate] {
   import CronUnit._
 
-  final val Year = 2016
-
   override implicit lazy val arbitraryDateTime: Arbitrary[LocalDate] = Arbitrary {
     for {
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(Year, _))
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(TestYear, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.lengthOfMonth)
-    } yield LocalDate.of(Year, yearMonth.getMonthValue, dayOfMonth)
+    } yield LocalDate.of(TestYear, yearMonth.getMonthValue, dayOfMonth)
   }
 
-  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): LocalDate =
-    LocalDate.of(Year, month, dayOfMonth)
+  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): LocalDate =
+    LocalDate.of(TestYear, month, dayOfMonth)
 
 }
 
@@ -55,7 +53,7 @@ trait ThreeTenBPLocalTimeTestBase extends DateTimeTestKitBase[LocalTime] {
     } yield LocalTime.of(hour, minute, second)
   }
 
-  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): LocalTime =
+  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): LocalTime =
     LocalTime.of(hours, minutes, seconds)
 
 }
@@ -63,57 +61,51 @@ trait ThreeTenBPLocalTimeTestBase extends DateTimeTestKitBase[LocalTime] {
 trait ThreeTenBPLocalDateTimeTestBase extends DateTimeTestKitBase[LocalDateTime] {
   import CronUnit._
 
-  final val Year = 2016
-
   override implicit lazy val arbitraryDateTime: Arbitrary[LocalDateTime] = Arbitrary {
     for {
       second     <- Gen.choose(Seconds.min, Seconds.max)
       minute     <- Gen.choose(Minutes.min, Minutes.max)
       hour       <- Gen.choose(Hours.min, Hours.max)
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(Year, _))
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(TestYear, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.lengthOfMonth)
-    } yield LocalDateTime.of(Year, yearMonth.getMonthValue, dayOfMonth, hour, minute, second)
+    } yield LocalDateTime.of(TestYear, yearMonth.getMonthValue, dayOfMonth, hour, minute, second)
   }
 
-  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): LocalDateTime =
-    LocalDateTime.of(Year, month, dayOfMonth, hours, minutes, seconds)
+  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): LocalDateTime =
+    LocalDateTime.of(TestYear, month, dayOfMonth, hours, minutes, seconds)
 
 }
 
 trait ThreeTenBPZonedDateTimeTestBase extends DateTimeTestKitBase[ZonedDateTime] {
   import CronUnit._
 
-  final val Year = 2017
-
   override implicit lazy val arbitraryDateTime: Arbitrary[ZonedDateTime] = Arbitrary {
     for {
       second     <- Gen.choose(Seconds.min, Seconds.max)
       minute     <- Gen.choose(Minutes.min, Minutes.max)
       hour       <- Gen.choose(Hours.min, Hours.max)
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(Year, _))
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(TestYear, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.lengthOfMonth)
-    } yield ZonedDateTime.of(Year, yearMonth.getMonthValue, dayOfMonth, hour, minute, second, 0, ZoneOffset.UTC)
+    } yield ZonedDateTime.of(TestYear, yearMonth.getMonthValue, dayOfMonth, hour, minute, second, 0, ZoneOffset.UTC)
   }
 
-  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): ZonedDateTime =
-    ZonedDateTime.of(Year, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
+  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): ZonedDateTime =
+    ZonedDateTime.of(TestYear, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
 }
 
 trait ThreeTenBPOffsetDateTimeTestBase extends DateTimeTestKitBase[OffsetDateTime] {
   import CronUnit._
-
-  final val Year = 2017
 
   override implicit lazy val arbitraryDateTime: Arbitrary[OffsetDateTime] = Arbitrary {
     for {
       second     <- Gen.choose(Seconds.min, Seconds.max)
       minute     <- Gen.choose(Minutes.min, Minutes.max)
       hour       <- Gen.choose(Hours.min, Hours.max)
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(Year, _))
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(TestYear, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.lengthOfMonth)
-    } yield OffsetDateTime.of(Year, yearMonth.getMonthValue, dayOfMonth, hour, minute, second, 0, ZoneOffset.UTC)
+    } yield OffsetDateTime.of(TestYear, yearMonth.getMonthValue, dayOfMonth, hour, minute, second, 0, ZoneOffset.UTC)
   }
 
-  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): OffsetDateTime =
-    OffsetDateTime.of(Year, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
+  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): OffsetDateTime =
+    OffsetDateTime.of(TestYear, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
 }

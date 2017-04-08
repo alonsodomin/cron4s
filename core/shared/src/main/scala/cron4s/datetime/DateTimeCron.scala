@@ -79,7 +79,9 @@ private[datetime] class FullCron extends DateTimeCron[CronExpr] {
     val direction = Direction.of(amount)
     for {
       (adjustedTime, carryOver, _) <- stepper.stepOverTime(expr.timePart.raw, from, amount, direction)
+      _   <- Some(println(s"Adjusted time: $adjustedTime | carryOver: $carryOver"))
       (adjustedDate, _, _)         <- stepper.stepOverDate(expr.datePart.raw, adjustedTime, carryOver, direction)(allOf(expr, dt))
+      _   <- Some(println(s"Adjusted date: $adjustedDate"))
     } yield adjustedDate
   }
 

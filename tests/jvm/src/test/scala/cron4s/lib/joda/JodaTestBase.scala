@@ -29,37 +29,33 @@ import org.scalacheck.{Arbitrary, Gen}
 trait JodaDateTimeTestBase extends DateTimeTestKitBase[DateTime] {
   import CronUnit._
 
-  final val Year = 2014
-
   override implicit lazy val arbitraryDateTime: Arbitrary[DateTime] = Arbitrary {
     for {
       second     <- Gen.choose(Seconds.min, Seconds.max)
       minute     <- Gen.choose(Minutes.min, Minutes.max)
       hour       <- Gen.choose(Hours.min, Hours.max)
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(Year, _))
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(TestYear, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.toLocalDate(1).dayOfMonth().getMaximumValue)
-    } yield new DateTime(Year, yearMonth.getMonthOfYear, dayOfMonth, hour, minute, second)
+    } yield new DateTime(TestYear, yearMonth.getMonthOfYear, dayOfMonth, hour, minute, second)
   }
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): DateTime =
-    new DateTime(Year, month, dayOfMonth, hours, minutes, seconds)
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): DateTime =
+    new DateTime(TestYear, month, dayOfMonth, hours, minutes, seconds)
 
 }
 
 trait JodaLocalDateTestBase extends DateTimeTestKitBase[LocalDate] {
   import CronUnit._
 
-  final val Year = 2014
-
   override implicit lazy val arbitraryDateTime: Arbitrary[LocalDate] = Arbitrary {
     for {
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(Year, _))
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(TestYear, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.toLocalDate(1).dayOfMonth().getMaximumValue)
-    } yield new LocalDate(Year, yearMonth.getMonthOfYear, dayOfMonth)
+    } yield new LocalDate(TestYear, yearMonth.getMonthOfYear, dayOfMonth)
   }
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): LocalDate =
-    new LocalDate(Year, month, dayOfMonth)
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): LocalDate =
+    new LocalDate(TestYear, month, dayOfMonth)
 
 }
 
@@ -74,7 +70,7 @@ trait JodaLocalTimeTestBase extends DateTimeTestKitBase[LocalTime] {
     } yield new LocalTime(hour, minute, second)
   }
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): LocalTime =
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): LocalTime =
     new LocalTime(hours, minutes, seconds)
 
 }
@@ -82,19 +78,17 @@ trait JodaLocalTimeTestBase extends DateTimeTestKitBase[LocalTime] {
 trait JodaLocalDateTimeTestBase extends DateTimeTestKitBase[LocalDateTime] {
   import CronUnit._
 
-  final val Year = 2014
-
   override implicit lazy val arbitraryDateTime: Arbitrary[LocalDateTime] = Arbitrary {
     for {
       second     <- Gen.choose(Seconds.min, Seconds.max)
       minute     <- Gen.choose(Minutes.min, Minutes.max)
       hour       <- Gen.choose(Hours.min, Hours.max)
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(Year, _))
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(TestYear, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.toLocalDate(1).dayOfMonth().getMaximumValue)
-    } yield new LocalDateTime(Year, yearMonth.getMonthOfYear, dayOfMonth, hour, minute, second)
+    } yield new LocalDateTime(TestYear, yearMonth.getMonthOfYear, dayOfMonth, hour, minute, second)
   }
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): LocalDateTime =
-    new LocalDateTime(Year, month, dayOfMonth, hours, minutes, seconds)
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): LocalDateTime =
+    new LocalDateTime(TestYear, month, dayOfMonth, hours, minutes, seconds)
 
 }

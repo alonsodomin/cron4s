@@ -16,11 +16,12 @@
 
 package cron4s.datetime
 
+import cron4s.lib.threetenbp._
 import cron4s.testkit.DateTimeCronTestKit
 
-import testdummy._
+import org.threeten.bp._
 
 /**
   * Created by alonsodomin on 29/01/2017.
   */
-class DateTimeCronSpec extends DateTimeCronTestKit[DummyDateTime] with DummyTestBase
+class DateTimeCronSpec extends DateTimeCronTestKit[LocalDateTime] with ThreeTenBPLocalDateTimeTestBase

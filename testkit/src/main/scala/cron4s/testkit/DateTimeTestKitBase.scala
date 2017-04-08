@@ -22,9 +22,10 @@ import org.scalacheck.Arbitrary
   * Created by alonsodomin on 29/08/2016.
   */
 trait DateTimeTestKitBase[DateTime] {
+  final val TestYear = 2016
 
   implicit def arbitraryDateTime: Arbitrary[DateTime]
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): DateTime
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): DateTime
 
 }
