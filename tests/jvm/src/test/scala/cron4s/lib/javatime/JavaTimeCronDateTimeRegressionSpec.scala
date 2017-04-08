@@ -49,12 +49,9 @@ class JavaTimeCronDateTimeRegressionSpec extends FlatSpec with Matchers {
   // https://github.com/alonsodomin/cron4s/issues/59
   "Cron with day of week" should "yield a date in the future" in {
     val Right(cron) = Cron("0 0 0 * * 1-3")
-    println(cron.raw)
 
     for (dayOfMonth <- 1 to 30) {
       val from = LocalDateTime.of(2017, 3, dayOfMonth, 2, 0, 0)
-      println(from)
-
       cron.next(from).forall(_.isAfter(from)) shouldBe true
     }
   }

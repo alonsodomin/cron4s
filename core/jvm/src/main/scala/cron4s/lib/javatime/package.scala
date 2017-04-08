@@ -27,6 +27,7 @@ import scalaz.Equal
   * Created by alonsodomin on 11/12/2016.
   */
 package object javatime {
+  private[javatime] final val DayOfWeekOffset = 1
 
   implicit lazy val javaLocalDateEq      : Equal[LocalDate]      = Equal.equalA[LocalDate]
   implicit lazy val javaLocalTimeEq      : Equal[LocalTime]      = Equal.equalA[LocalTime]

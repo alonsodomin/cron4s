@@ -20,6 +20,7 @@ import cron4s.CronField._
 import cron4s.datetime.IsDateTime
 import cron4s.expr._
 
+import org.scalatest.Matchers
 import org.scalatest.prop.TableDrivenPropertyChecks
 
 import scalaz.Equal
@@ -28,7 +29,7 @@ import scalaz.Equal
   * Created by alonsodomin on 29/08/2016.
   */
 abstract class CronDateTimeTestKit[DateTime: IsDateTime: Equal]
-  extends Cron4sPropSpec with TableDrivenPropertyChecks { this: DateTimeTestKitBase[DateTime] =>
+  extends Cron4sPropSpec with Matchers with TableDrivenPropertyChecks { this: DateTimeTestKitBase[DateTime] =>
 
   val onlyTuesdaysAt12 = CronExpr(
     ConstNode[Second](0),
@@ -61,13 +62,14 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Equal]
     ("expr", "from", "stepSize", "expected"),
     (onlyTuesdaysAt12, createDateTime(0, 0, 0, 1, 8), 1, createDateTime(0, 0, 12, 2, 8)),
     (onlySundays, createDateTime(0, 0, 0, 1, 8), 1, createDateTime(0, 1, 0, 7, 8)),
-    (betweenDayOfWeekWithconstantTime, createDateTime(0, 0, 2, 11, 3), 1, createDateTime(0, 0, 0, 15, 3))
+    (betweenDayOfWeekWithconstantTime, createDateTime(0, 0, 2, 11, 3), 1, createDateTime(0, 0, 0, 15, 3)),
+    (betweenDayOfWeekWithconstantTime, createDateTime(0, 0, 2, 7, 3), -1, createDateTime(0, 0, 0, 3, 3))
   )
 
   property("step") {
     forAll(samples) { (expr: CronExpr, initial: DateTime, stepSize: Int, expected: DateTime) =>
       val returnedDateTime = expr.step(initial, stepSize)
-      returnedDateTime.map(_ ?== expected).getOrElse(falsified)
+      returnedDateTime shouldBe Some(expected)
     }
   }
 

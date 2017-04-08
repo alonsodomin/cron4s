@@ -16,12 +16,12 @@
 
 package cron4s.lib.javatime
 
-import java.time.temporal.{ChronoField, Temporal, TemporalField}
+import java.time.temporal.{ChronoField, ChronoUnit, Temporal, TemporalField}
 
 import cron4s.CronField
 import cron4s.datetime.IsDateTime
 
-import scala.util.Try
+import scala.util.{Success, Try}
 
 /**
   * Created by alonsodomin on 30/01/2017.
@@ -44,7 +44,7 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
   override def get[F <: CronField](dateTime: DT, field: F): Option[Int] = {
     val temporalField = mapField(field)
 
-    val offset = if (field == DayOfWeek) -1 else 0
+    val offset = if (field == DayOfWeek) -DayOfWeekOffset else 0
     if (!dateTime.isSupported(temporalField)) None
     else Some(dateTime.get(temporalField) + offset)
   }
@@ -52,14 +52,28 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
   override def set[F <: CronField](dateTime: DT, field: F, value: Int): Option[DT] = {
     val temporalField = mapField(field)
 
-    val offset = if (field == DayOfWeek) 1 else 0
+    def preAdjust(dt: DT): Try[DT] = {
+      if (field == DayOfWeek) {
+        val currDayOfWeek = dt.get(ChronoField.DAY_OF_WEEK)
+        if (currDayOfWeek > (value + DayOfWeekOffset)) {
+          Try(dt.plus(7, ChronoUnit.DAYS).asInstanceOf[DT])
+        } else Success(dt)
+      } else Success(dt)
+    }
+
+    def adjust(realVal: Int)(dt: DT): Try[DT] =
+      Try(dt.`with`(temporalField, realVal.toLong).asInstanceOf[DT])
+
+    def postAdjust(dt: DT): Try[DT] = {
+      if (dt.isSupported(ChronoField.MILLI_OF_SECOND)) {
+        Try(dt.`with`(ChronoField.MILLI_OF_SECOND, 0).asInstanceOf[DT])
+      } else Success(dt)
+    }
+
     if (!dateTime.isSupported(temporalField)) None
     else {
-      val newDate = Try(dateTime.`with`(temporalField, value.toLong + offset).asInstanceOf[DT]).toOption
-      if (dateTime.isSupported(ChronoField.MILLI_OF_SECOND) && field == Second) {
-        newDate.map(_.`with`(ChronoField.MILLI_OF_SECOND, 0).asInstanceOf[DT])
-      }
-      else newDate
+      val realVal = if (field == DayOfWeek) value + DayOfWeekOffset else value
+      adjust(realVal)(dateTime).flatMap(postAdjust).toOption
     }
   }
 
