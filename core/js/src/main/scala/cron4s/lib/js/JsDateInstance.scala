@@ -16,8 +16,7 @@
 
 package cron4s.lib.js
 
-import cron4s.CronField
-import cron4s.CronField._
+import cron4s.{CronField, CronUnit}
 import cron4s.datetime.IsDateTime
 
 import scala.scalajs.js.Date
@@ -26,9 +25,28 @@ import scala.scalajs.js.Date
   * Created by alonsodomin on 30/01/2017.
   */
 private[js] final class JsDateInstance extends IsDateTime[Date] {
+  import CronField._
+  import CronUnit._
 
   @inline
   override def supportedFields(dateTime: Date): List[CronField] = CronField.All
+
+  override def plus[F <: CronField](dateTime: Date, amount: Int, unit: CronUnit[F]): Option[Date] = {
+    def setter(set: Date => Unit): Date = {
+      val newDateTime = new Date(dateTime.getTime())
+      set(newDateTime)
+      newDateTime
+    }
+
+    unit match {
+      case Seconds     => Some(setter(d => d.setSeconds(d.getSeconds() + amount)))
+      case Minutes     => Some(setter(d => d.setMinutes(d.getMinutes() + amount)))
+      case Hours       => Some(setter(d => d.setHours(d.getHours() + amount)))
+      case DaysOfMonth => Some(setter(d => d.setDate(d.getDate() + amount)))
+      case Months      => Some(setter(d => d.setMonth(d.getMonth() + amount)))
+      case _           => None
+    }
+  }
 
   override def get[F <: CronField](dateTime: Date, field: F): Option[Int] = {
     val value = field match {

@@ -34,13 +34,14 @@ trait JodaDateTimeTestBase extends DateTimeTestKitBase[DateTime] {
       second     <- Gen.choose(Seconds.min, Seconds.max)
       minute     <- Gen.choose(Minutes.min, Minutes.max)
       hour       <- Gen.choose(Hours.min, Hours.max)
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(TestYear, _))
+      year       <- yearGen
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(year, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.toLocalDate(1).dayOfMonth().getMaximumValue)
-    } yield new DateTime(TestYear, yearMonth.getMonthOfYear, dayOfMonth, hour, minute, second)
+    } yield new DateTime(year, yearMonth.getMonthOfYear, dayOfMonth, hour, minute, second)
   }
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): DateTime =
-    new DateTime(TestYear, month, dayOfMonth, hours, minutes, seconds)
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): DateTime =
+    new DateTime(year, month, dayOfMonth, hours, minutes, seconds)
 
 }
 
@@ -49,13 +50,14 @@ trait JodaLocalDateTestBase extends DateTimeTestKitBase[LocalDate] {
 
   override implicit lazy val arbitraryDateTime: Arbitrary[LocalDate] = Arbitrary {
     for {
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(TestYear, _))
+      year       <- yearGen
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(year, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.toLocalDate(1).dayOfMonth().getMaximumValue)
-    } yield new LocalDate(TestYear, yearMonth.getMonthOfYear, dayOfMonth)
+    } yield new LocalDate(year, yearMonth.getMonthOfYear, dayOfMonth)
   }
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): LocalDate =
-    new LocalDate(TestYear, month, dayOfMonth)
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): LocalDate =
+    new LocalDate(year, month, dayOfMonth)
 
 }
 
@@ -70,7 +72,7 @@ trait JodaLocalTimeTestBase extends DateTimeTestKitBase[LocalTime] {
     } yield new LocalTime(hour, minute, second)
   }
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): LocalTime =
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): LocalTime =
     new LocalTime(hours, minutes, seconds)
 
 }
@@ -83,12 +85,13 @@ trait JodaLocalDateTimeTestBase extends DateTimeTestKitBase[LocalDateTime] {
       second     <- Gen.choose(Seconds.min, Seconds.max)
       minute     <- Gen.choose(Minutes.min, Minutes.max)
       hour       <- Gen.choose(Hours.min, Hours.max)
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(TestYear, _))
+      year       <- yearGen
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(new YearMonth(year, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.toLocalDate(1).dayOfMonth().getMaximumValue)
-    } yield new LocalDateTime(TestYear, yearMonth.getMonthOfYear, dayOfMonth, hour, minute, second)
+    } yield new LocalDateTime(year, yearMonth.getMonthOfYear, dayOfMonth, hour, minute, second)
   }
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): LocalDateTime =
-    new LocalDateTime(TestYear, month, dayOfMonth, hours, minutes, seconds)
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): LocalDateTime =
+    new LocalDateTime(year, month, dayOfMonth, hours, minutes, seconds)
 
 }

@@ -16,11 +16,10 @@
 
 package cron4s.lib.threetenbp
 
-import cron4s.CronField
-import cron4s.CronField._
+import cron4s.{CronField, CronUnit}
 import cron4s.datetime.IsDateTime
 
-import org.threeten.bp.temporal.{ChronoField, Temporal, TemporalField}
+import org.threeten.bp.temporal.{ChronoField, ChronoUnit, Temporal, TemporalField, TemporalUnit}
 
 import scala.util.Try
 
@@ -28,8 +27,10 @@ import scala.util.Try
   * Created by alonsodomin on 30/01/2017.
   */
 private[threetenbp] final class JSR310Instance[DT <: Temporal] extends IsDateTime[DT] {
+  import CronField._
+  import CronUnit._
 
-  private[this] def mapField(field: CronField): TemporalField = field match {
+  private[this] def asTemporalField(field: CronField): TemporalField = field match {
     case Second     => ChronoField.SECOND_OF_MINUTE
     case Minute     => ChronoField.MINUTE_OF_HOUR
     case Hour       => ChronoField.HOUR_OF_DAY
@@ -38,11 +39,23 @@ private[threetenbp] final class JSR310Instance[DT <: Temporal] extends IsDateTim
     case DayOfWeek  => ChronoField.DAY_OF_WEEK
   }
 
+  private[this] def asTemporalUnit[F <: CronField](unit: CronUnit[F]): Option[TemporalUnit] = unit match {
+    case Seconds     => Some(ChronoUnit.SECONDS)
+    case Minutes     => Some(ChronoUnit.MINUTES)
+    case Hours       => Some(ChronoUnit.HOURS)
+    case DaysOfMonth => Some(ChronoUnit.DAYS)
+    case Months      => Some(ChronoUnit.MONTHS)
+    case _           => None
+  }
+
+  override def plus[F <: CronField](dateTime: DT, amount: Int, unit: CronUnit[F]): Option[DT] =
+    asTemporalUnit(unit).flatMap(u => Try(dateTime.plus(amount.toLong, u).asInstanceOf[DT]).toOption)
+
   override def supportedFields(dateTime: DT): List[CronField] =
-    CronField.All.filter(f => dateTime.isSupported(mapField(f)))
+    CronField.All.filter(f => dateTime.isSupported(asTemporalField(f)))
 
   override def get[F <: CronField](dateTime: DT, field: F): Option[Int] = {
-    val temporalField = mapField(field)
+    val temporalField = asTemporalField(field)
 
     val offset = if (field == DayOfWeek) -1 else 0
     if (!dateTime.isSupported(temporalField)) None
@@ -50,7 +63,7 @@ private[threetenbp] final class JSR310Instance[DT <: Temporal] extends IsDateTim
   }
 
   override def set[F <: CronField](dateTime: DT, field: F, value: Int): Option[DT] = {
-    val temporalField = mapField(field)
+    val temporalField = asTemporalField(field)
 
     val offset = if (field == DayOfWeek) 1 else 0
     if (!dateTime.isSupported(temporalField)) None

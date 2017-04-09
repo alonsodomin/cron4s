@@ -32,13 +32,14 @@ trait ThreeTenBPLocalDateTestBase extends DateTimeTestKitBase[LocalDate] {
 
   override implicit lazy val arbitraryDateTime: Arbitrary[LocalDate] = Arbitrary {
     for {
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(TestYear, _))
+      year       <- yearGen
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(year, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.lengthOfMonth)
-    } yield LocalDate.of(TestYear, yearMonth.getMonthValue, dayOfMonth)
+    } yield LocalDate.of(year, yearMonth.getMonthValue, dayOfMonth)
   }
 
-  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): LocalDate =
-    LocalDate.of(TestYear, month, dayOfMonth)
+  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): LocalDate =
+    LocalDate.of(year, month, dayOfMonth)
 
 }
 
@@ -53,7 +54,7 @@ trait ThreeTenBPLocalTimeTestBase extends DateTimeTestKitBase[LocalTime] {
     } yield LocalTime.of(hour, minute, second)
   }
 
-  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): LocalTime =
+  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): LocalTime =
     LocalTime.of(hours, minutes, seconds)
 
 }
@@ -66,13 +67,14 @@ trait ThreeTenBPLocalDateTimeTestBase extends DateTimeTestKitBase[LocalDateTime]
       second     <- Gen.choose(Seconds.min, Seconds.max)
       minute     <- Gen.choose(Minutes.min, Minutes.max)
       hour       <- Gen.choose(Hours.min, Hours.max)
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(TestYear, _))
+      year       <- yearGen
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(year, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.lengthOfMonth)
-    } yield LocalDateTime.of(TestYear, yearMonth.getMonthValue, dayOfMonth, hour, minute, second)
+    } yield LocalDateTime.of(year, yearMonth.getMonthValue, dayOfMonth, hour, minute, second)
   }
 
-  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): LocalDateTime =
-    LocalDateTime.of(TestYear, month, dayOfMonth, hours, minutes, seconds)
+  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): LocalDateTime =
+    LocalDateTime.of(year, month, dayOfMonth, hours, minutes, seconds)
 
 }
 
@@ -84,13 +86,14 @@ trait ThreeTenBPZonedDateTimeTestBase extends DateTimeTestKitBase[ZonedDateTime]
       second     <- Gen.choose(Seconds.min, Seconds.max)
       minute     <- Gen.choose(Minutes.min, Minutes.max)
       hour       <- Gen.choose(Hours.min, Hours.max)
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(TestYear, _))
+      year       <- yearGen
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(year, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.lengthOfMonth)
-    } yield ZonedDateTime.of(TestYear, yearMonth.getMonthValue, dayOfMonth, hour, minute, second, 0, ZoneOffset.UTC)
+    } yield ZonedDateTime.of(year, yearMonth.getMonthValue, dayOfMonth, hour, minute, second, 0, ZoneOffset.UTC)
   }
 
-  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): ZonedDateTime =
-    ZonedDateTime.of(TestYear, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
+  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): ZonedDateTime =
+    ZonedDateTime.of(year, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
 }
 
 trait ThreeTenBPOffsetDateTimeTestBase extends DateTimeTestKitBase[OffsetDateTime] {
@@ -101,11 +104,12 @@ trait ThreeTenBPOffsetDateTimeTestBase extends DateTimeTestKitBase[OffsetDateTim
       second     <- Gen.choose(Seconds.min, Seconds.max)
       minute     <- Gen.choose(Minutes.min, Minutes.max)
       hour       <- Gen.choose(Hours.min, Hours.max)
-      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(TestYear, _))
+      year       <- yearGen
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(year, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.lengthOfMonth)
-    } yield OffsetDateTime.of(TestYear, yearMonth.getMonthValue, dayOfMonth, hour, minute, second, 0, ZoneOffset.UTC)
+    } yield OffsetDateTime.of(year, yearMonth.getMonthValue, dayOfMonth, hour, minute, second, 0, ZoneOffset.UTC)
   }
 
-  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int): OffsetDateTime =
-    OffsetDateTime.of(TestYear, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
+  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): OffsetDateTime =
+    OffsetDateTime.of(year, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
 }
