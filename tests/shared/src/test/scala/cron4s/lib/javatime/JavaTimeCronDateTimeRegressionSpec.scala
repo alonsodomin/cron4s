@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package cron4s.lib.threetenbp
+package cron4s.lib.javatime
+
+import java.time.LocalDateTime
+import java.time.temporal.{ChronoField, ChronoUnit}
 
 import cron4s._
-
 import org.scalatest.{FlatSpec, Matchers}
 
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.temporal.{ChronoField, ChronoUnit}
-
 /**
-  * Created by domingueza on 20/02/2017.
+  * Created by alonsodomin on 24/02/2017.
   */
-class ThreeTenBPCronDateTimeRegressionSpec extends FlatSpec with Matchers {
+class JavaTimeCronDateTimeRegressionSpec extends FlatSpec with Matchers {
 
   "Cron" should "not advance to the next day" in {
     val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
@@ -44,6 +43,16 @@ class ThreeTenBPCronDateTimeRegressionSpec extends FlatSpec with Matchers {
     val Some(next) = cron.next(from)
 
     next.getLong(ChronoField.MILLI_OF_SECOND) shouldBe 0
+  }
+
+  // https://github.com/alonsodomin/cron4s/issues/59
+  "Cron with day of week" should "yield a date in the future" in {
+    val Right(cron) = Cron("0 0 0 * * 1-3")
+
+    for (dayOfMonth <- 1 to 30) {
+      val from = LocalDateTime.of(2017, 3, dayOfMonth, 2, 0, 0)
+      cron.next(from).forall(_.isAfter(from)) shouldBe true
+    }
   }
 
 }

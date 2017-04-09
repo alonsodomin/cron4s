@@ -1,7 +1,7 @@
 # Cron4s
 
 [![Build Status](https://travis-ci.org/alonsodomin/cron4s.svg?branch=master)](https://travis-ci.org/alonsodomin/cron4s)
-[![Scala.js](http://scala-js.org/assets/badges/scalajs-0.6.13.svg)](http://scala-js.org)
+[![Scala.js](http://scala-js.org/assets/badges/scalajs-0.6.14.svg)](http://scala-js.org)
 [![License](http://img.shields.io/:license-Apache%202-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Latest version](https://index.scala-lang.org/alonsodomin/cron4s/cron4s/latest.svg?color=green)](https://index.scala-lang.org/alonsodomin/cron4s)
 
