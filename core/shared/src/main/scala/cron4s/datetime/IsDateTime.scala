@@ -16,7 +16,7 @@
 
 package cron4s.datetime
 
-import cron4s.{CronField, CronUnit}
+import cron4s.CronField
 
 /**
   * Bridge adapter between specific date-time libraries and expression support
@@ -25,7 +25,7 @@ import cron4s.{CronField, CronUnit}
   */
 trait IsDateTime[DateTime] {
 
-  def plus[F <: CronField](dateTime: DateTime, amount: Int, unit: CronUnit[F]): Option[DateTime]
+  def plus(dateTime: DateTime, amount: Int, unit: DateTimeUnit): Option[DateTime]
 
   /**
     * List of the fields supported by this date time representation
