@@ -36,7 +36,9 @@ implicit object MyDateInstance extends IsDateTime[MyTime] {
 
   def supportedFields(myTime: MyTime): List[CronField] =
     List(CronField.Second, CronField.Minute, CronField.Hour)
-        
+  
+  def plus[F <: CronField](myTime: MyTime, amount: Int, unit: CronUnit[F]): Option[MyTime] = ???
+  
   def get[F <: CronField](myTime: MyTime, field: F): Option[Int] = field match {
     case CronField.Second => Some(myTime.seconds)
     case CronField.Minute => Some(myTime.minutes)
@@ -92,7 +94,7 @@ trait MyTimeTestBase extends DateTimeTestKitBase[MyTime] {
     } yield MyTime(second, minute, hour)
   }
 
-  def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): MyTime =
+  override def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): MyTime =
     MyTime(seconds, minutes, hours)
 
 }
