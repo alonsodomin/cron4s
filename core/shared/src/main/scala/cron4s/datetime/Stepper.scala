@@ -47,13 +47,13 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   protected[this] def stepOverMonth(prev: DTStep, expr: MonthsNode): DTStep = {
     for {
       (dt, carryOver, dir) <- stepAndAdjust(prev, expr)
-      newDateTime          <- DT.plus(dt, carryOver * 12, CronUnit.Months)
+      newDateTime          <- DT.plus(dt, carryOver * 12, DateTimeUnit.Months)
     } yield (newDateTime, 0, dir)
   }
 
   protected[this] def stepOverDayOfWeek(prev: DTStep, expr: DaysOfWeekNode): DTStep = for {
     (dt, carryOver, dir) <- stepAndAdjust(prev, expr)
-    newDateTime          <- DT.plus(dt, carryOver * 7, CronUnit.DaysOfMonth)
+    newDateTime          <- DT.plus(dt, carryOver, DateTimeUnit.Weeks)
   } yield (newDateTime, 0, dir)
 
   object stepping extends Poly2 {

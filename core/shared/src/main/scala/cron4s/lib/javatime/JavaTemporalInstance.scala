@@ -18,7 +18,7 @@ package cron4s.lib.javatime
 
 import java.time.temporal._
 
-import cron4s.datetime.IsDateTime
+import cron4s.datetime.{DateTimeUnit, IsDateTime}
 import cron4s.{CronField, CronUnit}
 
 import scala.util.{Success, Try}
@@ -28,7 +28,7 @@ import scala.util.{Success, Try}
   */
 private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDateTime[DT] {
   import CronField._
-  import CronUnit._
+  import DateTimeUnit._
 
   private[this] def asTemporalField(field: CronField): TemporalField = field match {
     case Second     => ChronoField.SECOND_OF_MINUTE
@@ -39,17 +39,17 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
     case DayOfWeek  => ChronoField.DAY_OF_WEEK
   }
 
-  private[this] def asTemporalUnit[F <: CronField](unit: CronUnit[F]): Option[TemporalUnit] = unit match {
-    case Seconds     => Some(ChronoUnit.SECONDS)
-    case Minutes     => Some(ChronoUnit.MINUTES)
-    case Hours       => Some(ChronoUnit.HOURS)
-    case DaysOfMonth => Some(ChronoUnit.DAYS)
-    case Months      => Some(ChronoUnit.MONTHS)
-    case _           => None
+  private[this] def asTemporalUnit[F <: CronField](unit: DateTimeUnit): TemporalUnit = unit match {
+    case Seconds => ChronoUnit.SECONDS
+    case Minutes => ChronoUnit.MINUTES
+    case Hours   => ChronoUnit.HOURS
+    case Days    => ChronoUnit.DAYS
+    case Months  => ChronoUnit.MONTHS
+    case Weeks   => ChronoUnit.WEEKS
   }
 
-  override def plus[F <: CronField](dateTime: DT, amount: Int, unit: CronUnit[F]): Option[DT] =
-    asTemporalUnit(unit).flatMap(u => Try(dateTime.plus(amount.toLong, u).asInstanceOf[DT]).toOption)
+  override def plus(dateTime: DT, amount: Int, unit: DateTimeUnit): Option[DT] =
+    Try(dateTime.plus(amount.toLong, asTemporalUnit(unit)).asInstanceOf[DT]).toOption
 
   def supportedFields(dateTime: DT): List[CronField] =
     CronField.All.filter(f => dateTime.isSupported(asTemporalField(f)))

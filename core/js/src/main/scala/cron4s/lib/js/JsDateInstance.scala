@@ -16,8 +16,8 @@
 
 package cron4s.lib.js
 
-import cron4s.{CronField, CronUnit}
-import cron4s.datetime.IsDateTime
+import cron4s.CronField
+import cron4s.datetime.{DateTimeUnit, IsDateTime}
 
 import scala.scalajs.js.Date
 
@@ -26,12 +26,12 @@ import scala.scalajs.js.Date
   */
 private[js] final class JsDateInstance extends IsDateTime[Date] {
   import CronField._
-  import CronUnit._
+  import DateTimeUnit._
 
   @inline
   override def supportedFields(dateTime: Date): List[CronField] = CronField.All
 
-  override def plus[F <: CronField](dateTime: Date, amount: Int, unit: CronUnit[F]): Option[Date] = {
+  override def plus(dateTime: Date, amount: Int, unit: DateTimeUnit): Option[Date] = {
     def setter(set: Date => Unit): Date = {
       val newDateTime = new Date(dateTime.getTime())
       set(newDateTime)
@@ -39,12 +39,12 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
     }
 
     unit match {
-      case Seconds     => Some(setter(d => d.setSeconds(d.getSeconds() + amount)))
-      case Minutes     => Some(setter(d => d.setMinutes(d.getMinutes() + amount)))
-      case Hours       => Some(setter(d => d.setHours(d.getHours() + amount)))
-      case DaysOfMonth => Some(setter(d => d.setDate(d.getDate() + amount)))
-      case Months      => Some(setter(d => d.setMonth(d.getMonth() + amount)))
-      case _           => None
+      case Seconds => Some(setter(d => d.setSeconds(d.getSeconds() + amount)))
+      case Minutes => Some(setter(d => d.setMinutes(d.getMinutes() + amount)))
+      case Hours   => Some(setter(d => d.setHours(d.getHours() + amount)))
+      case Days    => Some(setter(d => d.setDate(d.getDate() + amount)))
+      case Months  => Some(setter(d => d.setMonth(d.getMonth() + amount)))
+      case Weeks   => Some(setter(d => d.setDate(d.getDate() + (amount * 7))))
     }
   }
 
