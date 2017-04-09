@@ -17,7 +17,6 @@
 package cron4s.lib.js
 
 import cron4s.testkit.CronDateTimeTestKit
-import org.scalatest.Ignore
 
 import scala.scalajs.js.Date
 
