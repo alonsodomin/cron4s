@@ -45,14 +45,9 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   }
 
   protected[this] def stepOverMonth(prev: DTStep, expr: MonthsNode): DTStep = {
-    def adjustYear(dt: DateTime, carryOver: Int): Option[DateTime] = {
-      if (carryOver == 0) Some(dt)
-      else DT.plus(dt, carryOver * 12, CronUnit.Months)
-    }
-
     for {
       (dt, carryOver, dir) <- stepAndAdjust(prev, expr)
-      newDateTime          <- adjustYear(dt, carryOver)
+      newDateTime          <- DT.plus(dt, carryOver * 12, CronUnit.Months)
     } yield (newDateTime, 0, dir)
   }
 
