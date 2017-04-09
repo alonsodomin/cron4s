@@ -5,7 +5,7 @@ import Keys._
 object Dependencies {
 
   object version {
-    val scalaz      = "7.2.9"
+    val scalaz      = "7.2.10"
     val shapeless   = "2.3.2"
 
     val momentjs    = "0.1.5"
@@ -13,12 +13,12 @@ object Dependencies {
     val jodaConvert = "1.8.1"
     val fastparse   = "0.4.2"
 
-    val scalacheck  = "1.13.4"
+    val scalacheck  = "1.13.5"
     val scalatest   = "3.0.1"
     val discipline  = "0.7.3"
     val catalysts   = "0.0.5"
 
-    val scalaJavaTime = "2.0.0-M8"
+    val scalaJavaTime = "2.0.0-M9"
   }
 
   val macroParadise = compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full)
