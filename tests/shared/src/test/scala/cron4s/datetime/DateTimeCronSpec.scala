@@ -16,12 +16,12 @@
 
 package cron4s.datetime
 
-import cron4s.lib.threetenbp._
-import cron4s.testkit.DateTimeCronTestKit
+import java.time.LocalDateTime
 
-import org.threeten.bp._
+import cron4s.lib.javatime._
+import cron4s.testkit.DateTimeCronTestKit
 
 /**
   * Created by alonsodomin on 29/01/2017.
   */
-class DateTimeCronSpec extends DateTimeCronTestKit[LocalDateTime] with ThreeTenBPLocalDateTimeTestBase
+class DateTimeCronSpec extends DateTimeCronTestKit[LocalDateTime] with JavaLocalDateTimeTestBase
