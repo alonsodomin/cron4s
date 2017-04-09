@@ -37,7 +37,7 @@ implicit object MyDateInstance extends IsDateTime[MyTime] {
   def supportedFields(myTime: MyTime): List[CronField] =
     List(CronField.Second, CronField.Minute, CronField.Hour)
   
-  def plus](myTime: MyTime, amount: Int, unit: DateTimeUnit): Option[MyTime] = ???
+  def plus(myTime: MyTime, amount: Int, unit: DateTimeUnit): Option[MyTime] = None
   
   def get[F <: CronField](myTime: MyTime, field: F): Option[Int] = field match {
     case CronField.Second => Some(myTime.seconds)
