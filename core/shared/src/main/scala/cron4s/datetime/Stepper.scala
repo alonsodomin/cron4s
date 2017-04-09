@@ -25,11 +25,10 @@ import shapeless._
 import scala.annotation.tailrec
 
 private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
-  import CronField._
 
   val MaxIterationCount = 3
 
-  protected type Step = Option[(DateTime, Int, Direction)]
+  protected type DTStep = Option[(DateTime, Int, Direction)]
 
   protected[this] def stepField[N[_ <: CronField], F <: CronField]
       (expr: N[F], from: DateTime, step: Int, direction: Direction)(implicit N: FieldExpr[N, F]): Option[(Int, Int)] =
@@ -37,7 +36,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       .flatMap(expr.step0(_, step, direction))
 
   protected[this] def stepAndAdjust[N[_ <: CronField], F <: CronField]
-      (dateTimeAndStep: Step, expr: N[F])(implicit N: FieldExpr[N, F]): Step = {
+      (dateTimeAndStep: DTStep, expr: N[F])(implicit N: FieldExpr[N, F]): DTStep = {
     for {
       (dateTime, step, dir) <- dateTimeAndStep
       (value, nextStep)     <- stepField(expr, dateTime, step, dir)
@@ -45,54 +44,53 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
     } yield (newDateTime, nextStep, dir)
   }
 
-  protected[this] def stepDayOfWeek
-      (dt: DateTime, expr: FieldNodeWithAny[DayOfWeek], stepSize: Int, direction: Direction): Step = {
+  protected[this] def stepOverMonth(prev: DTStep, expr: MonthsNode): DTStep = {
     for {
-      dayOfWeek         <- DT.get(dt, DayOfWeek)
-      (value, nextStep) <- expr.step0(dayOfWeek, stepSize, direction)
-      newDateTime       <- DT.set(dt, DayOfWeek, value)
-      newDayOfWeek      <- DT.get(dt, DayOfWeek)
-    } yield (newDateTime, nextStep + (newDayOfWeek - dayOfWeek), direction)
+      (dt, carryOver, dir) <- stepAndAdjust(prev, expr)
+      newDateTime          <- DT.plus(dt, carryOver * 12, CronUnit.Months)
+    } yield (newDateTime, 0, dir)
   }
+
+  protected[this] def stepOverDayOfWeek(prev: DTStep, expr: DaysOfWeekNode): DTStep = for {
+    (dt, carryOver, dir) <- stepAndAdjust(prev, expr)
+    newDateTime          <- DT.plus(dt, carryOver * 7, CronUnit.DaysOfMonth)
+  } yield (newDateTime, 0, dir)
 
   object stepping extends Poly2 {
-    implicit def caseSeconds     = at[Step, SecondsNode]((step, node) => stepAndAdjust(step, node))
-    implicit def caseMinutes     = at[Step, MinutesNode]((step, node) => stepAndAdjust(step, node))
-    implicit def caseHours       = at[Step, HoursNode]((step, node) => stepAndAdjust(step, node))
-    implicit def caseDaysOfMonth = at[Step, DaysOfMonthNode]((step, node) => stepAndAdjust(step, node))
-    implicit def caseMonths      = at[Step, MonthsNode]((step, node) => stepAndAdjust(step, node))
+    implicit def caseSeconds     = at[DTStep, SecondsNode]((step, node) => stepAndAdjust(step, node))
+    implicit def caseMinutes     = at[DTStep, MinutesNode]((step, node) => stepAndAdjust(step, node))
+    implicit def caseHours       = at[DTStep, HoursNode]((step, node) => stepAndAdjust(step, node))
+    implicit def caseDaysOfMonth = at[DTStep, DaysOfMonthNode]((step, node) => stepAndAdjust(step, node))
+    implicit def caseMonths      = at[DTStep, MonthsNode](stepOverMonth)
+    implicit def caseDaysOfWeek  = at[DTStep, DaysOfWeekNode](stepOverDayOfWeek)
   }
 
-  def stepOverDate(rawExpr: RawDateCronExpr, from: DateTime, step: Int, direction: Direction)(matches: DateTime => Boolean): Step = {
-    val dateWithoutDayOfWeek = rawExpr.take(2)
-    val daysOfWeek = rawExpr.select[DaysOfWeekNode]
-
-    def doStep(previous: Step): Step =
-      dateWithoutDayOfWeek.foldLeft(previous)(stepping).flatMap {
-        case (dt, stepSize, dir) => stepDayOfWeek(dt, daysOfWeek, stepSize, dir)
-      }
+  def stepOverDate(rawExpr: RawDateCronExpr, from: DateTime, step: Int, direction: Direction)(matches: DateTime => Boolean): DTStep = {
+    // Steps in the CronExpr and applies carry over from day of week in number of weeks
+    def doStep(previous: DTStep): DTStep =
+      rawExpr.foldLeft(previous)(stepping)
 
     @tailrec
-    def dateStepLoop(previous: Step, iterationCount: Int): Step = {
+    def dateStepLoop(previous: DTStep, iterationCount: Int): DTStep = {
       val dateAdjusted = doStep(previous)
 
       dateAdjusted match {
         case Some((_, nextStep, _)) if nextStep != 0 && iterationCount < MaxIterationCount =>
-          dateStepLoop(doStep(dateAdjusted), iterationCount + 1)
+          dateStepLoop(dateAdjusted, iterationCount + 1)
 
         case Some((dateTime, _, dir)) if !matches(dateTime) && iterationCount < MaxIterationCount =>
-          val nextStep: Step = Some((dateTime, 1, dir))
-          dateStepLoop(doStep(nextStep), iterationCount + 1)
+          val nextStep: DTStep = Some((dateTime, 1, dir))
+          dateStepLoop(nextStep, iterationCount + 1)
 
         case _ => dateAdjusted
       }
     }
 
-    val initialStep: Step = Some((from, step, direction))
+    val initialStep: DTStep = Some((from, step, direction))
     dateStepLoop(initialStep, 0)
   }
 
-  def stepOverTime(rawExpr: RawTimeCronExpr, from: DateTime, initial: Int, dir: Direction): Step =
-    rawExpr.foldLeft(Some((from, initial, dir)): Step)(stepping)
+  def stepOverTime(rawExpr: RawTimeCronExpr, from: DateTime, initial: Int, dir: Direction): DTStep =
+    rawExpr.foldLeft(Some((from, initial, dir)): DTStep)(stepping)
 
 }

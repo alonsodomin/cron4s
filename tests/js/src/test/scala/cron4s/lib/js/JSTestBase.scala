@@ -35,10 +35,10 @@ trait JSTestBase extends DateTimeTestKitBase[Date] {
     hours       <- Gen.choose(Hours.min, Hours.max)
     daysOfMonth <- Gen.choose(DaysOfMonth.min, DaysOfMonth.max)
     months      <- Gen.choose(Months.min, Months.max)
-    daysOfWeek  <- Gen.choose(DaysOfWeek.min, DaysOfWeek.max)
-  } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, daysOfWeek))
+    year        <- yearGen
+  } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, year))
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): Date =
-    new Date(2016, month - 1, dayOfMonth, hours, minutes, seconds)
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): Date =
+    new Date(year, month - 1, dayOfMonth, hours, minutes, seconds)
 
 }

@@ -16,15 +16,16 @@
 
 package cron4s.testkit
 
-import org.scalacheck.Arbitrary
+import org.scalacheck.{Arbitrary, Gen}
 
 /**
   * Created by alonsodomin on 29/08/2016.
   */
 trait DateTimeTestKitBase[DateTime] {
-
   implicit def arbitraryDateTime: Arbitrary[DateTime]
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, dayOfWeek: Int): DateTime
+  protected val yearGen: Gen[Int] = Gen.choose(2016, 2020)
+
+  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): DateTime
 
 }
