@@ -19,9 +19,9 @@ package cron4s.lib
 import java.time._
 import java.time.temporal.Temporal
 
-import cron4s.datetime.IsDateTime
+import cats.Eq
 
-import scalaz.Equal
+import cron4s.datetime.IsDateTime
 
 /**
   * Created by alonsodomin on 11/12/2016.
@@ -29,11 +29,11 @@ import scalaz.Equal
 package object javatime {
   private[javatime] final val DayOfWeekOffset = 1
 
-  implicit lazy val javaLocalDateEq      : Equal[LocalDate]      = Equal.equalA[LocalDate]
-  implicit lazy val javaLocalTimeEq      : Equal[LocalTime]      = Equal.equalA[LocalTime]
-  implicit lazy val javaLocalDateTimeEq  : Equal[LocalDateTime]  = Equal.equalA[LocalDateTime]
-  implicit lazy val javaZonedDateTimeEq  : Equal[ZonedDateTime]  = Equal.equalA[ZonedDateTime]
-  implicit lazy val javaOffsetDateTimeEq : Equal[OffsetDateTime] = Equal.equalA[OffsetDateTime]
+  implicit lazy val javaLocalDateEq      : Eq[LocalDate]      = Eq.fromUniversalEquals[LocalDate]
+  implicit lazy val javaLocalTimeEq      : Eq[LocalTime]      = Eq.fromUniversalEquals[LocalTime]
+  implicit lazy val javaLocalDateTimeEq  : Eq[LocalDateTime]  = Eq.fromUniversalEquals[LocalDateTime]
+  implicit lazy val javaZonedDateTimeEq  : Eq[ZonedDateTime]  = Eq.fromUniversalEquals[ZonedDateTime]
+  implicit lazy val javaOffsetDateTimeEq : Eq[OffsetDateTime] = Eq.fromUniversalEquals[OffsetDateTime]
 
   implicit def javaTemporalInstance[DT <: Temporal]: IsDateTime[DT] = new JavaTemporalInstance[DT]
 

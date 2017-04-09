@@ -16,7 +16,7 @@
 
 package cron4s
 
-import scalaz.Equal
+import cats.{Eq, Show}
 
 /**
   * Each of the different fields supported in CRON expressions
@@ -50,6 +50,8 @@ object CronField extends CronFieldInstances {
 
 private[cron4s] trait CronFieldInstances {
 
-  implicit val cronFieldEq: Equal[CronField] = Equal.equalA[CronField]
+  implicit val cronFieldEq: Eq[CronField] = Eq.fromUniversalEquals[CronField]
+
+  implicit val cronFieldShow: Show[CronField] = Show.fromToString
 
 }

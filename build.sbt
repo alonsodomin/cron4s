@@ -251,6 +251,7 @@ lazy val tests = (crossProject in file("tests")).
   settings(noPublishSettings: _*).
   settings(Dependencies.tests: _*).
   jsSettings(commonJsSettings: _*).
+  jsSettings(Dependencies.testsJS: _*).
   jvmSettings(commonJvmSettings).
   jvmSettings(Dependencies.testsJVM: _*).
   dependsOn(testkit % Test)

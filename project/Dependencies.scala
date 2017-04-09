@@ -5,7 +5,7 @@ import Keys._
 object Dependencies {
 
   object version {
-    val scalaz      = "7.2.10"
+    val cats        = "0.9.0"
     val shapeless   = "2.3.2"
 
     val momentjs    = "0.1.5"
@@ -27,9 +27,9 @@ object Dependencies {
 
   lazy val core = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
-      "com.chuusai" %%% "shapeless"   % version.shapeless,
-      "org.scalaz"  %%% "scalaz-core" % version.scalaz,
-      "com.lihaoyi" %%% "fastparse"   % version.fastparse
+      "com.chuusai"   %%% "shapeless" % version.shapeless,
+      "org.typelevel" %%% "cats"      % version.cats,
+      "com.lihaoyi"   %%% "fastparse" % version.fastparse
     )
   }
 
@@ -46,20 +46,23 @@ object Dependencies {
 
   lazy val testkit = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
-      "org.scalaz"     %%% "scalaz-core"               % version.scalaz,
-      "org.typelevel"  %%% "discipline"                % version.discipline,
-      "org.typelevel"  %%% "catalysts-platform"        % version.catalysts,
-      "org.scalaz"     %%% "scalaz-scalacheck-binding" % version.scalaz,
-      "org.scalacheck" %%% "scalacheck"                % version.scalacheck,
-      "org.scalatest"  %%% "scalatest"                 % version.scalatest
+      "org.typelevel"  %%% "cats"               % version.cats,
+      "org.typelevel"  %%% "cats-laws"          % version.cats,
+      "org.typelevel"  %%% "discipline"         % version.discipline,
+      "org.typelevel"  %%% "catalysts-platform" % version.catalysts,
+      "org.scalacheck" %%% "scalacheck"         % version.scalacheck,
+      "org.scalatest"  %%% "scalatest"          % version.scalatest
     )
   }
 
   lazy val tests = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
-      "org.scalatest"     %%% "scalatest"       % version.scalatest % Test,
-      "io.github.cquiroz" %%% "scala-java-time" % version.scalaJavaTime
+      "org.scalatest"     %%% "scalatest"       % version.scalatest % Test
     )
+  }
+
+  lazy val testsJS = Def.settings {
+    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % version.scalaJavaTime
   }
 
   lazy val testsJVM = Def.settings {
