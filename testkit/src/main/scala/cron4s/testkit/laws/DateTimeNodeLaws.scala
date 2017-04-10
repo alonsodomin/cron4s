@@ -16,10 +16,11 @@
 
 package cron4s.testkit.laws
 
+import cats.laws._
+
 import cron4s.CronField
 import cron4s.datetime.{IsDateTime, DateTimeNode}
 import cron4s.expr.FieldExpr
-import cron4s.testkit._
 import cron4s.syntax.node._
 
 /**
@@ -30,15 +31,15 @@ trait DateTimeNodeLaws[E[_ <: CronField], F <: CronField, DateTime] {
   implicit def expr: FieldExpr[E, F]
   implicit def TC: DateTimeNode[E, F]
 
-  def matchable(e: E[F], dt: DateTime): IsEqual[Boolean] = {
+  def matchable(e: E[F], dt: DateTime): IsEq[Boolean] = {
     val fieldVal = DT.get(dt, expr.unit(e).field)
     e.matchesIn(dt) <-> fieldVal.exists(expr.matches(e)(_))
   }
 
-  def forward(e: E[F], from: DateTime): IsEqual[Option[DateTime]] =
+  def forward(e: E[F], from: DateTime): IsEq[Option[DateTime]] =
     e.nextIn(from) <-> e.stepIn(from, 1)
 
-  def backwards(e: E[F], from: DateTime): IsEqual[Option[DateTime]] =
+  def backwards(e: E[F], from: DateTime): IsEq[Option[DateTime]] =
     e.prevIn(from) <-> e.stepIn(from, -1)
 
 }

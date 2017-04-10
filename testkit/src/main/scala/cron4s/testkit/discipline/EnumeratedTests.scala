@@ -16,15 +16,15 @@
 
 package cron4s.testkit.discipline
 
+import cats.laws.discipline._
+import cats.implicits._
+
 import cron4s.testkit.laws.EnumeratedLaws
 import cron4s.base.Enumerated
 
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
 import org.typelevel.discipline.Laws
-
-import scalaz._
-import Scalaz._
 
 /**
   * Created by alonsodomin on 27/08/2016.

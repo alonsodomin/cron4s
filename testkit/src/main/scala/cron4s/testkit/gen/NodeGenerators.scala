@@ -16,13 +16,13 @@
 
 package cron4s.testkit.gen
 
+import cats.data.NonEmptyList
+
 import cron4s.{CronField, CronUnit}
 import cron4s.expr._
 import cron4s.base._
 
 import org.scalacheck._
-
-import scalaz.NonEmptyList
 
 /**
   * Created by alonsodomin on 28/08/2016.
@@ -109,7 +109,7 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       .flatMap(size => Gen.listOfN(size, memberGen))
       .map(inspectElements)
       .map { elems =>
-        SeveralNode[F](NonEmptyList(elems.head, elems.tail: _*))
+        SeveralNode[F](NonEmptyList.of(elems.head, elems.tail: _*))
       }
   }
 

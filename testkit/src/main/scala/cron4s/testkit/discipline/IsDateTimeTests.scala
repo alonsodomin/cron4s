@@ -16,6 +16,8 @@
 
 package cron4s.testkit.discipline
 
+import cats.Eq
+
 import cron4s.CronField
 import cron4s.datetime.IsDateTime
 import cron4s.testkit.CronFieldValue
@@ -25,8 +27,6 @@ import org.scalacheck._
 import Prop._
 
 import org.typelevel.discipline.Laws
-
-import scalaz.Equal
 
 /**
   * Created by alonsodomin on 29/08/2016.
@@ -52,7 +52,7 @@ object IsDateTimeTests {
 
   def apply[DateTime](implicit
     dtEv: IsDateTime[DateTime],
-    eqEv: Equal[DateTime]
+    eqEv: Eq[DateTime]
   ): IsDateTimeTests[DateTime] =
     new IsDateTimeTests[DateTime] {
       val laws: IsDateTimeLaws[DateTime] = IsDateTimeLaws[DateTime]

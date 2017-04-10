@@ -16,21 +16,22 @@
 
 package cron4s.testkit.laws
 
+import cats.Eq
+import cats.kernel.laws._
+import cats.implicits._
+
 import cron4s.CronField
 import cron4s.datetime.IsDateTime
 import cron4s.testkit._
 
 import org.scalacheck.Prop
 
-import scalaz._
-import Scalaz._
-
 /**
   * Created by alonsodomin on 29/08/2016.
   */
 trait IsDateTimeLaws[DateTime] {
   implicit def DT: IsDateTime[DateTime]
-  implicit def eq: Equal[DateTime]
+  implicit def eq: Eq[DateTime]
 
   def gettable[F <: CronField](dt: DateTime, field: F): Prop =
     DT.get(dt, field).isDefined ?== DT.supportedFields(dt).contains(field)
@@ -62,10 +63,10 @@ object IsDateTimeLaws {
 
   def apply[DateTime](implicit
     dtEv: IsDateTime[DateTime],
-    eqEv: Equal[DateTime]
+    eqEv: Eq[DateTime]
   ): IsDateTimeLaws[DateTime] =
     new IsDateTimeLaws[DateTime] {
-      implicit val eq: Equal[DateTime] = eqEv
+      implicit val eq: Eq[DateTime] = eqEv
       implicit val DT: IsDateTime[DateTime] = dtEv
     }
 
