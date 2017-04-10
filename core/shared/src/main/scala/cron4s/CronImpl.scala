@@ -21,11 +21,9 @@ import cron4s.expr._
 import fastparse.all._
 
 /**
-  * Entry point for the CRON parsing operation
-  *
-  * @author Antonio Alonso Dominguez
+  * Created by domingueza on 10/04/2017.
   */
-object Cron {
+private[cron4s] trait CronImpl {
 
   def apply(e: String): Either[InvalidCron, CronExpr] =
     parse(e).right.flatMap(validation.validateCron)
