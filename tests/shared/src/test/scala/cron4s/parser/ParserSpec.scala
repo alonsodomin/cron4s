@@ -70,8 +70,8 @@ class ParserSpec extends Cron4sPropSpec
       verify: (ConstNode[F], String) => Boolean
   ): Boolean = {
     verifyParsed[F, SeveralNode[F]](parser, input) { expr =>
-      if (expr.values.size == expected.size) {
-        val matches = expr.values.list.toList.zip(expected).map { case (exprPart, expectedPart) =>
+      if (expr.values.toList.size == expected.size) {
+        val matches = expr.values.toList.zip(expected).map { case (exprPart, expectedPart) =>
           expectedPart match {
             case Left(value) =>
               exprPart.raw.select[ConstNode[F]].exists(verify(_, value))

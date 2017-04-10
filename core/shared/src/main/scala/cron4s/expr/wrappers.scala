@@ -16,12 +16,12 @@
 
 package cron4s.expr
 
+import cats.Show
+
 import cron4s.{CronField, CronUnit}
 import cron4s.base.Predicate
 
 import shapeless._
-
-import scalaz.Show
 
 /**
   * Created by alonsodomin on 23/01/2017.
@@ -35,7 +35,7 @@ final class FieldNode[F <: CronField](private[cron4s] val raw: RawFieldNode[F]) 
 object FieldNode {
 
   implicit def fieldNodeShow[F <: CronField]: Show[FieldNode[F]] =
-    Show.showFromToString[FieldNode[F]]
+    Show.fromToString[FieldNode[F]]
 
   implicit def fieldNodeInstance[F <: CronField]: FieldExpr[FieldNode, F] = new FieldExpr[FieldNode, F] {
     def matches(node: FieldNode[F]): Predicate[Int] =
@@ -69,7 +69,7 @@ final class FieldNodeWithAny[F <: CronField](private[cron4s] val raw: RawFieldNo
 object FieldNodeWithAny {
 
   implicit def fieldNodeWithAny[F <: CronField]: Show[FieldNodeWithAny[F]] =
-    Show.showFromToString[FieldNodeWithAny[F]]
+    Show.fromToString[FieldNodeWithAny[F]]
 
   implicit def fieldNodeInstance[F <: CronField]: FieldExpr[FieldNodeWithAny, F] =
     new FieldExpr[FieldNodeWithAny, F] {
@@ -105,7 +105,7 @@ final class EnumerableNode[F <: CronField](private[cron4s] val raw: RawEnumerabl
 object EnumerableNode {
 
   implicit def enumerableNodeShow[F <: CronField]: Show[EnumerableNode[F]] =
-    Show.showFromToString[EnumerableNode[F]]
+    Show.fromToString[EnumerableNode[F]]
 
   implicit def enumerableNodeInstance[F <: CronField]: FieldExpr[EnumerableNode, F] =
     new FieldExpr[EnumerableNode, F] {
@@ -139,7 +139,7 @@ final class DivisibleNode[F <: CronField](private[cron4s] val raw: RawDivisibleN
 object DivisibleNode {
 
   implicit def divisibleNodeShow[F <: CronField]: Show[DivisibleNode[F]] =
-    Show.showFromToString[DivisibleNode[F]]
+    Show.fromToString[DivisibleNode[F]]
 
   implicit def divisibleNodeInstance[F <: CronField]: FieldExpr[DivisibleNode, F] =
     new FieldExpr[DivisibleNode, F] {

@@ -16,10 +16,10 @@
 
 package cron4s.syntax
 
-import cron4s.base.Predicate
+import cats.{Eq, Foldable, MonoidK}
+import cats.syntax.foldable._
 
-import scalaz.{Equal, Foldable, PlusEmpty}
-import scalaz.syntax.foldable._
+import cron4s.base.Predicate
 
 /**
   * Created by alonsodomin on 29/07/2016.
@@ -30,19 +30,19 @@ trait PredicateSyntax {
 
   def not[A](m: Predicate[A]): Predicate[A] = Predicate { a => !m(a) }
 
-  def equalTo[A: Equal](a: A): Predicate[A] = Predicate { b => implicitly[Equal[A]].equal(a, b) }
+  def equalTo[A: Eq](a: A): Predicate[A] = Predicate { b => Eq[A].eqv(a, b) }
 
   def noneOf[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
     not(allOf(c))
 
   def anyOf[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
-    Predicate { a => ev.any(c)(_(a)) }
+    Predicate { a => ev.exists(c)(_(a)) }
 
   def allOf[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
-    Predicate { a => ev.all(c)(_(a)) }
+    Predicate { a => ev.forall(c)(_(a)) }
 
-  def asOf[C[_]: Foldable, A](c: C[Predicate[A]])(implicit M: PlusEmpty[Predicate]): Predicate[A] =
-    c.foldLeft(M.empty[A])((a, b) => M.plus(a, b))
+  def asOf[C[_]: Foldable, A](c: C[Predicate[A]])(implicit M: MonoidK[Predicate]): Predicate[A] =
+    c.foldLeft(M.empty[A])((a, b) => M.combineK(a, b))
 
 }
 

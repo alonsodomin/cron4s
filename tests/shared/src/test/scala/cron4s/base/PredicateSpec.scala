@@ -16,80 +16,36 @@
 
 package cron4s.base
 
+import cats.Eq
+import cats.laws.discipline.{ContravariantTests, MonoidKTests}
+import cats.implicits._
+
 import cron4s.syntax.predicate._
+import cron4s.testkit.Cron4sLawSuite
+import cron4s.testkit.discipline.PredicateTests
 
 import org.scalacheck._
 
-import scalaz._
-import scalaz.scalacheck._
-import Scalaz._
 
 /**
   * Created by alonsodomin on 04/08/2016.
   */
-object PredicateSpec extends Properties("Predicate") {
-  import Prop._
+class PredicateSpec extends Cron4sLawSuite {
   import Arbitrary._
-  import ScalazProperties._
 
-  implicit lazy val arbitraryMatcher = Arbitrary[Predicate[Int]] {
+  implicit lazy val arbitraryPredicate = Arbitrary[Predicate[Int]] {
     for { x <- arbitrary[Int] } yield equalTo(x)
   }
 
-  implicit val predicateEquality = Equal.equalBy[Predicate[Int], Boolean](_.apply(0))
+  implicit val predicateEq = Eq.by[Predicate[Int], Boolean](_.apply(0))
 
-  def checkAll(name: String, props: Properties) = {
-    for ((name2, prop) <- props.properties) yield {
-      property(name + ":" + name2) = prop
-    }
-  }
+  checkAll("ContravariantPredicate", ContravariantTests[Predicate].contravariant[Int, Int, Int])
+  checkAll("PredicateConjunctionMonoid", MonoidKTests[Predicate](Predicate.conjunction.monoidK).monoidK[Int])
+  checkAll("PredicateDisjunctionMonoid", MonoidKTests[Predicate](Predicate.disjunction.monoidK).monoidK[Int])
 
-  checkAll("Predicate", contravariant.laws[Predicate])
+  checkAll("Predicate", PredicateTests.predicate[List, Int])
 
-  object disjunction {
-    import Predicate.disjunction._
-
-    def check() = {
-      checkAll("Predicate", plusEmpty.laws[Predicate])
-    }
-  }
-  object conjuction {
-    import Predicate.conjunction._
-
-    def check() = {
-      checkAll("Predicate", plusEmpty.laws[Predicate])
-    }
-  }
-
-  disjunction.check()
-  conjuction.check()
-
-  val preedicatesAndValues = for {
-    predicate <- arbitrary[Predicate[Int]]
-    value     <- arbitrary[Int]
-  } yield (predicate, value)
-
-  property("not") = forAll(preedicatesAndValues) {
-    case (matcher, value) => (!matcher)(value) == !matcher(value)
-  }
-
-  val pairsOfPredicates = for {
-    leftPred  <- arbitrary[Predicate[Int]]
-    rightPred <- arbitrary[Predicate[Int]]
-    value     <- arbitrary[Int]
-  } yield (leftPred, rightPred, value)
-
-  property("and") = forAll(pairsOfPredicates) {
-    case (left, right, value) =>
-      (left && right)(value) == (left(value) && right(value))
-  }
-
-  property("or") = forAll(pairsOfPredicates) {
-    case (left, right, value) =>
-      (left || right)(value) == (left(value) || right(value))
-  }
-
-  val alwaysPredicates = for {
+  /*val alwaysPredicates = for {
     returnVal <- arbitrary[Boolean]
     predicate <- Gen.const(always[Int](returnVal))
     value     <- arbitrary[Int]
@@ -97,34 +53,6 @@ object PredicateSpec extends Properties("Predicate") {
 
   property("always") = forAll(alwaysPredicates) {
     case (matcher, returnVal, value) => matcher(value) == returnVal
-  }
-
-  val negatedPredicates = for {
-    predicate <- arbitrary[Predicate[Int]]
-    negated   <- Gen.const(not(predicate))
-    value     <- arbitrary[Int]
-  } yield (predicate, negated, value)
-
-  property("negated") = forAll(negatedPredicates) {
-    case (predicate, negated, value) =>
-      negated(value) == !predicate(value)
-  }
-
-  val predicateList = for {
-    list  <- Gen.listOf(arbitrary[Predicate[Int]])
-    value <- arbitrary[Int]
-  } yield (list, value)
-
-  property("noneOf") = forAll(predicateList) {
-    case (list, value) => noneOf(list).apply(value) == not(allOf(list))(value)
-  }
-
-  property("anyOf") = forAll(predicateList) {
-    case (list, value) => anyOf(list).apply(value) == list.exists(_(value))
-  }
-
-  property("allOf") = forAll(predicateList) {
-    case (list, value) => allOf(list).apply(value) == list.forall(_(value))
-  }
+  }*/
 
 }

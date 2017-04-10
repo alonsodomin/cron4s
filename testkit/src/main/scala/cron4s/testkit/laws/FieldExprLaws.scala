@@ -16,9 +16,10 @@
 
 package cron4s.testkit.laws
 
+import cats.laws._
+
 import cron4s.CronField
 import cron4s.expr.FieldExpr
-import cron4s.testkit._
 import cron4s.syntax.field._
 
 /**
@@ -27,7 +28,7 @@ import cron4s.syntax.field._
 trait FieldExprLaws[E[_ <: CronField], F <: CronField] extends EnumeratedLaws[E[F]] {
   implicit def TC: FieldExpr[E, F]
 
-  def matchable(expr: E[F], value: Int): IsEqual[Boolean] = {
+  def matchable(expr: E[F], value: Int): IsEq[Boolean] = {
     val withinRange = expr.range.contains(value)
     expr.matches(value) <-> withinRange
   }
@@ -35,14 +36,14 @@ trait FieldExprLaws[E[_ <: CronField], F <: CronField] extends EnumeratedLaws[E[
   def implicationCommutative[EE[_ <: CronField]](left: E[F], right: EE[F])(
       implicit
       EE: FieldExpr[EE, F]
-  ): IsEqual[Boolean] = {
+  ): IsEq[Boolean] = {
     left.implies(right) <-> right.impliedBy(left)
   }
 
   def implicationEquivalence[EE[_ <: CronField]](left: E[F], right: EE[F])(
       implicit
       EE: FieldExpr[EE, F]
-  ): IsEqual[Boolean] = {
+  ): IsEq[Boolean] = {
     (left.impliedBy(right) && right.impliedBy(left)) <-> (left.range == right.range)
   }
 

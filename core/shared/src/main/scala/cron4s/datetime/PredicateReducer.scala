@@ -16,6 +16,9 @@
 
 package cron4s.datetime
 
+import cats.MonoidK
+import cats.instances.list._
+
 import cron4s.CronField
 import cron4s.expr._
 import cron4s.base._
@@ -23,14 +26,11 @@ import cron4s.syntax.predicate._
 
 import shapeless._
 
-import scalaz.PlusEmpty
-import scalaz.std.list._
-
 /**
   * Created by domingueza on 29/07/2016.
   */
 private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime])
-    (implicit M: PlusEmpty[Predicate]) {
+    (implicit M: MonoidK[Predicate]) {
 
   object asPredicate extends Poly1 {
     import CronField._

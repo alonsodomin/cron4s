@@ -16,10 +16,11 @@
 
 package cron4s.expr
 
-import cron4s.CronField
-import shapeless._
+import cats.Show
 
-import scalaz.Show
+import cron4s.CronField
+
+import shapeless._
 
 /**
   * Created by alonsodomin on 17/12/2016.
@@ -56,26 +57,26 @@ private[cron4s] object ops {
 
   object show extends Poly1 {
     implicit def caseEach[F <: CronField](implicit show: Show[EachNode[F]]) =
-      at[EachNode[F]](show.shows)
+      at[EachNode[F]](show.show)
     implicit def caseAny[F <: CronField](implicit show: Show[AnyNode[F]]) =
-      at[AnyNode[F]](show.shows)
+      at[AnyNode[F]](show.show)
     implicit def caseConst[F <: CronField](implicit show: Show[ConstNode[F]]) =
-      at[ConstNode[F]](show.shows)
+      at[ConstNode[F]](show.show)
     implicit def caseBetween[F <: CronField](implicit show: Show[BetweenNode[F]]) =
-      at[BetweenNode[F]](show.shows)
+      at[BetweenNode[F]](show.show)
     implicit def caseSeveral[F <: CronField](implicit show: Show[SeveralNode[F]]) =
-      at[SeveralNode[F]](show.shows)
+      at[SeveralNode[F]](show.show)
     implicit def caseEvery[F <: CronField](implicit show: Show[EveryNode[F]]) =
-      at[EveryNode[F]](show.shows)
+      at[EveryNode[F]](show.show)
 
     implicit def caseField[F <: CronField](implicit show: Show[FieldNode[F]]) =
-      at[FieldNode[F]](show.shows)
+      at[FieldNode[F]](show.show)
     implicit def caseFieldWithAny[F <: CronField](implicit show: Show[FieldNodeWithAny[F]]) =
-      at[FieldNodeWithAny[F]](show.shows)
+      at[FieldNodeWithAny[F]](show.show)
     implicit def caseEnumerable[F <: CronField](implicit show: Show[EnumerableNode[F]]) =
-      at[EnumerableNode[F]](show.shows)
+      at[EnumerableNode[F]](show.show)
     implicit def caseDivisble[F <: CronField](implicit show: Show[DivisibleNode[F]]) =
-      at[DivisibleNode[F]](show.shows)
+      at[DivisibleNode[F]](show.show)
   }
 
   object unit extends Poly1 {

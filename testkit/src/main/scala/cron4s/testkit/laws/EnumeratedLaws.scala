@@ -16,14 +16,14 @@
 
 package cron4s.testkit.laws
 
+import cats.laws._
+import cats.kernel.laws._
+import cats.implicits._
+
 import cron4s.base.{Direction, Enumerated}
 import cron4s.syntax.enumerated._
-import cron4s.testkit._
 
 import org.scalacheck.Prop
-
-import scalaz._
-import Scalaz._
 
 /**
   * Created by alonsodomin on 27/08/2016.
@@ -31,16 +31,16 @@ import Scalaz._
 trait EnumeratedLaws[A] {
   implicit def TC: Enumerated[A]
 
-  def min(a: A): IsEqual[Int] =
+  def min(a: A): IsEq[Int] =
     a.min <-> a.range.min
 
-  def max(a: A): IsEqual[Int] =
+  def max(a: A): IsEq[Int] =
     a.max <-> a.range.max
 
-  def forward(a: A, from: Int): IsEqual[Option[Int]] =
+  def forward(a: A, from: Int): IsEq[Option[Int]] =
     a.next(from) <-> a.step(from, 1).map(_._1)
 
-  def backwards(a: A, from: Int): IsEqual[Option[Int]] =
+  def backwards(a: A, from: Int): IsEq[Option[Int]] =
     a.prev(from) <-> a.step(from, -1).map(_._1)
 
   private[cron4s] def zeroStepSize(a: A, from: Int, direction: Direction): Boolean = {
@@ -48,22 +48,22 @@ trait EnumeratedLaws[A] {
     stepped.forall { case (result, _) => a.range.contains(result) }
   }
 
-  def fromMinToMinForwards(a: A): IsEqual[Option[(Int, Int)]] =
+  def fromMinToMinForwards(a: A): IsEq[Option[(Int, Int)]] =
     a.step(a.min, a.range.size) <-> Some(a.min -> 1)
 
-  def fromMaxToMaxForwards(a: A): IsEqual[Option[(Int, Int)]] =
+  def fromMaxToMaxForwards(a: A): IsEq[Option[(Int, Int)]] =
     a.step(a.max, a.range.size) <-> Some(a.max -> 1)
 
-  def fromMinToMaxForwards(a: A): IsEqual[Option[(Int, Int)]] =
+  def fromMinToMaxForwards(a: A): IsEq[Option[(Int, Int)]] =
     a.step(a.min, a.range.size - 1) <-> Some(a.max -> 0)
 
-  def fromMinToMaxBackwards(a: A): IsEqual[Option[(Int, Int)]] =
+  def fromMinToMaxBackwards(a: A): IsEq[Option[(Int, Int)]] =
     a.step(a.min, -1) <-> Some(a.max -> -1)
 
-  def fromMaxToMinForwards(a: A): IsEqual[Option[(Int, Int)]] =
+  def fromMaxToMinForwards(a: A): IsEq[Option[(Int, Int)]] =
     a.step(a.max, 1) <-> Some(a.min -> 1)
 
-  def fromMaxToMinBackwards(a: A): IsEqual[Option[(Int, Int)]] =
+  def fromMaxToMinBackwards(a: A): IsEq[Option[(Int, Int)]] =
     a.step(a.max, -(a.range.size - 1)) <-> Some(a.min -> 0)
 
   def backAndForth(a: A, from: Int, stepSize: Int): Prop = {

@@ -16,9 +16,10 @@
 
 package cron4s.base
 
-import cron4s.syntax.predicate._
+import cats.{Monoid, MonoidK}
+import cats.functor.Contravariant
 
-import scalaz.{Contravariant, Monoid, PlusEmpty}
+import cron4s.syntax.predicate._
 
 /**
   * Created by alonsodomin on 02/01/2016.
@@ -51,23 +52,23 @@ object Predicate {
   }
 
   object conjunction {
-    implicit val monoidK: PlusEmpty[Predicate] = new PlusEmpty[Predicate] {
+    implicit val monoidK: MonoidK[Predicate] = new MonoidK[Predicate] {
       def empty[A]: Predicate[A] = always(true)
 
-      def plus[A](x: Predicate[A], y: => Predicate[A]): Predicate[A] = x && y
+      def combineK[A](x: Predicate[A], y: Predicate[A]): Predicate[A] = x && y
     }
 
-    implicit def monoid[A]: Monoid[Predicate[A]] = monoidK.monoid[A]
+    implicit def monoid[A]: Monoid[Predicate[A]] = monoidK.algebra[A]
   }
 
   object disjunction {
-    implicit val monoidK: PlusEmpty[Predicate] = new PlusEmpty[Predicate] {
+    implicit val monoidK: MonoidK[Predicate] = new MonoidK[Predicate] {
       def empty[A]: Predicate[A] = always(false)
 
-      def plus[A](x: Predicate[A], y: => Predicate[A]): Predicate[A] = x || y
+      def combineK[A](x: Predicate[A], y: Predicate[A]): Predicate[A] = x || y
     }
 
-    implicit def monoid[A]: Monoid[Predicate[A]] = monoidK.monoid[A]
+    implicit def monoid[A]: Monoid[Predicate[A]] = monoidK.algebra[A]
   }
 
 }

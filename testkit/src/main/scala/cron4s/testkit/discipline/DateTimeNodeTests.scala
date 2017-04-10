@@ -16,6 +16,10 @@
 
 package cron4s.testkit.discipline
 
+import cats.Eq
+import cats.laws.discipline._
+import cats.implicits._
+
 import cron4s.CronField
 import cron4s.datetime.IsDateTime
 import cron4s.expr.FieldExpr
@@ -24,9 +28,6 @@ import cron4s.testkit.laws.DateTimeNodeLaws
 import org.scalacheck.Prop._
 import org.scalacheck._
 import org.typelevel.discipline.Laws
-
-import scalaz._
-import Scalaz._
 
 /**
   * Created by alonsodomin on 28/08/2016.
@@ -38,7 +39,7 @@ trait DateTimeNodeTests[E[_ <: CronField], F <: CronField, DateTime] extends Law
                arbNode: Arbitrary[E[F]],
                arbDateTime: Arbitrary[DateTime],
                expr: FieldExpr[E, F],
-               dateTimeEq: Equal[DateTime]
+               dateTimeEq: Eq[DateTime]
   ): RuleSet = new DefaultRuleSet(
     name = "dateTimeNode",
     parent = None,

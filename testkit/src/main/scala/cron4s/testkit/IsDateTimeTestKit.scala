@@ -16,17 +16,17 @@
 
 package cron4s.testkit
 
+import cats.Eq
+
 import cron4s.datetime.IsDateTime
 import cron4s.CronField
 import cron4s.testkit.discipline.IsDateTimeTests
 import cron4s.testkit.gen.{ArbitraryCronField, ArbitraryCronFieldValues}
 
-import scalaz.Equal
-
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-abstract class IsDateTimeTestKit[DateTime : IsDateTime : Equal](name: String)
+abstract class IsDateTimeTestKit[DateTime : IsDateTime : Eq](name: String)
   extends Cron4sLawSuite
     with ArbitraryCronFieldValues
     with ArbitraryCronField

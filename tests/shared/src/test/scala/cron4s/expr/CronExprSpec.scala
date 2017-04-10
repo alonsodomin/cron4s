@@ -16,11 +16,11 @@
 
 package cron4s.expr
 
+import cats.syntax.show._
+
 import cron4s._
 
 import org.scalatest.{FlatSpec, Matchers}
-
-import scalaz.syntax.show._
 
 /**
   * Created by alonsodomin on 07/08/2016.
@@ -59,8 +59,8 @@ class CronExprSpec extends FlatSpec with Matchers {
     expr.field[DayOfWeek] shouldBe expr.daysOfWeek
     expr.daysOfWeek shouldBe dayOfWeekExpr
 
-    expr.toString shouldBe expr.shows
-    expr.shows shouldBe "15 10 4 12 6 3"
+    expr.toString shouldBe expr.show
+    expr.show shouldBe "15 10 4 12 6 3"
   }
 
   "timePart" should "return the time relative part of the expression" in {

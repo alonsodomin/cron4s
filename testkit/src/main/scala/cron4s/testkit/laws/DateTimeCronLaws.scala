@@ -16,14 +16,15 @@
 
 package cron4s.testkit.laws
 
+import cats.laws._
+import cats.kernel.laws._
+import cats.implicits._
+
 import cron4s.CronField
 import cron4s.datetime.{DateTimeCron, IsDateTime}
-import cron4s.testkit._
 import cron4s.syntax.cron._
 
 import org.scalacheck.Prop
-
-import scalaz.std.anyVal._
 
 /**
   * Created by alonsodomin on 29/01/2017.
@@ -66,13 +67,13 @@ trait DateTimeCronLaws[E, DateTime] {
     e.allOf(dt) ?== containsAll
   }
 
-  def forwards(e: E, from: DateTime): IsEqual[Option[DateTime]] =
+  def forwards(e: E, from: DateTime): IsEq[Option[DateTime]] =
     e.next(from) <-> e.step(from, 1)
 
-  def backwards(e: E, from: DateTime): IsEqual[Option[DateTime]] =
+  def backwards(e: E, from: DateTime): IsEq[Option[DateTime]] =
     e.prev(from) <-> e.step(from, -1)
 
-  def supportedFieldsEquality(e: E): IsEqual[List[CronField]] =
+  def supportedFieldsEquality(e: E): IsEq[List[CronField]] =
     supportedFields[E] <-> e.supportedFields
 
 }

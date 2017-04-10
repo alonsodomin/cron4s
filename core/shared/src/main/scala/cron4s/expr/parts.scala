@@ -16,9 +16,9 @@
 
 package cron4s.expr
 
-import shapeless._
+import cats.Show
 
-import scalaz.Show
+import shapeless._
 
 final case class DateCronExpr(
     daysOfMonth: DaysOfMonthNode,
@@ -36,7 +36,7 @@ final case class DateCronExpr(
 object DateCronExpr {
 
   implicit val dateCronShow: Show[DateCronExpr] =
-    Show.showFromToString[DateCronExpr]
+    Show.fromToString[DateCronExpr]
 
 }
 
@@ -56,6 +56,6 @@ final case class TimeCronExpr(
 object TimeCronExpr {
 
   implicit val timeCronShow: Show[TimeCronExpr] =
-    Show.showFromToString[TimeCronExpr]
+    Show.fromToString[TimeCronExpr]
 
 }

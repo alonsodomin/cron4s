@@ -16,13 +16,13 @@
 
 package cron4s.datetime
 
+import cats.MonoidK
+
 import cron4s.{CronField, CronUnit}
 import cron4s.base.{Direction, Predicate}
 import cron4s.expr._
 
 import shapeless.Coproduct
-
-import scalaz.PlusEmpty
 
 /**
   * Created by alonsodomin on 14/01/2017.
@@ -30,7 +30,7 @@ import scalaz.PlusEmpty
 trait DateTimeCron[T] {
 
   protected def matches[DateTime](expr: T, dt: IsDateTime[DateTime])
-    (implicit M: PlusEmpty[Predicate]): Predicate[DateTime]
+    (implicit M: MonoidK[Predicate]): Predicate[DateTime]
 
   def allOf[DateTime](expr: T, dt: IsDateTime[DateTime]): Predicate[DateTime] =
     matches(expr, dt)(Predicate.conjunction.monoidK)
@@ -69,7 +69,7 @@ object DateTimeCron {
 private[datetime] final class FullCron extends DateTimeCron[CronExpr] {
 
   protected def matches[DateTime](expr: CronExpr, dt: IsDateTime[DateTime])
-      (implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
+      (implicit M: MonoidK[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime](dt)
     reducer.run(Coproduct[AnyCron](expr))
   }
@@ -95,7 +95,7 @@ private[datetime] final class FullCron extends DateTimeCron[CronExpr] {
 private[datetime] final class TimeCron extends DateTimeCron[TimeCronExpr] {
 
   protected def matches[DateTime](expr: TimeCronExpr, dt: IsDateTime[DateTime])
-      (implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
+      (implicit M: MonoidK[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime](dt)
     reducer.run(Coproduct[AnyCron](expr))
   }
@@ -118,7 +118,7 @@ private[datetime] final class TimeCron extends DateTimeCron[TimeCronExpr] {
 private[datetime] final class DateCron extends DateTimeCron[DateCronExpr] {
 
   protected def matches[DateTime](expr: DateCronExpr, dt: IsDateTime[DateTime])
-      (implicit M: PlusEmpty[Predicate]): Predicate[DateTime] = {
+      (implicit M: MonoidK[Predicate]): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime](dt)
     reducer.run(Coproduct[AnyCron](expr))
   }

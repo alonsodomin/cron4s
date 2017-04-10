@@ -16,6 +16,10 @@
 
 package cron4s.testkit.discipline
 
+import cats.Eq
+import cats.laws.discipline._
+import cats.implicits._
+
 import cron4s.datetime.{IsDateTime, DateTimeCron}
 import cron4s.testkit.laws.DateTimeCronLaws
 
@@ -23,9 +27,6 @@ import org.scalacheck.Prop._
 import org.scalacheck._
 
 import org.typelevel.discipline.Laws
-
-import scalaz._
-import Scalaz._
 
 /**
   * Created by alonsodomin on 29/01/2017.
@@ -36,7 +37,7 @@ trait DateTimeCronTests[E, DateTime] extends Laws {
   def dateTimeCron(implicit
     arbE: Arbitrary[E],
     arbDateTime: Arbitrary[DateTime],
-    dateTimeEq: Equal[DateTime]
+    dateTimeEq: Eq[DateTime]
   ): RuleSet = new DefaultRuleSet(
     name = "dateTimeCron",
     parent = None,

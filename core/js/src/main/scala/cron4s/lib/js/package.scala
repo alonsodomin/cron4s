@@ -16,26 +16,19 @@
 
 package cron4s.lib
 
+import cats.Eq
+import cats.instances.double._
+
 import cron4s.datetime.IsDateTime
 
 import scala.scalajs.js.Date
-
-import scalaz.Equal
 
 /**
   * Created by alonsodomin on 11/12/2016.
   */
 package object js {
 
-  implicit val jsDateEq: Equal[Date] = Equal.equal[Date] { (lhs, rhs) =>
-    lhs.getUTCFullYear() == rhs.getUTCFullYear() &&
-      lhs.getUTCMonth() == rhs.getUTCMonth() &&
-      lhs.getUTCDate() == rhs.getUTCDate() &&
-      lhs.getUTCHours() == rhs.getUTCHours() &&
-      lhs.getUTCMinutes() == rhs.getUTCMinutes() &&
-      lhs.getUTCSeconds() == rhs.getUTCSeconds() &&
-      lhs.getUTCMilliseconds() == rhs.getUTCMilliseconds()
-  }
+  implicit val jsDateEq: Eq[Date] = Eq.by(_.getTime())
 
   implicit val jsDateInstance: IsDateTime[Date] = new JsDateInstance
 
