@@ -38,7 +38,7 @@ object PredicateLaws {
     (self || other)(value) <-> (self(value) || other(value))
 
   def noMatch[F[_], A](preds: F[Predicate[A]], value: A)(implicit F: Foldable[F]): IsEq[Boolean] =
-    noneOf(preds).apply(value) <-> preds.forall(p => not(p).apply(value))
+    noneOf(preds).apply(value) <-> not(allOf(preds))(value)
 
   def someMatch[F[_], A](preds: F[Predicate[A]], value: A)(implicit F: Foldable[F]): IsEq[Boolean] =
     anyOf(preds).apply(value) <-> preds.exists(_(value))
