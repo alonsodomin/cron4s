@@ -16,7 +16,8 @@
 
 package cron4s.testkit
 
-import cats.Eq
+import cats.{Eq, Show}
+import cats.implicits._
 
 import cron4s.CronField._
 import cron4s.datetime.IsDateTime
@@ -28,7 +29,7 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq]
+abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show]
   extends Cron4sPropSpec with Matchers with TableDrivenPropertyChecks { this: DateTimeTestKitBase[DateTime] =>
 
   val onlyTuesdaysAt12 = CronExpr(
@@ -79,6 +80,8 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq]
   property("step") {
     forAll(samples) { (expr: CronExpr, initial: DateTime, stepSize: Int, expected: DateTime) =>
       val returnedDateTime = expr.step(initial, stepSize)
+      println(Show[Option[DateTime]].show(returnedDateTime))
+      //assert(Eq[Option[DateTime]].eqv(returnedDateTime, Some(expected)))
       returnedDateTime shouldBe Some(expected)
     }
   }
