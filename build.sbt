@@ -107,7 +107,7 @@ lazy val coverageSettings = Seq(
 )
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
-  mimaPreviousArtifacts := Set("com.github.alonsodomin.cron4s" %% s"cron4s-${module}" % "0.3.0")
+  mimaPreviousArtifacts := Set("com.github.alonsodomin.cron4s" %% s"cron4s-${module}" % "0.3.2")
 )
 
 lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
@@ -182,7 +182,7 @@ lazy val cron4sJS = (project in file(".js")).
   settings(publishSettings).
   enablePlugins(ScalaJSPlugin).
   aggregate(coreJS, testkitJS, testsJS).
-  dependsOn(coreJS, testkitJS, testsJS  % "test")
+  dependsOn(coreJS, testkitJS % "test", testsJS  % "test")
 
 lazy val cron4sJVM = (project in file(".jvm")).
   settings(
@@ -193,7 +193,7 @@ lazy val cron4sJVM = (project in file(".jvm")).
   settings(commonJvmSettings: _*).
   settings(publishSettings).
   aggregate(coreJVM, testkitJVM, testsJVM).
-  dependsOn(coreJVM, testkitJVM, testsJVM % "test")
+  dependsOn(coreJVM, testkitJVM % "test", testsJVM % "test")
 
 lazy val docs = project.
   enablePlugins(MicrositesPlugin).
