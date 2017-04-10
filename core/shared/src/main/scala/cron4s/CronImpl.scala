@@ -25,8 +25,11 @@ import fastparse.all._
   */
 private[cron4s] trait CronImpl {
 
-  def apply(e: String): Either[InvalidCron, CronExpr] =
-    parse(e).right.flatMap(validation.validateCron)
+  def apply(e: String): Either[InvalidCron, CronExpr] = {
+    // Needed for Scala 2.11
+    import cats.syntax.either._
+    parse(e).flatMap(validation.validateCron)
+  }
 
   private[this] def parse(e: String): Either[ParseFailed, CronExpr] = {
     parser.cron.parse(e) match {
