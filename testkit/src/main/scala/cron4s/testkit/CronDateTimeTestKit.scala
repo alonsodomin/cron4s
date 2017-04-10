@@ -24,13 +24,12 @@ import cron4s.datetime.IsDateTime
 import cron4s.expr._
 
 import org.scalatest._
-import org.scalatest.prop.TableDrivenPropertyChecks
 
 /**
   * Created by alonsodomin on 29/08/2016.
   */
 abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show]
-  extends Cron4sPropSpec with Matchers with TableDrivenPropertyChecks { this: DateTimeTestKitBase[DateTime] =>
+  extends FlatSpec { this: DateTimeTestKitBase[DateTime] =>
 
   val onlyTuesdaysAt12 = CronExpr(
     ConstNode[Second](0),
@@ -68,8 +67,8 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show]
     EachNode[DayOfWeek]
   )
 
-  lazy val samples = Table(
-    ("expr",           "from",                              "stepSize", "expected"),
+  lazy val samples = Seq(
+  //("expr",           "from",                              "stepSize", "expected"),
     (onlyTuesdaysAt12, createDateTime(0, 0, 0, 1, 8, 2016),          1, createDateTime(0, 0, 12, 2, 8, 2016)),
     (onlySundays,      createDateTime(0, 0, 0, 1, 8, 2016),          1, createDateTime(0, 1, 0, 7, 8, 2016)),
     (betweenDayOfWeek, createDateTime(0, 0, 2, 11, 3, 2016),         1, createDateTime(0, 0, 0, 15, 3, 2016)),
@@ -77,12 +76,13 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show]
     (betweenMonth,     createDateTime(0, 1, 1, 4, 11, 2016),         1, createDateTime(0, 0, 0, 5, 4, 2017))
   )
 
-  property("step") {
-    forAll(samples) { (expr: CronExpr, initial: DateTime, stepSize: Int, expected: DateTime) =>
+  "Cron.step" should "match expected result" in {
+    val test = Eq[Option[DateTime]]
+    for {
+      (expr, initial, stepSize, expected) <- samples
+    } {
       val returnedDateTime = expr.step(initial, stepSize)
-      println(Show[Option[DateTime]].show(returnedDateTime))
-      //assert(Eq[Option[DateTime]].eqv(returnedDateTime, Some(expected)))
-      returnedDateTime shouldBe Some(expected)
+      assert(test.eqv(returnedDateTime, Some(expected)), s"${returnedDateTime.get.show} != ${expected.show}")
     }
   }
 
