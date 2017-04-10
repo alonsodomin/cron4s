@@ -77,12 +77,12 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show]
   )
 
   "Cron.step" should "match expected result" in {
-    val test = Eq[Option[DateTime]]
+    val test = Eq[DateTime]
     for {
       (expr, initial, stepSize, expected) <- samples
     } {
-      val returnedDateTime = expr.step(initial, stepSize)
-      assert(test.eqv(returnedDateTime, Some(expected)), s"${returnedDateTime.get.show} != ${expected.show}")
+      val returnedDateTime = expr.step(initial, stepSize).get
+      assert(test.eqv(returnedDateTime, expected), s"${returnedDateTime.show} != ${expected.show}")
     }
   }
 

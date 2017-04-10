@@ -28,6 +28,8 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
   import CronField._
   import DateTimeUnit._
 
+  val DaysInWeek = 7
+
   @inline
   override def supportedFields(dateTime: Date): List[CronField] = CronField.All
 
@@ -58,7 +60,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       case DayOfWeek  =>
         val dayOfWeek = {
           val idx = dateTime.getUTCDay() - 1
-          if (idx < 0) 7 + idx
+          if (idx < 0) DaysInWeek + idx
           else idx
         }
         dayOfWeek
@@ -81,7 +83,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       case DayOfMonth => setter(_.setUTCDate(value))
       case Month      => setter(_.setUTCMonth(value - 1))
       case DayOfWeek  =>
-        val dayToSet = (value + 1) % 7
+        val dayToSet = (value % DaysInWeek) + 1
         val offset = dayToSet - dateTime.getUTCDay()
         setter(d => d.setUTCDate(d.getUTCDate() + offset))
     })
