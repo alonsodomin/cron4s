@@ -16,9 +16,9 @@
 
 package cron4s.expr
 
-import shapeless._
+import cats.Show
 
-import scalaz.Show
+import shapeless._
 
 /**
   * Representation of a valid CRON expression as an AST
@@ -53,6 +53,6 @@ final case class CronExpr(
 object CronExpr {
 
   implicit val CronExprShow: Show[CronExpr] =
-    Show.showFromToString[CronExpr]
+    Show.fromToString[CronExpr]
 
 }

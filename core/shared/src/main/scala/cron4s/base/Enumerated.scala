@@ -16,8 +16,7 @@
 
 package cron4s.base
 
-import scalaz._
-import Scalaz._
+import cats.implicits._
 
 /**
   * Created by alonsodomin on 23/08/2016.

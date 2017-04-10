@@ -16,7 +16,7 @@
 
 package cron4s
 
-import scalaz.NonEmptyList
+import cats.data.NonEmptyList
 
 /**
   * Created by alonsodomin on 30/08/2016.

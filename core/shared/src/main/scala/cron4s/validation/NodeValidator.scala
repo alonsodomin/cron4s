@@ -16,13 +16,13 @@
 
 package cron4s.validation
 
+import cats._
+import cats.implicits._
+
 import cron4s.{CronField, CronUnit, FieldError}
 import cron4s.expr._
 import cron4s.base.Enumerated
 import cron4s.syntax.field._
-
-import scalaz._
-import Scalaz._
 
 /**
   * Created by alonsodomin on 18/12/2016.
@@ -98,7 +98,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       val elemValidator = NodeValidator[EnumerableNode[F]]
 
       def implicationErrorMsg(that: EnumerableNode[F], impliedBy: EnumerableNode[F]): String =
-        s"Value '${that.shows}' at field ${that.unit.field} is implied by '${impliedBy.shows}'"
+        s"Value '${that.show}' at field ${that.unit.field} is implied by '${impliedBy.show}'"
 
       def verifyImplication(seen: List[EnumerableNode[F]], curr: EnumerableNode[F]): List[FieldError] = {
         seen.flatMap { elem =>
@@ -117,12 +117,14 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
 
       def validate(node: SeveralNode[F]): List[FieldError] = {
         val zero = List.empty[EnumerableNode[F]] -> List.empty[List[FieldError]]
-        val (_, errorResult) = node.values.foldRight(zero) { case (e, (seen, errors)) =>
-          val subErrors = elemValidator.validate(e)
-          val newErrors = verifyImplication(seen, e) :: subErrors :: errors
-          val newSeen = e :: seen
-          newSeen -> newErrors
-        }
+        val (_, errorResult) = node.values.foldRight(Eval.now(zero)) { (e, acc) =>
+          acc.map { case (seen, errors) =>
+            val subErrors = elemValidator.validate(e)
+            val newErrors = verifyImplication(seen, e) :: subErrors :: errors
+            val newSeen = e :: seen
+            newSeen -> newErrors
+          }
+        }.value
 
         errorResult.flatten
       }
@@ -138,7 +140,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
         if (!evenlyDivided) {
           baseErrors :+ FieldError(
             node.unit.field,
-            s"Step '${node.freq}' does not evenly divide the value '${node.base.shows}' in field ${node.unit}"
+            s"Step '${node.freq}' does not evenly divide the value '${node.base.show}' in field ${node.unit}"
           )
         } else baseErrors
       }

@@ -16,9 +16,9 @@
 
 package cron4s
 
-import cron4s.expr.CronExpr
+import cats.data.NonEmptyList
 
-import scalaz._
+import cron4s.expr.CronExpr
 
 /**
   * Created by alonsodomin on 30/08/2016.
@@ -28,7 +28,7 @@ package object validation {
   def validateCron(expr: CronExpr): Either[ValidationError, CronExpr] = {
     val errors = expr.raw.map(ops.validate).toList.flatten
     if (errors.size > 0) {
-      Left(ValidationError(NonEmptyList(errors.head, errors.tail: _*)))
+      Left(ValidationError(NonEmptyList.fromListUnsafe(errors)))
     } else Right(expr)
   }
 

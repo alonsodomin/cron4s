@@ -16,13 +16,13 @@
 
 package cron4s
 
+import cats.data.NonEmptyList
+
 import cron4s.expr._
 
 import fastparse.all._
 
 import shapeless._
-
-import scalaz.NonEmptyList
 
 /**
   * Created by alonsodomin on 15/12/2016.
@@ -96,7 +96,7 @@ package object parser extends NodeConversions {
   def several[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[SeveralNode[F]] = {
     def compose(p: Parser[EnumerableNode[F]])(implicit unit: CronUnit[F]): Parser[SeveralNode[F]] =
       p.rep(min = 2, sep = ",")
-        .map(values => SeveralNode[F](NonEmptyList(values.head, values.tail: _*)))
+        .map(values => SeveralNode[F](NonEmptyList.of(values.head, values.tail: _*)))
 
     compose(between(p).map(between2Enumerable) | p.map(const2Enumerable))
   }
