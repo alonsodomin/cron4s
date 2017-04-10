@@ -100,12 +100,13 @@ trait MyTimeTestBase extends DateTimeTestKitBase[MyTime] {
 }
 ```
 
-Also, to be able to perform assertions, **cron4s** needs an instance of the `cats.Eq` type class:
+Also, to be able to perform assertions, **cron4s** needs an instance of the `cats.Eq` and `cats.Show` type classes:
 
 ```tut:silent
-import cats.Eq
+import cats.{Eq, Show}
 
 implicit val myTimeEq: Eq[MyTime] = Eq.fromUniversalEquals[MyTime]
+implicit val myTimeShow: Show[MyTime] = Show.fromToString[MyTime]
 ```
 
 Now define a spec for your `IsDateTime` instance (along with your other test sources):

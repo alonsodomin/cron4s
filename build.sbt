@@ -43,7 +43,6 @@ lazy val commonJvmSettings = Seq(
 
 lazy val commonJsSettings = Seq(
   scalaJSStage in Test := FastOptStage,
-  persistLauncher in Test := false,
   requiresDOM := false,
   // batch mode decreases the amount of memory needed to compile scala.js code
   scalaJSOptimizerOptions := scalaJSOptimizerOptions.value.withBatchMode(botBuild.value),

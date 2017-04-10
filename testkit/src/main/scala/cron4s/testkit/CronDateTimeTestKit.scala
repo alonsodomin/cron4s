@@ -16,21 +16,20 @@
 
 package cron4s.testkit
 
-import cats.Eq
-import catalysts.Platform
+import cats.{Eq, Show}
+import cats.implicits._
 
 import cron4s.CronField._
 import cron4s.datetime.IsDateTime
 import cron4s.expr._
 
-import org.scalatest.Matchers
-import org.scalatest.prop.TableDrivenPropertyChecks
+import org.scalatest._
 
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq]
-  extends Cron4sPropSpec with Matchers with TableDrivenPropertyChecks { this: DateTimeTestKitBase[DateTime] =>
+abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show]
+  extends FlatSpec { this: DateTimeTestKitBase[DateTime] =>
 
   val onlyTuesdaysAt12 = CronExpr(
     ConstNode[Second](0),
@@ -68,8 +67,8 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq]
     EachNode[DayOfWeek]
   )
 
-  lazy val samples = Table(
-    ("expr",           "from",                              "stepSize", "expected"),
+  lazy val samples = Seq(
+  //("expr",           "from",                              "stepSize", "expected"),
     (onlyTuesdaysAt12, createDateTime(0, 0, 0, 1, 8, 2016),          1, createDateTime(0, 0, 12, 2, 8, 2016)),
     (onlySundays,      createDateTime(0, 0, 0, 1, 8, 2016),          1, createDateTime(0, 1, 0, 7, 8, 2016)),
     (betweenDayOfWeek, createDateTime(0, 0, 2, 11, 3, 2016),         1, createDateTime(0, 0, 0, 15, 3, 2016)),
@@ -77,11 +76,13 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq]
     (betweenMonth,     createDateTime(0, 1, 1, 4, 11, 2016),         1, createDateTime(0, 0, 0, 5, 4, 2017))
   )
 
-  property("step") {
-    forAll(samples) { (expr: CronExpr, initial: DateTime, stepSize: Int, expected: DateTime) =>
-      val returnedDateTime = expr.step(initial, stepSize)
-      // Workaround ScalaJS bug https://github.com/scala-js/scala-js/pull/2713
-      if (Platform.isJvm) returnedDateTime shouldBe Some(expected)
+  "Cron.step" should "match expected result" in {
+    val test = Eq[DateTime]
+    for {
+      (expr, initial, stepSize, expected) <- samples
+    } {
+      val returnedDateTime = expr.step(initial, stepSize).get
+      assert(test.eqv(returnedDateTime, expected), s"${returnedDateTime.show} != ${expected.show}")
     }
   }
 

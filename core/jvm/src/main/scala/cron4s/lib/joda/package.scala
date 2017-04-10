@@ -16,7 +16,7 @@
 
 package cron4s.lib
 
-import cats.Eq
+import cats.{Eq, Show}
 
 import cron4s.datetime.IsDateTime
 
@@ -31,6 +31,11 @@ package object joda {
   implicit val jodaLocalDateEq     : Eq[LocalDate]     = Eq.fromUniversalEquals[LocalDate]
   implicit val jodaLocalTimeEq     : Eq[LocalTime]     = Eq.fromUniversalEquals[LocalTime]
   implicit val jodaLocalDateTimeEq : Eq[LocalDateTime] = Eq.fromUniversalEquals[LocalDateTime]
+
+  implicit val jodaDateTimeShow      : Show[DateTime] = Show.fromToString
+  implicit val jodaLocalDateShow     : Show[LocalDate] = Show.fromToString
+  implicit val jodaLocalTimeShow     : Show[LocalTime] = Show.fromToString
+  implicit val jodaLocalDateTimeShow : Show[LocalDateTime] = Show.fromToString
 
   implicit val jodaDateTimeInstance      : IsDateTime[DateTime]      = new JodaDateTimeInstance
   implicit val jodaLocalDateInstance     : IsDateTime[LocalDate]     = new JodaLocalDateInstance
