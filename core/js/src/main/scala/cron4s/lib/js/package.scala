@@ -17,7 +17,7 @@
 package cron4s.lib
 
 import cats.Eq
-import cats.instances.double._
+import cats.instances.string._
 
 import cron4s.datetime.IsDateTime
 
@@ -28,7 +28,7 @@ import scala.scalajs.js.Date
   */
 package object js {
 
-  implicit val jsDateEq: Eq[Date] = Eq.by(_.getTime())
+  implicit val jsDateEq: Eq[Date] = Eq.by(_.toUTCString())
 
   implicit val jsDateInstance: IsDateTime[Date] = new JsDateInstance
 

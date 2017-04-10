@@ -17,13 +17,12 @@
 package cron4s.testkit
 
 import cats.Eq
-import catalysts.Platform
 
 import cron4s.CronField._
 import cron4s.datetime.IsDateTime
 import cron4s.expr._
 
-import org.scalatest.Matchers
+import org.scalatest._
 import org.scalatest.prop.TableDrivenPropertyChecks
 
 /**
@@ -80,8 +79,7 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq]
   property("step") {
     forAll(samples) { (expr: CronExpr, initial: DateTime, stepSize: Int, expected: DateTime) =>
       val returnedDateTime = expr.step(initial, stepSize)
-      // Workaround ScalaJS bug https://github.com/scala-js/scala-js/pull/2713
-      if (Platform.isJvm) returnedDateTime shouldBe Some(expected)
+      returnedDateTime shouldBe Some(expected)
     }
   }
 

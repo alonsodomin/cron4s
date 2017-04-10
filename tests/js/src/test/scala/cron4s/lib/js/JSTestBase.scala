@@ -39,6 +39,6 @@ trait JSTestBase extends DateTimeTestKitBase[Date] {
   } yield createDateTime(seconds, minutes, hours, daysOfMonth, months, year))
 
   protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): Date =
-    new Date(year, month - 1, dayOfMonth, hours, minutes, seconds)
+    new Date(Date.UTC(year, month - 1, dayOfMonth, hours, minutes, seconds, ms = 0))
 
 }
