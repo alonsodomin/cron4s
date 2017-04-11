@@ -16,14 +16,13 @@
 
 package cron4s.lib.joda
 
-import cron4s.testkit.DateTimeCronTestKit
-
+import cron4s.testkit.IsDateTimeTestKit
 import org.joda.time.{DateTime, LocalDate, LocalDateTime, LocalTime}
 
 /**
-  * Created by alonsodomin on 29/01/2017.
+  * Created by alonsodomin on 04/02/2017.
   */
-class JodaDateTimeCronSpec extends DateTimeCronTestKit[DateTime] with JodaDateTimeTestBase
-class JodaLocalDateCronSpec extends DateTimeCronTestKit[LocalDate] with JodaLocalDateTestBase
-class JodaLocalTimeCronSpec extends DateTimeCronTestKit[LocalTime] with JodaLocalTimeTestBase
-class JodaLocalDateTimeCronSpec extends DateTimeCronTestKit[LocalDateTime] with JodaLocalDateTimeTestBase
+class JodaDateTimeSpec extends IsDateTimeTestKit[DateTime]("DateTime") with JodaDateTimeTestBase
+class JodaLocalDateSpec extends IsDateTimeTestKit[LocalDate]("LocalDate") with JodaLocalDateTestBase
+class JodaLocalTimeSpec extends IsDateTimeTestKit[LocalTime]("LocalTime") with JodaLocalTimeTestBase
+class JodaLocalDateTimeSpec extends IsDateTimeTestKit[LocalDateTime]("LocalDateTime") with JodaLocalDateTimeTestBase

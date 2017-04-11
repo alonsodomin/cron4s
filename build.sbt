@@ -181,8 +181,8 @@ lazy val cron4sJS = (project in file(".js")).
   settings(commonJsSettings: _*).
   settings(publishSettings).
   enablePlugins(ScalaJSPlugin).
-  aggregate(coreJS, testkitJS, testsJS).
-  dependsOn(coreJS, testkitJS, testsJS  % "test")
+  aggregate(coreJS, momentjs, testkitJS, testsJS).
+  dependsOn(coreJS, momentjs, testkitJS, testsJS  % Test)
 
 lazy val cron4sJVM = (project in file(".jvm")).
   settings(
@@ -192,8 +192,8 @@ lazy val cron4sJVM = (project in file(".jvm")).
   settings(commonSettings: _*).
   settings(commonJvmSettings: _*).
   settings(publishSettings).
-  aggregate(coreJVM, testkitJVM, testsJVM).
-  dependsOn(coreJVM, testkitJVM, testsJVM % "test")
+  aggregate(coreJVM, joda, testkitJVM, testsJVM).
+  dependsOn(coreJVM, joda, testkitJVM, testsJVM % Test)
 
 lazy val docs = project.
   enablePlugins(MicrositesPlugin).
@@ -265,6 +265,30 @@ lazy val bench = (project in file("bench")).
   settings(noPublishSettings).
   enablePlugins(JmhPlugin).
   dependsOn(coreJVM)
+
+// DateTime library extensions
+
+lazy val joda = (project in file("time-lib/joda")).
+  enablePlugins(AutomateHeaderPlugin).
+  settings(
+    name := "joda",
+    moduleName := "cron4s-joda"
+  ).
+  settings(commonSettings).
+  settings(commonJvmSettings).
+  settings(Dependencies.joda).
+  dependsOn(coreJVM, testkitJVM % Test)
+
+lazy val momentjs = (project in file("time-lib/momentjs")).
+  enablePlugins(AutomateHeaderPlugin, ScalaJSPlugin).
+  settings(
+    name := "momentjs",
+    moduleName := "cron4s-momentjs"
+  ).
+  settings(commonSettings).
+  settings(commonJsSettings).
+  settings(Dependencies.momentjs).
+  dependsOn(coreJS, testkitJS % Test)
 
 // Utility command aliases
 

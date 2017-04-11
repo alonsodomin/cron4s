@@ -18,9 +18,7 @@ package cron4s.lib.joda
 
 import cron4s.CronUnit
 import cron4s.testkit.DateTimeTestKitBase
-
 import org.joda.time._
-
 import org.scalacheck.{Arbitrary, Gen}
 
 /**

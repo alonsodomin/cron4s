@@ -8,7 +8,7 @@ object Dependencies {
     val cats        = "0.9.0"
     val shapeless   = "2.3.2"
 
-    val momentjs    = "0.1.5"
+    val momentjs    = "0.7.0"
     val jodaTime    = "2.9.7"
     val jodaConvert = "1.8.1"
     val fastparse   = "0.4.2"
@@ -18,7 +18,7 @@ object Dependencies {
     val discipline  = "0.7.3"
     val catalysts   = "0.0.5"
 
-    val scalaJavaTime = "2.0.0-M9"
+    val scalaJavaTime = "2.0.0-M10"
   }
 
   val macroParadise = compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full)
@@ -70,6 +70,19 @@ object Dependencies {
       "joda-time" % "joda-time"    % version.jodaTime,
       "org.joda"  % "joda-convert" % version.jodaConvert
     )
+  }
+
+  // Dependencies of extension libraries
+
+  lazy val joda = Def.settings {
+    libraryDependencies ++= Seq(
+      "joda-time" % "joda-time"    % version.jodaTime,
+      "org.joda"  % "joda-convert" % version.jodaConvert
+    )
+  }
+
+  lazy val momentjs = Def.settings {
+    libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % version.momentjs
   }
 
 }

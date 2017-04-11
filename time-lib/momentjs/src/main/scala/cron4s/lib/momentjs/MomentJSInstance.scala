@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-package cron4s.lib.joda
-
-import cron4s.testkit.IsDateTimeTestKit
-
-import org.joda.time.{DateTime, LocalDate, LocalDateTime, LocalTime}
+package cron4s.lib.momentjs
 
 /**
-  * Created by alonsodomin on 04/02/2017.
+  * Created by alonsodomin on 11/04/2017.
   */
-class JodaDateTimeSpec extends IsDateTimeTestKit[DateTime]("DateTime") with JodaDateTimeTestBase
-class JodaLocalDateSpec extends IsDateTimeTestKit[LocalDate]("LocalDate") with JodaLocalDateTestBase
-class JodaLocalTimeSpec extends IsDateTimeTestKit[LocalTime]("LocalTime") with JodaLocalTimeTestBase
-class JodaLocalDateTimeSpec extends IsDateTimeTestKit[LocalDateTime]("LocalDateTime") with JodaLocalDateTimeTestBase
+class MomentJSInstance {
+
+}
