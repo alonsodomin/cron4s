@@ -14,24 +14,13 @@
  * limitations under the License.
  */
 
-package cron4s.lib
+package cron4s.lib.momentjs
 
-import cats.{Eq, Show}
-import cats.instances.double._
+import cron4s.testkit.IsDateTimeTestKit
 
-import cron4s.datetime.IsDateTime
-
-import moment._
+import moment.Date
 
 /**
-  * Created by alonsodomin on 11/04/2017.
+  * Created by alonsodomin on 12/04/2017.
   */
-package object momentjs {
-
-  implicit val momentjsEq: Eq[Date] = Eq.by(_.unix())
-
-  implicit val momentjsShow: Show[Date] = Show.show(_.toISOString())
-
-  implicit val momentjsInstance: IsDateTime[Date] = new MomentJSInstance
-
-}
+class MomentJSDateSpec extends IsDateTimeTestKit[Date]("MomentJS") with MomentJSTestBase

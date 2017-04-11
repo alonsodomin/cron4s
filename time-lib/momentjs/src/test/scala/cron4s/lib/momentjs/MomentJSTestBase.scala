@@ -17,9 +17,9 @@
 package cron4s.lib.momentjs
 
 import cron4s.testkit.DateTimeTestKitBase
+import moment.{Date, Moment}
 
-import moment.{Moment, Date}
-
+import scala.scalajs.js.annotation.JSImport
 import scala.scalajs.js.{Date => JsDate}
 
 /**
@@ -28,6 +28,6 @@ import scala.scalajs.js.{Date => JsDate}
 trait MomentJSTestBase extends DateTimeTestKitBase[Date] {
 
   protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): Date =
-    Moment(JsDate.UTC(year, month - 1, dayOfMonth, hours, minutes, seconds, ms = 0))
+    Moment(new JsDate(year, month - 1, dayOfMonth, hours, minutes, seconds, ms = 0))
 
 }

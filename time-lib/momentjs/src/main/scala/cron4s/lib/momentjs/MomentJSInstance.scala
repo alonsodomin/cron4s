@@ -28,6 +28,8 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
   import CronField._
   import DateTimeUnit._
 
+  val DaysInWeek = 7
+
   override def plus(dateTime: Date, amount: Int, unit: DateTimeUnit): Option[Date] = Some(unit match {
     case Seconds => dateTime.add(amount, Units.Second)
     case Minutes => dateTime.add(amount, Units.Minute)
@@ -59,8 +61,14 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
     case Minute     => dateTime.minute()
     case Hour       => dateTime.hour()
     case DayOfMonth => dateTime.date()
-    case Month      => dateTime.month()
-    case DayOfWeek  => dateTime.day()
+    case Month      => dateTime.month() + 1
+    case DayOfWeek  =>
+      val dayOfWeek = {
+        val idx = dateTime.day() - 1
+        if (idx < 0) DaysInWeek + idx
+        else idx
+      }
+      dayOfWeek
   })
 
   /**
@@ -77,8 +85,10 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
     case Minute     => dateTime.minute(value.toDouble)
     case Hour       => dateTime.hour(value.toDouble)
     case DayOfMonth => dateTime.date(value.toDouble)
-    case Month      => dateTime.month(value.toDouble)
-    case DayOfWeek  => dateTime.day(value.toDouble)
+    case Month      => dateTime.month((value - 1).toDouble)
+    case DayOfWeek  =>
+      val dayToSet = (value % DaysInWeek) + 1
+      dateTime.day(dayToSet.toDouble)
   })
 
 }

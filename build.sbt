@@ -284,14 +284,14 @@ lazy val joda = (project in file("time-lib/joda")).
 
 lazy val momentjs = (project in file("time-lib/momentjs")).
   enablePlugins(AutomateHeaderPlugin, ScalaJSPlugin).
+  settings(commonSettings).
+  settings(commonJsSettings).
+  settings(publishSettings).
   settings(
     name := "momentjs",
     moduleName := "cron4s-momentjs",
-    test := {}
+    jsEnv := PhantomJSEnv().value
   ).
-  settings(commonSettings).
-  settings(commonJsSettings).
-  settings(noPublishSettings).
   settings(Dependencies.momentjs).
   dependsOn(coreJS, testkitJS % Test)
 
