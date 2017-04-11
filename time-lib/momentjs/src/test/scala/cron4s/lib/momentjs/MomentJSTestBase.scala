@@ -22,14 +22,10 @@ import moment.{Moment, Date}
 
 import scala.scalajs.js.{Date => JsDate}
 
-import org.scalacheck.Arbitrary
-
 /**
   * Created by alonsodomin on 11/04/2017.
   */
 trait MomentJSTestBase extends DateTimeTestKitBase[Date] {
-
-  implicit def arbitraryDateTime: Arbitrary[Date] = ???
 
   protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): Date =
     Moment(JsDate.UTC(year, month - 1, dayOfMonth, hours, minutes, seconds, ms = 0))

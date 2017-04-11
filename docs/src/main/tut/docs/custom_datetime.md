@@ -79,20 +79,9 @@ The first thing to to is to provide an implementation of the `cron4s.testkit.Dat
 is meant to instruct **cron4s** on how to create arbitrary instances of your date time object:
  
 ```tut:silent
-import cron4s.CronUnit
 import cron4s.testkit.DateTimeTestKitBase
-import org.scalacheck.{Arbitrary, Gen}
 
 trait MyTimeTestBase extends DateTimeTestKitBase[MyTime] {
-  import CronUnit._
-
-  override implicit lazy val arbitraryDateTime: Arbitrary[MyTime] = Arbitrary {
-    for {
-      second <- Gen.choose(Seconds.min, Seconds.max)
-      minute <- Gen.choose(Minutes.min, Minutes.max)
-      hour   <- Gen.choose(Hours.min, Hours.max)
-    } yield MyTime(second, minute, hour)
-  }
 
   override def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): MyTime =
     MyTime(seconds, minutes, hours)
