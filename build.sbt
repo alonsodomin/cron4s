@@ -217,7 +217,6 @@ lazy val core = (crossProject in file("core")).
   jsSettings(commonJsSettings: _*).
   jsSettings(Dependencies.coreJS: _*).
   jvmSettings(commonJvmSettings).
-  jvmSettings(Dependencies.coreJVM: _*).
   jvmSettings(mimaSettings("core"): _*)
 
 lazy val coreJS = core.js
@@ -260,7 +259,10 @@ lazy val testsJVM = tests.jvm
 
 lazy val bench = (project in file("bench")).
   enablePlugins(AutomateHeaderPlugin).
-  settings(name := "bench").
+  settings(
+    name := "bench",
+    moduleName := "cron4s-bench"
+  ).
   settings(commonSettings).
   settings(noPublishSettings).
   enablePlugins(JmhPlugin).
@@ -276,6 +278,7 @@ lazy val joda = (project in file("time-lib/joda")).
   ).
   settings(commonSettings).
   settings(commonJvmSettings).
+  settings(publishSettings).
   settings(Dependencies.joda).
   dependsOn(coreJVM, testkitJVM % Test)
 
@@ -283,10 +286,12 @@ lazy val momentjs = (project in file("time-lib/momentjs")).
   enablePlugins(AutomateHeaderPlugin, ScalaJSPlugin).
   settings(
     name := "momentjs",
-    moduleName := "cron4s-momentjs"
+    moduleName := "cron4s-momentjs",
+    test := {}
   ).
   settings(commonSettings).
   settings(commonJsSettings).
+  settings(noPublishSettings).
   settings(Dependencies.momentjs).
   dependsOn(coreJS, testkitJS % Test)
 

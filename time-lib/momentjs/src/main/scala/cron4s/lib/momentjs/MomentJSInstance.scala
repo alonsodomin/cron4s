@@ -16,9 +16,69 @@
 
 package cron4s.lib.momentjs
 
+import cron4s.CronField
+import cron4s.datetime.{DateTimeUnit, IsDateTime}
+
+import moment._
+
 /**
   * Created by alonsodomin on 11/04/2017.
   */
-class MomentJSInstance {
+private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
+  import CronField._
+  import DateTimeUnit._
+
+  override def plus(dateTime: Date, amount: Int, unit: DateTimeUnit): Option[Date] = Some(unit match {
+    case Seconds => dateTime.add(amount, Units.Second)
+    case Minutes => dateTime.add(amount, Units.Minute)
+    case Hours   => dateTime.add(amount, Units.Hour)
+    case Days    => dateTime.add(amount, Units.Day)
+    case Weeks   => dateTime.add(amount, Units.Week)
+    case Months  => dateTime.add(amount, Units.Month)
+  })
+
+  /**
+    * List of the fields supported by this date time representation
+    *
+    * @param dateTime the date time representation
+    * @return list of the supported fields
+    */
+  @inline
+  override def supportedFields(dateTime: Date): List[CronField] = CronField.All
+
+  /**
+    * Getter access for a specific field in a date-time
+    *
+    * @param dateTime a date-time
+    * @param field    a CronField
+    * @tparam F the CronField type
+    * @return value of the field
+    */
+  override def get[F <: CronField](dateTime: Date, field: F): Option[Int] = Some(field match {
+    case Second     => dateTime.second()
+    case Minute     => dateTime.minute()
+    case Hour       => dateTime.hour()
+    case DayOfMonth => dateTime.date()
+    case Month      => dateTime.month()
+    case DayOfWeek  => dateTime.day()
+  })
+
+  /**
+    * Setter access for a specific field in a date-time
+    *
+    * @param dateTime a date-time
+    * @param field    a CronField
+    * @param value    new value for the field
+    * @tparam F the CronField type
+    * @return a new date-time with the given field set to the new value
+    */
+  override def set[F <: CronField](dateTime: Date, field: F, value: Int): Option[Date] = Some(field match {
+    case Second     => dateTime.second(value.toDouble)
+    case Minute     => dateTime.minute(value.toDouble)
+    case Hour       => dateTime.hour(value.toDouble)
+    case DayOfMonth => dateTime.date(value.toDouble)
+    case Month      => dateTime.month(value.toDouble)
+    case DayOfWeek  => dateTime.day(value.toDouble)
+  })
 
 }

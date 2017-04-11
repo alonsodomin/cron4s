@@ -7,17 +7,15 @@ object Dependencies {
   object version {
     val cats        = "0.9.0"
     val shapeless   = "2.3.2"
-
-    val momentjs    = "0.7.0"
-    val jodaTime    = "2.9.7"
-    val jodaConvert = "1.8.1"
     val fastparse   = "0.4.2"
-
     val scalacheck  = "1.13.5"
     val scalatest   = "3.0.1"
     val discipline  = "0.7.3"
     val catalysts   = "0.0.5"
 
+    val jodaTime      = "2.9.7"
+    val jodaConvert   = "1.8.1"
+    val momentjs      = "0.7.0"
     val scalaJavaTime = "2.0.0-M10"
   }
 
@@ -35,13 +33,6 @@ object Dependencies {
 
   lazy val coreJS = Def.settings {
     libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % version.scalaJavaTime
-  }
-
-  lazy val coreJVM = Def.settings {
-    libraryDependencies ++= Seq(
-      "joda-time" % "joda-time"    % version.jodaTime    % Optional,
-      "org.joda"  % "joda-convert" % version.jodaConvert % Optional
-    )
   }
 
   lazy val testkit = Def.settings {
@@ -81,8 +72,8 @@ object Dependencies {
     )
   }
 
-  lazy val momentjs = Def.settings {
+  lazy val momentjs = Def.settings(
     libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % version.momentjs
-  }
+  )
 
 }
