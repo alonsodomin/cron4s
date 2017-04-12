@@ -102,7 +102,7 @@ class ParserSpec extends Cron4sPropSpec
   }
 
   val anyParserGen: Gen[Parser[AnyNode[CronField]]] =
-    Gen.oneOf(any[Second], any[DayOfMonth], any[DayOfWeek])
+    Gen.oneOf(any[DayOfMonth], any[DayOfWeek])
 
   property("should be able to parse a question mark in any field") {
     forAll(anyParserGen) { parser =>
