@@ -98,7 +98,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       val elemValidator = NodeValidator[EnumerableNode[F]]
 
       def implicationErrorMsg(that: EnumerableNode[F], impliedBy: EnumerableNode[F]): String =
-        s"Value '${that.show}' at field ${that.unit.field} is implied by '${impliedBy.show}'"
+        s"Value '${that.show}' is implied by '${impliedBy.show}'"
 
       def verifyImplication(seen: List[EnumerableNode[F]], curr: EnumerableNode[F]): List[InvalidField] = {
         seen.flatMap { elem =>
@@ -140,7 +140,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
         if (!evenlyDivided) {
           baseErrors :+ InvalidField(
             node.unit.field,
-            s"Step '${node.freq}' does not evenly divide the value '${node.base.show}' in field ${node.unit}"
+            s"Step '${node.freq}' does not evenly divide the value '${node.base.show}'"
           )
         } else baseErrors
       }

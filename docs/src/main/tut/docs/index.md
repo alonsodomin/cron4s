@@ -36,7 +36,7 @@ import cron4s._
 val parsed = Cron("10-35 2,4,6 * ? * *")
 ```
 
-We will get an `Either[InvalidCron, CronExpr]`, the left side giving us an error description if the parsing
+We will get an `Either[Error, CronExpr]`, the left side giving us an error description if the parsing
 has failed. In the above example the expression parsed successfully but if we pass a wrong or invalid expression
 we will get the actual reason for the failure in the left side of the `Either`:
 
@@ -83,11 +83,19 @@ as well in the left side of the `Either` returned by the `Cron` constructor. For
 has a sequence that mixes elements that self-imply each other, which is invalid: 
 
 ```tut
-val invalid = Cron("12,10-20 * * * * *")
+val invalid = Cron("12,10-20 * * * * ?")
 ```
 
 ```tut:invisible
 assert(invalid.isLeft)
+```
+
+In this case, the error type in the left side of the `Either` can be narrowed down to `InvalidCron`, which will give
+a `NonEmptyList` with all the validation errors that the expression had. To demosrate this, here is an example:
+
+```tut
+val invalidCron: InvalidCron = invalid.left.get.asInstanceOf[InvalidCron]
+println(invalidCron.reason.toList.mkString("\n"))
 ```
 
 ### The Cron4s AST

@@ -38,7 +38,7 @@ class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
 
     returnedErrors shouldBe List(InvalidField(
       Minute,
-      s"Value '${node1.show}' at field Minute is implied by '${node2.show}'"
+      s"Value '${node1.show}' is implied by '${node2.show}'"
     ))
   }
 
