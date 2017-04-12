@@ -16,7 +16,7 @@
 
 package cron4s.validation
 
-import cron4s.{CronField, CronUnit, FieldError}
+import cron4s.{CronField, CronUnit, InvalidField}
 import cron4s.expr.ConstNode
 import cron4s.base.Enumerated
 import cron4s.testkit.Cron4sPropSpec
@@ -32,13 +32,13 @@ class ConstNodeValidatorSpec extends Cron4sPropSpec
   private[this] def check[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Unit = {
     property(s"ConstNode[${unit.field}] with value within range should pass validation") {
       forAll(constGen[F]) { node =>
-        NodeValidator[ConstNode[F]].validate(node) shouldBe List.empty[FieldError]
+        NodeValidator[ConstNode[F]].validate(node) shouldBe List.empty[InvalidField]
       }
     }
 
     property(s"ConstNode[${unit.field}] with value outside range should return a field error") {
       forAll(invalidConstGen[F]) { node =>
-        val expectedError = FieldError(
+        val expectedError = InvalidField(
           unit.field,
           s"Value ${node.value} is out of bounds for field: ${unit.field}"
         )

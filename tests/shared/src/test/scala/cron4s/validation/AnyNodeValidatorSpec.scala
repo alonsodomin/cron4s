@@ -16,7 +16,7 @@
 
 package cron4s.validation
 
-import cron4s.{CronField, CronUnit, FieldError}
+import cron4s.{CronField, CronUnit, InvalidField}
 import cron4s.expr.AnyNode
 import cron4s.testkit.Cron4sPropSpec
 import cron4s.testkit.gen.ArbitratyAnyNode
@@ -35,7 +35,7 @@ class AnyNodeValidatorSpec extends Cron4sPropSpec
   private[this] def check[F <: CronField](implicit unit: CronUnit[F], arbNode: Arbitrary[AnyNode[F]]): Unit = {
     property(s"EachNode[${unit.field}] should always pass validation") {
       forAll { (node: AnyNode[F]) =>
-        NodeValidator[AnyNode[F]].validate(node) shouldBe List.empty[FieldError]
+        NodeValidator[AnyNode[F]].validate(node) shouldBe List.empty[InvalidField]
       }
     }
   }

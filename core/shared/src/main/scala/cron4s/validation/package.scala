@@ -25,11 +25,28 @@ import cron4s.expr.CronExpr
   */
 package object validation {
 
-  def validateCron(expr: CronExpr): Either[ValidationError, CronExpr] = {
-    val errors = expr.raw.map(ops.validate).toList.flatten
-    if (errors.size > 0) {
-      Left(ValidationError(NonEmptyList.fromListUnsafe(errors)))
-    } else Right(expr)
+  def validateCron(expr: CronExpr): Either[InvalidCron, CronExpr] = {
+    val dayFieldError = validateDayFields(expr)
+    val fieldErrors = expr.raw.map(ops.validate).toList.flatten
+
+    NonEmptyList.fromList[ValidationError](fieldErrors)
+      .map(list => dayFieldError.fold(list)(_ :: list))
+      .map(errs => Left(InvalidCron(errs)))
+      .getOrElse(Right(expr))
+  }
+
+  private def validateDayFields(expr: CronExpr) = {
+    def errorMsg(fieldExpr: String) =
+      s"Fields ${CronField.DayOfMonth} and ${CronField.DayOfWeek} can't both have the expression: $fieldExpr"
+
+    val dayOfMonth = expr.field[CronField.DayOfMonth].toString
+    val dayOfWeek  = expr.field[CronField.DayOfWeek].toString
+
+    def checkValue(value: String) = if (dayOfMonth == value && dayOfWeek == value) {
+      Some(InvalidFieldCombination(errorMsg(value)))
+    } else None
+
+    checkValue("?") orElse checkValue("*")
   }
 
 }

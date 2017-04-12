@@ -16,14 +16,41 @@
 
 package cron4s
 
+import cats.Show
 import cats.data.NonEmptyList
+import cats.syntax.show._
 
 /**
   * Created by alonsodomin on 30/08/2016.
   */
-sealed trait InvalidCron extends Serializable
+sealed abstract class Error(description: => String) extends Exception(description)
 
-final case class ParseFailed(msg: String, position: Int) extends InvalidCron
+object Error {
+  implicit val errorShow: Show[Error] = Show.show(_.getMessage)
+}
 
-final case class FieldError(field: CronField, msg: String)
-final case class ValidationError(fields: NonEmptyList[FieldError]) extends InvalidCron
+final case class ParseFailed(msg: String, position: Int)
+  extends Error(s"Parsing error '$msg' at position $position")
+
+sealed trait ValidationError
+object ValidationError {
+  implicit val validationErrorShow: Show[ValidationError] = Show.show {
+    case e: InvalidField            => e.show
+    case e: InvalidFieldCombination => e.show
+  }
+}
+
+final case class InvalidCron(reason: NonEmptyList[ValidationError])
+  extends Error(reason.toList.map(_.show).mkString(", "))
+
+final case class InvalidField(field: CronField, msg: String) extends ValidationError
+object InvalidField {
+  implicit val invalidFieldShow: Show[InvalidField] = Show.show { err =>
+    s"${err.field}: ${err.msg}"
+  }
+}
+
+final case class InvalidFieldCombination(msg: String) extends ValidationError
+object InvalidFieldCombination {
+  implicit val invalidFieldCombinationShow: Show[InvalidFieldCombination] = Show.show(_.msg)
+}

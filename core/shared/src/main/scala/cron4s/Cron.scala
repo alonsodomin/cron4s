@@ -21,6 +21,7 @@ import cron4s.expr._
 import fastparse.all._
 
 import scala.scalajs.js.annotation.JSExportTopLevel
+import scala.util.{Failure, Success, Try}
 
 /**
   * Created by domingueza on 10/04/2017.
@@ -28,13 +29,26 @@ import scala.scalajs.js.annotation.JSExportTopLevel
 @JSExportTopLevel("cron4s.Cron")
 object Cron {
 
-  def apply(e: String): Either[InvalidCron, CronExpr] = {
+  // Alias for parse
+  def apply(e: String): Either[Error, CronExpr] = parse(e)
+
+  def parse(e: String): Either[Error, CronExpr] = {
     // Needed for Scala 2.11
     import cats.syntax.either._
-    parse(e).flatMap(validation.validateCron)
+    parse0(e).flatMap(validation.validateCron)
   }
 
-  private[this] def parse(e: String): Either[ParseFailed, CronExpr] = {
+  def tryParse(e: String): Try[CronExpr] = parse(e) match {
+    case Left(err)   => Failure(err)
+    case Right(expr) => Success(expr)
+  }
+
+  def unsafeParse(e: String): CronExpr = parse(e) match {
+    case Left(err)   => throw err
+    case Right(expr) => expr
+  }
+
+  private[this] def parse0(e: String): Either[ParseFailed, CronExpr] = {
     parser.cron.parse(e) match {
       case Parsed.Success(expr, _) =>
         Right(expr)

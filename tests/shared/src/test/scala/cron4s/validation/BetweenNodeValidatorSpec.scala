@@ -16,7 +16,7 @@
 
 package cron4s.validation
 
-import cron4s.{CronField, CronUnit, FieldError}
+import cron4s.{CronField, CronUnit, InvalidField}
 import cron4s.base.Enumerated
 import cron4s.expr.{BetweenNode, ConstNode}
 import cron4s.testkit.SlowCron4sPropSpec
@@ -32,7 +32,7 @@ class BetweenNodeValidatorSpec extends SlowCron4sPropSpec
   private[this] def check[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Unit = {
     property(s"BetweenNode[${unit.field}] with valid components should pass validation") {
       forAll(betweenGen[F]) { node =>
-        NodeValidator[BetweenNode[F]].validate(node) shouldBe List.empty[FieldError]
+        NodeValidator[BetweenNode[F]].validate(node) shouldBe List.empty[InvalidField]
       }
     }
 
@@ -45,11 +45,11 @@ class BetweenNodeValidatorSpec extends SlowCron4sPropSpec
           beginErrors ::: endErrors
         }
         val rangeErrors = {
-          if (node.begin.value >= node.end.value) List(FieldError(
+          if (node.begin.value >= node.end.value) List(InvalidField(
             unit.field,
             s"${node.begin.value} should be less than ${node.end.value}"
           ))
-          else List.empty[FieldError]
+          else List.empty[InvalidField]
         }
         val expectedErrors = constErrors ::: rangeErrors
 
