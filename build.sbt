@@ -54,7 +54,8 @@ lazy val commonJsSettings = Seq(
     val a = (baseDirectory in LocalRootProject).value.toURI.toString
     val g = "https://raw.githubusercontent.com/alonsodomin/cron4s/" + tagOrHash
     s"-P:scalajs:mapSourceURI:$a->$g/"
-  }
+  },
+  jsEnv := PhantomJSEnv().value
 )
 
 lazy val noPublishSettings = Seq(
@@ -289,8 +290,7 @@ lazy val momentjs = (project in file("time-lib/momentjs")).
   settings(publishSettings).
   settings(
     name := "momentjs",
-    moduleName := "cron4s-momentjs",
-    jsEnv := PhantomJSEnv().value
+    moduleName := "cron4s-momentjs"
   ).
   settings(Dependencies.momentjs).
   dependsOn(coreJS, testkitJS % Test)
