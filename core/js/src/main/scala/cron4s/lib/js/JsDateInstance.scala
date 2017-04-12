@@ -46,7 +46,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       case Hours   => Some(setter(d => d.setUTCHours(d.getUTCHours() + amount)))
       case Days    => Some(setter(d => d.setUTCDate(d.getUTCDate() + amount)))
       case Months  => Some(setter(d => d.setUTCMonth(d.getUTCMonth() + amount)))
-      case Weeks   => Some(setter(d => d.setUTCDate(d.getUTCDate() + (amount * 7))))
+      case Weeks   => Some(setter(d => d.setUTCDate(d.getUTCDate() + (amount * DaysInWeek))))
     }
   }
 

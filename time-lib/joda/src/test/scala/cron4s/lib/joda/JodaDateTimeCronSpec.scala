@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package cron4s.lib.js
+package cron4s.lib.joda
 
-import cron4s.testkit.DateTimeTestKitBase
-
-import scala.scalajs.js.Date
+import cron4s.testkit.DateTimeCronTestKit
+import org.joda.time.{DateTime, LocalDate, LocalDateTime, LocalTime}
 
 /**
-  * Created by alonsodomin on 02/09/2016.
+  * Created by alonsodomin on 29/01/2017.
   */
-trait JSTestBase extends DateTimeTestKitBase[Date] {
-
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): Date =
-    new Date(Date.UTC(year, month - 1, dayOfMonth, hours, minutes, seconds, ms = 0))
-
-}
+class JodaDateTimeCronSpec extends DateTimeCronTestKit[DateTime] with JodaDateTimeTestBase
+class JodaLocalDateCronSpec extends DateTimeCronTestKit[LocalDate] with JodaLocalDateTestBase
+class JodaLocalTimeCronSpec extends DateTimeCronTestKit[LocalTime] with JodaLocalTimeTestBase
+class JodaLocalDateTimeCronSpec extends DateTimeCronTestKit[LocalDateTime] with JodaLocalDateTimeTestBase

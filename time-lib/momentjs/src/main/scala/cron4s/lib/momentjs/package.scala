@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package cron4s.lib.joda
+package cron4s.lib
 
-import cron4s.testkit.DateTimeCronTestKit
+import cats.{Eq, Show}
+import cats.instances.double._
 
-import org.joda.time.{DateTime, LocalDate, LocalDateTime, LocalTime}
+import cron4s.datetime.IsDateTime
+
+import moment._
 
 /**
-  * Created by alonsodomin on 29/01/2017.
+  * Created by alonsodomin on 11/04/2017.
   */
-class JodaDateTimeCronSpec extends DateTimeCronTestKit[DateTime] with JodaDateTimeTestBase
-class JodaLocalDateCronSpec extends DateTimeCronTestKit[LocalDate] with JodaLocalDateTestBase
-class JodaLocalTimeCronSpec extends DateTimeCronTestKit[LocalTime] with JodaLocalTimeTestBase
-class JodaLocalDateTimeCronSpec extends DateTimeCronTestKit[LocalDateTime] with JodaLocalDateTimeTestBase
+package object momentjs {
+
+  implicit val momentjsEq: Eq[Date] = Eq.by(_.unix())
+
+  implicit val momentjsShow: Show[Date] = Show.show(_.toISOString())
+
+  implicit val momentjsInstance: IsDateTime[Date] = new MomentJSInstance
+
+}

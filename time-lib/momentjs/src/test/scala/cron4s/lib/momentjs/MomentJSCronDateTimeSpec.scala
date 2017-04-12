@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package cron4s.lib.js
+package cron4s.lib.momentjs
 
-import cron4s.testkit.DateTimeTestKitBase
+import cron4s.testkit.CronDateTimeTestKit
 
-import scala.scalajs.js.Date
+import moment.Date
 
 /**
-  * Created by alonsodomin on 02/09/2016.
+  * Created by alonsodomin on 11/04/2017.
   */
-trait JSTestBase extends DateTimeTestKitBase[Date] {
-
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): Date =
-    new Date(Date.UTC(year, month - 1, dayOfMonth, hours, minutes, seconds, ms = 0))
-
-}
+class MomentJSCronDateTimeSpec extends CronDateTimeTestKit[Date] with MomentJSTestBase
