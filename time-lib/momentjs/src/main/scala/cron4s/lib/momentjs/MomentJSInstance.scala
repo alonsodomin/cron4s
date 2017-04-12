@@ -80,15 +80,23 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
     * @tparam F the CronField type
     * @return a new date-time with the given field set to the new value
     */
-  override def set[F <: CronField](dateTime: Date, field: F, value: Int): Option[Date] = Some(field match {
-    case Second     => dateTime.second(value.toDouble)
-    case Minute     => dateTime.minute(value.toDouble)
-    case Hour       => dateTime.hour(value.toDouble)
-    case DayOfMonth => dateTime.date(value.toDouble)
-    case Month      => dateTime.month((value - 1).toDouble)
-    case DayOfWeek  =>
-      val dayToSet = (value % DaysInWeek) + 1
-      dateTime.day(dayToSet.toDouble)
-  })
+  override def set[F <: CronField](dateTime: Date, field: F, value: Int): Option[Date] = {
+    def setter(f: Date => Unit): Date = {
+      val newDateTime = Moment(dateTime)
+      f(newDateTime)
+      newDateTime
+    }
+
+    Some(field match {
+      case Second     => setter(_.second(value.toDouble).millisecond(0))
+      case Minute     => setter(_.minute(value.toDouble))
+      case Hour       => setter(_.hour(value.toDouble))
+      case DayOfMonth => setter(_.date(value.toDouble))
+      case Month      => setter(_.month((value - 1).toDouble))
+      case DayOfWeek  =>
+        val dayToSet = (value % DaysInWeek) + 1
+        setter(_.day(dayToSet.toDouble))
+    })
+  }
 
 }
