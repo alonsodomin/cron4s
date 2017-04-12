@@ -35,6 +35,10 @@ object Dependencies {
     libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % version.scalaJavaTime
   }
 
+  lazy val coreJVM = Def.settings {
+    libraryDependencies += "org.scala-js" %% "scalajs-stubs" % scalaJSVersion % Provided
+  }
+
   lazy val testkit = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
       "org.typelevel"  %%% "cats"               % version.cats,

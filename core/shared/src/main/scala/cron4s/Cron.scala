@@ -16,10 +16,33 @@
 
 package cron4s
 
+import cron4s.expr._
+
+import fastparse.all._
+
 import scala.scalajs.js.annotation.JSExportTopLevel
 
 /**
   * Created by domingueza on 10/04/2017.
   */
 @JSExportTopLevel("cron4s.Cron")
-object Cron extends CronImpl
+object Cron {
+
+  def apply(e: String): Either[InvalidCron, CronExpr] = {
+    // Needed for Scala 2.11
+    import cats.syntax.either._
+    parse(e).flatMap(validation.validateCron)
+  }
+
+  private[this] def parse(e: String): Either[ParseFailed, CronExpr] = {
+    parser.cron.parse(e) match {
+      case Parsed.Success(expr, _) =>
+        Right(expr)
+
+      case err @ Parsed.Failure(_, idx, _) =>
+        val error = ParseError(err)
+        Left(ParseFailed(error.failure.msg, idx))
+    }
+  }
+
+}
