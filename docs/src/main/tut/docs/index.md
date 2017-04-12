@@ -33,7 +33,7 @@ To parse a cron expression into a type that we can work with we will use the `Cr
 ```tut
 import cron4s._
 
-val parsed = Cron("10-35 2,4,6 * * * *")
+val parsed = Cron("10-35 2,4,6 * ? * *")
 ```
 
 We will get an `Either[InvalidCron, CronExpr]`, the left side giving us an error description if the parsing
@@ -48,15 +48,33 @@ val invalid = Cron("10-65 * * * * *")
 assert(invalid.isLeft)
 ```
 
-Assuming that we have successfully parsed an expression, we can extract it out of the `Either[..., ...]`
-with following expression:
+If we are not interested in the left side of the result (the error), we can easily convert it into an `Option[CronExpr]`:
 
 ```tut
-val cron = parsed.right.get
+parsed.toOption
+invalid.toOption
 ```
 
-**_Note:_** _It is not recommended to use `.right.get` to extract values out of `Either[..., ...]`
-types, we are doing it here as a means of simplifying the types just for the sake of the tutorial._ 
+**_Note:_** _In Scala 2.11 you might need to import `cats.syntax.either._` to be able to make the conversion._
+
+`Cron(expr)` is just a short-hand for `Cron.parse(expr)`. This object provides also with additional methods for parsing
+that return different types. In the first place we have `Cron.tryParse(expr)` which will return a `Try[CronExpr]` instead:
+
+```tut
+val invalid = Cron.tryParse("10-65 * * * * *")
+```
+
+```tut:invisible
+assert(invalid.isFailure)
+```
+
+And also `Cron.unsafeParse(expr)`, which will return a _naked_ `CronExpr` or happily blow-up with an exception
+interrupting the execution. This is the most Java-friendly version of all of them and you should try to avoid using it
+unless you are calling it from Java (well, it also comes handy during a REPL session or to write this tutorial):
+
+```tut:fail
+Cron.unsafeParse("10-65 * * * * *")
+```
 
 #### Validation errors
 
@@ -76,6 +94,10 @@ assert(invalid.isLeft)
 
 After successfully parsing a CRON expression, the `CronExpr` resulting type represents the previously
 parsed expression as an AST, in which we can access all the expression fields individually:
+
+```tut:invisible
+val Right(cron) = parsed
+```
 
 ```tut
 cron.seconds

@@ -18,7 +18,7 @@ import cron4s.lib.javatime._
 Now let's parse a new expression:
 
 ```tut
-val Right(cron) = Cron("10-35 2,4,6 * * * *")
+val Right(cron) = Cron("10-35 2,4,6 * * * ?")
 ```
 
 Now we can perform 2 types of matches against any object that extends `java.time.Temporal`:

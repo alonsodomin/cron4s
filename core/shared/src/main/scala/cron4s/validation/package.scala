@@ -29,8 +29,9 @@ package object validation {
     val dayFieldError = validateDayFields(expr)
     val fieldErrors = expr.raw.map(ops.validate).toList.flatten
 
-    NonEmptyList.fromList[ValidationError](fieldErrors)
-      .map(list => dayFieldError.fold(list)(_ :: list))
+    val allErrors = dayFieldError.fold[List[ValidationError]](fieldErrors)(_ :: fieldErrors)
+
+    NonEmptyList.fromList(allErrors)
       .map(errs => Left(InvalidCron(errs)))
       .getOrElse(Right(expr))
   }
