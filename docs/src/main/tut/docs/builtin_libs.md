@@ -3,16 +3,35 @@ layout: docs
 title: "Built-in libs"
 ---
 
-## Built-in libs
+## Built-in libraries and Modules
 
-These are the libraries that are currently supported:
+Cron4s provides support out of box for Java 8 Time in its `cron4s-core` module (even in ScalaJS). The integration is
+ available at `cron4s.lib.javatime` as many examples in this documentation have already shown. In ScalaJS, there is
+ an additional `cron4s.lib.js` package which provides integration with JavaScript's `Date` object.
 
-### Scala JVM
+Support for other libraries is provided via extension modules as follows:
 
- * Java Time API (JSR-310): Package `cron4s.lib.javatime`
- * Joda Time: Package `cron4s.lib.joda`
+### Joda Time
 
-### ScalaJS
+**JVM Only**
 
- * JavaScript `Date` API: Package `cron4s.lib.js`
- * Java Time API: Package `cron4s.lib.javatime`. _Support is provided via [scala-java-time](https://github.com/cquiroz/scala-java-time)._
+Integration with Joda Time is possible by including the `cron4s-joda` module among your dependencies:
+
+```
+libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s-joda" % "x.y.z"
+```
+
+After that, importing the package `cron4s.lib.joda` should be enough to use your Cron expressions against instances
+ of Joda's `DateTime`, `LocalDateTime`, `LocalDate` and `LocalTime`.
+
+### MomentJS
+
+**JS Only**
+
+To be able to use Cron4s with MomentJS you need to include the `cron4s-momentjs` module among your dependencies:
+
+```
+libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s-momentjs" % "x.y.z"
+```
+
+The relevant integration bridge is at package `cron4s.lib.momentjs`.
