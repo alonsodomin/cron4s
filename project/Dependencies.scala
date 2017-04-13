@@ -26,7 +26,7 @@ object Dependencies {
   lazy val core = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
       "com.chuusai"   %%% "shapeless" % version.shapeless,
-      "org.typelevel" %%% "cats"      % version.cats,
+      "org.typelevel" %%% "cats-core" % version.cats,
       "com.lihaoyi"   %%% "fastparse" % version.fastparse
     )
   }
@@ -41,7 +41,6 @@ object Dependencies {
 
   lazy val testkit = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
-      "org.typelevel"  %%% "cats"               % version.cats,
       "org.typelevel"  %%% "cats-laws"          % version.cats,
       "org.typelevel"  %%% "discipline"         % version.discipline,
       "org.typelevel"  %%% "catalysts-platform" % version.catalysts,

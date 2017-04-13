@@ -19,7 +19,7 @@ package cron4s.validation
 import cats._
 import cats.implicits._
 
-import cron4s.{CronField, CronUnit, FieldError}
+import cron4s.{CronField, CronUnit, InvalidField}
 import cron4s.expr._
 import cron4s.base.Enumerated
 import cron4s.syntax.field._
@@ -29,7 +29,7 @@ import cron4s.syntax.field._
   */
 sealed trait NodeValidator[A] {
 
-  def validate(node: A): List[FieldError]
+  def validate(node: A): List[InvalidField]
 
 }
 
@@ -38,7 +38,7 @@ object NodeValidator extends NodeValidatorInstances {
   @inline def apply[A](implicit validator: NodeValidator[A]): NodeValidator[A] = validator
 
   def alwaysValid[A]: NodeValidator[A] = new NodeValidator[A] {
-    def validate(node: A): List[FieldError] = List.empty
+    def validate(node: A): List[InvalidField] = List.empty
   }
 
 }
@@ -56,9 +56,9 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[ConstNode[F]] = new NodeValidator[ConstNode[F]] {
 
-      def validate(node: ConstNode[F]): List[FieldError] = {
+      def validate(node: ConstNode[F]): List[InvalidField] = {
         if (node.value < node.unit.min || node.value > node.unit.max) {
-          List(FieldError(
+          List(InvalidField(
             node.unit.field,
             s"Value ${node.value} is out of bounds for field: ${node.unit.field}"
           ))
@@ -73,14 +73,14 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
     ): NodeValidator[BetweenNode[F]] = new NodeValidator[BetweenNode[F]] {
       val subValidator = NodeValidator[ConstNode[F]]
 
-      def validate(node: BetweenNode[F]): List[FieldError] = {
+      def validate(node: BetweenNode[F]): List[InvalidField] = {
         val baseErrors = List(
           subValidator.validate(node.begin),
           subValidator.validate(node.end)
         ).flatten
 
         if (node.begin.value >= node.end.value) {
-          val error = FieldError(
+          val error = InvalidField(
             node.unit.field,
             s"${node.begin.value} should be less than ${node.end.value}"
           )
@@ -98,15 +98,15 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       val elemValidator = NodeValidator[EnumerableNode[F]]
 
       def implicationErrorMsg(that: EnumerableNode[F], impliedBy: EnumerableNode[F]): String =
-        s"Value '${that.show}' at field ${that.unit.field} is implied by '${impliedBy.show}'"
+        s"Value '${that.show}' is implied by '${impliedBy.show}'"
 
-      def verifyImplication(seen: List[EnumerableNode[F]], curr: EnumerableNode[F]): List[FieldError] = {
+      def verifyImplication(seen: List[EnumerableNode[F]], curr: EnumerableNode[F]): List[InvalidField] = {
         seen.flatMap { elem =>
           val error = {
             if (curr.impliedBy(elem))
-              Some(FieldError(curr.unit.field, implicationErrorMsg(curr, elem)))
+              Some(InvalidField(curr.unit.field, implicationErrorMsg(curr, elem)))
             else if (curr.implies(elem))
-              Some(FieldError(curr.unit.field, implicationErrorMsg(elem, curr)))
+              Some(InvalidField(curr.unit.field, implicationErrorMsg(elem, curr)))
             else
               None
           }
@@ -115,8 +115,8 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
         }
       }
 
-      def validate(node: SeveralNode[F]): List[FieldError] = {
-        val zero = List.empty[EnumerableNode[F]] -> List.empty[List[FieldError]]
+      def validate(node: SeveralNode[F]): List[InvalidField] = {
+        val zero = List.empty[EnumerableNode[F]] -> List.empty[List[InvalidField]]
         val (_, errorResult) = node.values.foldRight(Eval.now(zero)) { (e, acc) =>
           acc.map { case (seen, errors) =>
             val subErrors = elemValidator.validate(e)
@@ -134,13 +134,13 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       implicit
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[EveryNode[F]] = new NodeValidator[EveryNode[F]] {
-      def validate(node: EveryNode[F]): List[FieldError] = {
+      def validate(node: EveryNode[F]): List[InvalidField] = {
         val baseErrors = NodeValidator[DivisibleNode[F]].validate(node.base)
         val evenlyDivided = (node.base.range.size % node.freq) == 0
         if (!evenlyDivided) {
-          baseErrors :+ FieldError(
+          baseErrors :+ InvalidField(
             node.unit.field,
-            s"Step '${node.freq}' does not evenly divide the value '${node.base.show}' in field ${node.unit}"
+            s"Step '${node.freq}' does not evenly divide the value '${node.base.show}'"
           )
         } else baseErrors
       }
@@ -154,7 +154,7 @@ private[validation] trait LowPriorityNodeValidatorInstances {
       implicit
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[EnumerableNode[F]] = new NodeValidator[EnumerableNode[F]] {
-      def validate(node: EnumerableNode[F]): List[FieldError] =
+      def validate(node: EnumerableNode[F]): List[InvalidField] =
         node.raw.fold(ops.validate)
     }
 
@@ -162,7 +162,7 @@ private[validation] trait LowPriorityNodeValidatorInstances {
       implicit
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[DivisibleNode[F]] = new NodeValidator[DivisibleNode[F]] {
-      def validate(node: DivisibleNode[F]): List[FieldError] =
+      def validate(node: DivisibleNode[F]): List[InvalidField] =
         node.raw.fold(ops.validate)
     }
 
@@ -170,7 +170,7 @@ private[validation] trait LowPriorityNodeValidatorInstances {
       implicit
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[FieldNode[F]] = new NodeValidator[FieldNode[F]] {
-      def validate(node: FieldNode[F]): List[FieldError] =
+      def validate(node: FieldNode[F]): List[InvalidField] =
         node.raw.fold(ops.validate)
     }
 
@@ -178,7 +178,7 @@ private[validation] trait LowPriorityNodeValidatorInstances {
       implicit
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[FieldNodeWithAny[F]] = new NodeValidator[FieldNodeWithAny[F]] {
-    def validate(node: FieldNodeWithAny[F]): List[FieldError] =
+    def validate(node: FieldNodeWithAny[F]): List[InvalidField] =
       node.raw.fold(ops.validate)
   }
 

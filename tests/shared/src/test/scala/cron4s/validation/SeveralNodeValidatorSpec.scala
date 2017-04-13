@@ -16,7 +16,7 @@
 
 package cron4s.validation
 
-import cron4s.{CronField, CronUnit, FieldError}
+import cron4s.{CronField, CronUnit, InvalidField}
 import cron4s.expr.{EnumerableNode, SeveralNode}
 import cron4s.base.Enumerated
 import cron4s.testkit.SlowCron4sPropSpec
@@ -33,7 +33,7 @@ class SeveralNodeValidatorSpec extends SlowCron4sPropSpec with ValidatorPropSpec
 
     property(s"SeveralNode[${unit.field}] with valid components should pass validation") {
       forAll(severalGen[F]) { node =>
-        severalValidator.validate(node) shouldBe List.empty[FieldError]
+        severalValidator.validate(node) shouldBe List.empty[InvalidField]
       }
     }
 

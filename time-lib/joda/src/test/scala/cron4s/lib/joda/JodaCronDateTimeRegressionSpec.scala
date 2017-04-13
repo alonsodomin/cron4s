@@ -28,7 +28,7 @@ class JodaCronDateTimeRegressionSpec extends FlatSpec with Matchers {
   "Cron" should "not advance to the next day" in {
     val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
 
-    val Right(cron) = Cron("* */10 * * * *")
+    val Right(cron) = Cron("* */10 * * * ?")
     val Some(next) = cron.next(from)
 
     Seconds.secondsBetween(from, next).getSeconds should be <= 600
@@ -37,7 +37,7 @@ class JodaCronDateTimeRegressionSpec extends FlatSpec with Matchers {
   it should "reset the milli seconds field" in {
     val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
 
-    val Right(cron) = Cron("* */10 * * * *")
+    val Right(cron) = Cron("* */10 * * * ?")
     val Some(next) = cron.next(from)
 
     next.getMillisOfSecond shouldBe 0

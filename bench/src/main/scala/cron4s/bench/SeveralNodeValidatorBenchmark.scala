@@ -49,47 +49,47 @@ class SeveralNodeValidatorBenchmark {
   val _constImpliedByRangeReverse = SeveralNode(BetweenNode[Second](ConstNode(17), ConstNode(30)), ConstNode[Second](23))
 
   @Benchmark
-  def simpleValid(): List[FieldError] = {
+  def simpleValid(): List[InvalidField] = {
     NodeValidator[SeveralNode[Second]].validate(_simpleValid)
   }
 
   @Benchmark
-  def simpleInvalid(): List[FieldError] = {
+  def simpleInvalid(): List[InvalidField] = {
     NodeValidator[SeveralNode[Second]].validate(_simpleInvalid)
   }
 
   @Benchmark
-  def threeConstValid(): List[FieldError] = {
+  def threeConstValid(): List[InvalidField] = {
     NodeValidator[SeveralNode[Second]].validate(_threeConstValid)
   }
 
   @Benchmark
-  def threeConstInvalid(): List[FieldError] = {
+  def threeConstInvalid(): List[InvalidField] = {
     NodeValidator[SeveralNode[Second]].validate(_threeConstInvalid)
   }
 
   @Benchmark
-  def rangeValid(): List[FieldError] = {
+  def rangeValid(): List[InvalidField] = {
     NodeValidator[SeveralNode[Second]].validate(_rangeValid)
   }
 
   @Benchmark
-  def rangeInvalid(): List[FieldError] = {
+  def rangeInvalid(): List[InvalidField] = {
     NodeValidator[SeveralNode[Second]].validate(_rangeInvalid)
   }
 
   @Benchmark
-  def rangeInvalidConst(): List[FieldError] = {
+  def rangeInvalidConst(): List[InvalidField] = {
     NodeValidator[SeveralNode[Second]].validate(_rangeInvalidConst)
   }
 
   @Benchmark
-  def constImpliedByRange(): List[FieldError] = {
+  def constImpliedByRange(): List[InvalidField] = {
     NodeValidator[SeveralNode[Second]].validate(_constImpliedByRange)
   }
 
   @Benchmark
-  def constImpliedByRangeReverse(): List[FieldError] = {
+  def constImpliedByRangeReverse(): List[InvalidField] = {
     NodeValidator[SeveralNode[Second]].validate(_constImpliedByRangeReverse)
   }
 

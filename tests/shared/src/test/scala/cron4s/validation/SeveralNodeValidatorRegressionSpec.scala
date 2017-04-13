@@ -36,9 +36,9 @@ class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
 
     val returnedErrors = NodeValidator[SeveralNode[Minute]].validate(severalNode)
 
-    returnedErrors shouldBe List(FieldError(
+    returnedErrors shouldBe List(InvalidField(
       Minute,
-      s"Value '${node1.show}' at field Minute is implied by '${node2.show}'"
+      s"Value '${node1.show}' is implied by '${node2.show}'"
     ))
   }
 
@@ -48,7 +48,7 @@ class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
     val severalNode = SeveralNode[Minute](node1, node2)
 
     val returnedErrors = NodeValidator[SeveralNode[Minute]].validate(severalNode)
-    returnedErrors shouldBe List.empty[FieldError]
+    returnedErrors shouldBe List.empty[InvalidField]
   }
 
 }
