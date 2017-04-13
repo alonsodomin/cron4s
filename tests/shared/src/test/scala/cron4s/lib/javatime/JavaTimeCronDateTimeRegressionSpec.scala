@@ -36,7 +36,7 @@ class JavaTimeCronDateTimeRegressionSpec extends FlatSpec with Matchers {
     from.until(next, ChronoUnit.SECONDS) <= 600 shouldBe true
   }
 
-  it should "reset the milli seconds field" in {
+  "Cron" should "reset the milli seconds field" in {
     val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
 
     val Right(cron) = Cron("* */10 * * * ?")

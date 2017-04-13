@@ -21,8 +21,18 @@ import cats.implicits._
 /**
   * Created by alonsodomin on 23/08/2016.
   */
+final case class Step private[cron4s] (amount: Int, direction: Direction) {
+  require(amount >= 0, "Step amount must be a positive integer")
 
-private[cron4s] sealed abstract class Direction(val sign: Int) {
+  def reverse: Step = copy(direction = direction.reverse)
+
+}
+
+object Step {
+  def apply(stepSize: Int): Step = new Step(Math.abs(stepSize), Direction.of(stepSize))
+}
+
+sealed abstract class Direction(private[cron4s] val sign: Int) {
   def reverse: Direction
 }
 private[cron4s] object Direction {
@@ -45,15 +55,13 @@ trait Enumerated[A] {
   def min(a: A): Int = range(a).min
   def max(a: A): Int = range(a).max
 
-  private[cron4s] def step0(
-      a: A, from: Int, stepSize: Int, direction: Direction
-  ): Option[(Int, Int)] = {
-    if (stepSize == Int.MinValue || stepSize == Int.MaxValue) {
-      None
-    } else {
+  def step(a: A, from: Int, step: Step): Option[(Int, Int)] = {
+    if (step.amount == 0) None
+    else if (step.amount == Int.MinValue || step.amount == Int.MaxValue) None
+    else {
       val aRange = range(a)
 
-      def nearestNeighbourIndex = direction match {
+      def nearestNeighbourIndex = step.direction match {
         case Direction.Forward =>
           val idx = aRange.indexWhere(from < _)
           if (idx == -1) aRange.size
@@ -66,11 +74,10 @@ trait Enumerated[A] {
       def currentIdx = if (aRange.contains(from)) {
         aRange.indexOf(from)
       } else {
-        val correction = if (stepSize != 0) direction.reverse.sign else 0
-        nearestNeighbourIndex + correction
+        nearestNeighbourIndex + step.direction.reverse.sign
       }
 
-      val pointer = currentIdx + stepSize
+      val pointer = currentIdx + (step.amount * step.direction.sign)
       val index = {
         val mod = pointer % aRange.size
         if (mod < 0) aRange.size + mod
@@ -86,8 +93,10 @@ trait Enumerated[A] {
     }
   }
 
-  def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] =
-    step0(a, from, stepSize, Direction.of(stepSize))
+  def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] = {
+    if (stepSize == Int.MinValue || stepSize == Int.MaxValue) None
+    else step(a, from, Step(stepSize))
+  }
 
   def next(a: A)(from: Int): Option[Int] = step(a)(from, 1).map(_._1)
   def prev(a: A)(from: Int): Option[Int] = step(a)(from, -1).map(_._1)

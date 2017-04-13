@@ -19,7 +19,7 @@ package cron4s.datetime
 import cats.MonoidK
 
 import cron4s.{CronField, CronUnit}
-import cron4s.base.{Direction, Predicate}
+import cron4s.base.{Direction, Predicate, Step}
 import cron4s.expr._
 
 import shapeless.Coproduct
@@ -77,10 +77,10 @@ private[datetime] final class FullCron extends DateTimeCron[CronExpr] {
   def step[DateTime](expr: CronExpr, dt: IsDateTime[DateTime])
       (from: DateTime, amount: Int): Option[DateTime] = {
     val stepper = new Stepper[DateTime](dt)
-    val direction = Direction.of(amount)
+
     for {
-      (adjustedTime, carryOver, _) <- stepper.stepOverTime(expr.timePart.raw, from, amount, direction)
-      (adjustedDate, _, _)         <- stepper.stepOverDate(expr.datePart.raw, adjustedTime, carryOver, direction)(allOf(expr, dt))
+      (adjustedTime, carryOver) <- stepper.stepOverTime(expr.timePart.raw, from, Step(amount))
+      (adjustedDate, _)         <- stepper.stepOverDate(expr.datePart.raw, adjustedTime, carryOver)(allOf(expr, dt))
     } yield adjustedDate
   }
 
@@ -103,7 +103,7 @@ private[datetime] final class TimeCron extends DateTimeCron[TimeCronExpr] {
   def step[DateTime](expr: TimeCronExpr, dt: IsDateTime[DateTime])
       (from: DateTime, stepSize: Int): Option[DateTime] = {
     val stepper = new Stepper[DateTime](dt)
-    stepper.stepOverTime(expr.raw, from, stepSize, Direction.of(stepSize)).map(_._1)
+    stepper.stepOverTime(expr.raw, from, Step(stepSize)).map(_._1)
   }
 
   def ranges(expr: TimeCronExpr): Map[CronField, IndexedSeq[Int]] =
@@ -126,7 +126,7 @@ private[datetime] final class DateCron extends DateTimeCron[DateCronExpr] {
   def step[DateTime](expr: DateCronExpr, dt: IsDateTime[DateTime])
       (from: DateTime, stepSize: Int): Option[DateTime] = {
     val stepper = new Stepper[DateTime](dt)
-    stepper.stepOverDate(expr.raw, from, stepSize, Direction.of(stepSize))(allOf(expr, dt)).map(_._1)
+    stepper.stepOverDate(expr.raw, from, Step(stepSize))(allOf(expr, dt)).map(_._1)
   }
 
   def ranges(expr: DateCronExpr): Map[CronField, IndexedSeq[Int]] =

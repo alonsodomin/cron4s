@@ -20,7 +20,7 @@ import cats.laws._
 import cats.kernel.laws._
 import cats.implicits._
 
-import cron4s.base.{Direction, Enumerated}
+import cron4s.base.{Direction, Enumerated, Step}
 import cron4s.syntax.enumerated._
 
 import org.scalacheck.Prop
@@ -43,19 +43,16 @@ trait EnumeratedLaws[A] {
   def backwards(a: A, from: Int): IsEq[Option[Int]] =
     a.prev(from) <-> a.step(from, -1).map(_._1)
 
-  private[cron4s] def zeroStepSize(a: A, from: Int, direction: Direction): Boolean = {
-    val stepped = TC.step0(a, from, 0, direction)
-    stepped.forall { case (result, _) => a.range.contains(result) }
-  }
-
   def fromMinToMinForwards(a: A): IsEq[Option[(Int, Int)]] =
     a.step(a.min, a.range.size) <-> Some(a.min -> 1)
 
   def fromMaxToMaxForwards(a: A): IsEq[Option[(Int, Int)]] =
     a.step(a.max, a.range.size) <-> Some(a.max -> 1)
 
-  def fromMinToMaxForwards(a: A): IsEq[Option[(Int, Int)]] =
-    a.step(a.min, a.range.size - 1) <-> Some(a.max -> 0)
+  def fromMinToMaxForwards(a: A): IsEq[Option[(Int, Int)]] = {
+    val expected = if (a.range.size == 1) None else Some(a.max -> 0)
+    a.step(a.min, a.range.size - 1) <-> expected
+  }
 
   def fromMinToMaxBackwards(a: A): IsEq[Option[(Int, Int)]] =
     a.step(a.min, -1) <-> Some(a.max -> -1)
@@ -63,11 +60,13 @@ trait EnumeratedLaws[A] {
   def fromMaxToMinForwards(a: A): IsEq[Option[(Int, Int)]] =
     a.step(a.max, 1) <-> Some(a.min -> 1)
 
-  def fromMaxToMinBackwards(a: A): IsEq[Option[(Int, Int)]] =
-    a.step(a.max, -(a.range.size - 1)) <-> Some(a.min -> 0)
+  def fromMaxToMinBackwards(a: A): IsEq[Option[(Int, Int)]] = {
+    val expected = if (a.range.size == 1) None else Some(a.min -> 0)
+    a.step(a.max, -(a.range.size - 1)) <-> expected
+  }
 
   def backAndForth(a: A, from: Int, stepSize: Int): Prop = {
-    if (stepSize == 0) proved
+    if (stepSize == 0) a.step(from, stepSize) ?== None
     else {
       val moved = a.step(from, stepSize).map(_._1)
       val returned = moved.flatMap { from2 =>
