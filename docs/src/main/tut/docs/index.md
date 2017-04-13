@@ -51,11 +51,13 @@ assert(invalid.isLeft)
 If we are not interested in the left side of the result (the error), we can easily convert it into an `Option[CronExpr]`:
 
 ```tut
+import cats.syntax.either._
+
 parsed.toOption
 invalid.toOption
 ```
 
-**_Note:_** _In Scala 2.11 you might need to import `cats.syntax.either._` to be able to make the conversion._
+**_Note:_** _In Scala 2.12 you can avoid importing `cats.syntax.either._` to be able to make the conversion._
 
 `Cron(expr)` is just a short-hand for `Cron.parse(expr)`. This object provides also with additional methods for parsing
 that return different types. In the first place we have `Cron.tryParse(expr)` which will return a `Try[CronExpr]` instead:
