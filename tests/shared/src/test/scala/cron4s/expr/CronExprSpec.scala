@@ -33,7 +33,7 @@ class CronExprSpec extends FlatSpec with Matchers {
   val hourExpr       : HoursNode       = ConstNode[Hour](4)
   val dayOfMonthExpr : DaysOfMonthNode = ConstNode[DayOfMonth](12)
   val monthExpr      : MonthsNode      = ConstNode[Month](6)
-  val dayOfWeekExpr  : DaysOfWeekNode  = ConstNode[DayOfWeek](3)
+  val dayOfWeekExpr  : DaysOfWeekNode  = AnyNode[DayOfWeek]
 
   val timePart = TimeCronExpr(secondExpr, minuteExpr, hourExpr)
   val datePart = DateCronExpr(dayOfMonthExpr, monthExpr, dayOfWeekExpr)
@@ -60,7 +60,7 @@ class CronExprSpec extends FlatSpec with Matchers {
     expr.daysOfWeek shouldBe dayOfWeekExpr
 
     expr.toString shouldBe expr.show
-    expr.show shouldBe "15 10 4 12 6 3"
+    expr.show shouldBe "15 10 4 12 6 ?"
   }
 
   "timePart" should "return the time relative part of the expression" in {
@@ -80,7 +80,7 @@ class CronExprSpec extends FlatSpec with Matchers {
     datePart.months shouldBe monthExpr
     datePart.daysOfWeek shouldBe dayOfWeekExpr
 
-    datePart.toString shouldBe "12 6 3"
+    datePart.toString shouldBe "12 6 ?"
   }
 
 }

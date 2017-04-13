@@ -18,19 +18,31 @@ package cron4s
 
 import cats.data.NonEmptyList
 
+import cron4s.expr._
+
 import org.scalatest.{FlatSpec, Matchers}
 
-import scala.util.Failure
+import scala.util.{Failure, Success}
 
 /**
   * Created by alonsodomin on 12/04/2017.
   */
 object CronSpec {
+  import CronField._
 
   final val AllEachExpr = "* * * * * *"
   final val AnyDaysExpr = "* * * ? * ?"
 
   final val InvalidExprs = List(AllEachExpr, AnyDaysExpr)
+
+  final val ValidExpr = CronExpr(
+    SeveralNode(BetweenNode[Second](ConstNode(17), ConstNode(30)), ConstNode[Second](5)),
+    EachNode[Minute],
+    ConstNode[Hour](12),
+    EachNode[DayOfMonth],
+    EachNode[Month],
+    AnyNode[DayOfWeek]
+  )
 
 }
 
@@ -63,6 +75,16 @@ class CronSpec extends FlatSpec with Matchers {
     intercept[InvalidCron] {
       Cron.unsafeParse(AnyDaysExpr)
     }
+  }
+
+  it should "parse a valid expression" in {
+    val exprStr = ValidExpr.toString
+
+    Cron(exprStr) shouldBe Right(ValidExpr)
+
+    Cron.tryParse(exprStr) shouldBe Success(ValidExpr)
+
+    Cron.unsafeParse(exprStr) shouldBe ValidExpr
   }
 
 }
