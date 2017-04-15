@@ -188,7 +188,14 @@ lazy val cron4sJS = (project in file(".js")).
 lazy val cron4sJVM = (project in file(".jvm")).
   settings(
     name := "cron4s",
-    moduleName := "cron4s"
+    moduleName := "cron4s",
+    initialCommands in console :=
+      """
+        |import java.time._
+        |import cron4s._
+        |import cron4s.lib.javatime._
+        |
+      """.stripMargin
   ).
   settings(commonSettings: _*).
   settings(commonJvmSettings: _*).

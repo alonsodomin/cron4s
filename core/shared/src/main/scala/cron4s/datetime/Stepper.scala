@@ -31,6 +31,8 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   private type ResetPrevFn = DateTime => Option[DateTime]
   private type StepST = Option[(ResetPrevFn, DateTime, Step)]
 
+  private val identityReset: ResetPrevFn = Some(_)
+
   private[this] def stepNode[N[_ <: CronField], F <: CronField]
       (stepState: StepST, node: N[F])(implicit expr: FieldExpr[N, F]): StepST =
     stepState.flatMap { case (resetPrevious, from, step) =>
@@ -56,17 +58,15 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       }
   }
 
-  private[this] def stepOverMonth(prev: StepST, expr: MonthsNode): StepST = {
-    for {
-      (rstFn, dt, s @ Step(carryOver, _)) <- stepNode(prev, expr)
-      newDateTime                         <- DT.plus(dt, carryOver * 12, DateTimeUnit.Months)
-    } yield (rstFn, newDateTime, s.copy(amount = 0))
-  }
+  private[this] def stepOverMonth(prev: StepST, expr: MonthsNode): StepST = for {
+    (_, dt, s @ Step(carryOver, _)) <- stepNode(prev, expr)
+    newDateTime                     <- DT.plus(dt, carryOver * 12, DateTimeUnit.Months)
+  } yield (identityReset, newDateTime, s.copy(amount = 0))
 
   private[this] def stepOverDayOfWeek(prev: StepST, expr: DaysOfWeekNode): StepST = for {
-    (rstFn, dt, s @ Step(carryOver, _)) <- stepNode(prev, expr)
-    newDateTime                         <- DT.plus(dt, carryOver, DateTimeUnit.Weeks)
-  } yield (rstFn, newDateTime, s.copy(amount = 0))
+    (_, dt, s @ Step(carryOver, _)) <- stepNode(prev, expr)
+    newDateTime                     <- DT.plus(dt, carryOver, DateTimeUnit.Weeks)
+  } yield (identityReset, newDateTime, s.copy(amount = 0))
 
   object stepPerNode extends Poly2 {
     implicit def caseSeconds     = at[StepST, SecondsNode]((step, node) => stepNode(step, node))
@@ -84,14 +84,13 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   }
 
   def run(cron: AnyCron, from: DateTime, step: Step): Option[DateTime] = {
-    def initial(dt: DateTime): StepST = Some((Some(_), dt, step.copy(amount = 1)))
+    def initial(dt: DateTime): StepST = Some((identityReset, dt, step.copy(amount = 1)))
 
     @tailrec
     def go (stepSt: StepST, iteration: Int): StepST = {
       if (iteration == step.amount) stepSt
       else {
-        val iterationResult: StepST = cron.foldLeft(stepSt)(foldInternalExpr)
-        iterationResult match {
+        cron.foldLeft(stepSt)(foldInternalExpr) match {
           case Some((_, dt, _)) =>
             go(initial(dt), iteration + 1)
 
