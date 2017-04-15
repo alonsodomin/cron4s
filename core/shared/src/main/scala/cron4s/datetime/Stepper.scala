@@ -22,6 +22,8 @@ import cron4s.expr._
 
 import shapeless._
 
+import scala.annotation.tailrec
+
 private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
 
   val MaxIterationCount = 3
@@ -82,8 +84,23 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   }
 
   def run(cron: AnyCron, from: DateTime, step: Step): Option[DateTime] = {
-    val initial: StepST = Some((Some(_), from, step))
-    cron.foldLeft(initial)(foldInternalExpr).map(_._2)
+    def initial(dt: DateTime): StepST = Some((Some(_), dt, step.copy(amount = 1)))
+
+    @tailrec
+    def go (stepSt: StepST, iteration: Int): StepST = {
+      if (iteration == step.amount) stepSt
+      else {
+        val iterationResult: StepST = cron.foldLeft(stepSt)(foldInternalExpr)
+        iterationResult match {
+          case Some((_, dt, _)) =>
+            go(initial(dt), iteration + 1)
+
+          case None => None
+        }
+      }
+    }
+
+    go(initial(from), 0).map(_._2)
   }
 
 }
