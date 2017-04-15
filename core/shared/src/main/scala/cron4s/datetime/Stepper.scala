@@ -32,13 +32,13 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   private[this] def stepNode[N[_ <: CronField], F <: CronField]
       (stepState: StepST, node: N[F])(implicit expr: FieldExpr[N, F]): StepST =
     stepState.flatMap { case (resetPrevious, from, step) =>
-      def resetThis: DateTime => Option[DateTime] = { dt =>
+      def resetThis: DateTime => Option[DateTime] = {
         val resetValue = step.direction match {
           case Direction.Forward   => node.min
           case Direction.Backwards => node.max
         }
 
-        DT.set(dt, node.unit.field, resetValue)
+        resetPrevious.andThen(_.flatMap(DT.set(_, node.unit.field, resetValue)))
       }
 
       DT.get(from, node.unit.field).flatMap { currentValue =>
