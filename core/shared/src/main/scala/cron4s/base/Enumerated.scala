@@ -29,15 +29,15 @@ final case class Step private[cron4s] (amount: Int, direction: Direction) {
 }
 
 object Step {
-  def apply(stepSize: Int): Step = new Step(Math.abs(stepSize), Direction.of(stepSize))
+  def apply(stepSize: Int): Step = new Step(Math.abs(stepSize), Direction.ofSign(stepSize))
 }
 
 sealed abstract class Direction(private[cron4s] val sign: Int) {
   def reverse: Direction
 }
-private[cron4s] object Direction {
+object Direction {
 
-  def of(step: Int): Direction = {
+  def ofSign(step: Int): Direction = {
     if (step >= 0) Forward
     else Backwards
   }
@@ -56,8 +56,7 @@ trait Enumerated[A] {
   def max(a: A): Int = range(a).max
 
   def step(a: A, from: Int, step: Step): Option[(Int, Int)] = {
-    if (step.amount == 0) None
-    else if (step.amount == Int.MinValue || step.amount == Int.MaxValue) None
+    if (step.amount == Int.MinValue || step.amount == Int.MaxValue) None
     else {
       val aRange = range(a)
 
@@ -74,7 +73,7 @@ trait Enumerated[A] {
       def currentIdx = if (aRange.contains(from)) {
         aRange.indexOf(from)
       } else {
-        nearestNeighbourIndex + step.direction.reverse.sign
+        nearestNeighbourIndex
       }
 
       val pointer = currentIdx + (step.amount * step.direction.sign)
@@ -89,7 +88,9 @@ trait Enumerated[A] {
         pointer
       }
 
-      (aRange(index), offsetPointer / aRange.size).some
+      val newValue = aRange(index)
+      if (newValue != from) (newValue, offsetPointer / aRange.size).some
+      else none
     }
   }
 
