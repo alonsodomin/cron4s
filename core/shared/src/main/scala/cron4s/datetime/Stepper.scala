@@ -26,8 +26,6 @@ import scala.annotation.tailrec
 
 private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
 
-  val MaxIterationCount = 3
-
   private type ResetPrevFn = DateTime => Option[DateTime]
   private type StepST = Option[(ResetPrevFn, DateTime, Step)]
 
@@ -50,7 +48,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
           case Some((newValue, carryOver)) =>
             resetPrevious(from)
               .flatMap(DT.set(_, node.unit.field, newValue))
-              .map(dt => (resetThis, dt, step.copy(amount = Math.abs(carryOver))))
+              .map((resetThis, _, step.copy(amount = Math.abs(carryOver))))
 
           case None =>
             Some((resetThis, from, step.copy(amount = 0)))
@@ -78,7 +76,16 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   }
 
   object foldInternalExpr extends Poly2 {
-    implicit def caseFullExpr = at[StepST, CronExpr]((stepSt, expr) => expr.raw.foldLeft(stepSt)(stepPerNode))
+    implicit def caseFullExpr = at[StepST, CronExpr] { (stepSt, expr) =>
+      val dateWithoutDOW = expr.datePart.raw.take(2)
+      val daysOfWeekNode = expr.datePart.raw.select[DaysOfWeekNode]
+
+      for {
+        st @ (resetTime, _, _) <- expr.timePart.raw.foldLeft(stepSt)(stepPerNode)
+        (_, dt, step)          <- dateWithoutDOW.foldLeft(Some(st): StepST)(stepPerNode)
+        result                 <- stepOverDayOfWeek(Some((resetTime, dt, step)), daysOfWeekNode)
+      } yield result
+    }
     implicit def caseDateExpr = at[StepST, DateCronExpr]((stepSt, expr) => expr.raw.foldLeft(stepSt)(stepPerNode))
     implicit def caseTimeExpr = at[StepST, TimeCronExpr]((stepSt, expr) => expr.raw.foldLeft(stepSt)(stepPerNode))
   }

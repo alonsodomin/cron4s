@@ -48,7 +48,7 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show]
   lazy val samples = Seq(
   //("expr",           "from",                              "stepSize", "expected"),
     (OnlyTuesdaysAt12,     createDateTime(0, 0, 0, 1, 8, 2016),          1, createDateTime(0, 0, 12, 2, 8, 2016)),
-    (EachMinutesOnSundays, createDateTime(0, 0, 0, 1, 8, 2016),          1, createDateTime(0, 1, 0, 7, 8, 2016)),
+    (EachMinutesOnSundays, createDateTime(0, 0, 0, 1, 8, 2016),          1, createDateTime(0, 0, 0, 7, 8, 2016)),
     (BetweenDayOfWeek,     createDateTime(0, 0, 2, 11, 3, 2016),         1, createDateTime(0, 0, 0, 15, 3, 2016)),
     (BetweenDayOfWeek,     createDateTime(0, 0, 2, 7, 3, 2016),         -1, createDateTime(0, 0, 0, 3, 3, 2016)),
     (BetweenMonth,         createDateTime(0, 1, 1, 4, 11, 2016),         1, createDateTime(0, 0, 0, 1, 4, 2017)),
