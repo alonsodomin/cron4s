@@ -44,8 +44,7 @@ trait EnumeratedTests[A] extends Laws {
     "fromMinToMaxForwards" -> forAll(laws.fromMinToMaxForwards _),
     "fromMinToMaxBackwards" -> forAll(laws.fromMinToMaxBackwards _),
     "fromMaxToMinForwards" -> forAll(laws.fromMaxToMinForwards _),
-    "fromMaxToMinBackwards" -> forAll(laws.fromMaxToMinBackwards _),
-    "backAndForth" -> forAll(laws.backAndForth _)
+    "fromMaxToMinBackwards" -> forAll(laws.fromMaxToMinBackwards _)
   )
 
 }

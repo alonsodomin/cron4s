@@ -73,7 +73,8 @@ trait Enumerated[A] {
       def currentIdx = if (aRange.contains(from)) {
         aRange.indexOf(from)
       } else {
-        nearestNeighbourIndex
+        val correction = if (step.amount != 0) step.direction.reverse.sign else 0
+        nearestNeighbourIndex + correction
       }
 
       val pointer = currentIdx + (step.amount * step.direction.sign)
@@ -82,14 +83,16 @@ trait Enumerated[A] {
         if (mod < 0) aRange.size + mod
         else mod
       }
-      val offsetPointer = if (pointer < 0) {
+      val offset = if (pointer < 0) {
         pointer - (aRange.size - 1)
       } else {
         pointer
       }
 
       val newValue = aRange(index)
-      if (newValue != from) (newValue, offsetPointer / aRange.size).some
+      val carryOver = offset / aRange.size
+
+      if (newValue != from || carryOver != 0) (newValue, carryOver).some
       else none
     }
   }

@@ -50,7 +50,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
           case Some((newValue, carryOver)) =>
             resetPrevious(from)
               .flatMap(DT.set(_, node.unit.field, newValue))
-              .map(dt => (resetThis, dt, step.copy(amount = carryOver)))
+              .map(dt => (resetThis, dt, step.copy(amount = Math.abs(carryOver))))
 
           case None =>
             Some((resetThis, from, step.copy(amount = 0)))
@@ -59,13 +59,13 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   }
 
   private[this] def stepOverMonth(prev: StepST, expr: MonthsNode): StepST = for {
-    (_, dt, s @ Step(carryOver, _)) <- stepNode(prev, expr)
-    newDateTime                     <- DT.plus(dt, carryOver * 12, DateTimeUnit.Months)
+    (_, dt, s @ Step(carryOver, dir)) <- stepNode(prev, expr)
+    newDateTime                       <- DT.plus(dt, carryOver * 12 * dir.sign, DateTimeUnit.Months)
   } yield (identityReset, newDateTime, s.copy(amount = 0))
 
   private[this] def stepOverDayOfWeek(prev: StepST, expr: DaysOfWeekNode): StepST = for {
-    (_, dt, s @ Step(carryOver, _)) <- stepNode(prev, expr)
-    newDateTime                     <- DT.plus(dt, carryOver, DateTimeUnit.Weeks)
+    (_, dt, s @ Step(carryOver, dir)) <- stepNode(prev, expr)
+    newDateTime                       <- DT.plus(dt, carryOver * dir.sign, DateTimeUnit.Weeks)
   } yield (identityReset, newDateTime, s.copy(amount = 0))
 
   object stepPerNode extends Poly2 {

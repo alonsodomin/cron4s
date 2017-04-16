@@ -17,13 +17,9 @@
 package cron4s.testkit.laws
 
 import cats.laws._
-import cats.kernel.laws._
-import cats.implicits._
 
-import cron4s.base.{Direction, Enumerated, Step}
+import cron4s.base.Enumerated
 import cron4s.syntax.enumerated._
-
-import org.scalacheck.Prop
 
 /**
   * Created by alonsodomin on 27/08/2016.
@@ -63,34 +59,6 @@ trait EnumeratedLaws[A] {
   def fromMaxToMinBackwards(a: A): IsEq[Option[(Int, Int)]] = {
     val expected = if (a.range.size == 1) None else Some(a.min -> 0)
     a.step(a.max, -(a.range.size - 1)) <-> expected
-  }
-
-  def backAndForth(a: A, from: Int, stepSize: Int): Prop = {
-    if (stepSize == 0) a.step(from, stepSize) ?== None
-    else {
-      val moved = a.step(from, stepSize).map(_._1)
-      val returned = moved.flatMap { from2 =>
-        a.step(from2, stepSize * -1).map(_._1)
-      }
-
-      val expected = moved.map { _ =>
-        if (stepSize == 0) from
-        else {
-          val idx = if (stepSize > 0) {
-            val i = a.range.lastIndexWhere(from >= _)
-            if (i == -1) a.range.size - 1
-            else i
-          } else {
-            val i = a.range.indexWhere(from <= _)
-            if (i == -1) 0
-            else i
-          }
-          a.range(idx)
-        }
-      }
-
-      returned ?== expected
-    }
   }
 
 }
