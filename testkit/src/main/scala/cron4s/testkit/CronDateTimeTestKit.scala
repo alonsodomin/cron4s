@@ -19,70 +19,52 @@ package cron4s.testkit
 import cats.{Eq, Show}
 import cats.implicits._
 
-import cron4s.CronField._
+import cron4s.Cron
 import cron4s.datetime.IsDateTime
-import cron4s.expr._
 
-import org.scalatest._
+import org.scalatest.FlatSpec
 
 /**
   * Created by alonsodomin on 29/08/2016.
   */
-abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show]
-  extends FlatSpec { this: DateTimeTestKitBase[DateTime] =>
+object CronDateTimeTestKit {
 
-  val onlyTuesdaysAt12 = CronExpr(
-    ConstNode[Second](0),
-    ConstNode[Minute](0),
-    ConstNode[Hour](12),
-    EachNode[DayOfMonth],
-    EachNode[Month],
-    ConstNode[DayOfWeek](1)
-  )
-  val onlySundays = CronExpr(
-    ConstNode[Second](0),
-    EachNode[Minute],
-    EachNode[Hour],
-    EachNode[DayOfMonth],
-    EachNode[Month],
-    ConstNode[DayOfWeek](6)
-  )
+  final val OnlyTuesdaysAt12     = Cron.unsafeParse("0 0 12 ? * 1")
+  final val EachMinutesOnSundays = Cron.unsafeParse("0 * * ? * 6")
 
   // https://github.com/alonsodomin/cron4s/issues/59
-  val betweenDayOfWeek = CronExpr(
-    ConstNode[Second](0),
-    ConstNode[Minute](0),
-    ConstNode[Hour](0),
-    EachNode[DayOfMonth],
-    EachNode[Month],
-    BetweenNode[DayOfWeek](ConstNode(1), ConstNode(3))
-  )
+  final val BetweenDayOfWeek = Cron.unsafeParse("0 0 0 ? * 1-3")
+  final val BetweenMonth     = Cron.unsafeParse("0 0 0 * 4-10 ?")
 
-  val betweenMonth = CronExpr(
-    ConstNode[Second](0),
-    ConstNode[Minute](0),
-    ConstNode[Hour](0),
-    EachNode[DayOfMonth],
-    BetweenNode[Month](ConstNode(4), ConstNode(10)),
-    EachNode[DayOfWeek]
-  )
+  // https://github.com/alonsodomin/cron4s/issues/56
+  final val Every10Minutes   = Cron.unsafeParse("* */10 * * * ?")
+
+}
+
+abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show]
+  extends FlatSpec { this: DateTimeTestKitBase[DateTime] =>
+  import CronDateTimeTestKit._
 
   lazy val samples = Seq(
   //("expr",           "from",                              "stepSize", "expected"),
-    (onlyTuesdaysAt12, createDateTime(0, 0, 0, 1, 8, 2016),          1, createDateTime(0, 0, 12, 2, 8, 2016)),
-    (onlySundays,      createDateTime(0, 0, 0, 1, 8, 2016),          1, createDateTime(0, 1, 0, 7, 8, 2016)),
-    (betweenDayOfWeek, createDateTime(0, 0, 2, 11, 3, 2016),         1, createDateTime(0, 0, 0, 15, 3, 2016)),
-    (betweenDayOfWeek, createDateTime(0, 0, 2, 7, 3, 2016),         -1, createDateTime(0, 0, 0, 3, 3, 2016)),
-    (betweenMonth,     createDateTime(0, 1, 1, 4, 11, 2016),         1, createDateTime(0, 0, 0, 5, 4, 2017))
+    (OnlyTuesdaysAt12,     createDateTime(0, 0, 0, 1, 8, 2016),          1, createDateTime(0, 0, 12, 2, 8, 2016)),
+    (EachMinutesOnSundays, createDateTime(0, 0, 0, 1, 8, 2016),          1, createDateTime(0, 0, 0, 7, 8, 2016)),
+    (BetweenDayOfWeek,     createDateTime(0, 0, 2, 11, 3, 2016),         1, createDateTime(0, 0, 0, 15, 3, 2016)),
+    (BetweenDayOfWeek,     createDateTime(0, 0, 2, 7, 3, 2016),         -1, createDateTime(0, 0, 0, 3, 3, 2016)),
+    (BetweenMonth,         createDateTime(0, 1, 1, 4, 11, 2016),         1, createDateTime(0, 0, 0, 1, 4, 2017)),
+    (Every10Minutes,       createDateTime(42, 39, 16, 18, 2, 2017),      1, createDateTime(0, 40, 16, 18, 2, 2017))
   )
 
   "Cron.step" should "match expected result" in {
     val test = Eq[DateTime]
-    for {
-      (expr, initial, stepSize, expected) <- samples
-    } {
-      val returnedDateTime = expr.step(initial, stepSize).get
-      assert(test.eqv(returnedDateTime, expected), s"${returnedDateTime.show} != ${expected.show}")
+
+    for ((expr, initial, stepSize, expected) <- samples) {
+      val Some(returnedDateTime) = expr.step(initial, stepSize)
+      val matchesExpected = test.eqv(returnedDateTime, expected)
+
+      assert(matchesExpected,
+        s"[${expr.show}]: (${initial.show}, $stepSize) => ${returnedDateTime.show} != ${expected.show}"
+      )
     }
   }
 

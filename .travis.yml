@@ -34,6 +34,7 @@ install:
   - gem update --system
   - gem install sass
   - gem install jekyll -v 3.2.1
+  - sudo apt-get install -y graphviz
 
 script:
   - scripts/travis-build.sh

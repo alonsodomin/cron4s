@@ -21,13 +21,23 @@ import cats.implicits._
 /**
   * Created by alonsodomin on 23/08/2016.
   */
+final case class Step private[cron4s] (amount: Int, direction: Direction) {
+  require(amount >= 0, "Step amount must be a positive integer")
 
-private[cron4s] sealed abstract class Direction(val sign: Int) {
+  def reverse: Step = copy(direction = direction.reverse)
+
+}
+
+object Step {
+  def apply(stepSize: Int): Step = new Step(Math.abs(stepSize), Direction.ofSign(stepSize))
+}
+
+sealed abstract class Direction(private[cron4s] val sign: Int) {
   def reverse: Direction
 }
-private[cron4s] object Direction {
+object Direction {
 
-  def of(step: Int): Direction = {
+  def ofSign(step: Int): Direction = {
     if (step >= 0) Forward
     else Backwards
   }
@@ -45,15 +55,12 @@ trait Enumerated[A] {
   def min(a: A): Int = range(a).min
   def max(a: A): Int = range(a).max
 
-  private[cron4s] def step0(
-      a: A, from: Int, stepSize: Int, direction: Direction
-  ): Option[(Int, Int)] = {
-    if (stepSize == Int.MinValue || stepSize == Int.MaxValue) {
-      None
-    } else {
+  def step(a: A, from: Int, step: Step): Option[(Int, Int)] = {
+    if (step.amount == Int.MinValue || step.amount == Int.MaxValue) None
+    else {
       val aRange = range(a)
 
-      def nearestNeighbourIndex = direction match {
+      def nearestNeighbourIndex = step.direction match {
         case Direction.Forward =>
           val idx = aRange.indexWhere(from < _)
           if (idx == -1) aRange.size
@@ -66,28 +73,34 @@ trait Enumerated[A] {
       def currentIdx = if (aRange.contains(from)) {
         aRange.indexOf(from)
       } else {
-        val correction = if (stepSize != 0) direction.reverse.sign else 0
+        val correction = if (step.amount != 0) step.direction.reverse.sign else 0
         nearestNeighbourIndex + correction
       }
 
-      val pointer = currentIdx + stepSize
+      val pointer = currentIdx + (step.amount * step.direction.sign)
       val index = {
         val mod = pointer % aRange.size
         if (mod < 0) aRange.size + mod
         else mod
       }
-      val offsetPointer = if (pointer < 0) {
+      val offset = if (pointer < 0) {
         pointer - (aRange.size - 1)
       } else {
         pointer
       }
 
-      (aRange(index), offsetPointer / aRange.size).some
+      val newValue = aRange(index)
+      val carryOver = offset / aRange.size
+
+      if (newValue != from || carryOver != 0) (newValue, carryOver).some
+      else none
     }
   }
 
-  def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] =
-    step0(a, from, stepSize, Direction.of(stepSize))
+  def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] = {
+    if (stepSize == Int.MinValue || stepSize == Int.MaxValue) None
+    else step(a, from, Step(stepSize))
+  }
 
   def next(a: A)(from: Int): Option[Int] = step(a)(from, 1).map(_._1)
   def prev(a: A)(from: Int): Option[Int] = step(a)(from, -1).map(_._1)

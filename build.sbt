@@ -13,6 +13,8 @@ crossScalaVersions in ThisBuild := Seq(scalaVersion.value, "2.11.8")
 
 lazy val botBuild = settingKey[Boolean]("Build by TravisCI instead of local dev environment")
 
+lazy val consoleImports = settingKey[Seq[String]]("Base imports in the console")
+
 val commonSettings = Def.settings(
   name := "cron4s",
   organization := "com.github.alonsodomin.cron4s",
@@ -34,7 +36,9 @@ val commonSettings = Def.settings(
     "-language:existentials"
   ),
   botBuild := scala.sys.env.get("TRAVIS").isDefined,
-  parallelExecution in Test := false
+  parallelExecution in Test := false,
+  consoleImports := Seq("cron4s._"),
+  initialCommands in console := consoleImports.value.map(s => s"import $s").mkString("\n") + "\n"
 ) ++ Licensing.settings
 
 lazy val commonJvmSettings = Seq(
@@ -56,6 +60,10 @@ lazy val commonJsSettings = Seq(
     s"-P:scalajs:mapSourceURI:$a->$g/"
   },
   jsEnv := PhantomJSEnv().value
+)
+
+lazy val consoleSettings = Seq(
+  consoleImports ++= Seq("java.time._", "cron4s.lib.javatime._")
 )
 
 lazy val noPublishSettings = Seq(
@@ -190,8 +198,9 @@ lazy val cron4sJVM = (project in file(".jvm")).
     name := "cron4s",
     moduleName := "cron4s"
   ).
-  settings(commonSettings: _*).
-  settings(commonJvmSettings: _*).
+  settings(commonSettings).
+  settings(commonJvmSettings).
+  settings(consoleSettings).
   settings(publishSettings).
   aggregate(coreJVM, joda, testkitJVM, testsJVM).
   dependsOn(coreJVM, joda, testkitJVM, testsJVM % Test)
@@ -212,12 +221,13 @@ lazy val core = (crossProject in file("core")).
     name := "core",
     moduleName := "cron4s-core"
   ).
-  settings(commonSettings: _*).
-  settings(publishSettings: _*).
-  settings(Dependencies.core: _*).
-  jsSettings(commonJsSettings: _*).
-  jsSettings(Dependencies.coreJS: _*).
+  settings(commonSettings).
+  settings(publishSettings).
+  settings(Dependencies.core).
+  jsSettings(commonJsSettings).
+  jsSettings(Dependencies.coreJS).
   jvmSettings(commonJvmSettings).
+  jvmSettings(consoleSettings).
   jvmSettings(Dependencies.coreJVM: _*).
   jvmSettings(mimaSettings("core"): _*)
 
@@ -230,11 +240,12 @@ lazy val testkit = (crossProject.crossType(CrossType.Pure) in file("testkit")).
     name := "testkit",
     moduleName := "cron4s-testkit"
   ).
-  settings(commonSettings: _*).
-  settings(publishSettings: _*).
-  settings(Dependencies.testkit: _*).
-  jsSettings(commonJsSettings: _*).
+  settings(commonSettings).
+  settings(publishSettings).
+  settings(Dependencies.testkit).
+  jsSettings(commonJsSettings).
   jvmSettings(commonJvmSettings).
+  jvmSettings(consoleSettings).
   jvmSettings(mimaSettings("testkit"): _*).
   dependsOn(core)
 
@@ -247,13 +258,13 @@ lazy val tests = (crossProject in file("tests")).
     name := "tests",
     moduleName := "cron4s-tests"
   ).
-  settings(commonSettings: _*).
-  settings(noPublishSettings: _*).
-  settings(Dependencies.tests: _*).
-  jsSettings(commonJsSettings: _*).
-  jsSettings(Dependencies.testsJS: _*).
+  settings(commonSettings).
+  settings(noPublishSettings).
+  settings(Dependencies.tests).
+  jsSettings(commonJsSettings).
+  jsSettings(Dependencies.testsJS).
   jvmSettings(commonJvmSettings).
-  jvmSettings(Dependencies.testsJVM: _*).
+  jvmSettings(Dependencies.testsJVM).
   dependsOn(testkit % Test)
 
 lazy val testsJS = tests.js
@@ -276,7 +287,8 @@ lazy val joda = (project in file("time-lib/joda")).
   enablePlugins(AutomateHeaderPlugin).
   settings(
     name := "joda",
-    moduleName := "cron4s-joda"
+    moduleName := "cron4s-joda",
+    consoleImports ++= Seq("org.joda.time._", "cron4s.lib.joda._")
   ).
   settings(commonSettings).
   settings(commonJvmSettings).

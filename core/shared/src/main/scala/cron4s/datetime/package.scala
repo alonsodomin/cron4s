@@ -17,13 +17,18 @@
 package cron4s
 
 import cron4s.expr.{CronExpr, DateCronExpr, TimeCronExpr}
+
 import shapeless._
 
 /**
   * Created by alonsodomin on 24/01/2017.
   */
 package object datetime {
+  import CronField._
 
   private[datetime] type AnyCron = CronExpr :+: TimeCronExpr :+: DateCronExpr :+: CNil
+
+  private[datetime] type FieldSeq = Second :: Minute :: Hour :: DayOfMonth :: Month :: DayOfWeek :: HNil
+  val FieldSeq: FieldSeq = Second :: Minute :: Hour :: DayOfMonth :: Month :: DayOfWeek :: HNil
 
 }
