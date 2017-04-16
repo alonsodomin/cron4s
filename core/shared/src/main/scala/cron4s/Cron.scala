@@ -53,9 +53,10 @@ object Cron {
       case Parsed.Success(expr, _) =>
         Right(expr)
 
-      case err @ Parsed.Failure(_, idx, _) =>
-        val error = ParseError(err)
-        Left(ParseFailed(error.failure.msg, idx))
+      case Parsed.Failure(_, idx, extra) =>
+        val input = extra.input
+        val found = input.repr.literalize(input.slice(idx, idx + 20))
+        Left(ParseFailed(extra.traced.expected, found, idx))
     }
   }
 
