@@ -134,8 +134,14 @@ package object parser extends NodeConversions {
   }
 
   val cron: Parser[CronExpr] = P(
-    Start ~ of(seconds) ~ " " ~/ of(minutes) ~ " " ~/ of(hours) ~ " " ~/
-      withAny(daysOfMonth) ~ " " ~/ of(months) ~ " " ~/ withAny(daysOfWeek) ~ End
+    Start ~
+      (of(seconds) ~ " ").opaque("0-59") ~/
+      (of(minutes) ~ " ").opaque("0-59") ~/
+      (of(hours) ~ " ").opaque("0-23") ~/
+      (withAny(daysOfMonth) ~ " ").opaque("1-31") ~/
+      (of(months) ~ " ").opaque("<month>") ~/
+      withAny(daysOfWeek).opaque("<day-of-week>") ~/
+    End
   ).map { case (sec, min, hour, day, month, weekDay) =>
     CronExpr(sec, min, hour, day, month, weekDay)
   }
