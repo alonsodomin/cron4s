@@ -121,6 +121,12 @@
                           DateTimeNode
                         </a>
                       </li><li class="current-entities indented2">
+                        <a class="object" href="DateTimeUnit$.html" title=""></a>
+                        <a class="trait" href="DateTimeUnit.html" title="Created by alonsodomin on 09/04/2017."></a>
+                        <a href="DateTimeUnit.html" title="Created by alonsodomin on 09/04/2017.">
+                          DateTimeUnit
+                        </a>
+                      </li><li class="current-entities indented2">
                         <a class="object" href="IsDateTime$.html" title=""></a>
                         <a class="trait" href="IsDateTime.html" title="Bridge adapter between specific date-time libraries and expression support
 "></a>
@@ -223,10 +229,10 @@
 
         <div class="values members">
               <h3>Abstract Value Members</h3>
-              <ol><li name="cron4s.datetime.DateTimeCron#field" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="field[F&lt;:cron4s.CronField](expr:T)(implicitunit:cron4s.CronUnit[F]):Option[cron4s.expr.FieldNode[F]]"></a><a id="field[F&lt;:CronField](T)(CronUnit[F]):Option[FieldNode[F]]"></a>
+              <ol><li name="cron4s.datetime.DateTimeCron#matches" visbl="prt" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="matches[DateTime](expr:T,dt:cron4s.datetime.IsDateTime[DateTime])(implicitM:cats.MonoidK[cron4s.base.Predicate]):cron4s.base.Predicate[DateTime]"></a><a id="matches[DateTime](T,IsDateTime[DateTime])(MonoidK[Predicate]):Predicate[DateTime]"></a>
       <span class="permalink">
-      <a href="../../cron4s/datetime/DateTimeCron.html#field[F&lt;:cron4s.CronField](expr:T)(implicitunit:cron4s.CronUnit[F]):Option[cron4s.expr.FieldNode[F]]" title="Permalink">
+      <a href="../../cron4s/datetime/DateTimeCron.html#matches[DateTime](expr:T,dt:cron4s.datetime.IsDateTime[DateTime])(implicitM:cats.MonoidK[cron4s.base.Predicate]):cron4s.base.Predicate[DateTime]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -235,23 +241,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">field</span><span class="tparams">[<span name="F">F &lt;: <a href="../CronField.html" class="extype" name="cron4s.CronField">CronField</a></span>]</span><span class="params">(<span name="expr">expr: <span class="extype" name="cron4s.datetime.DateTimeCron.T">T</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="unit">unit: <a href="../CronUnit.html" class="extype" name="cron4s.CronUnit">CronUnit</a>[<span class="extype" name="cron4s.datetime.DateTimeCron.field.F">F</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="../expr/FieldNode.html" class="extype" name="cron4s.expr.FieldNode">FieldNode</a>[<span class="extype" name="cron4s.datetime.DateTimeCron.field.F">F</span>]]</span>
-      </span>
-      
-      
-    </li><li name="cron4s.datetime.DateTimeCron#matches" visbl="prt" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="matches[DateTime](expr:T,dt:cron4s.datetime.IsDateTime[DateTime])(implicitM:scalaz.PlusEmpty[cron4s.base.Predicate]):cron4s.base.Predicate[DateTime]"></a><a id="matches[DateTime](T,IsDateTime[DateTime])(PlusEmpty[Predicate]):Predicate[DateTime]"></a>
-      <span class="permalink">
-      <a href="../../cron4s/datetime/DateTimeCron.html#matches[DateTime](expr:T,dt:cron4s.datetime.IsDateTime[DateTime])(implicitM:scalaz.PlusEmpty[cron4s.base.Predicate]):cron4s.base.Predicate[DateTime]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">matches</span><span class="tparams">[<span name="DateTime">DateTime</span>]</span><span class="params">(<span name="expr">expr: <span class="extype" name="cron4s.datetime.DateTimeCron.T">T</span></span>, <span name="dt">dt: <a href="IsDateTime.html" class="extype" name="cron4s.datetime.IsDateTime">IsDateTime</a>[<span class="extype" name="cron4s.datetime.DateTimeCron.matches.DateTime">DateTime</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="M">M: <span class="extype" name="scalaz.PlusEmpty">PlusEmpty</span>[<a href="../base/Predicate.html" class="extype" name="cron4s.base.Predicate">Predicate</a>]</span>)</span><span class="result">: <a href="../base/Predicate.html" class="extype" name="cron4s.base.Predicate">Predicate</a>[<span class="extype" name="cron4s.datetime.DateTimeCron.matches.DateTime">DateTime</span>]</span>
+        <span class="name">matches</span><span class="tparams">[<span name="DateTime">DateTime</span>]</span><span class="params">(<span name="expr">expr: <span class="extype" name="cron4s.datetime.DateTimeCron.T">T</span></span>, <span name="dt">dt: <a href="IsDateTime.html" class="extype" name="cron4s.datetime.IsDateTime">IsDateTime</a>[<span class="extype" name="cron4s.datetime.DateTimeCron.matches.DateTime">DateTime</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="M">M: <span class="extype" name="cats.MonoidK">MonoidK</span>[<a href="../base/Predicate.html" class="extype" name="cron4s.base.Predicate">Predicate</a>]</span>)</span><span class="result">: <a href="../base/Predicate.html" class="extype" name="cron4s.base.Predicate">Predicate</a>[<span class="extype" name="cron4s.datetime.DateTimeCron.matches.DateTime">DateTime</span>]</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
@@ -459,6 +449,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="cron4s.datetime.DateTimeCron#field" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="field[F&lt;:cron4s.CronField](expr:T)(implicitselector:cron4s.expr.FieldSelector[T,F]):selector.Out[F]"></a><a id="field[F&lt;:CronField](T)(FieldSelector[T,F]):Out[F]"></a>
+      <span class="permalink">
+      <a href="../../cron4s/datetime/DateTimeCron.html#field[F&lt;:cron4s.CronField](expr:T)(implicitselector:cron4s.expr.FieldSelector[T,F]):selector.Out[F]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">field</span><span class="tparams">[<span name="F">F &lt;: <a href="../CronField.html" class="extype" name="cron4s.CronField">CronField</a></span>]</span><span class="params">(<span name="expr">expr: <span class="extype" name="cron4s.datetime.DateTimeCron.T">T</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="selector">selector: <a href="../expr/FieldSelector.html" class="extype" name="cron4s.expr.FieldSelector">FieldSelector</a>[<span class="extype" name="cron4s.datetime.DateTimeCron.T">T</span>, <span class="extype" name="cron4s.datetime.DateTimeCron.field.F">F</span>]</span>)</span><span class="result">: <a href="../expr/FieldSelector.html#Out[X&lt;:cron4s.CronField]" class="extmbr" name="cron4s.expr.FieldSelector.Out">Out</a>[<span class="extype" name="cron4s.datetime.DateTimeCron.field.F">F</span>]</span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">

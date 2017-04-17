@@ -184,10 +184,8 @@
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="cron4s">cron4s</a></dd></dl></div>
     </li><li class="current-entities indented1">
                         <span class="separator"></span>
-                        <a class="object" href="Cron$.html" title="Entry point for the CRON parsing operation
-"></a>
-                        <a href="Cron$.html" title="Entry point for the CRON parsing operation
-">
+                        <a class="object" href="Cron$.html" title="Created by domingueza on 10/04/2017."></a>
+                        <a href="Cron$.html" title="Created by domingueza on 10/04/2017.">
                           Cron
                         </a>
                       </li><li class="current-entities indented1">
@@ -207,16 +205,28 @@ at a given Cron Field.">
                           CronUnit
                         </a>
                       </li><li class="current-entities indented1">
-                        <span class="separator"></span>
-                        <a class="class" href="FieldError.html" title=""></a>
-                        <a href="FieldError.html" title="">
-                          FieldError
+                        <a class="object" href="Error$.html" title=""></a>
+                        <a class="class" href="Error.html" title="Created by alonsodomin on 30/08/2016."></a>
+                        <a href="Error.html" title="Created by alonsodomin on 30/08/2016.">
+                          Error
                         </a>
                       </li><li class="current-entities indented1">
                         <span class="separator"></span>
-                        <a class="trait" href="InvalidCron.html" title="Created by alonsodomin on 30/08/2016."></a>
-                        <a href="InvalidCron.html" title="Created by alonsodomin on 30/08/2016.">
+                        <a class="class" href="InvalidCron.html" title=""></a>
+                        <a href="InvalidCron.html" title="">
                           InvalidCron
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <a class="object" href="InvalidField$.html" title=""></a>
+                        <a class="class" href="InvalidField.html" title=""></a>
+                        <a href="InvalidField.html" title="">
+                          InvalidField
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <a class="object" href="InvalidFieldCombination$.html" title=""></a>
+                        <a class="class" href="InvalidFieldCombination.html" title=""></a>
+                        <a href="InvalidFieldCombination.html" title="">
+                          InvalidFieldCombination
                         </a>
                       </li><li class="current-entities indented1">
                         <span class="separator"></span>
@@ -225,8 +235,8 @@ at a given Cron Field.">
                           ParseFailed
                         </a>
                       </li><li class="current-entities indented1">
-                        <span class="separator"></span>
-                        <a class="class" href="" title=""></a>
+                        <a class="object" href="ValidationError$.html" title=""></a>
+                        <a class="trait" href="" title=""></a>
                         <a href="" title="">
                           ValidationError
                         </a>
@@ -235,25 +245,27 @@ at a given Cron Field.">
             </div>
           </div>
           <div id="content">
-            <body class="class type">
+            <body class="trait type">
       <div id="definition">
-        <div class="big-circle class">c</div>
+        <a href="ValidationError$.html" title="See companion object"><div class="big-circle trait-companion-object">t</div></a>
         <p id="owner"><a href="index.html" class="extype" name="cron4s">cron4s</a></p>
-        <h1>ValidationError<span class="permalink">
+        <h1><a href="ValidationError$.html" title="See companion object">ValidationError</a><span class="permalink">
       <a href="../cron4s/ValidationError.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
-        <h3><span class="morelinks"></span></h3>
+        <h3><span class="morelinks"><div>
+            Companion <a href="ValidationError$.html" title="See companion object">object ValidationError</a>
+          </div></span></h3>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">case class</span>
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">ValidationError</span><span class="params">(<span name="fields">fields: <span class="extype" name="scalaz.NonEmptyList">NonEmptyList</span>[<a href="FieldError.html" class="extype" name="cron4s.FieldError">FieldError</a>]</span>)</span><span class="result"> extends <a href="InvalidCron.html" class="extype" name="cron4s.InvalidCron">InvalidCron</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">ValidationError</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
 
@@ -262,12 +274,17 @@ at a given Cron Field.">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <a href="InvalidCron.html" class="extype" name="cron4s.InvalidCron">InvalidCron</a>, <span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
-        </div><div class="toggleContainer block diagram-container" id="inheritance-diagram-container">
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div><div class="toggleContainer block">
+            <span class="toggle">
+              Known Subclasses
+            </span>
+            <div class="subClasses hiddenContent"><a href="InvalidField.html" class="extype" name="cron4s.InvalidField">InvalidField</a>, <a href="InvalidFieldCombination.html" class="extype" name="cron4s.InvalidFieldCombination">InvalidFieldCombination</a></div>
+          </div><div class="toggleContainer block diagram-container" id="inheritance-diagram-container">
                 <span class="toggle diagram-link">
                   Type Hierarchy
                 </span>
-                <div class="diagram" id="inheritance-diagram"><svg class="class-diagram" id="graph1" viewBox="0.00 0.00 281.50 118.00" height="118pt" width="282pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 114)" class="graph" id="page0,1_graph0"><polygon points="-4,4 -4,-114 277.5,-114 277.5,4 -4,4" stroke="transparent" fill="#ffffff"></polygon><g class="cluster" id="clust1"></g><g class="cluster" id="clust2"></g><!-- node0 --><g class="node this class" id="graph1_0"><g id="a_this class|graph1_0"><a xlink:title="cron4s.ValidationError (this class)" xlink:href="#inheritance-diagram"><path d="M175.6667,-49C175.6667,-49 97.3333,-49 97.3333,-49 93.1667,-49 89,-44.8333 89,-40.6667 89,-40.6667 89,-32.3333 89,-32.3333 89,-28.1667 93.1667,-24 97.3333,-24 97.3333,-24 175.6667,-24 175.6667,-24 179.8333,-24 184,-28.1667 184,-32.3333 184,-32.3333 184,-40.6667 184,-40.6667 184,-44.8333 179.8333,-49 175.6667,-49" stroke="#418565" fill="#418565"></path><image xlink:href="../lib/class_diagram.png" y="-43.5" x="99.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-33.6" x="120.2266" text-anchor="start">ValidationError</text></a></g></g><!-- node1 --><g class="node trait" id="graph1_1"><g id="a_trait|graph1_1"><a xlink:title="cron4s.InvalidCron" xlink:href="InvalidCron.html#inheritance-diagram"><path d="M74.6667,-110C74.6667,-110 8.3333,-110 8.3333,-110 4.1667,-110 0,-105.8333 0,-101.6667 0,-101.6667 0,-93.3333 0,-93.3333 0,-89.1667 4.1667,-85 8.3333,-85 8.3333,-85 74.6667,-85 74.6667,-85 78.8333,-85 83,-89.1667 83,-93.3333 83,-93.3333 83,-101.6667 83,-101.6667 83,-105.8333 78.8333,-110 74.6667,-110" stroke="#2e6d82" fill="#2e6d82"></path><image xlink:href="../lib/trait_diagram.png" y="-104.5" x="10.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-94.6" x="31.1563" text-anchor="start">InvalidCron</text></a></g></g><!-- node1&#45;&gt;node0 --><g class="edge inheritance" id="graph1_1_0"><g id="a_inheritance|graph1_1_0"><a xlink:title="ValidationError is a subtype of InvalidCron"><path d="M67.1725,-81.0156C82.7992,-70.9816 102.4536,-58.3614 116.8412,-49.123" stroke="#d4d4d4" fill="none"></path><polygon points="65.7506,-79.0169 61.1841,-84.8608 68.3981,-83.1401 65.7506,-79.0169" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node2 --><g class="node trait" id="graph1_2"><g id="a_trait|graph1_2"><a xlink:title="scala.Product"><path d="M163.1667,-110C163.1667,-110 109.8333,-110 109.8333,-110 105.6667,-110 101.5,-105.8333 101.5,-101.6667 101.5,-101.6667 101.5,-93.3333 101.5,-93.3333 101.5,-89.1667 105.6667,-85 109.8333,-85 109.8333,-85 163.1667,-85 163.1667,-85 167.3333,-85 171.5,-89.1667 171.5,-93.3333 171.5,-93.3333 171.5,-101.6667 171.5,-101.6667 171.5,-105.8333 167.3333,-110 163.1667,-110" stroke="#2e6d82" fill="#2e6d82"></path><image xlink:href="../lib/trait_diagram.png" y="-104.5" x="111.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-94.6" x="132.1035" text-anchor="start">Product</text></a></g></g><!-- node2&#45;&gt;node0 --><g class="edge inheritance" id="graph1_2_0"><g id="a_inheritance|graph1_2_0"><a xlink:title="ValidationError is a subtype of Product"><path d="M136.5,-77.7386C136.5,-68.3393 136.5,-57.3803 136.5,-49.123" stroke="#d4d4d4" fill="none"></path><polygon points="134.0501,-77.8607 136.5,-84.8608 138.9501,-77.8608 134.0501,-77.8607" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node3 --><g class="node trait" id="graph1_3"><g id="a_trait|graph1_3"><a xlink:title="scala.Serializable"><path d="M265.1667,-110C265.1667,-110 197.8333,-110 197.8333,-110 193.6667,-110 189.5,-105.8333 189.5,-101.6667 189.5,-101.6667 189.5,-93.3333 189.5,-93.3333 189.5,-89.1667 193.6667,-85 197.8333,-85 197.8333,-85 265.1667,-85 265.1667,-85 269.3333,-85 273.5,-89.1667 273.5,-93.3333 273.5,-93.3333 273.5,-101.6667 273.5,-101.6667 273.5,-105.8333 269.3333,-110 265.1667,-110" stroke="#2e6d82" fill="#2e6d82"></path><image xlink:href="../lib/trait_diagram.png" y="-104.5" x="199.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-94.6" x="220.2109" text-anchor="start">Serializable</text></a></g></g><!-- node3&#45;&gt;node0 --><g class="edge inheritance" id="graph1_3_0"><g id="a_inheritance|graph1_3_0"><a xlink:title="ValidationError is a subtype of Serializable"><path d="M205.8275,-81.0156C190.2008,-70.9816 170.5464,-58.3614 156.1588,-49.123" stroke="#d4d4d4" fill="none"></path><polygon points="204.6019,-83.1401 211.8159,-84.8608 207.2494,-79.0169 204.6019,-83.1401" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
+                <div class="diagram" id="inheritance-diagram"><svg class="class-diagram" id="graph1" viewBox="0.00 0.00 237.50 155.00" height="155pt" width="238pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 151)" class="graph" id="page0,1_graph0"><polygon points="-4,4 -4,-151 233.5,-151 233.5,4 -4,4" stroke="transparent" fill="#ffffff"></polygon><g class="cluster" id="clust1"></g><g class="cluster" id="clust2"></g><!-- node0 --><g class="node this trait" id="graph1_0"><g id="a_this trait|graph1_0"><a xlink:title="cron4s.ValidationError (this trait)" xlink:href="#inheritance-diagram"><path d="M142.6667,-86C142.6667,-86 64.3333,-86 64.3333,-86 60.1667,-86 56,-81.8333 56,-77.6667 56,-77.6667 56,-69.3333 56,-69.3333 56,-65.1667 60.1667,-61 64.3333,-61 64.3333,-61 142.6667,-61 142.6667,-61 146.8333,-61 151,-65.1667 151,-69.3333 151,-69.3333 151,-77.6667 151,-77.6667 151,-81.8333 146.8333,-86 142.6667,-86" stroke="#2e6d82" fill="#2e6d82"></path><image xlink:href="../lib/trait_diagram.png" y="-80.5" x="66.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-70.6" x="87.2266" text-anchor="start">ValidationError</text></a></g></g><!-- node1 --><g class="node class" id="graph1_1"><g id="a_class|graph1_1"><a xlink:title="cron4s.InvalidField" xlink:href="InvalidField.html#inheritance-diagram"><path d="M74.6667,-25C74.6667,-25 8.3333,-25 8.3333,-25 4.1667,-25 0,-20.8333 0,-16.6667 0,-16.6667 0,-8.3333 0,-8.3333 0,-4.1667 4.1667,0 8.3333,0 8.3333,0 74.6667,0 74.6667,0 78.8333,0 83,-4.1667 83,-8.3333 83,-8.3333 83,-16.6667 83,-16.6667 83,-20.8333 78.8333,-25 74.6667,-25" stroke="#418565" fill="#418565"></path><image xlink:href="../lib/class_diagram.png" y="-19.5" x="10.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-9.6" x="31.1563" text-anchor="start">InvalidField</text></a></g></g><!-- node0&#45;&gt;node1 --><g class="edge inheritance" id="graph1_0_1"><g id="a_inheritance|graph1_0_1"><a xlink:title="InvalidField is a subtype of ValidationError"><path d="M85.6527,-55.9406C75.643,-46.0923 63.3874,-34.0343 54.33,-25.123" stroke="#d4d4d4" fill="none"></path><polygon points="83.9454,-57.6978 90.6536,-60.8608 87.382,-54.2049 83.9454,-57.6978" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node2 --><g class="node class" id="graph1_2"><g id="a_class|graph1_2"><a xlink:title="cron4s.InvalidFieldCombination" xlink:href="InvalidFieldCombination.html#inheritance-diagram"><path d="M221.1667,-25C221.1667,-25 109.8333,-25 109.8333,-25 105.6667,-25 101.5,-20.8333 101.5,-16.6667 101.5,-16.6667 101.5,-8.3333 101.5,-8.3333 101.5,-4.1667 105.6667,0 109.8333,0 109.8333,0 221.1667,0 221.1667,0 225.3333,0 229.5,-4.1667 229.5,-8.3333 229.5,-8.3333 229.5,-16.6667 229.5,-16.6667 229.5,-20.8333 225.3333,-25 221.1667,-25" stroke="#418565" fill="#418565"></path><image xlink:href="../lib/class_diagram.png" y="-19.5" x="111.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-9.6" x="132.1992" text-anchor="start">InvalidFieldCombination</text></a></g></g><!-- node0&#45;&gt;node2 --><g class="edge inheritance" id="graph1_0_2"><g id="a_inheritance|graph1_0_2"><a xlink:title="InvalidFieldCombination is a subtype of ValidationError"><path d="M121.3473,-55.9406C131.357,-46.0923 143.6126,-34.0343 152.67,-25.123" stroke="#d4d4d4" fill="none"></path><polygon points="119.618,-54.2049 116.3464,-60.8608 123.0546,-57.6978 119.618,-54.2049" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node3 --><g class="node class" id="graph1_3"><g id="a_class|graph1_3"><a xlink:title="scala.AnyRef"><path d="M129.6667,-147C129.6667,-147 77.3333,-147 77.3333,-147 73.1667,-147 69,-142.8333 69,-138.6667 69,-138.6667 69,-130.3333 69,-130.3333 69,-126.1667 73.1667,-122 77.3333,-122 77.3333,-122 129.6667,-122 129.6667,-122 133.8333,-122 138,-126.1667 138,-130.3333 138,-130.3333 138,-138.6667 138,-138.6667 138,-142.8333 133.8333,-147 129.6667,-147" stroke="#418565" fill="#418565"></path><image xlink:href="../lib/class_diagram.png" y="-141.5" x="79.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-131.6" x="100.2715" text-anchor="start">AnyRef</text></a></g></g><!-- node3&#45;&gt;node0 --><g class="edge inheritance" id="graph1_3_0"><g id="a_inheritance|graph1_3_0"><a xlink:title="ValidationError is a subtype of AnyRef"><path d="M103.5,-114.7386C103.5,-105.3393 103.5,-94.3803 103.5,-86.123" stroke="#d4d4d4" fill="none"></path><polygon points="101.0501,-114.8607 103.5,-121.8608 105.9501,-114.8608 101.0501,-114.8607" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
                 <div id="diagram-controls" class="hiddenContent">
                   <button id="diagram-zoom-out" class="diagram-btn"><i class="material-icons"></i></button>
                   <button id="diagram-zoom-in" class="diagram-btn"><i class="material-icons"></i></button>
@@ -298,7 +315,7 @@ at a given Cron Field.">
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="cron4s.ValidationError"><span>ValidationError</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="cron4s.InvalidCron"><span>InvalidCron</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="cron4s.ValidationError"><span>ValidationError</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -316,26 +333,7 @@ at a given Cron Field.">
 
       <div id="template">
         <div id="allMembers">
-        <div id="constructors" class="members">
-              <h3>Instance Constructors</h3>
-              <ol><li name="cron4s.ValidationError#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(fields:scalaz.NonEmptyList[cron4s.FieldError]):cron4s.ValidationError"></a><a id="&lt;init&gt;:ValidationError"></a>
-      <span class="permalink">
-      <a href="../cron4s/ValidationError.html#&lt;init&gt;(fields:scalaz.NonEmptyList[cron4s.FieldError]):cron4s.ValidationError" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
-      </span>
-      <span class="symbol">
-        <span class="name">ValidationError</span><span class="params">(<span name="fields">fields: <span class="extype" name="scalaz.NonEmptyList">NonEmptyList</span>[<a href="FieldError.html" class="extype" name="cron4s.FieldError">FieldError</a>]</span>)</span>
-      </span>
-      
-      
-    </li></ol>
-            </div>
+        
 
         
 
@@ -446,22 +444,22 @@ at a given Cron Field.">
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="cron4s.ValidationError#fields" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="fields:scalaz.NonEmptyList[cron4s.FieldError]"></a><a id="fields:NonEmptyList[FieldError]"></a>
+    </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../cron4s/ValidationError.html#fields:scalaz.NonEmptyList[cron4s.FieldError]" title="Permalink">
+      <a href="../cron4s/ValidationError.html#equals(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fields</span><span class="result">: <span class="extype" name="scalaz.NonEmptyList">NonEmptyList</span>[<a href="FieldError.html" class="extype" name="cron4s.FieldError">FieldError</a>]</span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       
-      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
@@ -497,6 +495,22 @@ at a given Cron Field.">
       </span>
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <span class="permalink">
+      <a href="../cron4s/ValidationError.html#hashCode():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -580,6 +594,22 @@ at a given Cron Field.">
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <span class="permalink">
+      <a href="../cron4s/ValidationError.html#toString():String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
@@ -656,17 +686,7 @@ at a given Cron Field.">
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.Product">
-              <h3>Inherited from <span class="extype" name="scala.Product">Product</span></h3>
-            </div><div class="parent" name="scala.Equals">
-              <h3>Inherited from <span class="extype" name="scala.Equals">Equals</span></h3>
-            </div><div class="parent" name="cron4s.InvalidCron">
-              <h3>Inherited from <a href="InvalidCron.html" class="extype" name="cron4s.InvalidCron">InvalidCron</a></h3>
-            </div><div class="parent" name="scala.Serializable">
-              <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
-            </div><div class="parent" name="java.io.Serializable">
-              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
-            </div><div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>

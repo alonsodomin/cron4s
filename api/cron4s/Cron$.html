@@ -184,10 +184,8 @@
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="cron4s">cron4s</a></dd></dl></div>
     </li><li class="current-entities indented1">
                         <span class="separator"></span>
-                        <a class="object" href="" title="Entry point for the CRON parsing operation
-"></a>
-                        <a href="" title="Entry point for the CRON parsing operation
-">
+                        <a class="object" href="" title="Created by domingueza on 10/04/2017."></a>
+                        <a href="" title="Created by domingueza on 10/04/2017.">
                           Cron
                         </a>
                       </li><li class="current-entities indented1">
@@ -207,16 +205,28 @@ at a given Cron Field.">
                           CronUnit
                         </a>
                       </li><li class="current-entities indented1">
-                        <span class="separator"></span>
-                        <a class="class" href="FieldError.html" title=""></a>
-                        <a href="FieldError.html" title="">
-                          FieldError
+                        <a class="object" href="Error$.html" title=""></a>
+                        <a class="class" href="Error.html" title="Created by alonsodomin on 30/08/2016."></a>
+                        <a href="Error.html" title="Created by alonsodomin on 30/08/2016.">
+                          Error
                         </a>
                       </li><li class="current-entities indented1">
                         <span class="separator"></span>
-                        <a class="trait" href="InvalidCron.html" title="Created by alonsodomin on 30/08/2016."></a>
-                        <a href="InvalidCron.html" title="Created by alonsodomin on 30/08/2016.">
+                        <a class="class" href="InvalidCron.html" title=""></a>
+                        <a href="InvalidCron.html" title="">
                           InvalidCron
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <a class="object" href="InvalidField$.html" title=""></a>
+                        <a class="class" href="InvalidField.html" title=""></a>
+                        <a href="InvalidField.html" title="">
+                          InvalidField
+                        </a>
+                      </li><li class="current-entities indented1">
+                        <a class="object" href="InvalidFieldCombination$.html" title=""></a>
+                        <a class="class" href="InvalidFieldCombination.html" title=""></a>
+                        <a href="InvalidFieldCombination.html" title="">
+                          InvalidFieldCombination
                         </a>
                       </li><li class="current-entities indented1">
                         <span class="separator"></span>
@@ -225,8 +235,8 @@ at a given Cron Field.">
                           ParseFailed
                         </a>
                       </li><li class="current-entities indented1">
-                        <span class="separator"></span>
-                        <a class="class" href="ValidationError.html" title=""></a>
+                        <a class="object" href="ValidationError$.html" title=""></a>
+                        <a class="trait" href="ValidationError.html" title=""></a>
                         <a href="ValidationError.html" title="">
                           ValidationError
                         </a>
@@ -258,8 +268,14 @@ at a given Cron Field.">
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Entry point for the CRON parsing operation
-</p></div><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/alonsodomin/cron4s/tree/master/core/shared/src/main/scala/cron4s/Cron.scala" target="_blank">Cron.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Created by domingueza on 10/04/2017.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@JSExportTopLevel</span><span class="args">(<span>
+      
+      <span class="symbol">&quot;cron4s.Cron&quot;</span>
+    </span>)</span>
+              
+        </dd><dt>Source</dt><dd><a href="https://github.com/alonsodomin/cron4s/tree/master/core/shared/src/main/scala/cron4s/Cron.scala" target="_blank">Cron.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -365,9 +381,9 @@ at a given Cron Field.">
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="cron4s.Cron#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="apply(e:String):Either[cron4s.InvalidCron,cron4s.expr.CronExpr]"></a><a id="apply(String):Either[InvalidCron,CronExpr]"></a>
+      <a id="apply(e:String):Either[cron4s.Error,cron4s.expr.CronExpr]"></a><a id="apply(String):Either[Error,CronExpr]"></a>
       <span class="permalink">
-      <a href="../cron4s/Cron$.html#apply(e:String):Either[cron4s.InvalidCron,cron4s.expr.CronExpr]" title="Permalink">
+      <a href="../cron4s/Cron$.html#apply(e:String):Either[cron4s.Error,cron4s.expr.CronExpr]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -376,7 +392,7 @@ at a given Cron Field.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="e">e: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Either">Either</span>[<a href="InvalidCron.html" class="extype" name="cron4s.InvalidCron">InvalidCron</a>, <a href="expr/CronExpr.html" class="extype" name="cron4s.expr.CronExpr">CronExpr</a>]</span>
+        <span class="name">apply</span><span class="params">(<span name="e">e: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Either">Either</span>[<a href="Error.html" class="extype" name="cron4s.Error">Error</a>, <a href="expr/CronExpr.html" class="extype" name="cron4s.expr.CronExpr">CronExpr</a>]</span>
       </span>
       
       
@@ -568,6 +584,22 @@ at a given Cron Field.">
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="cron4s.Cron#parse" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="parse(e:String):Either[cron4s.Error,cron4s.expr.CronExpr]"></a><a id="parse(String):Either[Error,CronExpr]"></a>
+      <span class="permalink">
+      <a href="../cron4s/Cron$.html#parse(e:String):Either[cron4s.Error,cron4s.expr.CronExpr]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">parse</span><span class="params">(<span name="e">e: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Either">Either</span>[<a href="Error.html" class="extype" name="cron4s.Error">Error</a>, <a href="expr/CronExpr.html" class="extype" name="cron4s.expr.CronExpr">CronExpr</a>]</span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -600,6 +632,38 @@ at a given Cron Field.">
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="cron4s.Cron#tryParse" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="tryParse(e:String):scala.util.Try[cron4s.expr.CronExpr]"></a><a id="tryParse(String):Try[CronExpr]"></a>
+      <span class="permalink">
+      <a href="../cron4s/Cron$.html#tryParse(e:String):scala.util.Try[cron4s.expr.CronExpr]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tryParse</span><span class="params">(<span name="e">e: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="expr/CronExpr.html" class="extype" name="cron4s.expr.CronExpr">CronExpr</a>]</span>
+      </span>
+      
+      
+    </li><li name="cron4s.Cron#unsafeParse" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="unsafeParse(e:String):cron4s.expr.CronExpr"></a><a id="unsafeParse(String):CronExpr"></a>
+      <span class="permalink">
+      <a href="../cron4s/Cron$.html#unsafeParse(e:String):cron4s.expr.CronExpr" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unsafeParse</span><span class="params">(<span name="e">e: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="expr/CronExpr.html" class="extype" name="cron4s.expr.CronExpr">CronExpr</a></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
