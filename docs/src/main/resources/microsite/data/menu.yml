@@ -35,8 +35,8 @@ options:
     section: intro
 
     nested_options:
-      - title: 0.2.x -> 0.3.0
-        url: docs/migration/0_3_0.html
-
       - title: 0.3.x -> 0.4.0
         url: docs/migration/0_4_0.html
+
+      - title: 0.2.x -> 0.3.0
+        url: docs/migration/0_3_0.html
