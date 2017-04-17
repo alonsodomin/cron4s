@@ -1,9 +1,8 @@
 
 import com.typesafe.sbt.pgp.PgpKeys
-import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
+
 import com.typesafe.tools.mima.plugin.MimaKeys.mimaPreviousArtifacts
 import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
-import sbtunidoc.Plugin.UnidocKeys._
 
 import scala.xml.transform.{RewriteRule, RuleTransformer}
 
@@ -206,12 +205,10 @@ lazy val cron4sJVM = (project in file(".jvm")).
   dependsOn(coreJVM, joda, testkitJVM, testsJVM % Test)
 
 lazy val docs = project.
-  enablePlugins(MicrositesPlugin).
+  enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, GhpagesPlugin).
   settings(moduleName := "cron4s-docs").
   settings(commonSettings).
   settings(noPublishSettings).
-  settings(ghpages.settings).
-  settings(unidocSettings).
   settings(docSettings).
   dependsOn(cron4sJVM)
 
