@@ -4,6 +4,10 @@ options:
     url: docs/index.html
     section: intro
 
+  - title: What's New?
+    url: docs/whats_new.html
+    section: intro
+
   - title: Working with Time
     url: docs/time_usage.html
     section: intro

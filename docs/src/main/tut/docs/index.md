@@ -72,7 +72,7 @@ assert(invalid.isFailure)
 
 And also `Cron.unsafeParse(expr)`, which will return a _naked_ `CronExpr` or happily blow-up with an exception
 interrupting the execution. This is the most Java-friendly version of all of them and you should try to avoid using it
-unless you are calling it from Java (well, it also comes handy during a REPL session or to write this tutorial):
+unless you are aware of the consequences (well, it also comes handy during a REPL session or to write this tutorial):
 
 ```tut:fail
 Cron.unsafeParse("10-65 * * * * *")
