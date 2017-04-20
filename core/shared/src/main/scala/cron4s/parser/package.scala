@@ -16,13 +16,9 @@
 
 package cron4s
 
-import cats.data.NonEmptyList
-
 import cron4s.expr._
 
 import fastparse.all._
-
-import shapeless._
 
 /**
   * Created by alonsodomin on 15/12/2016.

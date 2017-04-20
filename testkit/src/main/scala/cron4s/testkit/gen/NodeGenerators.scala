@@ -16,8 +16,6 @@
 
 package cron4s.testkit.gen
 
-import cats.data.NonEmptyList
-
 import cron4s.{CronField, CronUnit}
 import cron4s.expr._
 import cron4s.base._
@@ -101,15 +99,13 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
   private[this] def severalGen0[F <: CronField](memberGen: Gen[EnumerableNode[F]])(
     inspectElements: List[EnumerableNode[F]] => List[EnumerableNode[F]]
   )(
-    implicit
-    unit: CronUnit[F],
-    ev: Enumerated[CronUnit[F]]
+    implicit unit: CronUnit[F]
   ): Gen[SeveralNode[F]] = {
     Gen.choose(1, 5)
       .flatMap(size => Gen.listOfN(size, memberGen))
       .map(inspectElements)
       .map { elems =>
-        SeveralNode[F](NonEmptyList.of(elems.head, elems.tail: _*))
+        SeveralNode[F](elems.head, elems.tail: _*)
       }
   }
 
@@ -137,11 +133,7 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
 
   private[this] def everyGen0[F <: CronField](
       baseGen: Gen[DivisibleNode[F]]
-  )(
-      implicit
-      unit: CronUnit[F],
-      ev: Enumerated[CronUnit[F]]
-  ): Gen[EveryNode[F]] = for {
+  )(implicit unit: CronUnit[F]): Gen[EveryNode[F]] = for {
     base <- baseGen
     freq <- Gen.posNum[Int]
   } yield EveryNode(base, freq)

@@ -6,9 +6,9 @@ import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 
 import scala.xml.transform.{RewriteRule, RuleTransformer}
 
-scalaVersion in ThisBuild := "2.12.1"
+scalaVersion in ThisBuild := "2.12.2"
 
-crossScalaVersions in ThisBuild := Seq(scalaVersion.value, "2.11.8")
+crossScalaVersions in ThisBuild := Seq(scalaVersion.value, "2.11.11")
 
 lazy val botBuild = settingKey[Boolean]("Build by TravisCI instead of local dev environment")
 

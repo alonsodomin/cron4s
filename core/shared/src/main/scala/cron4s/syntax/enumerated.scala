@@ -18,8 +18,6 @@ package cron4s.syntax
 
 import cron4s.base.{Step, Enumerated}
 
-import scala.language.higherKinds
-
 /**
   * Created by alonsodomin on 23/08/2016.
   */

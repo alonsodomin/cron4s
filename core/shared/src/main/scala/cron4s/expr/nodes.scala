@@ -286,8 +286,7 @@ object EveryNode {
   implicit def everyNodeShow[F <: CronField]: Show[EveryNode[F]] =
     Show.fromToString[EveryNode[F]]
 
-  implicit def everyNodeInstance[F <: CronField]
-      (implicit baseExpr: FieldExpr[DivisibleNode, F]): FieldExpr[EveryNode, F] =
+  implicit def everyNodeInstance[F <: CronField]: FieldExpr[EveryNode, F] =
     new FieldExpr[EveryNode, F] {
 
       def unit(node: EveryNode[F]): CronUnit[F] = node.unit

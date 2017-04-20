@@ -21,8 +21,6 @@ import cron4s.expr._
 
 import org.openjdk.jmh.annotations._
 
-import shapeless.Coproduct
-
 
 /**
   * Sample run
