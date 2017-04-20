@@ -32,6 +32,16 @@ libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s-core" % "x.y.
 
 **cron4s** is cross compiled for Scala 2.11 and Scala 2.12. Java 8 is required when using it in the JVM. 
 
+## Limitations
+
+Before delving into the user guide, is preferred to understand that the library at this given moment has some limitations
+ in the expressions that is able to parse. These are the type of expressions that are not supported at the moment:
+ 
+ * `L` alone in _day of month_ meaning _the last day of the month_
+ * `nL` in _day of week_, being `n` a number between 0 and 6 meaning _the last day of week of a month_
+ * `nW` in _day of month_, being `n` a number between 0 and 31 meaning _the nearest weekday (Monday-Friday) to the given month day_.
+ * `n#m` in _day of week_, being `n` a number between 0 and 6 and `m` a number between 0 and 5 meaning _the mth day of the month_.
+
 ## License
 
 Copyright 2016-2017 Antonio Alonso Dominguez
