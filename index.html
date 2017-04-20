@@ -26,6 +26,18 @@
 
 <p><strong>cron4s</strong> is cross compiled for Scala 2.11 and Scala 2.12. Java 8 is required when using it in the JVM.</p>
 
+<h2 id="limitations">Limitations</h2>
+
+<p>Before delving into the user guide, is preferred to understand that the library at this given moment has some limitations
+ in the expressions that is able to parse. These are the type of expressions that are not supported at the moment:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">L</code> alone in <em>day of month</em> meaning <em>the last day of the month</em></li>
+  <li><code class="highlighter-rouge">nL</code> in <em>day of week</em>, being <code class="highlighter-rouge">n</code> a number between 0 and 6 meaning <em>the last day of week of a month</em></li>
+  <li><code class="highlighter-rouge">nW</code> in <em>day of month</em>, being <code class="highlighter-rouge">n</code> a number between 0 and 31 meaning <em>the nearest weekday (Monday-Friday) to the given month day</em>.</li>
+  <li><code class="highlighter-rouge">n#m</code> in <em>day of week</em>, being <code class="highlighter-rouge">n</code> a number between 0 and 6 and <code class="highlighter-rouge">m</code> a number between 0 and 5 meaning <em>the mth day of the month</em>.</li>
+</ul>
+
 <h2 id="license">License</h2>
 
 <p>Copyright 2016-2017 Antonio Alonso Dominguez</p>
