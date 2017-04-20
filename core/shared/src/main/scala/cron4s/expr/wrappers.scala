@@ -16,7 +16,7 @@
 
 package cron4s.expr
 
-import cats.Show
+import cats.{Eq, Show}
 
 import cron4s.{CronField, CronUnit}
 import cron4s.base.Predicate
@@ -33,6 +33,8 @@ final class FieldNode[F <: CronField](private[cron4s] val raw: RawFieldNode[F]) 
 }
 
 object FieldNode {
+
+  implicit def fieldNodeEq[F <: CronField]: Eq[FieldNode[F]] = Eq.fromUniversalEquals
 
   implicit def fieldNodeShow[F <: CronField]: Show[FieldNode[F]] =
     Show.fromToString[FieldNode[F]]
@@ -68,7 +70,9 @@ final class FieldNodeWithAny[F <: CronField](private[cron4s] val raw: RawFieldNo
 
 object FieldNodeWithAny {
 
-  implicit def fieldNodeWithAny[F <: CronField]: Show[FieldNodeWithAny[F]] =
+  implicit def fieldNodeWithAnyEq[F <: CronField]: Eq[FieldNodeWithAny[F]] = Eq.fromUniversalEquals
+
+  implicit def fieldNodeWithAnyShow[F <: CronField]: Show[FieldNodeWithAny[F]] =
     Show.fromToString[FieldNodeWithAny[F]]
 
   implicit def fieldNodeInstance[F <: CronField]: FieldExpr[FieldNodeWithAny, F] =
@@ -81,13 +85,8 @@ object FieldNodeWithAny {
 
       def implies[EE[_ <: CronField]](node: FieldNodeWithAny[F])(ee: EE[F])
         (implicit EE: FieldExpr[EE, F]): Boolean = node.raw match {
-          case Inl(any)                            => any.implies(ee)
-          case Inr(Inl(each))                      => each.implies(ee)
-          case Inr(Inr(Inl(const)))                => const.implies(ee)
-          case Inr(Inr(Inr(Inl(between))))         => between.implies(ee)
-          case Inr(Inr(Inr(Inr(Inl(several)))))    => several.implies(ee)
-          case Inr(Inr(Inr(Inr(Inr(Inl(every)))))) => every.implies(ee)
-          case _                                   => sys.error("Impossible!")
+          case Inl(any)  => any.implies(ee)
+          case Inr(tail) => new FieldNode[F](tail).implies(ee)
         }
 
       def unit(node: FieldNodeWithAny[F]): CronUnit[F] =
@@ -103,6 +102,8 @@ final class EnumerableNode[F <: CronField](private[cron4s] val raw: RawEnumerabl
 }
 
 object EnumerableNode {
+
+  implicit def enumerableNodeEq[F <: CronField]: Eq[EnumerableNode[F]] = Eq.fromUniversalEquals
 
   implicit def enumerableNodeShow[F <: CronField]: Show[EnumerableNode[F]] =
     Show.fromToString[EnumerableNode[F]]
@@ -137,6 +138,8 @@ final class DivisibleNode[F <: CronField](private[cron4s] val raw: RawDivisibleN
 }
 
 object DivisibleNode {
+
+  implicit def divisibleNodeEq[F <: CronField]: Eq[DivisibleNode[F]] = Eq.fromUniversalEquals
 
   implicit def divisibleNodeShow[F <: CronField]: Show[DivisibleNode[F]] =
     Show.fromToString[DivisibleNode[F]]
