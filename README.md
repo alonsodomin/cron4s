@@ -1,5 +1,7 @@
 # Cron4s
 
+[![Join the chat at https://gitter.im/cron4s/Lobby](https://badges.gitter.im/cron4s/Lobby.svg)](https://gitter.im/cron4s/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/alonsodomin/cron4s.svg?branch=master)](https://travis-ci.org/alonsodomin/cron4s)
 [![Scala.js](http://scala-js.org/assets/badges/scalajs-0.6.15.svg)](http://scala-js.org)
 [![License](http://img.shields.io/:license-Apache%202-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
