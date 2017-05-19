@@ -143,7 +143,8 @@ lazy val docSettings = Seq(
     "-doc-source-url", scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
     "-sourcepath", baseDirectory.in(LocalRootProject).value.getAbsolutePath,
     "-diagrams"
-  )
+  ),
+  scalacOptions in Tut := scalacOptions.value.filterNot(Set("-Ywarn-unused-import", "-Xfatal-warnings"))
 )
 
 lazy val releaseSettings = {
