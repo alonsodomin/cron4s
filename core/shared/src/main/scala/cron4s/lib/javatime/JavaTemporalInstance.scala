@@ -18,8 +18,8 @@ package cron4s.lib.javatime
 
 import java.time.temporal._
 
+import cron4s.CronField
 import cron4s.datetime.{DateTimeUnit, IsDateTime}
-import cron4s.{CronField, CronUnit}
 
 import scala.util.{Success, Try}
 

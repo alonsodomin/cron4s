@@ -19,7 +19,6 @@ package cron4s
 import cron4s.base.Enumerated
 
 import scala.annotation.implicitNotFound
-import scala.language.higherKinds
 
 import cats.{Eq, Show}
 

@@ -16,8 +16,6 @@
 
 package cron4s.bench
 
-import cats.data.NonEmptyList
-
 import cron4s._
 import cron4s.expr._
 
@@ -53,7 +51,7 @@ class NodeRangeBenchmark {
       .map(value => ConstNode[Minute](value))
       .map(const2Enumerable)
 
-    SeveralNode(NonEmptyList.of(minutes.head, minutes.tail: _*))
+    SeveralNode(minutes.head, minutes.tail: _*)
   }
 
   val severalBetweenNode: SeveralNode[Minute] = {
@@ -64,7 +62,7 @@ class NodeRangeBenchmark {
       BetweenNode[Minute](ConstNode(lower), ConstNode(lower + chunkSize - 1))
     }.map(between2Enumerable)
 
-    SeveralNode[Minute](NonEmptyList.of(minuteRanges.head, minuteRanges.tail: _*))
+    SeveralNode[Minute](minuteRanges.head, minuteRanges.tail: _*)
   }
 
   val everyEachNode = EveryNode(eachNode, 10)

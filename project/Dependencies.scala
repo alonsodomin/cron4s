@@ -7,16 +7,16 @@ object Dependencies {
   object version {
     val cats        = "0.9.0"
     val shapeless   = "2.3.2"
-    val fastparse   = "0.4.2"
+    val fastparse   = "0.4.3"
     val scalacheck  = "1.13.5"
-    val scalatest   = "3.0.1"
+    val scalatest   = "3.0.3"
     val discipline  = "0.7.3"
     val catalysts   = "0.0.5"
 
-    val jodaTime      = "2.9.7"
+    val jodaTime      = "2.9.9"
     val jodaConvert   = "1.8.1"
-    val momentjs      = "0.7.0"
-    val scalaJavaTime = "2.0.0-M10"
+    val momentjs      = "0.8.0"
+    val scalaJavaTime = "2.0.0-M11"
   }
 
   val macroParadise = compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full)

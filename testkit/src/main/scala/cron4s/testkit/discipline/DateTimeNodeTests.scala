@@ -38,7 +38,6 @@ trait DateTimeNodeTests[E[_ <: CronField], F <: CronField, DateTime] extends Law
   def dateTime(implicit
                arbNode: Arbitrary[E[F]],
                arbDateTime: Arbitrary[DateTime],
-               expr: FieldExpr[E, F],
                dateTimeEq: Eq[DateTime]
   ): RuleSet = new DefaultRuleSet(
     name = "dateTimeNode",

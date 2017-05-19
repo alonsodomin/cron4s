@@ -37,9 +37,6 @@ package object validation {
   }
 
   private def validateDayFields(expr: CronExpr) = {
-    def errorMsg(fieldExpr: String) =
-      s"Fields ${CronField.DayOfMonth} and ${CronField.DayOfWeek} can't both have the expression: $fieldExpr"
-
     val dayOfMonth = expr.field[CronField.DayOfMonth].toString
     val dayOfWeek  = expr.field[CronField.DayOfWeek].toString
 

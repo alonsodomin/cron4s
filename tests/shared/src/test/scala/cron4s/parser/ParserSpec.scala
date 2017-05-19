@@ -39,7 +39,7 @@ class ParserSpec extends Cron4sPropSpec
   import CronField._
   import CronUnit._
 
-  def verifyParsed[F <: CronField, E <: Node[F]](parser: Parser[E], input: String)(verify: E => Boolean): Boolean = {
+  def verifyParsed[F <: CronField, N <: Node[F]](parser: Parser[N], input: String)(verify: N => Boolean): Boolean = {
     parser.parse(input) match {
       case Parsed.Success(parsed, _) => verify(parsed)
       case err: Parsed.Failure =>
@@ -93,7 +93,7 @@ class ParserSpec extends Cron4sPropSpec
   // --------------------------------------------------------------
 
   val eachParserGen: Gen[Parser[EachNode[CronField]]] =
-    Gen.oneOf(each[Second], each[Minute], each[Hour], each[DayOfMonth], each[Month], each[DayOfWeek])
+    Gen.oneOf(CronUnit.All.map(each(_).asInstanceOf[Parser[EachNode[CronField]]]))
 
   property("should be able to parse an asterisk in any field") {
     forAll(eachParserGen) { parser =>
@@ -102,7 +102,7 @@ class ParserSpec extends Cron4sPropSpec
   }
 
   val anyParserGen: Gen[Parser[AnyNode[CronField]]] =
-    Gen.oneOf(any[DayOfMonth], any[DayOfWeek])
+    Gen.oneOf(Seq(any[DayOfMonth], any[DayOfWeek]).map(_.asInstanceOf[Parser[AnyNode[CronField]]]))
 
   property("should be able to parse a question mark in any field") {
     forAll(anyParserGen) { parser =>

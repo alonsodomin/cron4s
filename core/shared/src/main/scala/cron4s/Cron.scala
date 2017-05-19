@@ -32,11 +32,8 @@ object Cron {
   // Alias for parse
   def apply(e: String): Either[Error, CronExpr] = parse(e)
 
-  def parse(e: String): Either[Error, CronExpr] = {
-    // Needed for Scala 2.11
-    import cats.syntax.either._
-    parse0(e).flatMap(validation.validateCron)
-  }
+  def parse(e: String): Either[Error, CronExpr] =
+    parse0(e).right.flatMap(validation.validateCron)
 
   def tryParse(e: String): Try[CronExpr] = parse(e) match {
     case Left(err)   => Failure(err)
