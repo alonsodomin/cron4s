@@ -37,7 +37,8 @@ val commonSettings = Def.settings(
   botBuild := scala.sys.env.get("TRAVIS").isDefined,
   parallelExecution in Test := false,
   consoleImports := Seq("cron4s._"),
-  initialCommands in console := consoleImports.value.map(s => s"import $s").mkString("\n") + "\n"
+  initialCommands in console := consoleImports.value.map(s => s"import $s").mkString("\n") + "\n",
+  scalafmtOnCompile := true
 ) ++ Licensing.settings
 
 lazy val commonJvmSettings = Seq(
@@ -214,7 +215,7 @@ lazy val docs = project.
   dependsOn(cron4sJVM)
 
 lazy val core = (crossProject in file("core")).
-  enablePlugins(AutomateHeaderPlugin).
+  enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin).
   settings(
     name := "core",
     moduleName := "cron4s-core"
@@ -233,7 +234,7 @@ lazy val coreJS = core.js
 lazy val coreJVM = core.jvm
 
 lazy val testkit = (crossProject.crossType(CrossType.Pure) in file("testkit")).
-  enablePlugins(AutomateHeaderPlugin).
+  enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin).
   settings(
     name := "testkit",
     moduleName := "cron4s-testkit"
@@ -251,7 +252,7 @@ lazy val testkitJS = testkit.js
 lazy val testkitJVM = testkit.jvm
 
 lazy val tests = (crossProject in file("tests")).
-  enablePlugins(AutomateHeaderPlugin).
+  enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin).
   settings(
     name := "tests",
     moduleName := "cron4s-tests"
@@ -269,7 +270,7 @@ lazy val testsJS = tests.js
 lazy val testsJVM = tests.jvm
 
 lazy val bench = (project in file("bench")).
-  enablePlugins(AutomateHeaderPlugin).
+  enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin).
   settings(
     name := "bench",
     moduleName := "cron4s-bench"
@@ -282,7 +283,7 @@ lazy val bench = (project in file("bench")).
 // DateTime library extensions
 
 lazy val joda = (project in file("time-lib/joda")).
-  enablePlugins(AutomateHeaderPlugin).
+  enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin).
   settings(
     name := "joda",
     moduleName := "cron4s-joda",
@@ -295,7 +296,7 @@ lazy val joda = (project in file("time-lib/joda")).
   dependsOn(coreJVM, testkitJVM % Test)
 
 lazy val momentjs = (project in file("time-lib/momentjs")).
-  enablePlugins(AutomateHeaderPlugin, ScalaJSPlugin).
+  enablePlugins(AutomateHeaderPlugin, ScalaJSPlugin, ScalafmtPlugin).
   settings(commonSettings).
   settings(commonJsSettings).
   settings(publishSettings).
