@@ -19,7 +19,6 @@ package cron4s.lib.momentjs
 import cron4s.testkit.DateTimeTestKitBase
 import moment.{Date, Moment}
 
-import scala.scalajs.js.annotation.JSImport
 import scala.scalajs.js.{Date => JsDate}
 
 /**
