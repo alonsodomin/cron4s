@@ -43,6 +43,7 @@ val commonSettings = Def.settings(
   scalacOptions in (Compile, console) := scalacOptions.value.filterNot(
     Set("-Ywarn-unused-import", "-Xfatal-warnings")
   ),
+  scalafmtVersion := "1.0.0-RC2",
   scalafmtOnCompile := true
 ) ++ Licensing.settings
 
