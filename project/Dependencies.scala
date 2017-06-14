@@ -16,11 +16,11 @@ object Dependencies {
     val jodaTime      = "2.9.9"
     val jodaConvert   = "1.8.1"
     val momentjs      = "0.8.0"
-    val scalaJavaTime = "2.0.0-M11"
+    val scalaJavaTime = "2.0.0-M12"
   }
 
   val macroParadise = compilerPlugin("org.scalamacros" % "paradise"       % "2.1.0" cross CrossVersion.full)
-  val kindProjector = compilerPlugin("org.spire-math"  % "kind-projector" % "0.9.3" cross CrossVersion.binary)
+  val kindProjector = compilerPlugin("org.spire-math"  % "kind-projector" % "0.9.4" cross CrossVersion.binary)
   lazy val compilerPlugins = Seq(macroParadise, kindProjector)
 
   lazy val core = Def.settings {

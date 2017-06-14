@@ -23,21 +23,26 @@ val commonSettings = Def.settings(
     "scm:git:git@github.com:alonsodomin/cron4s.git"
   )),
   scalacOptions ++= Seq(
-    "-language:postfixOps",
+    "-encoding", "UTF-8",
     "-feature",
     "-unchecked",
     "-deprecation",
     "-Xfuture",
-    "-Xlint",
+    "-Xlint:-unused,_",
     "-Xfatal-warnings",
+    "-language:postfixOps",
     "-language:implicitConversions",
     "-language:higherKinds",
-    "-language:existentials"
+    "-language:existentials",
+    "-Ywarn-unused-import"
   ),
   botBuild := scala.sys.env.get("TRAVIS").isDefined,
   parallelExecution in Test := false,
   consoleImports := Seq("cron4s._"),
   initialCommands in console := consoleImports.value.map(s => s"import $s").mkString("\n") + "\n",
+  scalacOptions in (Compile, console) := scalacOptions.value.filterNot(
+    Set("-Ywarn-unused-import", "-Xfatal-warnings")
+  ),
   scalafmtOnCompile := true
 ) ++ Licensing.settings
 
