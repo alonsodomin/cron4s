@@ -27,20 +27,16 @@ env:
 addons:
   apt:
     packages:
-      - jekyll
       - graphviz
 
-#before_install:
-#  - export PATH=${PATH}:./vendor/bundle
+before_install:
+  - export PATH=${PATH}:./vendor/bundle
 
-#install:
-  # http://austinpray.com/ops/2015/09/20/change-travis-node-version.html
-#  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
-#  - rvm use 2.2.3 --install --fuzzy
-#  - gem update --system
-#  - gem install sass
-#  - gem install jekyll -v 3.2.1
-#  - sudo apt-get install -y graphviz
+install:
+  - rvm use 2.2.3 --install --fuzzy
+  - gem update --system
+  - gem install sass
+  - gem install jekyll -v 3.2.1
 
 script:
   - scripts/travis-build.sh
