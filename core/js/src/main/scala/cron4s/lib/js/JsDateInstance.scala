@@ -33,7 +33,9 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
   @inline
   override def supportedFields(dateTime: Date): List[CronField] = CronField.All
 
-  override def plus(dateTime: Date, amount: Int, unit: DateTimeUnit): Option[Date] = {
+  override def plus(dateTime: Date,
+                    amount: Int,
+                    unit: DateTimeUnit): Option[Date] = {
     def setter(set: Date => Unit): Date = {
       val newDateTime = new Date(dateTime.getTime())
       set(newDateTime)
@@ -41,12 +43,15 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
     }
 
     unit match {
-      case Seconds => Some(setter(d => d.setUTCSeconds(d.getUTCSeconds() + amount)))
-      case Minutes => Some(setter(d => d.setUTCMinutes(d.getUTCMinutes() + amount)))
-      case Hours   => Some(setter(d => d.setUTCHours(d.getUTCHours() + amount)))
-      case Days    => Some(setter(d => d.setUTCDate(d.getUTCDate() + amount)))
-      case Months  => Some(setter(d => d.setUTCMonth(d.getUTCMonth() + amount)))
-      case Weeks   => Some(setter(d => d.setUTCDate(d.getUTCDate() + (amount * DaysInWeek))))
+      case Seconds =>
+        Some(setter(d => d.setUTCSeconds(d.getUTCSeconds() + amount)))
+      case Minutes =>
+        Some(setter(d => d.setUTCMinutes(d.getUTCMinutes() + amount)))
+      case Hours  => Some(setter(d => d.setUTCHours(d.getUTCHours() + amount)))
+      case Days   => Some(setter(d => d.setUTCDate(d.getUTCDate() + amount)))
+      case Months => Some(setter(d => d.setUTCMonth(d.getUTCMonth() + amount)))
+      case Weeks =>
+        Some(setter(d => d.setUTCDate(d.getUTCDate() + (amount * DaysInWeek))))
     }
   }
 
@@ -57,7 +62,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       case Hour       => dateTime.getUTCHours()
       case DayOfMonth => dateTime.getUTCDate()
       case Month      => dateTime.getUTCMonth() + 1
-      case DayOfWeek  =>
+      case DayOfWeek =>
         val dayOfWeek = {
           val idx = dateTime.getUTCDay() - 1
           if (idx < 0) DaysInWeek + idx
@@ -69,7 +74,9 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
     Some(value)
   }
 
-  override def set[F <: CronField](dateTime: Date, field: F, value: Int): Option[Date] = {
+  override def set[F <: CronField](dateTime: Date,
+                                   field: F,
+                                   value: Int): Option[Date] = {
     def setter(setter: Date => Unit): Date = {
       val newDateTime = new Date(dateTime.getTime())
       setter(newDateTime)
@@ -82,7 +89,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       case Hour       => setter(_.setUTCHours(value))
       case DayOfMonth => setter(_.setUTCDate(value))
       case Month      => setter(_.setUTCMonth(value - 1))
-      case DayOfWeek  =>
+      case DayOfWeek =>
         val dayToSet = (value % DaysInWeek) + 1
         val offset = dayToSet - dateTime.getUTCDay()
         setter(d => d.setUTCDate(d.getUTCDate() + offset))

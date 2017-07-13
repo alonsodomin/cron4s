@@ -21,7 +21,6 @@ import cron4s.expr._
 
 import org.openjdk.jmh.annotations._
 
-
 /**
   * Sample run
   *    sbt "bench/jmh:run -r 2 -i 20 -w 2 -wi 20 -f 1 -t 1 cron4s.bench.NodeMatcherBenchmark"

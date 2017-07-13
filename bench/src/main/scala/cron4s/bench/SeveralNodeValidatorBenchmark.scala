@@ -35,18 +35,29 @@ class SeveralNodeValidatorBenchmark {
   val _simpleInvalid = SeveralNode(ConstNode[Second](67))
 
   val _threeConstValid = SeveralNode(
-    ConstNode[Second](4), ConstNode[Second](21), ConstNode[Second](54)
+    ConstNode[Second](4),
+    ConstNode[Second](21),
+    ConstNode[Second](54)
   )
   val _threeConstInvalid = SeveralNode(
-    ConstNode[Second](-2), ConstNode[Second](60), ConstNode[Second](120)
+    ConstNode[Second](-2),
+    ConstNode[Second](60),
+    ConstNode[Second](120)
   )
 
-  val _rangeValid = SeveralNode(BetweenNode[Second](ConstNode(4), ConstNode(10)))
-  val _rangeInvalid = SeveralNode(BetweenNode[Second](ConstNode(10), ConstNode(4)))
-  val _rangeInvalidConst = SeveralNode(BetweenNode[Second](ConstNode(-6), ConstNode(61)))
+  val _rangeValid = SeveralNode(
+    BetweenNode[Second](ConstNode(4), ConstNode(10)))
+  val _rangeInvalid = SeveralNode(
+    BetweenNode[Second](ConstNode(10), ConstNode(4)))
+  val _rangeInvalidConst = SeveralNode(
+    BetweenNode[Second](ConstNode(-6), ConstNode(61)))
 
-  val _constImpliedByRange = SeveralNode(ConstNode[Second](23), BetweenNode[Second](ConstNode(17), ConstNode(30)))
-  val _constImpliedByRangeReverse = SeveralNode(BetweenNode[Second](ConstNode(17), ConstNode(30)), ConstNode[Second](23))
+  val _constImpliedByRange = SeveralNode(
+    ConstNode[Second](23),
+    BetweenNode[Second](ConstNode(17), ConstNode(30)))
+  val _constImpliedByRangeReverse = SeveralNode(
+    BetweenNode[Second](ConstNode(17), ConstNode(30)),
+    ConstNode[Second](23))
 
   @Benchmark
   def simpleValid(): List[InvalidField] = {
