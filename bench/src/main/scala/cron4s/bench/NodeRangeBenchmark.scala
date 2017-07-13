@@ -47,9 +47,10 @@ class NodeRangeBenchmark {
 
   val severalConstNode: SeveralNode[Minute] = {
     val stepSize = Minutes.max / 10
-    val minutes: Seq[EnumerableNode[Minute]] = (Minutes.min to Minutes.max by stepSize)
-      .map(value => ConstNode[Minute](value))
-      .map(const2Enumerable)
+    val minutes: Seq[EnumerableNode[Minute]] =
+      (Minutes.min to Minutes.max by stepSize)
+        .map(value => ConstNode[Minute](value))
+        .map(const2Enumerable)
 
     SeveralNode(minutes.head, minutes.tail: _*)
   }
@@ -58,9 +59,11 @@ class NodeRangeBenchmark {
     val unit = CronUnit[CronField.Minute]
     val chunkSize = unit.max / 10
 
-    val minuteRanges = (unit.min to unit.max by chunkSize).map { lower =>
-      BetweenNode[Minute](ConstNode(lower), ConstNode(lower + chunkSize - 1))
-    }.map(between2Enumerable)
+    val minuteRanges = (unit.min to unit.max by chunkSize)
+      .map { lower =>
+        BetweenNode[Minute](ConstNode(lower), ConstNode(lower + chunkSize - 1))
+      }
+      .map(between2Enumerable)
 
     SeveralNode[Minute](minuteRanges.head, minuteRanges.tail: _*)
   }

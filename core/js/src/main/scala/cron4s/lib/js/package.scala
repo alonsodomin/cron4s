@@ -29,12 +29,12 @@ package object js {
 
   implicit val jsDateEq: Eq[Date] = Eq.instance { (lhs, rhs) =>
     lhs.getUTCFullYear() == rhs.getUTCFullYear() &&
-      lhs.getUTCMonth() == rhs.getUTCMonth() &&
-      lhs.getUTCDate() == rhs.getUTCDate() &&
-      lhs.getUTCHours() == rhs.getUTCHours() &&
-      lhs.getUTCMinutes() == rhs.getUTCMinutes() &&
-      lhs.getUTCSeconds() == rhs.getUTCSeconds() &&
-      lhs.getUTCMilliseconds() == rhs.getUTCMilliseconds()
+    lhs.getUTCMonth() == rhs.getUTCMonth() &&
+    lhs.getUTCDate() == rhs.getUTCDate() &&
+    lhs.getUTCHours() == rhs.getUTCHours() &&
+    lhs.getUTCMinutes() == rhs.getUTCMinutes() &&
+    lhs.getUTCSeconds() == rhs.getUTCSeconds() &&
+    lhs.getUTCMilliseconds() == rhs.getUTCMilliseconds()
   }
 
   implicit val jsDateShow: Show[Date] =
