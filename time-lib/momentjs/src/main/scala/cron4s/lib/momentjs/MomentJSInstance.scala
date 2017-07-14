@@ -17,7 +17,7 @@
 package cron4s.lib.momentjs
 
 import cron4s.CronField
-import cron4s.datetime.{DateTimeUnit, IsDateTime}
+import cron4s.datetime.{DateTimeError, DateTimeUnit, IsDateTime}
 
 import moment._
 
@@ -86,14 +86,14 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
     */
   override def set[F <: CronField](dateTime: Date,
                                    field: F,
-                                   value: Int): Option[Date] = {
+                                   value: Int): Either[DateTimeError, Date] = {
     def setter(f: Date => Unit): Date = {
       val newDateTime = Moment(dateTime)
       f(newDateTime)
       newDateTime
     }
 
-    Some(field match {
+    Right(field match {
       case Second     => setter(_.second(value.toDouble).millisecond(0))
       case Minute     => setter(_.minute(value.toDouble))
       case Hour       => setter(_.hour(value.toDouble))

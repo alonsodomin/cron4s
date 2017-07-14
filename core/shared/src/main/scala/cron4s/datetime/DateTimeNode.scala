@@ -69,7 +69,7 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
     for {
       current  <- DT.get(dateTime, expr.unit.field)
       newValue <- expr.step(current, step).map(_._1)
-      adjusted <- DT.set(dateTime, expr.unit.field, newValue)
+      adjusted <- DT.set(dateTime, expr.unit.field, newValue).toOption
     } yield adjusted
   }
 

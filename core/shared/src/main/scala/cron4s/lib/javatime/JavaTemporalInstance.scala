@@ -18,8 +18,10 @@ package cron4s.lib.javatime
 
 import java.time.temporal._
 
+import cats.syntax.either._
+
 import cron4s.CronField
-import cron4s.datetime.{DateTimeUnit, IsDateTime}
+import cron4s.datetime._
 
 import scala.util.{Success, Try}
 
@@ -62,7 +64,7 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
     else Some(dateTime.get(temporalField) + offset)
   }
 
-  override def set[F <: CronField](dateTime: DT, field: F, value: Int): Option[DT] = {
+  override def set[F <: CronField](dateTime: DT, field: F, value: Int): Either[DateTimeError, DT] = {
     val temporalField = asTemporalField(field)
 
     def adjust(realVal: Int)(dt: DT): Try[DT] =
@@ -74,10 +76,11 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
       } else Success(dt)
     }
 
-    if (!dateTime.isSupported(temporalField)) None
+    if (!dateTime.isSupported(temporalField)) UnsupportedField(field).asLeft
     else {
       val realVal = if (field == DayOfWeek) value + DayOfWeekOffset else value
-      adjust(realVal)(dateTime).flatMap(postAdjust).toOption
+      Either.fromTry(adjust(realVal)(dateTime).flatMap(postAdjust))
+        .leftMap(_ => InvalidFieldValue(field, value))
     }
   }
 
