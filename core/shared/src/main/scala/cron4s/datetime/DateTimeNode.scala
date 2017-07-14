@@ -66,10 +66,11 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
     * @return a date-time that is an amount of given steps from the given one
     */
   def stepIn[DateTime](expr: E[F], DT: IsDateTime[DateTime])(dateTime: DateTime, step: Int): Option[DateTime] = {
+    import cats.syntax.either._
     for {
       current  <- DT.get(dateTime, expr.unit.field)
       newValue <- expr.step(current, step).map(_._1)
-      adjusted <- DT.set(dateTime, expr.unit.field, newValue)
+      adjusted <- DT.set(dateTime, expr.unit.field, newValue).toOption
     } yield adjusted
   }
 

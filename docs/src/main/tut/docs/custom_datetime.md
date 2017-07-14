@@ -30,7 +30,7 @@ Now that we have a way of representing time, we need to provide an instance for 
 
 ```tut:silent
 import cron4s._
-import cron4s.datetime.{DateTimeUnit, IsDateTime}
+import cron4s.datetime._
 
 implicit object MyDateInstance extends IsDateTime[MyTime] {
 
@@ -46,11 +46,11 @@ implicit object MyDateInstance extends IsDateTime[MyTime] {
     case _                => None
   }
   
-  def set[F <: CronField](myTime: MyTime, field: F, value: Int): Option[MyTime] = field match {
-    case CronField.Second => Some(myTime.copy(seconds = value))
-    case CronField.Minute => Some(myTime.copy(minutes = value))
-    case CronField.Hour   => Some(myTime.copy(hour = value))
-    case _                => None
+  def set[F <: CronField](myTime: MyTime, field: F, value: Int): Either[DateTimeError, MyTime] = field match {
+    case CronField.Second => Right(myTime.copy(seconds = value))
+    case CronField.Minute => Right(myTime.copy(minutes = value))
+    case CronField.Hour   => Right(myTime.copy(hour = value))
+    case _                => Left(UnsupportedField(field))
   }
 
 }

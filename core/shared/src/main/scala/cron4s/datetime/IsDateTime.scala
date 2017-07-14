@@ -54,7 +54,7 @@ trait IsDateTime[DateTime] {
     * @tparam F the CronField type
     * @return a new date-time with the given field set to the new value
     */
-  def set[F <: CronField](dateTime: DateTime, field: F, value: Int): Option[DateTime]
+  def set[F <: CronField](dateTime: DateTime, field: F, value: Int): Either[DateTimeError, DateTime]
 
 }
 

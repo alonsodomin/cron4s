@@ -39,7 +39,7 @@ trait IsDateTimeLaws[DateTime] {
   def immutability[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Prop = {
     val check = for {
       current     <- DT.get(dt, fieldValue.field)
-      newDateTime <- DT.set(dt, fieldValue.field, fieldValue.value)
+      newDateTime <- DT.set(dt, fieldValue.field, fieldValue.value).toOption
     } yield {
       if (current == fieldValue.value) newDateTime ?== dt
       else newDateTime ?!= dt
@@ -50,7 +50,7 @@ trait IsDateTimeLaws[DateTime] {
 
   def settable[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Prop = {
     val check = for {
-      newDateTime <- DT.set(dt, fieldValue.field, fieldValue.value)
+      newDateTime <- DT.set(dt, fieldValue.field, fieldValue.value).toOption
       value       <- DT.get(newDateTime, fieldValue.field)
     } yield value ?== fieldValue.value
 

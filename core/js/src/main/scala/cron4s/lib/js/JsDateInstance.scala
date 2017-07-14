@@ -17,7 +17,12 @@
 package cron4s.lib.js
 
 import cron4s.CronField
-import cron4s.datetime.{DateTimeUnit, IsDateTime}
+import cron4s.datetime.{
+  DateTimeError,
+  DateTimeUnit,
+  InvalidFieldValue,
+  IsDateTime
+}
 
 import scala.scalajs.js.Date
 
@@ -76,14 +81,14 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
 
   override def set[F <: CronField](dateTime: Date,
                                    field: F,
-                                   value: Int): Option[Date] = {
+                                   value: Int): Either[DateTimeError, Date] = {
     def setter(setter: Date => Unit): Date = {
       val newDateTime = new Date(dateTime.getTime())
       setter(newDateTime)
       newDateTime
     }
 
-    Some(field match {
+    def assignFieldValue: Date = field match {
       case Second     => setter(_.setUTCSeconds(value, 0))
       case Minute     => setter(_.setUTCMinutes(value))
       case Hour       => setter(_.setUTCHours(value))
@@ -93,7 +98,14 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
         val dayToSet = (value % DaysInWeek) + 1
         val offset = dayToSet - dateTime.getUTCDay()
         setter(d => d.setUTCDate(d.getUTCDate() + offset))
-    })
+    }
+
+    def assignmentSucceeded(date: Date) =
+      get[F](date, field).contains(value)
+
+    val modifiedDate = assignFieldValue
+    if (assignmentSucceeded(modifiedDate)) Right(modifiedDate)
+    else Left(InvalidFieldValue(field, value))
   }
 
 }

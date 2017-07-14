@@ -16,8 +16,10 @@
 
 package cron4s.lib.joda
 
+import cats.syntax.either._
+
 import cron4s._
-import cron4s.datetime.{IsDateTime, DateTimeUnit}
+import cron4s.datetime._
 
 import org.joda.time._
 import org.joda.time.base.BaseLocal
@@ -69,11 +71,9 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
     */
   override def set[F <: CronField](dateTime: DT,
                                    field: F,
-                                   value: Int): Option[DT] = {
-    val jodaField = asDateTimeFieldType(field)
+                                   value: Int): Either[DateTimeError, DT] = {
     val offset = if (field == DayOfWeek) 1 else 0
-
-    setField(dateTime, jodaField, value + offset)
+    setField(dateTime, field, value + offset)
   }
 
   protected def asPeriod(amount: Int, unit: DateTimeUnit): ReadablePeriod =
@@ -86,7 +86,7 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
       case DateTimeUnit.Weeks   => Weeks.weeks(amount)
     }
 
-  private[this] def asDateTimeFieldType[F <: CronField](
+  protected def asDateTimeFieldType[F <: CronField](
       field: F): DateTimeFieldType = field match {
     case Second     => DateTimeFieldType.secondOfMinute()
     case Minute     => DateTimeFieldType.minuteOfHour()
@@ -103,8 +103,8 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
   protected def getField(dateTime: DT, field: DateTimeFieldType): Option[Int]
 
   protected def setField(dateTime: DT,
-                         field: DateTimeFieldType,
-                         value: Int): Option[DT]
+                         field: CronField,
+                         value: Int): Either[DateTimeError, DT]
 
 }
 
@@ -124,15 +124,21 @@ private[joda] final class JodaDateTimeInstance extends JodaInstance[DateTime] {
     else None
   }
 
-  override protected def setField(dateTime: DateTime,
-                                  field: DateTimeFieldType,
-                                  value: Int): Option[DateTime] = {
-    if (dateTime.isSupported(field)) {
-      val newDate = Try(dateTime.withField(field, value)).toOption
-      if (field.equals(DateTimeFieldType.secondOfMinute()))
+  override protected def setField(
+      dateTime: DateTime,
+      field: CronField,
+      value: Int): Either[DateTimeError, DateTime] = {
+    val fieldType = asDateTimeFieldType(field)
+
+    if (dateTime.isSupported(fieldType)) {
+      val newDate = Either
+        .catchNonFatal(dateTime.withField(fieldType, value))
+        .leftMap(_ => InvalidFieldValue(field, value))
+
+      if (fieldType.equals(DateTimeFieldType.secondOfMinute()))
         newDate.map(_.withMillisOfSecond(0))
       else newDate
-    } else None
+    } else UnsupportedField(field).asLeft
   }
 
 }
@@ -159,15 +165,21 @@ private[joda] final class JodaLocalTimeInstance
                                     period: ReadablePeriod): Option[LocalTime] =
     Some(dateTime.plus(period))
 
-  override protected def setField(dateTime: LocalTime,
-                                  field: DateTimeFieldType,
-                                  value: Int): Option[LocalTime] = {
-    if (dateTime.isSupported(field)) {
-      val newDate = Try(dateTime.withField(field, value)).toOption
-      if (field.equals(DateTimeFieldType.secondOfMinute()))
+  override protected def setField(
+      dateTime: LocalTime,
+      field: CronField,
+      value: Int): Either[DateTimeError, LocalTime] = {
+    val fieldType = asDateTimeFieldType(field)
+
+    if (dateTime.isSupported(fieldType)) {
+      val newDate = Either
+        .fromTry(Try(dateTime.withField(fieldType, value)))
+        .leftMap(_ => InvalidFieldValue(field, value))
+
+      if (fieldType.equals(DateTimeFieldType.secondOfMinute()))
         newDate.map(_.withMillisOfSecond(0))
       else newDate
-    } else None
+    } else UnsupportedField(field).asLeft
   }
 
 }
@@ -179,12 +191,17 @@ private[joda] final class JodaLocalDateInstance
                                     period: ReadablePeriod): Option[LocalDate] =
     Try(dateTime.plus(period)).toOption
 
-  override protected def setField(dateTime: LocalDate,
-                                  field: DateTimeFieldType,
-                                  value: Int): Option[LocalDate] = {
-    if (dateTime.isSupported(field)) {
-      Try(dateTime.withField(field, value)).toOption
-    } else None
+  override protected def setField(
+      dateTime: LocalDate,
+      field: CronField,
+      value: Int): Either[DateTimeError, LocalDate] = {
+    val fieldType = asDateTimeFieldType(field)
+
+    if (dateTime.isSupported(fieldType)) {
+      Either
+        .catchNonFatal(dateTime.withField(fieldType, value))
+        .leftMap(_ => InvalidFieldValue(field, value))
+    } else UnsupportedField(field).asLeft
   }
 
 }
@@ -197,15 +214,21 @@ private[joda] final class JodaLocalDateTimeInstance
       period: ReadablePeriod): Option[LocalDateTime] =
     Try(dateTime.plus(period)).toOption
 
-  override protected def setField(dateTime: LocalDateTime,
-                                  field: DateTimeFieldType,
-                                  value: Int): Option[LocalDateTime] = {
-    if (dateTime.isSupported(field)) {
-      val newDate = Try(dateTime.withField(field, value)).toOption
-      if (field.equals(DateTimeFieldType.secondOfMinute()))
+  override protected def setField(
+      dateTime: LocalDateTime,
+      field: CronField,
+      value: Int): Either[DateTimeError, LocalDateTime] = {
+    val fieldType = asDateTimeFieldType(field)
+
+    if (dateTime.isSupported(fieldType)) {
+      val newDate = Either
+        .catchNonFatal(dateTime.withField(fieldType, value))
+        .leftMap(_ => InvalidFieldValue(field, value))
+
+      if (fieldType.equals(DateTimeFieldType.secondOfMinute()))
         newDate.map(_.withMillisOfSecond(0))
       else newDate
-    } else None
+    } else UnsupportedField(field).asLeft
   }
 
 }
