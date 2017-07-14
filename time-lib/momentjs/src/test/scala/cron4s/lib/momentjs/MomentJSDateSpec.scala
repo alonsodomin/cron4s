@@ -23,4 +23,6 @@ import moment.Date
 /**
   * Created by alonsodomin on 12/04/2017.
   */
-class MomentJSDateSpec extends IsDateTimeTestKit[Date]("MomentJS") with MomentJSTestBase
+class MomentJSDateSpec
+    extends IsDateTimeTestKit[Date]("MomentJS")
+    with MomentJSTestBase

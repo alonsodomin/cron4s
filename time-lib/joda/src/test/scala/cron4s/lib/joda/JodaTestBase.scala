@@ -25,28 +25,48 @@ import org.joda.time._
   */
 trait JodaDateTimeTestBase extends DateTimeTestKitBase[DateTime] {
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): DateTime =
+  protected def createDateTime(seconds: Int,
+                               minutes: Int,
+                               hours: Int,
+                               dayOfMonth: Int,
+                               month: Int,
+                               year: Int): DateTime =
     new DateTime(year, month, dayOfMonth, hours, minutes, seconds)
 
 }
 
 trait JodaLocalDateTestBase extends DateTimeTestKitBase[LocalDate] {
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): LocalDate =
+  protected def createDateTime(seconds: Int,
+                               minutes: Int,
+                               hours: Int,
+                               dayOfMonth: Int,
+                               month: Int,
+                               year: Int): LocalDate =
     new LocalDate(year, month, dayOfMonth)
 
 }
 
 trait JodaLocalTimeTestBase extends DateTimeTestKitBase[LocalTime] {
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): LocalTime =
+  protected def createDateTime(seconds: Int,
+                               minutes: Int,
+                               hours: Int,
+                               dayOfMonth: Int,
+                               month: Int,
+                               year: Int): LocalTime =
     new LocalTime(hours, minutes, seconds)
 
 }
 
 trait JodaLocalDateTimeTestBase extends DateTimeTestKitBase[LocalDateTime] {
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): LocalDateTime =
+  protected def createDateTime(seconds: Int,
+                               minutes: Int,
+                               hours: Int,
+                               dayOfMonth: Int,
+                               month: Int,
+                               year: Int): LocalDateTime =
     new LocalDateTime(year, month, dayOfMonth, hours, minutes, seconds)
 
 }

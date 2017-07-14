@@ -26,7 +26,13 @@ import scala.scalajs.js.{Date => JsDate}
   */
 trait MomentJSTestBase extends DateTimeTestKitBase[Date] {
 
-  protected def createDateTime(seconds: Int, minutes: Int, hours: Int, dayOfMonth: Int, month: Int, year: Int): Date =
-    Moment(new JsDate(year, month - 1, dayOfMonth, hours, minutes, seconds, ms = 0))
+  protected def createDateTime(seconds: Int,
+                               minutes: Int,
+                               hours: Int,
+                               dayOfMonth: Int,
+                               month: Int,
+                               year: Int): Date =
+    Moment(
+      new JsDate(year, month - 1, dayOfMonth, hours, minutes, seconds, ms = 0))
 
 }

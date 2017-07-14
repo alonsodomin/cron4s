@@ -30,9 +30,7 @@ import scala.util.Try
 private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
   import CronField._
 
-  override def plus(dateTime: DT,
-                    amount: Int,
-                    unit: DateTimeUnit): Option[DT] =
+  override def plus(dateTime: DT, amount: Int, unit: DateTimeUnit): Option[DT] =
     plusPeriod(dateTime, asPeriod(amount, unit))
 
   /**
@@ -157,9 +155,8 @@ private[joda] abstract class JodaLocalBaseInstance[DT <: BaseLocal]
 private[joda] final class JodaLocalTimeInstance
     extends JodaLocalBaseInstance[LocalTime] {
 
-  override protected def plusPeriod(
-      dateTime: LocalTime,
-      period: ReadablePeriod): Option[LocalTime] =
+  override protected def plusPeriod(dateTime: LocalTime,
+                                    period: ReadablePeriod): Option[LocalTime] =
     Some(dateTime.plus(period))
 
   override protected def setField(dateTime: LocalTime,
@@ -178,9 +175,8 @@ private[joda] final class JodaLocalTimeInstance
 private[joda] final class JodaLocalDateInstance
     extends JodaLocalBaseInstance[LocalDate] {
 
-  override protected def plusPeriod(
-      dateTime: LocalDate,
-      period: ReadablePeriod): Option[LocalDate] =
+  override protected def plusPeriod(dateTime: LocalDate,
+                                    period: ReadablePeriod): Option[LocalDate] =
     Try(dateTime.plus(period)).toOption
 
   override protected def setField(dateTime: LocalDate,
