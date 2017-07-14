@@ -131,7 +131,7 @@ lazy val coverageSettings = Seq(
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   mimaPreviousArtifacts := Set(
-    "com.github.alonsodomin.cron4s" %% s"cron4s-${module}" % "0.3.2")
+    "com.github.alonsodomin.cron4s" %% s"cron4s-${module}" % "0.4.0")
 )
 
 lazy val docsMappingsAPIDir = settingKey[String](
