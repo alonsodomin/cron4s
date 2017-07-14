@@ -144,6 +144,7 @@ lazy val docSettings = Seq(
   micrositeAuthor := "Antonio Alonso Dominguez",
   micrositeGithubOwner := "alonsodomin",
   micrositeGithubRepo := "cron4s",
+  micrositeGitterChannel := true,
   micrositeHomepage := "https://alonsodomin.github.io/cron4s",
   micrositeBaseUrl := "/cron4s",
   micrositeDocumentationUrl := "docs",
