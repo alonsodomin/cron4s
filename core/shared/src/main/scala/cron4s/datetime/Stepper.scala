@@ -35,14 +35,17 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
 
   private[this] def stepNode[N[_ <: CronField], F <: CronField]
       (stepState: StepST, node: N[F])(implicit expr: FieldExpr[N, F]): StepST = {
+
     def attemptSet(dt: DateTime, step: Step, newValue: Int, carryOver: Int): Option[(DateTime, Int)] = {
       DT.set(dt, node.unit.field, newValue)
         .map(_ -> carryOver)
         .recover {
-          case InvalidFieldValue(_, _) => dt -> (step.direction match {
-            case Direction.Forward   => Math.max(carryOver, step.direction.sign)
-            case Direction.Backwards => Math.min(carryOver, step.direction.sign)
-          })
+          case InvalidFieldValue(field, value) =>
+            val newCarryOver = step.direction match {
+              case Direction.Forward   => Math.max(carryOver, step.direction.sign)
+              case Direction.Backwards => Math.min(carryOver, step.direction.sign)
+            }
+            dt -> newCarryOver
         }
         .toOption
     }
@@ -50,7 +53,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
     stepState.flatMap { case (resetPrevious, from, step) =>
       def resetThis: DateTime => Option[DateTime] = {
         val resetValue = step.direction match {
-          case Direction.Forward => node.min
+          case Direction.Forward   => node.min
           case Direction.Backwards => node.max
         }
 
@@ -60,8 +63,9 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       DT.get(from, node.unit.field).flatMap { currentValue =>
         node.step(currentValue, step) match {
           case Some((newValue, carryOver)) =>
-            resetPrevious(from)
-              .flatMap(attemptSet(_, step, newValue, carryOver))
+            // Attempt to set a new value in the field and reset previous fields
+            attemptSet(from, step, newValue, carryOver)
+              .flatMap { case (dt, co) => resetPrevious(dt).map(_ -> co) }
               .map { case (dt, co) => (resetThis, dt, step.copy(amount = Math.abs(co))) }
 
           case None =>
