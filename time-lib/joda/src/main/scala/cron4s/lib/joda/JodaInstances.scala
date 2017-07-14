@@ -135,7 +135,7 @@ private[joda] final class JodaDateTimeInstance extends JodaInstance[DateTime] {
         .catchNonFatal(dateTime.withField(fieldType, value))
         .leftMap(_ => InvalidFieldValue(field, value))
 
-      if (field.equals(DateTimeFieldType.secondOfMinute()))
+      if (fieldType.equals(DateTimeFieldType.secondOfMinute()))
         newDate.map(_.withMillisOfSecond(0))
       else newDate
     } else UnsupportedField(field).asLeft
@@ -176,7 +176,7 @@ private[joda] final class JodaLocalTimeInstance
         .fromTry(Try(dateTime.withField(fieldType, value)))
         .leftMap(_ => InvalidFieldValue(field, value))
 
-      if (field.equals(DateTimeFieldType.secondOfMinute()))
+      if (fieldType.equals(DateTimeFieldType.secondOfMinute()))
         newDate.map(_.withMillisOfSecond(0))
       else newDate
     } else UnsupportedField(field).asLeft
@@ -225,7 +225,7 @@ private[joda] final class JodaLocalDateTimeInstance
         .catchNonFatal(dateTime.withField(fieldType, value))
         .leftMap(_ => InvalidFieldValue(field, value))
 
-      if (field.equals(DateTimeFieldType.secondOfMinute()))
+      if (fieldType.equals(DateTimeFieldType.secondOfMinute()))
         newDate.map(_.withMillisOfSecond(0))
       else newDate
     } else UnsupportedField(field).asLeft
