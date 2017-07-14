@@ -36,8 +36,7 @@ val commonSettings = Def.settings(
     "-language:postfixOps",
     "-language:implicitConversions",
     "-language:higherKinds",
-    "-language:existentials",
-    "-Ywarn-unused-import"
+    "-language:existentials"
   ),
   botBuild := scala.sys.env.get("TRAVIS").isDefined,
   parallelExecution in Test := false,
