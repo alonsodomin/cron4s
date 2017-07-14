@@ -17,7 +17,12 @@
 package cron4s.lib.momentjs
 
 import cron4s.CronField
-import cron4s.datetime.{DateTimeError, DateTimeUnit, IsDateTime}
+import cron4s.datetime.{
+  DateTimeError,
+  DateTimeUnit,
+  InvalidFieldValue,
+  IsDateTime
+}
 
 import moment._
 
@@ -93,7 +98,7 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
       newDateTime
     }
 
-    Right(field match {
+    def assignFieldValue: Date = field match {
       case Second     => setter(_.second(value.toDouble).millisecond(0))
       case Minute     => setter(_.minute(value.toDouble))
       case Hour       => setter(_.hour(value.toDouble))
@@ -102,7 +107,14 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
       case DayOfWeek =>
         val dayToSet = (value % DaysInWeek) + 1
         setter(_.day(dayToSet.toDouble))
-    })
+    }
+
+    def assignmentSucceeded(date: Date) =
+      get[F](date, field).contains(value)
+
+    val modifiedDate = assignFieldValue
+    if (assignmentSucceeded(modifiedDate)) Right(modifiedDate)
+    else Left(InvalidFieldValue(field, value))
   }
 
 }
