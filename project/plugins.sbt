@@ -1,6 +1,6 @@
 resolvers += "Typesafe Repository" at "https://repo.typesafe.com/typesafe/releases/"
 
-addSbtPlugin("org.scala-js"       % "sbt-scalajs"         % "0.6.18")
+addSbtPlugin("org.scala-js"       % "sbt-scalajs"         % "0.6.19")
 addSbtPlugin("com.github.gseitz"  % "sbt-release"         % "1.0.5")
 addSbtPlugin("org.scoverage"      % "sbt-scoverage"       % "1.5.0")
 addSbtPlugin("com.codacy"         % "sbt-codacy-coverage" % "1.3.0")

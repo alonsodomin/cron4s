@@ -5,7 +5,7 @@ import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 
 import scala.xml.transform.{RewriteRule, RuleTransformer}
 
-scalaVersion in ThisBuild := "2.12.2"
+scalaVersion in ThisBuild := "2.12.3"
 
 crossScalaVersions in ThisBuild := Seq(scalaVersion.value, "2.11.11")
 
@@ -334,3 +334,4 @@ addCommandAlias("testJVM", "cron4sJVM/test")
 addCommandAlias("testJS", "cron4sJS/test")
 addCommandAlias("validateJVM", ";testJVM;makeMicrosite")
 addCommandAlias("validateJS", "testJS")
+addCommandAlias("rebuild", ";clean;validateJS;validateJVM")
