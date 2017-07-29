@@ -15,6 +15,22 @@ lazy val botBuild =
 lazy val consoleImports =
   settingKey[Seq[String]]("Base imports in the console")
 
+lazy val unusedWarning = Seq(
+  scalacOptions ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, 11)) =>
+        Seq("-Ywarn-unused-import")
+      case Some((2, n)) if n >= 12 =>
+        Seq("-Xlint:-unused,_")
+    }
+  },
+  scalacOptions in (Compile, console) := scalacOptions.value.filterNot(
+    Set("-Ywarn-unused-import", "-Xlint:-unused,_", "-Xfatal-warnings")
+  ),
+  scalacOptions in (Test, console) := (scalacOptions in (Compile, console)).value,
+  scalacOptions in Tut := (scalacOptions in (Compile, console)).value
+)
+
 val commonSettings = Def.settings(
   name := "cron4s",
   organization := "com.github.alonsodomin.cron4s",
@@ -31,7 +47,6 @@ val commonSettings = Def.settings(
     "-unchecked",
     "-deprecation",
     "-Xfuture",
-    "-Xlint:-unused,_",
     "-Xfatal-warnings",
     "-language:postfixOps",
     "-language:implicitConversions",
@@ -44,12 +59,9 @@ val commonSettings = Def.settings(
   initialCommands in console := consoleImports.value
     .map(s => s"import $s")
     .mkString("\n") + "\n",
-  scalacOptions in (Compile, console) := scalacOptions.value.filterNot(
-    Set("-Ywarn-unused-import", "-Xfatal-warnings")
-  ),
   scalafmtVersion in ThisBuild := "1.1.0",
   scalafmtOnCompile := true
-) ++ Licensing.settings
+) ++ unusedWarning ++ Licensing.settings
 
 lazy val commonJvmSettings = Seq(
   fork in Test := false
@@ -164,9 +176,7 @@ lazy val docSettings = Seq(
     "-sourcepath",
     baseDirectory.in(LocalRootProject).value.getAbsolutePath,
     "-diagrams"
-  ),
-  scalacOptions in Tut := scalacOptions.value.filterNot(
-    Set("-Ywarn-unused-import", "-Xfatal-warnings"))
+  )
 )
 
 lazy val releaseSettings = {
