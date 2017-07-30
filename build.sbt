@@ -1,3 +1,4 @@
+import sbtcrossproject.{crossProject, CrossType}
 import com.typesafe.sbt.pgp.PgpKeys
 
 import com.typesafe.tools.mima.plugin.MimaKeys.mimaPreviousArtifacts
@@ -245,7 +246,7 @@ lazy val docs = project
   .settings(docSettings)
   .dependsOn(cron4sJVM)
 
-lazy val core = (crossProject in file("core"))
+lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("core"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
     name := "core",
@@ -258,31 +259,33 @@ lazy val core = (crossProject in file("core"))
   .jsSettings(Dependencies.coreJS)
   .jvmSettings(commonJvmSettings)
   .jvmSettings(consoleSettings)
-  .jvmSettings(Dependencies.coreJVM: _*)
-  .jvmSettings(mimaSettings("core"): _*)
+  .jvmSettings(Dependencies.coreJVM)
+  .jvmSettings(mimaSettings("core"))
 
 lazy val coreJS = core.js
 lazy val coreJVM = core.jvm
 
-lazy val testkit = (crossProject.crossType(CrossType.Pure) in file("testkit"))
-  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
-  .settings(
-    name := "testkit",
-    moduleName := "cron4s-testkit"
-  )
-  .settings(commonSettings)
-  .settings(publishSettings)
-  .settings(Dependencies.testkit)
-  .jsSettings(commonJsSettings)
-  .jvmSettings(commonJvmSettings)
-  .jvmSettings(consoleSettings)
-  .jvmSettings(mimaSettings("testkit"): _*)
-  .dependsOn(core)
+lazy val testkit =
+  (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file(
+    "testkit"))
+    .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+    .settings(
+      name := "testkit",
+      moduleName := "cron4s-testkit"
+    )
+    .settings(commonSettings)
+    .settings(publishSettings)
+    .settings(Dependencies.testkit)
+    .jsSettings(commonJsSettings)
+    .jvmSettings(commonJvmSettings)
+    .jvmSettings(consoleSettings)
+    .jvmSettings(mimaSettings("testkit"))
+    .dependsOn(core)
 
 lazy val testkitJS = testkit.js
 lazy val testkitJVM = testkit.jvm
 
-lazy val tests = (crossProject in file("tests"))
+lazy val tests = (crossProject(JSPlatform, JVMPlatform) in file("tests"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
     name := "tests",
