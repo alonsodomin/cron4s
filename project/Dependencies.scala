@@ -1,6 +1,8 @@
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import sbt._
 import Keys._
+
+import sbtcrossproject.CrossPlugin.autoImport._
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSVersion
 
 object Dependencies {
 
