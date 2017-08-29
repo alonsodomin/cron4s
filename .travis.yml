@@ -8,8 +8,8 @@ jdk:
   - oraclejdk8
 
 scala:
-   - 2.11.11
-   - 2.12.3
+  - 2.11.11
+  - 2.12.3
 
 cache:
   directories:
