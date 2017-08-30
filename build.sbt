@@ -78,7 +78,7 @@ lazy val commonJsSettings = Seq(
     s"-P:scalajs:mapSourceURI:$a->$g/"
   },
   parallelExecution := false,
-  jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv()
+  jsEnv := PhantomJSEnv().value
 )
 
 lazy val consoleSettings = Seq(
