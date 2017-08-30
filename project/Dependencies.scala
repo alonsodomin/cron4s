@@ -9,14 +9,14 @@ object Dependencies {
   object version {
     val cats        = "1.0.0-MF"
     val shapeless   = "2.3.2"
-    val fastparse   = "0.4.3"
+    val fastparse   = "0.4.4"
     val scalacheck  = "1.13.5"
-    val scalatest   = "3.0.3"
+    val scalatest   = "3.0.4"
     val discipline  = "0.8"
     val catalysts   = "0.0.5"
 
     val jodaTime      = "2.9.9"
-    val jodaConvert   = "1.8.2"
+    val jodaConvert   = "1.8.3"
     val momentjs      = "0.8.1"
     val scalaJavaTime = "2.0.0-M12"
   }

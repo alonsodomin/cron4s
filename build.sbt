@@ -28,7 +28,12 @@ lazy val unusedWarning = Seq(
 val commonSettings = Def.settings(
   name := "cron4s",
   organization := "com.github.alonsodomin.cron4s",
+  organizationName := "Antonio Alonso Dominguez",
   description := "CRON expression parser for Scala",
+  startYear := Some(2017),
+  homepage := Some(url("https://github.com/alonsodomin/cron4s")),
+  licenses += ("Apache-2.0", url(
+    "https://www.apache.org/licenses/LICENSE-2.0.txt")),
   scmInfo := Some(
     ScmInfo(
       url("https://github.com/alonsodomin/cron4s"),
@@ -55,7 +60,7 @@ val commonSettings = Def.settings(
     .mkString("\n") + "\n",
   scalafmtVersion in ThisBuild := "1.1.0",
   scalafmtOnCompile := true
-) ++ unusedWarning ++ Licensing.settings
+) ++ unusedWarning
 
 lazy val commonJvmSettings = Seq(
   fork in Test := false
@@ -92,9 +97,6 @@ lazy val noPublishSettings = Seq(
 )
 
 lazy val publishSettings = Seq(
-  homepage := Some(url("https://github.com/alonsodomin/cron4s")),
-  licenses := Seq(
-    "Apache 2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
   publishMavenStyle := true,
   publishArtifact in Test := false,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
