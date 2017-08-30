@@ -108,24 +108,22 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
           else Nil
 
         def impliesError(elem: EnumerableNode[F]): List[InvalidField] =
-         if (curr.implies(elem)) List(InvalidField(currField, implicationErrorMsg(elem, curr)))
-         else Nil
+          if (curr.implies(elem)) List(InvalidField(currField, implicationErrorMsg(elem, curr)))
+          else Nil
 
         State { seen =>
-          val errors = seen.traverse { elem =>
-            impliedByError(elem) ++ impliesError(elem)
+          val errors = seen.foldMap { elem =>
+            impliesError(elem) ++ impliedByError(elem)
           }
-
-          (curr :: seen) -> errors
+          (curr :: seen) -> List(errors)
         }
       }
 
       def validate(node: SeveralNode[F]): List[InvalidField] = {
-        val validation = node.values.map { elem =>
+        val validation = node.values.foldMapM { elem =>
           val elemErrors = elemValidator.validate(elem)
-          checkImplication(elem).map(newErrors => elemErrors :: newErrors)
-        }.reduceLeft { (lhs, rhs) => (lhs, rhs).mapN(_ ++ _) }
-
+          checkImplication(elem).map(elemErrors :: _)
+        }
         validation.runEmptyA.value.flatten
       }
     }
