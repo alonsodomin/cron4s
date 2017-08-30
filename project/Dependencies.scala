@@ -1,11 +1,13 @@
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import sbt._
 import Keys._
+
+import sbtcrossproject.CrossPlugin.autoImport._
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSVersion
 
 object Dependencies {
 
   object version {
-    val cats        = "0.9.0"
+    val cats        = "1.0.0-MF"
     val shapeless   = "2.3.2"
     val fastparse   = "0.4.3"
     val scalacheck  = "1.13.5"

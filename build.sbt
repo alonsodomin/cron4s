@@ -6,9 +6,6 @@ import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 
 import scala.xml.transform.{RewriteRule, RuleTransformer}
 
-lazy val botBuild =
-  settingKey[Boolean]("Build by TravisCI instead of local dev environment")
-
 lazy val consoleImports =
   settingKey[Seq[String]]("Base imports in the console")
 
@@ -48,9 +45,9 @@ val commonSettings = Def.settings(
     "-language:postfixOps",
     "-language:implicitConversions",
     "-language:higherKinds",
-    "-language:existentials"
+    "-language:existentials",
+    "-Ypartial-unification"
   ),
-  botBuild := scala.sys.env.get("TRAVIS").isDefined,
   parallelExecution in Test := false,
   consoleImports := Seq("cron4s._"),
   initialCommands in console := consoleImports.value
@@ -65,11 +62,11 @@ lazy val commonJvmSettings = Seq(
 )
 
 lazy val commonJsSettings = Seq(
-  scalaJSStage in Test := FastOptStage,
+  scalaJSStage in Global := FastOptStage,
   requiresDOM := false,
   // batch mode decreases the amount of memory needed to compile scala.js code
   scalaJSOptimizerOptions := scalaJSOptimizerOptions.value.withBatchMode(
-    botBuild.value),
+    isTravisBuild.value),
   scalacOptions += {
     val tagOrHash = {
       if (isSnapshot.value)
@@ -80,6 +77,7 @@ lazy val commonJsSettings = Seq(
     val g = "https://raw.githubusercontent.com/alonsodomin/cron4s/" + tagOrHash
     s"-P:scalajs:mapSourceURI:$a->$g/"
   },
+  parallelExecution := false,
   jsEnv := PhantomJSEnv().value
 )
 

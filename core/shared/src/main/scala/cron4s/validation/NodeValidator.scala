@@ -16,7 +16,7 @@
 
 package cron4s.validation
 
-import cats._
+import cats.data._
 import cats.implicits._
 
 import cron4s.{CronField, CronUnit, InvalidField}
@@ -100,33 +100,33 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       def implicationErrorMsg(that: EnumerableNode[F], impliedBy: EnumerableNode[F]): String =
         s"Value '${that.show}' is implied by '${impliedBy.show}'"
 
-      def verifyImplication(seen: List[EnumerableNode[F]], curr: EnumerableNode[F]): List[InvalidField] = {
-        seen.flatMap { elem =>
-          val error = {
-            if (curr.impliedBy(elem))
-              Some(InvalidField(curr.unit.field, implicationErrorMsg(curr, elem)))
-            else if (curr.implies(elem))
-              Some(InvalidField(curr.unit.field, implicationErrorMsg(elem, curr)))
-            else
-              None
+      def checkImplication(curr: EnumerableNode[F]): State[List[EnumerableNode[F]], List[List[InvalidField]]] = {
+        lazy val currField = curr.unit.field
+
+        def impliedByError(elem: EnumerableNode[F]): List[InvalidField] =
+          if (curr.impliedBy(elem)) List(InvalidField(currField, implicationErrorMsg(curr, elem)))
+          else Nil
+
+        def impliesError(elem: EnumerableNode[F]): List[InvalidField] =
+         if (curr.implies(elem)) List(InvalidField(currField, implicationErrorMsg(elem, curr)))
+         else Nil
+
+        State { seen =>
+          val errors = seen.traverse { elem =>
+            impliedByError(elem) ++ impliesError(elem)
           }
 
-          error.toList
+          (curr :: seen) -> errors
         }
       }
 
       def validate(node: SeveralNode[F]): List[InvalidField] = {
-        val zero = List.empty[EnumerableNode[F]] -> List.empty[List[InvalidField]]
-        val (_, errorResult) = node.values.foldRight(Eval.now(zero)) { (e, acc) =>
-          acc.map { case (seen, errors) =>
-            val subErrors = elemValidator.validate(e)
-            val newErrors = verifyImplication(seen, e) :: subErrors :: errors
-            val newSeen = e :: seen
-            newSeen -> newErrors
-          }
-        }.value
+        val validation = node.values.map { elem =>
+          val elemErrors = elemValidator.validate(elem)
+          checkImplication(elem).map(newErrors => elemErrors :: newErrors)
+        }.reduceLeft { (lhs, rhs) => (lhs, rhs).mapN(_ ++ _) }
 
-        errorResult.flatten
+        validation.runEmptyA.value.flatten
       }
     }
 
@@ -135,13 +135,13 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       ev: Enumerated[CronUnit[F]]
     ): NodeValidator[EveryNode[F]] = new NodeValidator[EveryNode[F]] {
       def validate(node: EveryNode[F]): List[InvalidField] = {
-        val baseErrors = NodeValidator[DivisibleNode[F]].validate(node.base)
+        lazy val baseErrors = NodeValidator[DivisibleNode[F]].validate(node.base)
         val evenlyDivided = (node.base.range.size % node.freq) == 0
         if (!evenlyDivided) {
-          baseErrors :+ InvalidField(
+          InvalidField(
             node.unit.field,
             s"Step '${node.freq}' does not evenly divide the value '${node.base.show}'"
-          )
+          ) :: baseErrors
         } else baseErrors
       }
     }
