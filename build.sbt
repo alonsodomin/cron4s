@@ -45,7 +45,8 @@ val commonSettings = Def.settings(
     "-language:postfixOps",
     "-language:implicitConversions",
     "-language:higherKinds",
-    "-language:existentials"
+    "-language:existentials",
+    "-Ypartial-unification"
   ),
   parallelExecution in Test := false,
   consoleImports := Seq("cron4s._"),
