@@ -19,7 +19,7 @@ package cron4s.validation
 import cats.syntax.show._
 
 import cron4s._
-import cron4s.expr.{BetweenNode, ConstNode, SeveralNode}
+import cron4s.expr._
 
 import org.scalatest._
 
@@ -49,6 +49,31 @@ class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
 
     val returnedErrors = NodeValidator[SeveralNode[Minute]].validate(severalNode)
     returnedErrors shouldBe List.empty[InvalidField]
+  }
+
+  it should "include both error messages when implication is bidirectional" in {
+    val node1 = ConstNode[Second](10)
+    val node2 = ConstNode[Second](10)
+    val severalNode = SeveralNode[Second](node1, node2)
+
+    val returnedErrors = NodeValidator[SeveralNode[Second]].validate(severalNode)
+    returnedErrors shouldBe List(
+      InvalidField(Second, s"Value '${node1.show}' is implied by '${node2.show}'"),
+      InvalidField(Second, s"Value '${node2.show}' is implied by '${node1.show}'")
+    )
+  }
+
+  it should "accumulate all the implication errors" in {
+    val node1 = ConstNode[Month](5)
+    val node2 = BetweenNode[Month](ConstNode(2), ConstNode(6))
+    val node3 = BetweenNode[Month](ConstNode(4), ConstNode(8))
+    val severalNode = SeveralNode[Month](node1, node2, node3)
+
+    val returnedErrors = NodeValidator[SeveralNode[Month]].validate(severalNode)
+    returnedErrors shouldBe List(
+      InvalidField(Month, s"Value '${node1.show}' is implied by '${node2.show}'"),
+      InvalidField(Month, s"Value '${node1.show}' is implied by '${node3.show}'")
+    )
   }
 
 }
