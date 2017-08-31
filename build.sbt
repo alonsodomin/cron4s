@@ -90,16 +90,9 @@ lazy val consoleSettings = Seq(
   consoleImports ++= Seq("java.time._", "cron4s.lib.javatime._")
 )
 
-lazy val noPublishSettings = Seq(
-  publish := (),
-  publishLocal := (),
-  publishArtifact := false
-)
-
 lazy val publishSettings = Seq(
   publishMavenStyle := true,
   publishArtifact in Test := false,
-  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   autoAPIMappings := true,
   apiURL := Some(url("https://alonsodomin.github.io/cron4s/api/")),
   publishTo := Some(
@@ -129,6 +122,12 @@ lazy val publishSettings = Seq(
         <url>https://github.com/alonsodomin</url>
       </developer>
     </developers>
+)
+
+lazy val noPublishSettings = publishSettings ++ Seq(
+  publish := (),
+  publishLocal := (),
+  publishArtifact := false
 )
 
 lazy val coverageSettings = Seq(
@@ -179,14 +178,10 @@ lazy val docSettings = Seq(
 lazy val releaseSettings = {
   import ReleaseTransformations._
 
-  val sonatypeReleaseAll = ReleaseStep(
-    action = Command.process("sonatypeReleaseAll", _),
-    enableCrossBuild = true
-  )
-
   Seq(
     sonatypeProfileName := "com.github.alonsodomin",
     releaseCrossBuild := true,
+    releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     releaseProcess := Seq[ReleaseStep](
       checkSnapshotDependencies,
       inquireVersions,
@@ -198,7 +193,7 @@ lazy val releaseSettings = {
       publishArtifacts,
       setNextVersion,
       commitNextVersion,
-      sonatypeReleaseAll,
+      releaseStepCommand("sonatypeReleaseAll"),
       pushChanges
     )
   )
