@@ -122,9 +122,12 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       def validate(node: SeveralNode[F]): List[InvalidField] = {
         val validation = node.values.foldMapM { elem =>
           val elemErrors = elemValidator.validate(elem)
-          checkImplication(elem).map(elemErrors :: _)
+          // If subexpressions in the elements are not valid, then
+          // do not check for element implication
+          if (elemErrors.isEmpty) checkImplication(elem)
+          else State.pure[List[EnumerableNode[F]], List[List[InvalidField]]](List(elemErrors))
         }
-        validation.runEmptyA.value.flatten
+        validation.map(_.flatten).runEmptyA.value
       }
     }
 

@@ -76,4 +76,16 @@ class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
     )
   }
 
+  it should "not check for implication of elements when a subexpression is invalid" in {
+    val node1 = ConstNode[Second](23)
+    val node2 = BetweenNode[Second](ConstNode(-390), ConstNode(120))
+    val severalNode = SeveralNode[Second](node1, node2)
+
+    val returnedErrors = NodeValidator[SeveralNode[Second]].validate(severalNode)
+    returnedErrors shouldBe List(
+      InvalidField(Second, s"Value ${node2.begin.show} is out of bounds for field: Second"),
+      InvalidField(Second, s"Value ${node2.end.show} is out of bounds for field: Second")
+    )
+  }
+
 }
