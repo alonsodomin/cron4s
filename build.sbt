@@ -93,6 +93,7 @@ lazy val consoleSettings = Seq(
 lazy val publishSettings = Seq(
   publishMavenStyle := true,
   publishArtifact in Test := false,
+  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   autoAPIMappings := true,
   apiURL := Some(url("https://alonsodomin.github.io/cron4s/api/")),
   publishTo := Some(
@@ -181,7 +182,6 @@ lazy val releaseSettings = {
   Seq(
     sonatypeProfileName := "com.github.alonsodomin",
     releaseCrossBuild := true,
-    releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     releaseProcess := Seq[ReleaseStep](
       checkSnapshotDependencies,
       inquireVersions,
