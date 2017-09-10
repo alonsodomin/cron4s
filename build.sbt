@@ -68,7 +68,6 @@ lazy val commonJvmSettings = Seq(
 
 lazy val commonJsSettings = Seq(
   scalaJSStage in Global := FastOptStage,
-  requiresDOM := false,
   // batch mode decreases the amount of memory needed to compile scala.js code
   scalaJSOptimizerOptions := scalaJSOptimizerOptions.value.withBatchMode(
     isTravisBuild.value),
@@ -83,7 +82,7 @@ lazy val commonJsSettings = Seq(
     s"-P:scalajs:mapSourceURI:$a->$g/"
   },
   parallelExecution := false,
-  jsEnv := PhantomJSEnv().value
+  jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
 )
 
 lazy val consoleSettings = Seq(
@@ -140,7 +139,7 @@ lazy val coverageSettings = Seq(
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   mimaPreviousArtifacts := Set(
-    "com.github.alonsodomin.cron4s" %% s"cron4s-${module}" % "0.4.0")
+    "com.github.alonsodomin.cron4s" %% s"cron4s-${module}" % "0.4.2")
 )
 
 lazy val docsMappingsAPIDir = settingKey[String](

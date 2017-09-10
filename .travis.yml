@@ -22,7 +22,7 @@ cache:
 
 env:
   global:
-    - TRAVIS_NODE_VERSION="4"
+    - TRAVIS_NODE_VERSION="5"
 
 addons:
   apt:
@@ -37,6 +37,7 @@ install:
   - gem update --system
   - gem install sass
   - gem install jekyll -v 3.2.1
+  - npm install jsdom
 
 script:
   - scripts/travis-build.sh
@@ -48,4 +49,3 @@ after_success:
 branches:
   only:
     - master
-    - 0.3.x
