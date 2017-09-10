@@ -65,6 +65,7 @@ dist/
 node_modules/
 temp/
 .node-xmlhttprequest*
+package-lock.json
 
 # vagrant artifacts #
 #####################
