@@ -38,7 +38,8 @@ val commonSettings = Def.settings(
     ScmInfo(
       url("https://github.com/alonsodomin/cron4s"),
       "scm:git:git@github.com:alonsodomin/cron4s.git"
-    )),
+    )
+  ),
   scalacOptions ++= Seq(
     "-encoding",
     "UTF-8",
@@ -58,7 +59,7 @@ val commonSettings = Def.settings(
   initialCommands in console := consoleImports.value
     .map(s => s"import $s")
     .mkString("\n") + "\n",
-  scalafmtVersion in ThisBuild := "1.1.0",
+  scalafmtVersion in ThisBuild := "1.2.0",
   scalafmtOnCompile := true
 ) ++ unusedWarning
 
