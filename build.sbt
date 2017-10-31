@@ -59,7 +59,7 @@ val commonSettings = Def.settings(
   initialCommands in console := consoleImports.value
     .map(s => s"import $s")
     .mkString("\n") + "\n",
-  scalafmtVersion in ThisBuild := "1.2.0",
+  scalafmtVersion in ThisBuild := "1.3.0",
   scalafmtOnCompile := true
 ) ++ unusedWarning
 

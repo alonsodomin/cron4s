@@ -17,7 +17,7 @@
 package cron4s.base
 
 import cats.{Monoid, MonoidK}
-import cats.functor.Contravariant
+import cats.Contravariant
 
 import cron4s.syntax.predicate._
 

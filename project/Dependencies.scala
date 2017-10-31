@@ -7,7 +7,7 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSVersion
 object Dependencies {
 
   object version {
-    val cats        = "1.0.0-MF"
+    val cats        = "1.0.0-RC1"
     val shapeless   = "2.3.2"
     val fastparse   = "0.4.4"
     val scalacheck  = "1.13.5"

@@ -9,7 +9,7 @@ jdk:
 
 scala:
   - 2.11.11
-  - 2.12.3
+  - 2.12.4
 
 cache:
   directories:

@@ -17,7 +17,6 @@
 package cron4s.testkit.laws
 
 import cats.laws._
-import cats.kernel.laws._
 import cats.implicits._
 
 import cron4s.CronField
