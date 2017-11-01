@@ -32,38 +32,32 @@ trait DateTimeCronLaws[E, DateTime] {
   implicit def DT: IsDateTime[DateTime]
   implicit def TC: DateTimeCron[E]
 
-  def matchAny(e: E, dt: DateTime): Prop = {
-    val fieldValues = e.supportedFields.flatMap { field =>
-      DT.get(dt, field)
-    }
+  def matchAny(e: E, dt: DateTime): IsEq[Boolean] = {
+    val fieldValues =
+      e.supportedFields.flatMap(DT.get(dt, _))
 
     val exprRanges = e.ranges
-    val supportedRanges = DT.supportedFields(dt).flatMap { field =>
-      exprRanges.get(field)
-    }
+    val supportedRanges =
+      DT.supportedFields(dt).flatMap(exprRanges.get)
 
-    val existsAny = supportedRanges.zip(fieldValues).exists { case (range, value) =>
-      range.contains(value)
-    }
+    val existsAny = supportedRanges.zip(fieldValues)
+      .exists { case (range, value) => range.contains(value) }
 
-    e.anyOf(dt) ?== existsAny
+    e.anyOf(dt) <-> existsAny
   }
 
-  def matchAll(e: E, dt: DateTime): Prop = {
-    val fieldValues = e.supportedFields.flatMap { field =>
-      DT.get(dt, field)
-    }
+  def matchAll(e: E, dt: DateTime): IsEq[Boolean] = {
+    val fieldValues =
+      e.supportedFields.flatMap(DT.get(dt, _))
 
     val exprRanges = e.ranges
-    val supportedRanges = DT.supportedFields(dt).flatMap { field =>
-      exprRanges.get(field)
-    }
+    val supportedRanges =
+      DT.supportedFields(dt).flatMap(exprRanges.get)
 
-    val containsAll = supportedRanges.zip(fieldValues).forall { case (range, value) =>
-      range.contains(value)
-    }
+    val containsAll = supportedRanges.zip(fieldValues)
+      .forall { case (range, value) => range.contains(value) }
 
-    e.allOf(dt) ?== containsAll
+    e.allOf(dt) <-> containsAll
   }
 
   def forwards(e: E, from: DateTime): IsEq[Option[DateTime]] =

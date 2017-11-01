@@ -44,6 +44,7 @@ object Dependencies {
   lazy val testkit = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
       "org.typelevel"  %%% "cats-laws"          % version.cats,
+      "org.typelevel"  %%% "cats-testkit"       % version.cats,
       "org.typelevel"  %%% "discipline"         % version.discipline,
       "org.typelevel"  %%% "catalysts-platform" % version.catalysts,
       "org.scalacheck" %%% "scalacheck"         % version.scalacheck,

@@ -17,7 +17,7 @@
 package cron4s.testkit.laws
 
 import cats.Eq
-import cats.kernel.laws._
+import cats.laws._
 import cats.implicits._
 
 import cron4s.CronField
@@ -33,28 +33,36 @@ trait IsDateTimeLaws[DateTime] {
   implicit def DT: IsDateTime[DateTime]
   implicit def eq: Eq[DateTime]
 
-  def gettable[F <: CronField](dt: DateTime, field: F): Prop =
-    DT.get(dt, field).isDefined ?== DT.supportedFields(dt).contains(field)
+  def gettable[F <: CronField](dt: DateTime, field: F): IsEq[Boolean] =
+    DT.get(dt, field).isDefined <-> DT.supportedFields(dt).contains(field)
 
-  def immutability[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Prop = {
+  def immutability[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): IsEq[Option[Boolean]] = {
     val check = for {
       current     <- DT.get(dt, fieldValue.field)
       newDateTime <- DT.set(dt, fieldValue.field, fieldValue.value).toOption
     } yield {
-      if (current == fieldValue.value) newDateTime ?== dt
-      else newDateTime ?!= dt
+      if (current == fieldValue.value) newDateTime === dt
+      else newDateTime =!= dt
     }
 
-    check.getOrElse(proved)
+    val expected = if (DT.supportedFields(dt).contains(fieldValue.field)) {
+      Some(true)
+    } else None
+
+    check <-> expected
   }
 
-  def settable[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Prop = {
-    val check = for {
+  def settable[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): IsEq[Option[Int]] = {
+    val newValue = for {
       newDateTime <- DT.set(dt, fieldValue.field, fieldValue.value).toOption
       value       <- DT.get(newDateTime, fieldValue.field)
-    } yield value ?== fieldValue.value
+    } yield value
 
-    check.getOrElse(proved)
+    val expected = if (DT.supportedFields(dt).contains(fieldValue.field)) {
+      Some(fieldValue.value)
+    } else None
+
+    newValue <-> expected
   }
 
 }

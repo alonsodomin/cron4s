@@ -16,7 +16,9 @@
 
 package cron4s.testkit
 
+import cats.tests._
 import catalysts.Platform
+
 import org.scalactic.anyvals.{PosInt, PosZInt}
 import org.scalatest.{FunSuite, Matchers, PropSpec}
 import org.scalatest.prop.{Configuration, GeneratorDrivenPropertyChecks}
@@ -42,23 +44,9 @@ trait TestSettings extends Configuration {
 }
 
 
-trait Cron4sLawSuite extends FunSuite
-  with GeneratorDrivenPropertyChecks
-  with Discipline
-  with Matchers
-  with TestSettings {
+trait Cron4sLawSuite extends CatsSuite
 
-  override implicit val generatorDrivenConfig: PropertyCheckConfiguration =
-    defaultPropertyCheckConfig
-
-}
-
-trait SlowCron4sLawSuite extends Cron4sLawSuite {
-
-  override implicit val generatorDrivenConfig: PropertyCheckConfiguration =
-    slowPropertyCheckConfig
-
-}
+trait SlowCron4sLawSuite extends SlowCatsSuite
 
 abstract class Cron4sPropSpec extends PropSpec
   with TestSettings {

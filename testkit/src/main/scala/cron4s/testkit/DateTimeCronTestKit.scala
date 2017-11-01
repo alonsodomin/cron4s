@@ -17,7 +17,6 @@
 package cron4s.testkit
 
 import cats.Eq
-import catalysts.Platform
 
 import cron4s.datetime.IsDateTime
 import cron4s.expr.{CronExpr, DateCronExpr, TimeCronExpr}
@@ -30,10 +29,6 @@ import cron4s.testkit.gen.CronGenerators
 abstract class DateTimeCronTestKit[DateTime : IsDateTime : Eq] extends SlowCron4sLawSuite
   with DateTimeTestKitBase[DateTime]
   with CronGenerators {
-
-  override implicit val generatorDrivenConfig: PropertyCheckConfiguration =
-    if (Platform.isJvm) defaultPropertyCheckConfig.copy(minSuccessful = 10)
-    else slowPropertyCheckConfig
 
   checkAll("CronExpr", DateTimeCronTests[CronExpr, DateTime].dateTimeCron)
   checkAll("TimeCronExpr", DateTimeCronTests[DateCronExpr, DateTime].dateTimeCron)

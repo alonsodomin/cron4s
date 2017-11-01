@@ -17,6 +17,8 @@
 package cron4s.testkit.discipline
 
 import cats.Eq
+import cats.laws.discipline._
+import cats.implicits._
 
 import cron4s.CronField
 import cron4s.datetime.IsDateTime
