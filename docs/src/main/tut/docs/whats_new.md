@@ -3,6 +3,17 @@ layout: docs
 title: "What's New"
 ---
 
+## 0.4.3
+
+This is a maintenance release over 0.4.2:
+
+Version upgrades:
+
+ * Scala 2.11.11 / Scala 2.12.4
+ * ScalaJS 0.6.20
+ * Cats 1.0.0-RC1
+ * FastParse 1.0.0
+
 ## 0.4.2
 
 This a maintenance release over 0.4.1:
