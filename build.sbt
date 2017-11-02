@@ -75,7 +75,7 @@ lazy val commonJsSettings = Seq(
   scalacOptions += {
     val tagOrHash = {
       if (isSnapshot.value)
-        sys.process.Process("git rev-parse HEAD").lines_!.head
+        sys.process.Process("git rev-parse HEAD").lineStream_!.head
       else version.value
     }
     val a = (baseDirectory in LocalRootProject).value.toURI.toString
@@ -126,8 +126,7 @@ lazy val publishSettings = Seq(
 )
 
 lazy val noPublishSettings = publishSettings ++ Seq(
-  publish := (),
-  publishLocal := (),
+  skip in publish := true,
   publishArtifact := false
 )
 
