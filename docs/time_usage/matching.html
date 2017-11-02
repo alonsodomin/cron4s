@@ -7,15 +7,13 @@ libraries available. To use the built-in support for it we will need the followi
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">java.time._</span>
 <span class="k">import</span> <span class="nn">cron4s._</span>
 <span class="k">import</span> <span class="nn">cron4s.lib.javatime._</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>Now let’s parse a new expression:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="nc">Right</span><span class="o">(</span><span class="n">cron</span><span class="o">)</span> <span class="k">=</span> <span class="nc">Cron</span><span class="o">(</span><span class="s">"10-35 2,4,6 * * * ?"</span><span class="o">)</span>
 <span class="n">cron</span><span class="k">:</span> <span class="kt">cron4s.expr.CronExpr</span> <span class="o">=</span> <span class="mi">10</span><span class="o">-</span><span class="mi">35</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">?</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>Now we can perform 2 types of matches against any object that extends <code class="highlighter-rouge">java.time.Temporal</code>:</p>
 
@@ -27,8 +25,7 @@ libraries available. To use the built-in support for it we will need the followi
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">anyOf</span><span class="o">(</span><span class="n">now</span><span class="o">)</span>
 <span class="n">res1</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">true</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>As said before, these two operations are also available at the sub-expression level:</p>
 
@@ -43,8 +40,7 @@ libraries available. To use the built-in support for it we will need the followi
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">timePart</span><span class="o">.</span><span class="n">anyOf</span><span class="o">(</span><span class="n">now</span><span class="o">)</span>
 <span class="n">res5</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">true</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p><code class="highlighter-rouge">allOf</code> will evaluate all the fields of the Cron expression against all the fields
 of the <em>DateTime</em> object and it will return <code class="highlighter-rouge">false</code> if there is any one that does
@@ -62,8 +58,7 @@ of using the whole expression:</p>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">minutes</span><span class="o">.</span><span class="n">matchesIn</span><span class="o">(</span><span class="n">now</span><span class="o">)</span>
 <span class="n">res7</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">true</span>
-</code></pre>
-</div>
+</code></pre></div>
 </section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/cron4s/highlight/highlight.pack.js"></script><script>hljs.configure({
 languages:['scala','java','bash']
 });

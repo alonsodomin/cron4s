@@ -34,8 +34,7 @@ if wanting to use the Java 8 time support, the user will need these imports:</p>
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">java.time._</span>
 <span class="k">import</span> <span class="nn">cron4s._</span>
 <span class="k">import</span> <span class="nn">cron4s.lib.javatime._</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <h5 id="individual-fields">Individual fields</h5>
 
@@ -47,8 +46,7 @@ operations also available at the field level. For example, given the following i
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">dateTime</span> <span class="k">=</span> <span class="nc">LocalDateTime</span><span class="o">.</span><span class="n">of</span><span class="o">(</span><span class="mi">2016</span><span class="o">,</span> <span class="mi">12</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">9</span><span class="o">)</span>
 <span class="n">dateTime</span><span class="k">:</span> <span class="kt">java.time.LocalDateTime</span> <span class="o">=</span> <span class="mi">2016</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">01</span><span class="n">T00</span><span class="k">:</span><span class="err">04</span><span class="kt">:</span><span class="err">09</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>There were cases in which users could find a compilation error when using the operations <code class="highlighter-rouge">next</code>, <code class="highlighter-rouge">prev</code> and <code class="highlighter-rouge">step</code> in
 individual field expressions when used with DateTime objects. This was due to the existence of operations with the
@@ -61,15 +59,13 @@ compiler refused to resolve the implicit that enable to perform such operation i
  <span class="n">required</span><span class="k">:</span> <span class="kt">Int</span>
        <span class="n">cron</span><span class="o">.</span><span class="n">seconds</span><span class="o">.</span><span class="n">next</span><span class="o">(</span><span class="n">dateTime</span><span class="o">)</span>
                          <span class="o">^</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>To solve this problem the methods that operate on DateTime objects have been renamed including the <code class="highlighter-rouge">In</code> suffix:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">seconds</span><span class="o">.</span><span class="n">nextIn</span><span class="o">(</span><span class="n">dateTime</span><span class="o">)</span>
 <span class="n">res1</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">java.time.LocalDateTime</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">2016</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">01</span><span class="n">T00</span><span class="k">:</span><span class="err">04</span><span class="kt">:</span><span class="err">10</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>This aligns them with the previously existent <code class="highlighter-rouge">matchesIn</code> method.</p>
 </section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/cron4s/highlight/highlight.pack.js"></script><script>hljs.configure({

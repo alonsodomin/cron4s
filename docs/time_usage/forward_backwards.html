@@ -7,15 +7,13 @@ a given one. To see is in action, let’s start with our own basic imports:</p>
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">java.time._</span>
 <span class="k">import</span> <span class="nn">cron4s._</span>
 <span class="k">import</span> <span class="nn">cron4s.lib.javatime._</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>And an already parsed CRON expression:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="nc">Right</span><span class="o">(</span><span class="n">cron</span><span class="o">)</span> <span class="k">=</span> <span class="nc">Cron</span><span class="o">(</span><span class="s">"10-35 2,4,6 * ? * *"</span><span class="o">)</span>
 <span class="n">cron</span><span class="k">:</span> <span class="kt">cron4s.expr.CronExpr</span> <span class="o">=</span> <span class="mi">10</span><span class="o">-</span><span class="mi">35</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span> <span class="o">*</span> <span class="o">?</span> <span class="o">*</span> <span class="o">*</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>Now the <code class="highlighter-rouge">next</code> operation is able to return to us the next moment in time according
 to the CRON expression:</p>
@@ -25,15 +23,13 @@ to the CRON expression:</p>
 
 <span class="kt">scala&gt;</span> <span class="kt">cron.next</span><span class="o">(</span><span class="kt">now</span><span class="o">)</span>
 <span class="kt">res0:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">java.time.LocalDateTime</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">2016</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">01</span><span class="n">T00</span><span class="k">:</span><span class="err">04</span><span class="kt">:</span><span class="err">35</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>And of course, we can also get the previous moment in time to a given one:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">prev</span><span class="o">(</span><span class="n">now</span><span class="o">)</span>
 <span class="n">res1</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">java.time.LocalDateTime</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">2016</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">01</span><span class="n">T00</span><span class="k">:</span><span class="err">04</span><span class="kt">:</span><span class="err">33</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>Let’s try this with the sub-expressions too:</p>
 
@@ -42,8 +38,7 @@ to the CRON expression:</p>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">timePart</span><span class="o">.</span><span class="n">prev</span><span class="o">(</span><span class="n">now</span><span class="o">)</span>
 <span class="n">res3</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">java.time.LocalDateTime</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">2016</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">01</span><span class="n">T00</span><span class="k">:</span><span class="err">04</span><span class="kt">:</span><span class="err">33</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>If for some reason we do not want the next one, but the following to the next one,
 then we could recursively invoke the <code class="highlighter-rouge">next</code> operation in any subsequent generated
@@ -58,8 +53,7 @@ how big is the step size that we want to make:</p>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">datePart</span><span class="o">.</span><span class="n">step</span><span class="o">(</span><span class="n">now</span><span class="o">,</span> <span class="o">-</span><span class="mi">3</span><span class="o">)</span>
 <span class="n">res6</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">java.time.LocalDateTime</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <h3 id="individual-fields">Individual fields</h3>
 
@@ -71,8 +65,7 @@ expression:</p>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">minutes</span><span class="o">.</span><span class="n">prevIn</span><span class="o">(</span><span class="n">now</span><span class="o">)</span>
 <span class="n">res8</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">java.time.LocalDateTime</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">2016</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">01</span><span class="n">T00</span><span class="k">:</span><span class="err">02</span><span class="kt">:</span><span class="err">34</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <h3 id="why-so-many-option">Why so many <code class="highlighter-rouge">Option[...]</code>?</h3>
 
@@ -86,8 +79,7 @@ expression:</p>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">next</span><span class="o">(</span><span class="n">today</span><span class="o">)</span>
 <span class="n">res9</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">java.time.LocalDate</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>So in this case the <code class="highlighter-rouge">next</code> method returns <code class="highlighter-rouge">None</code> instead of giving us the next datetime to
  the given local date according to the cron expression. The reason for this is because
@@ -101,8 +93,7 @@ expression:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">datePart</span><span class="o">.</span><span class="n">next</span><span class="o">(</span><span class="n">today</span><span class="o">)</span>
 <span class="n">res10</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">java.time.LocalDate</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">13</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>Now we get a <code class="highlighter-rouge">LocalDate</code> but this may not still be what we want, since all the constrains
  defined for the time fields are being ignored.</p>
@@ -112,8 +103,7 @@ expression:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">next</span><span class="o">(</span><span class="n">today</span><span class="o">.</span><span class="n">atStartOfDay</span><span class="o">())</span>
 <span class="n">res11</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">java.time.LocalDateTime</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">12</span><span class="n">T00</span><span class="k">:</span><span class="err">02</span><span class="kt">:</span><span class="err">10</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>The same applies when working with <code class="highlighter-rouge">LocalTime</code> instances:</p>
 
@@ -128,8 +118,7 @@ expression:</p>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">next</span><span class="o">(</span><span class="n">before</span><span class="o">.</span><span class="n">atDate</span><span class="o">(</span><span class="n">today</span><span class="o">))</span>
 <span class="n">res14</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">java.time.LocalDateTime</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="mi">2017</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">12</span><span class="n">T00</span><span class="k">:</span><span class="err">04</span><span class="kt">:</span><span class="err">35</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>And of course, same happens when dealing with the individual fields of the cron expression:</p>
 
@@ -144,8 +133,7 @@ expression:</p>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">daysOfMonth</span><span class="o">.</span><span class="n">nextIn</span><span class="o">(</span><span class="n">before</span><span class="o">)</span>
 <span class="n">res18</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">java.time.LocalTime</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
-</code></pre>
-</div>
+</code></pre></div>
 </section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/cron4s/highlight/highlight.pack.js"></script><script>hljs.configure({
 languages:['scala','java','bash']
 });

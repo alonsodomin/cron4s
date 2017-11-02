@@ -65,8 +65,7 @@ burden of dealing with two separate namespaces for the same APIs.</p>
  continue using it you must include this last module among your dependencies:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s-joda" % "x.y.z"
-</code></pre>
-</div>
+</code></pre></div>
 
 <h4 id="field-access-from-expressions">Field access from expressions</h4>
 
@@ -77,14 +76,12 @@ burden of dealing with two separate namespaces for the same APIs.</p>
 <p>Old signature:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">field</span><span class="o">[</span><span class="kt">F</span> <span class="k">&lt;:</span> <span class="kt">CronField</span><span class="o">](</span><span class="k">implicit</span> <span class="n">unit</span><span class="k">:</span> <span class="kt">CronUnit</span><span class="o">[</span><span class="kt">F</span><span class="o">])</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">FieldNode</span><span class="o">[</span><span class="kt">F</span><span class="o">]]</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>New signature:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">field</span><span class="o">[</span><span class="kt">F</span> <span class="k">&lt;:</span> <span class="kt">CronField</span><span class="o">](</span><span class="k">implicit</span> <span class="n">selector</span><span class="k">:</span> <span class="kt">FieldSelector</span><span class="o">[</span><span class="kt">CronExpr</span>, <span class="kt">F</span><span class="o">])</span><span class="k">:</span> <span class="kt">selector.Out</span><span class="o">[</span><span class="kt">F</span><span class="o">]</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>The new signature looks more complex than the previous one and sort of returns a magic type out of that implicit <code class="highlighter-rouge">selector</code>.
  However it comes with a big benefit:</p>

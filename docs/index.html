@@ -3,14 +3,12 @@
 <p>To start using <strong>cron4s</strong> in your project just include the library as part of your dependencies:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s-core" % "x.y.z"
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>Or in ScalaJS:</p>
 
 <div class="highlighter-rouge"><pre class="highlight"><code>libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s-core" % "x.y.z"
-</code></pre>
-</div>
+</code></pre></div>
 
 <h3 id="parsing">Parsing</h3>
 
@@ -32,8 +30,7 @@
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">parsed</span> <span class="k">=</span> <span class="nc">Cron</span><span class="o">(</span><span class="s">"10-35 2,4,6 * ? * *"</span><span class="o">)</span>
 <span class="n">parsed</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">cron4s.Error</span>,<span class="kt">cron4s.expr.CronExpr</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Right</span><span class="o">(</span><span class="mi">10</span><span class="o">-</span><span class="mi">35</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span> <span class="o">*</span> <span class="o">?</span> <span class="o">*</span> <span class="o">*)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>We will get an <code class="highlighter-rouge">Either[Error, CronExpr]</code>, the left side giving us an error description if the parsing
 has failed. In the above example the expression parsed successfully but if we pass a wrong or invalid expression
@@ -41,8 +38,7 @@ we will get the actual reason for the failure in the left side of the <code clas
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">invalid</span> <span class="k">=</span> <span class="nc">Cron</span><span class="o">(</span><span class="s">"10-65 * * * * *"</span><span class="o">)</span>
 <span class="n">invalid</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">cron4s.Error</span>,<span class="kt">cron4s.expr.CronExpr</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Left</span><span class="o">(</span><span class="n">cron4s</span><span class="o">.</span><span class="nc">ParseFailed</span><span class="k">:</span> <span class="kt">Expected</span> <span class="kt">'</span><span class="err">0</span><span class="kt">-</span><span class="err">59</span><span class="kt">'</span> <span class="kt">at</span> <span class="kt">position</span> <span class="err">0</span> <span class="kt">but</span> <span class="kt">found</span> <span class="kt">'</span><span class="err">"10</span><span class="kt">-</span><span class="err">65</span> <span class="kt">*</span> <span class="kt">*</span> <span class="kt">*</span> <span class="kt">*</span> <span class="kt">*</span><span class="err">"</span><span class="kt">'</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>If we are not interested in the left side of the result (the error), we can easily convert it into an <code class="highlighter-rouge">Option[CronExpr]</code>:</p>
 
@@ -54,8 +50,7 @@ we will get the actual reason for the failure in the left side of the <code clas
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">invalid</span><span class="o">.</span><span class="n">toOption</span>
 <span class="n">res2</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">cron4s.expr.CronExpr</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p><strong><em>Note:</em></strong> <em>In Scala 2.12 you can avoid importing <code class="highlighter-rouge">cats.syntax.either._</code> to be able to make the conversion.</em></p>
 
@@ -64,8 +59,7 @@ that return different types. In the first place we have <code class="highlighter
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">invalid</span> <span class="k">=</span> <span class="nc">Cron</span><span class="o">.</span><span class="n">tryParse</span><span class="o">(</span><span class="s">"10-65 * * * * *"</span><span class="o">)</span>
 <span class="n">invalid</span><span class="k">:</span> <span class="kt">scala.util.Try</span><span class="o">[</span><span class="kt">cron4s.expr.CronExpr</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Failure</span><span class="o">(</span><span class="n">cron4s</span><span class="o">.</span><span class="nc">ParseFailed</span><span class="k">:</span> <span class="kt">Expected</span> <span class="kt">'</span><span class="err">0</span><span class="kt">-</span><span class="err">59</span><span class="kt">'</span> <span class="kt">at</span> <span class="kt">position</span> <span class="err">0</span> <span class="kt">but</span> <span class="kt">found</span> <span class="kt">'</span><span class="err">"10</span><span class="kt">-</span><span class="err">65</span> <span class="kt">*</span> <span class="kt">*</span> <span class="kt">*</span> <span class="kt">*</span> <span class="kt">*</span><span class="err">"</span><span class="kt">'</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>And also <code class="highlighter-rouge">Cron.unsafeParse(expr)</code>, which will return a <em>naked</em> <code class="highlighter-rouge">CronExpr</code> or happily blow-up with an exception
 interrupting the execution. This is the most Java-friendly version of all of them and you should try to avoid using it
@@ -76,9 +70,8 @@ unless you are aware of the consequences (well, it also comes handy during a REP
   <span class="kt">at</span> <span class="kt">cron4s.Cron$.parse0</span><span class="o">(</span><span class="kt">Cron.scala:</span><span class="err">56</span><span class="o">)</span>
   <span class="kt">at</span> <span class="kt">cron4s.Cron$.parse</span><span class="o">(</span><span class="kt">Cron.scala:</span><span class="err">36</span><span class="o">)</span>
   <span class="kt">at</span> <span class="kt">cron4s.Cron$.unsafeParse</span><span class="o">(</span><span class="kt">Cron.scala:</span><span class="err">43</span><span class="o">)</span>
-  <span class="kt">...</span> <span class="err">241</span> <span class="kt">elided</span>
-</code></pre>
-</div>
+  <span class="kt">...</span> <span class="err">44</span> <span class="kt">elided</span>
+</code></pre></div>
 
 <h4 id="validation-errors">Validation errors</h4>
 
@@ -88,8 +81,7 @@ has a sequence that mixes elements that self-imply each other, which is invalid:
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">invalid</span> <span class="k">=</span> <span class="nc">Cron</span><span class="o">(</span><span class="s">"12,10-20 * * * * ?"</span><span class="o">)</span>
 <span class="n">invalid</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">cron4s.Error</span>,<span class="kt">cron4s.expr.CronExpr</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Left</span><span class="o">(</span><span class="n">cron4s</span><span class="o">.</span><span class="nc">InvalidCron</span><span class="k">:</span> <span class="kt">Second:</span> <span class="kt">Value</span> <span class="kt">'</span><span class="err">12</span><span class="kt">'</span> <span class="kt">is</span> <span class="kt">implied</span> <span class="kt">by</span> <span class="kt">'</span><span class="err">10</span><span class="kt">-</span><span class="err">20</span><span class="kt">'</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>In this case, the error type in the left side of the <code class="highlighter-rouge">Either</code> can be narrowed down to <code class="highlighter-rouge">InvalidCron</code>, which will give
 a <code class="highlighter-rouge">NonEmptyList</code> with all the validation errors that the expression had. To demosrate this, here is an example:</p>
@@ -99,8 +91,7 @@ a <code class="highlighter-rouge">NonEmptyList</code> with all the validation er
 
 <span class="kt">scala&gt;</span> <span class="kt">println</span><span class="o">(</span><span class="kt">invalidCron.reason.toList.mkString</span><span class="o">(</span><span class="err">"</span><span class="kt">\n</span><span class="err">"</span><span class="o">))</span>
 <span class="kt">InvalidField</span><span class="o">(</span><span class="kt">Second</span><span class="o">,</span><span class="kt">Value</span> <span class="kt">'</span><span class="err">12</span><span class="kt">'</span> <span class="kt">is</span> <span class="kt">implied</span> <span class="kt">by</span> <span class="kt">'</span><span class="err">10</span><span class="kt">-</span><span class="err">20</span><span class="kt">'</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <h3 id="the-cron4s-ast">The Cron4s AST</h3>
 
@@ -115,8 +106,7 @@ parsed expression as an AST, in which we can access all the expression fields in
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">months</span>
 <span class="n">res9</span><span class="k">:</span> <span class="kt">cron4s.expr.MonthsNode</span> <span class="o">=</span> <span class="o">*</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>We can also take the date or time parts only of the expression using either <code class="highlighter-rouge">timePart</code> or <code class="highlighter-rouge">datePart</code>:</p>
 
@@ -125,8 +115,7 @@ parsed expression as an AST, in which we can access all the expression fields in
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">date</span> <span class="k">=</span> <span class="n">cron</span><span class="o">.</span><span class="n">datePart</span>
 <span class="n">date</span><span class="k">:</span> <span class="kt">cron4s.expr.DateCronExpr</span> <span class="o">=</span> <span class="o">?</span> <span class="o">*</span> <span class="o">*</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>And similarly as with the main expression type, we can get individual fields out of the
 date and time sub expressions:</p>
@@ -139,15 +128,13 @@ date and time sub expressions:</p>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">date</span><span class="o">.</span><span class="n">daysOfMonth</span>
 <span class="n">res12</span><span class="k">:</span> <span class="kt">cron4s.expr.DaysOfMonthNode</span> <span class="o">=</span> <span class="o">?</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>Or by means of the <code class="highlighter-rouge">field</code> method in <code class="highlighter-rouge">CronExpr</code> and passing either the cron field type.</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">field</span><span class="o">[</span><span class="kt">CronField.Minute</span><span class="o">]</span>
 <span class="n">res13</span><span class="k">:</span> <span class="kt">cron4s.expr.FieldSelector.MinutesFromCronExpr.Out</span><span class="o">[</span><span class="kt">cron4s.CronField.Minute</span><span class="o">]</span> <span class="k">=</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>Some other basic operations at the <code class="highlighter-rouge">CronExpr</code> level are asking for the list of supported fields of the
 actual value ranges for all the fields in the form of a map:</p>
@@ -157,15 +144,13 @@ actual value ranges for all the fields in the form of a map:</p>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">ranges</span>
 <span class="n">res15</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">cron4s.CronField</span>,<span class="kt">IndexedSeq</span><span class="o">[</span><span class="kt">Int</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="nc">Second</span> <span class="o">-&gt;</span> <span class="nc">Range</span> <span class="mi">10</span> <span class="n">to</span> <span class="mi">35</span><span class="o">,</span> <span class="nc">DayOfMonth</span> <span class="o">-&gt;</span> <span class="nc">Range</span> <span class="mi">1</span> <span class="n">to</span> <span class="mi">31</span><span class="o">,</span> <span class="nc">Month</span> <span class="o">-&gt;</span> <span class="nc">Range</span> <span class="mi">1</span> <span class="n">to</span> <span class="mi">12</span><span class="o">,</span> <span class="nc">DayOfWeek</span> <span class="o">-&gt;</span> <span class="nc">Range</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">6</span><span class="o">,</span> <span class="nc">Hour</span> <span class="o">-&gt;</span> <span class="nc">Range</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">23</span><span class="o">,</span> <span class="nc">Minute</span> <span class="o">-&gt;</span> <span class="nc">Vector</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">6</span><span class="o">))</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>To convert an AST back into the original string expression we simply use the <code class="highlighter-rouge">toString</code> method:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">toString</span>
 <span class="n">res16</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="mi">10</span><span class="o">-</span><span class="mi">35</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span> <span class="o">*</span> <span class="o">?</span> <span class="o">*</span> <span class="o">*</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <h3 id="sub-expressions">Sub-expressions</h3>
 
@@ -180,8 +165,7 @@ you can use them in exactly the same way. For example:</p>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">datePart</span><span class="o">.</span><span class="n">supportedFields</span>
 <span class="n">res19</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">cron4s.CronField</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">DayOfMonth</span><span class="o">,</span> <span class="nc">Month</span><span class="o">,</span> <span class="nc">DayOfWeek</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p><code class="highlighter-rouge">supportedFields</code> is not super-interesting at <code class="highlighter-rouge">CronExpr</code> (we expect it to support all the fields anyway) but when
 is part of the sub-expressions gives us a more particular piece of information about the actual expression itself. The
@@ -195,8 +179,7 @@ is part of the sub-expressions gives us a more particular piece of information a
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">datePart</span><span class="o">.</span><span class="n">field</span><span class="o">[</span><span class="kt">CronField.DayOfWeek</span><span class="o">]</span>
 <span class="n">res22</span><span class="k">:</span> <span class="kt">cron4s.expr.FieldSelector.DayOfWeekFromDateExpr.Out</span><span class="o">[</span><span class="kt">cron4s.CronField.DayOfWeek</span><span class="o">]</span> <span class="k">=</span> <span class="o">*</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>It’s important to note that when we pass a field type that is not supported by the given expression, we get a compile
  error:</p>
@@ -205,8 +188,7 @@ is part of the sub-expressions gives us a more particular piece of information a
 <span class="o">&lt;</span><span class="n">console</span><span class="k">&gt;:</span><span class="mi">20</span><span class="k">:</span> <span class="kt">error:</span> <span class="kt">Field</span> <span class="kt">cron4s.CronField.DayOfMonth</span> <span class="kt">is</span> <span class="kt">not</span> <span class="kt">a</span> <span class="kt">member</span> <span class="kt">of</span> <span class="kt">expression</span> <span class="kt">cron4s.expr.TimeCronExpr</span>
        <span class="n">cron</span><span class="o">.</span><span class="n">timePart</span><span class="o">.</span><span class="n">field</span><span class="o">[</span><span class="kt">CronField.DayOfMonth</span><span class="o">]</span>
                           <span class="o">^</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>This is just a teaser, we will see much more interesting operations on cron expressions later but it’s good to know
 that all operations possible on a <code class="highlighter-rouge">CronExpr</code>, are also possible on it’s subexpressions.</p>
@@ -218,23 +200,20 @@ access that field type definition via the <code class="highlighter-rouge">unit</
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">seconds</span><span class="o">.</span><span class="n">unit</span><span class="o">.</span><span class="n">field</span>
 <span class="n">res24</span><span class="k">:</span> <span class="kt">cron4s.CronField.Second</span> <span class="o">=</span> <span class="nc">Second</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>The expression unit can be used to give us information about what values are valid for that
 specific field:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">seconds</span><span class="o">.</span><span class="n">unit</span><span class="o">.</span><span class="n">range</span>
 <span class="n">res25</span><span class="k">:</span> <span class="kt">IndexedSeq</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Range</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">59</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>Which is different than the range of values accepted by the expression at that given field:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">seconds</span><span class="o">.</span><span class="n">range</span>
 <span class="n">res26</span><span class="k">:</span> <span class="kt">IndexedSeq</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Range</span> <span class="mi">10</span> <span class="n">to</span> <span class="mi">35</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>We can also obtain a field expression</p>
 
@@ -245,8 +224,7 @@ specific field:</p>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">field</span><span class="o">[</span><span class="kt">CronField.Minute</span><span class="o">].</span><span class="n">toString</span>
 <span class="n">res28</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>Other interesting operations are the ones that can be used to test if a given value matches the
 field expression:</p>
@@ -262,8 +240,7 @@ field expression:</p>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">minutes</span><span class="o">.</span><span class="n">matches</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
 <span class="n">res32</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">false</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>Or to test if a given field expression is implied by another one (that is also parameterized by
 the same field type). To show this, let’s work with some simple field expressions:</p>
@@ -297,14 +274,12 @@ the same field type). To show this, let’s work with some simple field expressi
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">fixedMinute</span><span class="o">.</span><span class="n">impliedBy</span><span class="o">(</span><span class="n">minutesRange</span><span class="o">)</span>
 <span class="n">res37</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">true</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>These two operations allways hold the following property (it looks obvious, but it’s important):</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">scala</span><span class="o">&gt;</span> <span class="n">assert</span><span class="o">(</span><span class="n">minutesRange</span><span class="o">.</span><span class="n">implies</span><span class="o">(</span><span class="n">fixedMinute</span><span class="o">)</span> <span class="o">==</span> <span class="n">fixedMinute</span><span class="o">.</span><span class="n">impliedBy</span><span class="o">(</span><span class="n">minutesRange</span><span class="o">))</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>It’s important to notice that when using either the <code class="highlighter-rouge">implies</code> or <code class="highlighter-rouge">impliedBy</code> operation, if the two nodes are not
 parameterized for the same field type, the code won’t compile:</p>
@@ -325,8 +300,7 @@ parameterized for the same field type, the code won’t compile:</p>
 <span class="o">&lt;</span><span class="n">console</span><span class="k">&gt;:</span><span class="mi">24</span><span class="k">:</span> <span class="kt">error:</span> <span class="kt">could</span> <span class="kt">not</span> <span class="kt">find</span> <span class="kt">implicit</span> <span class="kt">value</span> <span class="kt">for</span> <span class="kt">parameter</span> <span class="kt">EE:</span> <span class="kt">cron4s.expr.FieldExpr</span><span class="o">[</span><span class="kt">EE</span>,<span class="kt">cron4s.CronField.Minute</span><span class="o">]</span>
        <span class="n">minutesRange</span><span class="o">.</span><span class="n">implies</span><span class="o">(</span><span class="n">eachSecond</span><span class="o">)</span>
                            <span class="o">^</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>The error looks a bit scary, but in essence is saying to us that the <code class="highlighter-rouge">implies</code> method was expecting
 any kind of expression as long as it was for the <code class="highlighter-rouge">Minute</code> field (expressed as <code class="highlighter-rouge">EE[cron4s.CronField.Minute]</code>).</p>

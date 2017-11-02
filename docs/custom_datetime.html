@@ -18,8 +18,7 @@ of this trait is enough to be able to use your favourite library.</p>
 <p>As an example, we are going to implement support for a very dummy version of a <em>time</em> object:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">MyTime</span><span class="o">(</span><span class="n">seconds</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">minutes</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">hour</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>Now that we have a way of representing time, we need to provide an instance for the <code class="highlighter-rouge">IsDateTime</code> typeclass:</p>
 
@@ -48,8 +47,7 @@ of this trait is enough to be able to use your favourite library.</p>
   <span class="o">}</span>
 
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>That should be enough. To be sure that all works we are going to use it with a CRON expression:</p>
 
@@ -64,8 +62,7 @@ of this trait is enough to be able to use your favourite library.</p>
 
 <span class="n">scala</span><span class="o">&gt;</span> <span class="n">cron</span><span class="o">.</span><span class="n">timePart</span><span class="o">.</span><span class="n">next</span><span class="o">(</span><span class="n">myTime</span><span class="o">)</span>
 <span class="n">res2</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">MyTime</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="nc">MyTime</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="mi">30</span><span class="o">,</span><span class="mi">10</span><span class="o">))</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <h3 id="testing">Testing</h3>
 
@@ -74,8 +71,7 @@ of this trait is enough to be able to use your favourite library.</p>
 To start using it, just include it in your dependencies:</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"com.github.alonsodomin.cron4s"</span> <span class="o">%%</span> <span class="s">"cron4s-testkit"</span> <span class="o">%</span> <span class="s">"x.y.z"</span> <span class="o">%</span> <span class="nc">Test</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>The first thing to to is to provide an implementation of the <code class="highlighter-rouge">cron4s.testkit.DateTimeTestKitBase</code> trait, this
 is meant to instruct <strong>cron4s</strong> on how to create arbitrary instances of your date time object:</p>
@@ -88,8 +84,7 @@ is meant to instruct <strong>cron4s</strong> on how to create arbitrary instance
     <span class="nc">MyTime</span><span class="o">(</span><span class="n">seconds</span><span class="o">,</span> <span class="n">minutes</span><span class="o">,</span> <span class="n">hours</span><span class="o">)</span>
 
 <span class="o">}</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>Also, to be able to perform assertions, <strong>cron4s</strong> needs an instance of the <code class="highlighter-rouge">cats.Eq</code> and <code class="highlighter-rouge">cats.Show</code> type classes:</p>
 
@@ -97,16 +92,14 @@ is meant to instruct <strong>cron4s</strong> on how to create arbitrary instance
 
 <span class="k">implicit</span> <span class="k">val</span> <span class="n">myTimeEq</span><span class="k">:</span> <span class="kt">Eq</span><span class="o">[</span><span class="kt">MyTime</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Eq</span><span class="o">.</span><span class="n">fromUniversalEquals</span><span class="o">[</span><span class="kt">MyTime</span><span class="o">]</span>
 <span class="k">implicit</span> <span class="k">val</span> <span class="n">myTimeShow</span><span class="k">:</span> <span class="kt">Show</span><span class="o">[</span><span class="kt">MyTime</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Show</span><span class="o">.</span><span class="n">fromToString</span><span class="o">[</span><span class="kt">MyTime</span><span class="o">]</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>Now define a spec for your <code class="highlighter-rouge">IsDateTime</code> instance (along with your other test sources):</p>
 
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">cron4s.testkit.IsDateTimeTestKit</span>
 
 <span class="k">class</span> <span class="nc">MyTimeSpec</span> <span class="k">extends</span> <span class="nc">IsDateTimeTestKit</span><span class="o">[</span><span class="kt">MyTime</span><span class="o">](</span><span class="s">"MyTime"</span><span class="o">)</span> <span class="k">with</span> <span class="nc">MyTimeTestBase</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>This will test that your implementation of the <code class="highlighter-rouge">IsDateTime</code> typeclass abides by its laws. To be fully covered is also
 recommended to verify that the different CRON expressions work correctly with your date time library. In this case
@@ -115,8 +108,7 @@ we will be defining a class extending from <code class="highlighter-rouge">cron4
 <div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">cron4s.testkit.DateTimeCronTestKit</span>
 
 <span class="k">class</span> <span class="nc">MyTimeCronSpec</span> <span class="k">extends</span> <span class="nc">DateTimeCronTestKit</span><span class="o">[</span><span class="kt">MyTime</span><span class="o">]</span> <span class="k">with</span> <span class="nc">MyTimeTestBase</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 <p>And that’s all, now those tests will be run along any other test sources in your project.</p>
 </section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/cron4s/highlight/highlight.pack.js"></script><script>hljs.configure({
