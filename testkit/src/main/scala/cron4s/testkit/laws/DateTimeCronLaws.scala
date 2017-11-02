@@ -17,13 +17,10 @@
 package cron4s.testkit.laws
 
 import cats.laws._
-import cats.implicits._
 
 import cron4s.CronField
 import cron4s.datetime.{DateTimeCron, IsDateTime}
 import cron4s.syntax.cron._
-
-import org.scalacheck.Prop
 
 /**
   * Created by alonsodomin on 29/01/2017.

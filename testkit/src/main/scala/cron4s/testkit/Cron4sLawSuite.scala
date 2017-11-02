@@ -20,9 +20,8 @@ import cats.tests._
 import catalysts.Platform
 
 import org.scalactic.anyvals.{PosInt, PosZInt}
-import org.scalatest.{FunSuite, Matchers, PropSpec}
-import org.scalatest.prop.{Configuration, GeneratorDrivenPropertyChecks}
-import org.typelevel.discipline.scalatest.Discipline
+import org.scalatest.PropSpec
+import org.scalatest.prop.Configuration
 
 /**
   * Created by alonsodomin on 31/01/2017.

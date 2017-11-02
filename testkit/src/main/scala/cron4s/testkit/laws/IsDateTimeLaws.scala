@@ -24,8 +24,6 @@ import cron4s.CronField
 import cron4s.datetime.IsDateTime
 import cron4s.testkit._
 
-import org.scalacheck.Prop
-
 /**
   * Created by alonsodomin on 29/08/2016.
   */

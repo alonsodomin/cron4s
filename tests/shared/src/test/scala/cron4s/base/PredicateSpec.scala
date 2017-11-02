@@ -18,7 +18,6 @@ package cron4s.base
 
 import cats.Eq
 import cats.laws.discipline.{ContravariantTests, MonoidKTests}
-import cats.implicits._
 
 import cron4s.syntax.predicate._
 import cron4s.testkit.Cron4sLawSuite
