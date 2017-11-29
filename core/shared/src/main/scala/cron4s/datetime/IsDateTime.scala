@@ -18,11 +18,16 @@ package cron4s.datetime
 
 import cron4s.CronField
 
+import scala.annotation.implicitNotFound
+
 /**
   * Bridge adapter between specific date-time libraries and expression support
   *
   * @author Antonio Alonso Dominguez
   */
+@implicitNotFound(
+  "Type ${DateTime} is not supported on current scope. You may be missing some imports, check the documentation to know more."
+)
 trait IsDateTime[DateTime] {
 
   def plus(dateTime: DateTime, amount: Int, unit: DateTimeUnit): Option[DateTime]
