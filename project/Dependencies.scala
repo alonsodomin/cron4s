@@ -7,7 +7,7 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSVersion
 object Dependencies {
 
   object version {
-    val cats        = "1.0.0-RC1"
+    val cats        = "1.0.0-RC2"
     val shapeless   = "2.3.2"
     val fastparse   = "1.0.0"
     val scalacheck  = "1.13.5"
@@ -22,7 +22,7 @@ object Dependencies {
   }
 
   val macroParadise = compilerPlugin("org.scalamacros" % "paradise"       % "2.1.1" cross CrossVersion.full)
-  val kindProjector = compilerPlugin("org.spire-math"  % "kind-projector" % "0.9.4" cross CrossVersion.binary)
+  val kindProjector = compilerPlugin("org.spire-math"  % "kind-projector" % "0.9.5" cross CrossVersion.binary)
   lazy val compilerPlugins = Seq(macroParadise, kindProjector)
 
   lazy val core = Def.settings {

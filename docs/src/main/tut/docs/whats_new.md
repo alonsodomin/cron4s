@@ -3,6 +3,16 @@ layout: docs
 title: "What's New"
 ---
 
+## 0.4.4
+
+This is a maintenance release over 0.4.3:
+
+Version upgrades:
+
+ * Scala 2.11.11 / Scala 2.12.4
+ * ScalaJS 0.6.21
+ * Cats 1.0.0-RC2
+
 ## 0.4.3
 
 This is a maintenance release over 0.4.2:
