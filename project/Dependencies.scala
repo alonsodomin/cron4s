@@ -2,7 +2,8 @@ import sbt._
 import Keys._
 
 import sbtcrossproject.CrossPlugin.autoImport._
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSVersion
+import scalajscrossproject.ScalaJSCrossPlugin.autoImport.{toScalaJSGroupID => _, _}
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
 object Dependencies {
 
@@ -16,7 +17,7 @@ object Dependencies {
     val catalysts   = "0.0.5"
 
     val jodaTime      = "2.9.9"
-    val jodaConvert   = "1.8.3"
+    val jodaConvert   = "1.9.2"
     val momentjs      = "0.8.1"
     val scalaJavaTime = "2.0.0-M12"
   }
