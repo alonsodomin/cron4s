@@ -53,11 +53,18 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
     * @tparam F the CronField type
     * @return value of the field
     */
-  override def get[F <: CronField](dateTime: DT, field: F): Option[Int] = {
+  override def get[F <: CronField](dateTime: DT,
+                                   field: F): Either[DateTimeError, Int] = {
     val jodaField = asDateTimeFieldType(field)
-    val offset = if (field == DayOfWeek) -1 else 0
+    if (isSupported(dateTime, jodaField)) {
+      val offset = if (field == DayOfWeek) -1 else 0
 
-    getField(dateTime, jodaField).map(_ + offset)
+      getField(dateTime, jodaField)
+        .map(_ + offset)
+        .fold(UnsupportedField(field).asLeft[Int])(_.asRight)
+    } else {
+      UnsupportedField(field).asLeft
+    }
   }
 
   /**

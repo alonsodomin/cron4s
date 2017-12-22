@@ -48,7 +48,7 @@ trait IsDateTime[DateTime] {
     * @tparam F the CronField type
     * @return value of the field
     */
-  def get[F <: CronField](dateTime: DateTime, field: F): Option[Int]
+  def get[F <: CronField](dateTime: DateTime, field: F): Either[DateTimeError, Int]
 
   /**
     * Setter access for a specific field in a date-time

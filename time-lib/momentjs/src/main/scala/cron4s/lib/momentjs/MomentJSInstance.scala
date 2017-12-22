@@ -64,8 +64,9 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
     * @tparam F the CronField type
     * @return value of the field
     */
-  override def get[F <: CronField](dateTime: Date, field: F): Option[Int] =
-    Some(field match {
+  override def get[F <: CronField](dateTime: Date,
+                                   field: F): Either[DateTimeError, Int] =
+    Right(field match {
       case Second     => dateTime.second()
       case Minute     => dateTime.minute()
       case Hour       => dateTime.hour()

@@ -16,8 +16,13 @@
 
 package cron4s.datetime
 
+import cats.Eq
 import cron4s.CronField
 
-sealed trait DateTimeError
+sealed trait DateTimeError extends Product
+object DateTimeError {
+  implicit val dateTimeErrorEq: Eq[DateTimeError] = Eq.fromUniversalEquals
+}
+
 final case class UnsupportedField(field: CronField) extends DateTimeError
 final case class InvalidFieldValue(field: CronField, value: Int) extends DateTimeError
