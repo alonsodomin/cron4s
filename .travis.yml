@@ -8,13 +8,14 @@ jdk:
   - oraclejdk8
 
 scala:
-  - 2.11.11
+  - 2.11.12
   - 2.12.4
 
 cache:
   directories:
     - $HOME/.m2
     - $HOME/.sbt/0.13/dependency
+    - $HOME/.sbt/1.0/dependency
     - $HOME/.sbt/boot/scala*
     - $HOME/.sbt/launchers
     - $HOME/.ivy2
