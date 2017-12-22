@@ -34,6 +34,7 @@ private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime
 
   object asPredicate extends Poly1 {
     import CronField._
+    import cats.syntax.either._
 
     private[this] def predicateFor[N[_ <: CronField], F <: CronField]
         (field: F, node: N[F])

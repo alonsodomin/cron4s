@@ -16,6 +16,8 @@
 
 package cron4s.lib.js
 
+import cats.syntax.either._
+
 import cron4s.CronField
 import cron4s.datetime.{
   DateTimeError,
@@ -102,7 +104,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
     }
 
     def assignmentSucceeded(date: Date) =
-      get[F](date, field).contains(value)
+      get[F](date, field).toOption.contains(value)
 
     val modifiedDate = assignFieldValue
     if (assignmentSucceeded(modifiedDate)) Right(modifiedDate)

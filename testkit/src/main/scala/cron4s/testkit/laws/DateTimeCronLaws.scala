@@ -17,6 +17,7 @@
 package cron4s.testkit.laws
 
 import cats.laws._
+import cats.syntax.either._
 
 import cron4s.CronField
 import cron4s.datetime.{DateTimeCron, IsDateTime}
@@ -31,7 +32,7 @@ trait DateTimeCronLaws[E, DateTime] {
 
   def matchAny(e: E, dt: DateTime): IsEq[Boolean] = {
     val fieldValues =
-      e.supportedFields.flatMap(DT.get(dt, _).toSeq)
+      e.supportedFields.flatMap(DT.get(dt, _).toOption)
 
     val exprRanges = e.ranges
     val supportedRanges =
@@ -45,7 +46,7 @@ trait DateTimeCronLaws[E, DateTime] {
 
   def matchAll(e: E, dt: DateTime): IsEq[Boolean] = {
     val fieldValues =
-      e.supportedFields.flatMap(DT.get(dt, _).toSeq)
+      e.supportedFields.flatMap(DT.get(dt, _).toOption)
 
     val exprRanges = e.ranges
     val supportedRanges =

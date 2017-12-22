@@ -17,6 +17,7 @@
 package cron4s.testkit.laws
 
 import cats.laws._
+import cats.syntax.either._
 
 import cron4s.CronField
 import cron4s.datetime.{IsDateTime, DateTimeNode}
@@ -32,7 +33,7 @@ trait DateTimeNodeLaws[E[_ <: CronField], F <: CronField, DateTime] {
   implicit def TC: DateTimeNode[E, F]
 
   def matchable(e: E[F], dt: DateTime): IsEq[Boolean] = {
-    val fieldVal = DT.get(dt, expr.unit(e).field)
+    val fieldVal = DT.get(dt, expr.unit(e).field).toOption
     e.matchesIn(dt) <-> fieldVal.exists(expr.matches(e)(_))
   }
 
@@ -46,7 +47,8 @@ trait DateTimeNodeLaws[E[_ <: CronField], F <: CronField, DateTime] {
 
 object DateTimeNodeLaws {
 
-  def apply[E[_ <: CronField], F <: CronField, DateTime](implicit
+  def apply[E[_ <: CronField], F <: CronField, DateTime](
+    implicit
     dt0: IsDateTime[DateTime],
     expr0: FieldExpr[E, F],
     TC0: DateTimeNode[E, F]

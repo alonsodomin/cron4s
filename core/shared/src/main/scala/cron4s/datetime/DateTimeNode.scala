@@ -30,6 +30,7 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
     * @return true if there is a field in this date-time that matches this expression
     */
   def matchesIn[DateTime](expr: E[F], DT: IsDateTime[DateTime]): Predicate[DateTime] = Predicate { dt =>
+    import cats.syntax.either._
     val current = DT.get(dt, expr.unit.field)
     current.map(expr.matches).getOrElse(false)
   }
