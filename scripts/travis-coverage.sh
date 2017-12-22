@@ -9,3 +9,4 @@ codacy="$sbt_cmd codacyCoverage"
 coverage="$report && $aggregate && $codacy"
 
 eval $coverage
+bash <(curl -s https://codecov.io/bash)

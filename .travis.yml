@@ -40,7 +40,6 @@ script:
 
 after_success:
   - scripts/travis-coverage.sh
-  - bash <(curl -s https://codecov.io/bash)
 
 branches:
   only:
