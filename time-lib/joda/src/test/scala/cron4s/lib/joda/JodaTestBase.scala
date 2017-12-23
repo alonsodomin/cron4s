@@ -31,7 +31,13 @@ trait JodaDateTimeTestBase extends DateTimeTestKitBase[DateTime] {
                                dayOfMonth: Int,
                                month: Int,
                                year: Int): DateTime =
-    new DateTime(year, month, dayOfMonth, hours, minutes, seconds)
+    new DateTime(year,
+                 month,
+                 dayOfMonth,
+                 hours,
+                 minutes,
+                 seconds,
+                 DateTimeZone.UTC)
 
 }
 
