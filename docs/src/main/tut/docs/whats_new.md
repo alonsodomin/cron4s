@@ -3,6 +3,21 @@ layout: docs
 title: "What's New"
 ---
 
+## 0.4.4
+
+This is a maintenance release over 0.4.3:
+
+Changes:
+
+ * [#94](https://github.com/alonsodomin/cron4s/pull/94): The signature for the `get` method in the `IsDateTime` typeclass
+   has been changed to capture errors when getting the value of a given field.
+
+Version upgrades:
+
+ * Scala 2.11.12 / Scala 2.12.4
+ * ScalaJS 0.6.21
+ * Cats 1.0.0-RC2
+
 ## 0.4.3
 
 This is a maintenance release over 0.4.2:

@@ -28,7 +28,7 @@ trait FieldExpr[E[_ <: CronField], F <: CronField] extends Enumerated[E[F]] {
 
   def implies[EE[_ <: CronField]](e: E[F])(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean
 
-  def impliedBy[EE[_ <: CronField]](e: E[F])(ee: EE[F])(
+  final def impliedBy[EE[_ <: CronField]](e: E[F])(ee: EE[F])(
       implicit EE: FieldExpr[EE, F]
     ): Boolean =
       EE.implies(ee)(e)(this)

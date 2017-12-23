@@ -39,11 +39,11 @@ implicit object MyDateInstance extends IsDateTime[MyTime] {
   
   def plus(myTime: MyTime, amount: Int, unit: DateTimeUnit): Option[MyTime] = None
   
-  def get[F <: CronField](myTime: MyTime, field: F): Option[Int] = field match {
-    case CronField.Second => Some(myTime.seconds)
-    case CronField.Minute => Some(myTime.minutes)
-    case CronField.Hour   => Some(myTime.hour)
-    case _                => None
+  def get[F <: CronField](myTime: MyTime, field: F): Either[DateTimeError, Int] = field match {
+    case CronField.Second => Right(myTime.seconds)
+    case CronField.Minute => Right(myTime.minutes)
+    case CronField.Hour   => Right(myTime.hour)
+    case _                => Left(UnsupportedField(field))
   }
   
   def set[F <: CronField](myTime: MyTime, field: F, value: Int): Either[DateTimeError, MyTime] = field match {

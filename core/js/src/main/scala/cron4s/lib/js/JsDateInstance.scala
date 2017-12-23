@@ -16,6 +16,8 @@
 
 package cron4s.lib.js
 
+import cats.syntax.either._
+
 import cron4s.CronField
 import cron4s.datetime.{
   DateTimeError,
@@ -60,7 +62,8 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
     }
   }
 
-  override def get[F <: CronField](dateTime: Date, field: F): Option[Int] = {
+  override def get[F <: CronField](dateTime: Date,
+                                   field: F): Either[DateTimeError, Int] = {
     val value = field match {
       case Second     => dateTime.getUTCSeconds()
       case Minute     => dateTime.getUTCMinutes()
@@ -76,7 +79,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
         dayOfWeek
     }
 
-    Some(value)
+    Right(value)
   }
 
   override def set[F <: CronField](dateTime: Date,
@@ -101,7 +104,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
     }
 
     def assignmentSucceeded(date: Date) =
-      get[F](date, field).contains(value)
+      get[F](date, field).toOption.contains(value)
 
     val modifiedDate = assignFieldValue
     if (assignmentSucceeded(modifiedDate)) Right(modifiedDate)

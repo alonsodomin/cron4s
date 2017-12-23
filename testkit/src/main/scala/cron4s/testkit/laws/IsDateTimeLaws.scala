@@ -17,12 +17,15 @@
 package cron4s.testkit.laws
 
 import cats.Eq
-import cats.laws._
+import cats.kernel.laws._
 import cats.implicits._
 
 import cron4s.CronField
 import cron4s.datetime.IsDateTime
 import cron4s.testkit._
+
+import org.scalacheck.Prop
+import Prop._
 
 /**
   * Created by alonsodomin on 29/08/2016.
@@ -32,42 +35,39 @@ trait IsDateTimeLaws[DateTime] {
   implicit def eq: Eq[DateTime]
 
   def gettable[F <: CronField](dt: DateTime, field: F): IsEq[Boolean] =
-    DT.get(dt, field).isDefined <-> DT.supportedFields(dt).contains(field)
+    DT.get(dt, field).isRight <-> DT.supportedFields(dt).contains(field)
 
-  def immutability[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): IsEq[Option[Boolean]] = {
-    val check = for {
-      current     <- DT.get(dt, fieldValue.field)
-      newDateTime <- DT.set(dt, fieldValue.field, fieldValue.value).toOption
-    } yield {
-      if (current == fieldValue.value) newDateTime === dt
-      else newDateTime =!= dt
-    }
+  def immutability[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Prop = {
+    if (DT.supportedFields(dt).contains(fieldValue.field)) {
+      val check = for {
+        current     <- DT.get(dt, fieldValue.field)
+        newDateTime <- DT.set(dt, fieldValue.field, fieldValue.value)
+      } yield {
+        if (current === fieldValue.value) Prop.undecided
+        else Prop(newDateTime =!= dt)
+      }
 
-    val expected = if (DT.supportedFields(dt).contains(fieldValue.field)) {
-      Some(true)
-    } else None
-
-    check <-> expected
+      check.fold(Prop.exception(_), identity)
+    } else Prop.proved
   }
 
-  def settable[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): IsEq[Option[Int]] = {
-    val newValue = for {
-      newDateTime <- DT.set(dt, fieldValue.field, fieldValue.value).toOption
-      value       <- DT.get(newDateTime, fieldValue.field)
-    } yield value
+  def settable[F <: CronField](dt: DateTime, fieldValue: CronFieldValue[F]): Prop = {
+    if (DT.supportedFields(dt).contains(fieldValue.field)) {
+      val check = for {
+        newDateTime <- DT.set(dt, fieldValue.field, fieldValue.value)
+        value       <- DT.get(newDateTime, fieldValue.field)
+      } yield value
 
-    val expected = if (DT.supportedFields(dt).contains(fieldValue.field)) {
-      Some(fieldValue.value)
-    } else None
-
-    newValue <-> expected
+      check.fold(Prop.exception(_), _ ?= fieldValue.value)
+    } else Prop.proved
   }
 
 }
 
 object IsDateTimeLaws {
 
-  def apply[DateTime](implicit
+  def apply[DateTime](
+    implicit
     dtEv: IsDateTime[DateTime],
     eqEv: Eq[DateTime]
   ): IsDateTimeLaws[DateTime] =

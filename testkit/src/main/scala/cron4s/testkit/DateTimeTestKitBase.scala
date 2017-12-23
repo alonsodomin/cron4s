@@ -31,7 +31,7 @@ trait DateTimeTestKitBase[DateTime] {
     second     <- Gen.choose(Seconds.min, Seconds.max)
     minute     <- Gen.choose(Minutes.min, Minutes.max)
     hour       <- Gen.choose(Hours.min, Hours.max)
-    year       <- Gen.choose(2016, 2020)
+    year       <- Gen.choose(1990, 2020)
     yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(year, _))
     dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.lengthOfMonth())
   } yield createDateTime(second, minute, hour, dayOfMonth, yearMonth.getMonthValue, year))

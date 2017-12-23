@@ -60,7 +60,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
         resetPrevious.andThen(_.flatMap(DT.set(_, node.unit.field, resetValue).toOption))
       }
 
-      DT.get(from, node.unit.field).flatMap { currentValue =>
+      DT.get(from, node.unit.field).toOption.flatMap { currentValue =>
         node.step(currentValue, step) match {
           case Some((newValue, carryOver)) =>
             // Attempt to set a new value in the field and reset previous fields
