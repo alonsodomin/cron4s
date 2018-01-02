@@ -16,7 +16,7 @@ Version upgrades:
 
  * Scala 2.11.12 / Scala 2.12.4
  * ScalaJS 0.6.21
- * Cats 1.0.0-RC2
+ * Cats 1.0.1
 
 ## 0.4.3
 
