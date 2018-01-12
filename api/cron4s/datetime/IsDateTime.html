@@ -107,8 +107,8 @@
                         <a class="trait" href="DateTimeCron.html" title="Created by alonsodomin on 14/01/2017."></a>
                         <a href="DateTimeCron.html" title="Created by alonsodomin on 14/01/2017.">DateTimeCron</a>
                       </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="trait" href="DateTimeError.html" title=""></a>
+                        <a class="object" href="DateTimeError$.html" title=""></a>
+                        <a class="class" href="DateTimeError.html" title=""></a>
                         <a href="DateTimeError.html" title="">DateTimeError</a>
                       </li><li class="current-entities indented2">
                         <a class="object" href="DateTimeNode$.html" title=""></a>
@@ -161,7 +161,13 @@
 
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Bridge adapter between specific date-time libraries and expression support
-</p></div><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/alonsodomin/cron4s/tree/master/core/shared/src/main/scala/cron4s/datetime/IsDateTime.scala" target="_blank">IsDateTime.scala</a></dd></dl><div class="toggleContainer block">
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@implicitNotFound</span><span class="args">(<span>
+      
+      <span class="defval" name="&quot;Type ${DateTime} is not supported on current scope. You may be missing some imports, check the documentation to know more.&quot;">...</span>
+    </span>)</span>
+              
+        </dd><dt>Source</dt><dd><a href="https://github.com/alonsodomin/cron4s/tree/master/core/shared/src/main/scala/cron4s/datetime/IsDateTime.scala" target="_blank">IsDateTime.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -226,9 +232,9 @@
         <div class="values members">
               <h3>Abstract Value Members</h3>
               <ol><li name="cron4s.datetime.IsDateTime#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="get[F&lt;:cron4s.CronField](dateTime:DateTime,field:F):Option[Int]"></a><a id="get[F&lt;:CronField](DateTime,F):Option[Int]"></a>
+      <a id="get[F&lt;:cron4s.CronField](dateTime:DateTime,field:F):Either[cron4s.datetime.DateTimeError,Int]"></a><a id="get[F&lt;:CronField](DateTime,F):Either[DateTimeError,Int]"></a>
       <span class="permalink">
-      <a href="../../cron4s/datetime/IsDateTime.html#get[F&lt;:cron4s.CronField](dateTime:DateTime,field:F):Option[Int]" title="Permalink">
+      <a href="../../cron4s/datetime/IsDateTime.html#get[F&lt;:cron4s.CronField](dateTime:DateTime,field:F):Either[cron4s.datetime.DateTimeError,Int]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -237,7 +243,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">get</span><span class="tparams">[<span name="F">F &lt;: <a href="../CronField.html" class="extype" name="cron4s.CronField">CronField</a></span>]</span><span class="params">(<span name="dateTime">dateTime: <span class="extype" name="cron4s.datetime.IsDateTime.DateTime">DateTime</span></span>, <span name="field">field: <span class="extype" name="cron4s.datetime.IsDateTime.get.F">F</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Option.html#scala.Option" class="extype" name="scala.Option">Option</a>[<a href="http://www.scala-lang.org/api/2.12.4/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a>]</span>
+        <span class="name">get</span><span class="tparams">[<span name="F">F &lt;: <a href="../CronField.html" class="extype" name="cron4s.CronField">CronField</a></span>]</span><span class="params">(<span name="dateTime">dateTime: <span class="extype" name="cron4s.datetime.IsDateTime.DateTime">DateTime</span></span>, <span name="field">field: <span class="extype" name="cron4s.datetime.IsDateTime.get.F">F</span></span>)</span><span class="result">: <span class="extype" name="scala.Either">Either</span>[<a href="DateTimeError.html" class="extype" name="cron4s.datetime.DateTimeError">DateTimeError</a>, <a href="http://www.scala-lang.org/api/2.12.4/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a>]</span>
       </span>
       
       <p class="shortcomment cmt">Getter access for a specific field in a date-time
