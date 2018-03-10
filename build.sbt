@@ -139,7 +139,7 @@ lazy val coverageSettings = Seq(
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   mimaPreviousArtifacts := Set(
-    "com.github.alonsodomin.cron4s" %% s"cron4s-${module}" % "0.4.3")
+    "com.github.alonsodomin.cron4s" %% s"cron4s-${module}" % "0.4.4")
 )
 
 lazy val docsMappingsAPIDir = settingKey[String](
@@ -335,6 +335,6 @@ lazy val momentjs = (project in file("time-lib/momentjs"))
 
 addCommandAlias("testJVM", "cron4sJVM/test")
 addCommandAlias("testJS", "cron4sJS/test")
-addCommandAlias("validateJVM", ";testJVM;makeMicrosite")
+addCommandAlias("validateJVM", ";testJVM;cron4sJVM/mimaReportBinaryIssues;makeMicrosite")
 addCommandAlias("validateJS", "testJS")
 addCommandAlias("rebuild", ";clean;validateJS;validateJVM")
