@@ -335,6 +335,7 @@ lazy val momentjs = (project in file("time-lib/momentjs"))
 
 addCommandAlias("testJVM", "cron4sJVM/test")
 addCommandAlias("testJS", "cron4sJS/test")
-addCommandAlias("validateJVM", ";testJVM;cron4sJVM/mimaReportBinaryIssues;makeMicrosite")
+addCommandAlias("validateJVM",
+                ";testJVM;cron4sJVM/mimaReportBinaryIssues;makeMicrosite")
 addCommandAlias("validateJS", "testJS")
 addCommandAlias("rebuild", ";clean;validateJS;validateJVM")
