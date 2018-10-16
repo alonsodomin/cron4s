@@ -24,7 +24,7 @@ object Dependencies {
   }
 
   val macroParadise = compilerPlugin("org.scalamacros" % "paradise"       % "2.1.1" cross CrossVersion.full)
-  val kindProjector = compilerPlugin("org.spire-math"  % "kind-projector" % "0.9.7" cross CrossVersion.binary)
+  val kindProjector = compilerPlugin("org.spire-math"  % "kind-projector" % "0.9.8" cross CrossVersion.binary)
   lazy val compilerPlugins = Seq(macroParadise, kindProjector)
 
   lazy val core = Def.settings {
