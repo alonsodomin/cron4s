@@ -14,7 +14,7 @@ object Dependencies {
     val fastparse   = "1.0.0"
     val scalacheck  = "1.14.0"
     val scalatest   = "3.0.5"
-    val discipline  = "0.9.0"
+    val discipline  = "0.10.0"
     val catalysts   = "0.6"
 
     val jodaTime      = "2.9.9"
