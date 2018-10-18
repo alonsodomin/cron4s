@@ -16,9 +16,10 @@ object Dependencies {
     val scalatest   = "3.0.5"
     val discipline  = "0.10.0"
     val catalysts   = "0.6"
-
-    val jodaTime      = "2.9.9"
+    
+    val jodaTime      = "2.10"
     val jodaConvert   = "2.1.1"
+    
     val momentjs      = "0.8.1"
     val scalaJavaTime = "2.0.0-M13"
   }
