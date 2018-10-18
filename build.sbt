@@ -1,4 +1,4 @@
-import sbtcrossproject.{crossProject, CrossType}
+import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 import com.typesafe.sbt.pgp.PgpKeys
 
 import com.typesafe.tools.mima.plugin.MimaKeys.mimaPreviousArtifacts
