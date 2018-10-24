@@ -37,9 +37,12 @@ class PredicateSpec extends Cron4sLawSuite {
 
   implicit val predicateEq = Eq.by[Predicate[Int], Boolean](_.apply(0))
 
-  checkAll("ContravariantPredicate", ContravariantTests[Predicate].contravariant[Int, Int, Int])
-  checkAll("PredicateConjunctionMonoid", MonoidKTests[Predicate](Predicate.conjunction.monoidK).monoidK[Int])
-  checkAll("PredicateDisjunctionMonoid", MonoidKTests[Predicate](Predicate.disjunction.monoidK).monoidK[Int])
+  checkAll("ContravariantPredicate",
+           ContravariantTests[Predicate].contravariant[Int, Int, Int])
+  checkAll("PredicateConjunctionMonoid",
+           MonoidKTests[Predicate](Predicate.conjunction.monoidK).monoidK[Int])
+  checkAll("PredicateDisjunctionMonoid",
+           MonoidKTests[Predicate](Predicate.disjunction.monoidK).monoidK[Int])
 
   checkAll("Predicate", PredicateTests.predicate[List, Int])
 

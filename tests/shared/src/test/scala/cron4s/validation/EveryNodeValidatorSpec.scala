@@ -24,15 +24,16 @@ import cron4s.testkit.Cron4sPropSpec
 /**
   * Created by alonsodomin on 30/12/2016.
   */
-class EveryNodeValidatorSpec extends Cron4sPropSpec
-  with ValidatorPropSpec {
+class EveryNodeValidatorSpec extends Cron4sPropSpec with ValidatorPropSpec {
 
   import CronField._
 
   private[this] def check[F <: CronField](
-      implicit unit: CronUnit[F], enum: Enumerated[CronUnit[F]]
+      implicit unit: CronUnit[F],
+      enum: Enumerated[CronUnit[F]]
   ): Unit = {
-    property(s"EveryNode[${unit.field}] with invalid base returns the invalid errors of its base") {
+    property(
+      s"EveryNode[${unit.field}] with invalid base returns the invalid errors of its base") {
       forAll(everyGen[F]) { node =>
         val expectedErrors = NodeValidator[DivisibleNode[F]].validate(node.base)
         val returnedErrors = NodeValidator[EveryNode[F]].validate(node)

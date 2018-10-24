@@ -34,12 +34,14 @@ class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
     val node2 = BetweenNode[Minute](ConstNode(10), ConstNode(24))
     val severalNode = SeveralNode[Minute](node1, node2)
 
-    val returnedErrors = NodeValidator[SeveralNode[Minute]].validate(severalNode)
+    val returnedErrors =
+      NodeValidator[SeveralNode[Minute]].validate(severalNode)
 
-    returnedErrors shouldBe List(InvalidField(
-      Minute,
-      s"Value '${node1.show}' is implied by '${node2.show}'"
-    ))
+    returnedErrors shouldBe List(
+      InvalidField(
+        Minute,
+        s"Value '${node1.show}' is implied by '${node2.show}'"
+      ))
   }
 
   it should "not fail if they overlap without full implication" in {
@@ -47,7 +49,8 @@ class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
     val node2 = BetweenNode[Minute](ConstNode(10), ConstNode(24))
     val severalNode = SeveralNode[Minute](node1, node2)
 
-    val returnedErrors = NodeValidator[SeveralNode[Minute]].validate(severalNode)
+    val returnedErrors =
+      NodeValidator[SeveralNode[Minute]].validate(severalNode)
     returnedErrors shouldBe List.empty[InvalidField]
   }
 
@@ -56,10 +59,13 @@ class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
     val node2 = ConstNode[Second](10)
     val severalNode = SeveralNode[Second](node1, node2)
 
-    val returnedErrors = NodeValidator[SeveralNode[Second]].validate(severalNode)
+    val returnedErrors =
+      NodeValidator[SeveralNode[Second]].validate(severalNode)
     returnedErrors shouldBe List(
-      InvalidField(Second, s"Value '${node1.show}' is implied by '${node2.show}'"),
-      InvalidField(Second, s"Value '${node2.show}' is implied by '${node1.show}'")
+      InvalidField(Second,
+                   s"Value '${node1.show}' is implied by '${node2.show}'"),
+      InvalidField(Second,
+                   s"Value '${node2.show}' is implied by '${node1.show}'")
     )
   }
 
@@ -71,8 +77,10 @@ class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
 
     val returnedErrors = NodeValidator[SeveralNode[Month]].validate(severalNode)
     returnedErrors shouldBe List(
-      InvalidField(Month, s"Value '${node1.show}' is implied by '${node2.show}'"),
-      InvalidField(Month, s"Value '${node1.show}' is implied by '${node3.show}'")
+      InvalidField(Month,
+                   s"Value '${node1.show}' is implied by '${node2.show}'"),
+      InvalidField(Month,
+                   s"Value '${node1.show}' is implied by '${node3.show}'")
     )
   }
 
@@ -81,10 +89,15 @@ class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
     val node2 = BetweenNode[Second](ConstNode(-390), ConstNode(120))
     val severalNode = SeveralNode[Second](node1, node2)
 
-    val returnedErrors = NodeValidator[SeveralNode[Second]].validate(severalNode)
+    val returnedErrors =
+      NodeValidator[SeveralNode[Second]].validate(severalNode)
     returnedErrors shouldBe List(
-      InvalidField(Second, s"Value ${node2.begin.show} is out of bounds for field: Second"),
-      InvalidField(Second, s"Value ${node2.end.show} is out of bounds for field: Second")
+      InvalidField(
+        Second,
+        s"Value ${node2.begin.show} is out of bounds for field: Second"),
+      InvalidField(
+        Second,
+        s"Value ${node2.end.show} is out of bounds for field: Second")
     )
   }
 

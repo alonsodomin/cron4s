@@ -21,7 +21,6 @@ import cron4s.testkit.SlowCron4sLawSuite
 import cron4s.testkit.discipline.FieldExprTests
 import cron4s.testkit.gen.ArbitrarySeveralNode
 
-
 /**
   * Created by alonsodomin on 01/08/2016.
   */
