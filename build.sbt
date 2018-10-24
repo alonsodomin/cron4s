@@ -82,7 +82,9 @@ lazy val commonJsSettings = Seq(
     s"-P:scalajs:mapSourceURI:$a->$g/"
   },
   parallelExecution := false,
+  //scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
   jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
+  //jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv()
 )
 
 lazy val consoleSettings = Seq(
@@ -236,7 +238,7 @@ lazy val docs = project
   .dependsOn(cron4sJVM)
 
 lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("core"))
-  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, ScalaJSBundlerPlugin)
   .settings(
     name := "core",
     moduleName := "cron4s-core"
@@ -319,7 +321,7 @@ lazy val joda = (project in file("time-lib/joda"))
   .dependsOn(coreJVM, testkitJVM % Test)
 
 lazy val momentjs = (project in file("time-lib/momentjs"))
-  .enablePlugins(AutomateHeaderPlugin, ScalaJSPlugin, ScalafmtPlugin)
+  .enablePlugins(AutomateHeaderPlugin, ScalaJSPlugin, ScalafmtPlugin, ScalaJSBundlerPlugin)
   .settings(commonSettings)
   .settings(commonJsSettings)
   .settings(publishSettings)
