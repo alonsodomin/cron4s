@@ -18,7 +18,7 @@ object Dependencies {
     val catalysts   = "0.7"
     
     val jodaTime      = "2.10.1"
-    val jodaConvert   = "2.1.1"
+    val jodaConvert   = "2.1.2"
     
     val momentjs      = "0.8.1"
     val scalaJavaTime = "2.0.0-RC1"
