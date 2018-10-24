@@ -24,8 +24,10 @@ import cron4s.base.{Step, Enumerated}
 private[syntax] class EnumeratedOps[A](self: A, tc: Enumerated[A]) {
   def max: Int = tc.max(self)
   def min: Int = tc.min(self)
-  def step(from: Int, stepSize: Int): Option[(Int, Int)] = tc.step(self)(from, stepSize)
-  def step(from: Int, step: Step): Option[(Int, Int)] = tc.step(self, from, step)
+  def step(from: Int, stepSize: Int): Option[(Int, Int)] =
+    tc.step(self)(from, stepSize)
+  def step(from: Int, step: Step): Option[(Int, Int)] =
+    tc.step(self, from, step)
   def next(from: Int): Option[Int] = tc.next(self)(from)
   def prev(from: Int): Option[Int] = tc.prev(self)(from)
   def range: IndexedSeq[Int] = tc.range(self)
@@ -33,8 +35,8 @@ private[syntax] class EnumeratedOps[A](self: A, tc: Enumerated[A]) {
 
 private[syntax] trait EnumeratedSyntax {
 
-  implicit def toEnumeratedOps[A](target: A)
-      (implicit tc: Enumerated[A]): EnumeratedOps[A] =
+  implicit def toEnumeratedOps[A](target: A)(
+      implicit tc: Enumerated[A]): EnumeratedOps[A] =
     new EnumeratedOps[A](target, tc)
 
 }

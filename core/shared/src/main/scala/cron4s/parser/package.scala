@@ -28,7 +28,8 @@ package object parser extends NodeConversions {
   import CronUnit._
 
   private[this] val digit = P(CharIn('0' to '9'))
-  private[this] val sexagesimal = P(((CharIn('1' to '5') ~ digit) | ("0" ~ digit) | digit).!).map(_.toInt)
+  private[this] val sexagesimal =
+    P(((CharIn('1' to '5') ~ digit) | ("0" ~ digit) | digit).!).map(_.toInt)
 
   //----------------------------------------
   // Individual Expression Atoms
@@ -36,32 +37,42 @@ package object parser extends NodeConversions {
 
   // Seconds
 
-  val seconds: Parser[ConstNode[Second]] = sexagesimal.map(value => ConstNode[Second](value))
+  val seconds: Parser[ConstNode[Second]] =
+    sexagesimal.map(value => ConstNode[Second](value))
 
   // Minutes
 
-  val minutes: Parser[ConstNode[Minute]] = sexagesimal.map(value => ConstNode[Minute](value))
+  val minutes: Parser[ConstNode[Minute]] =
+    sexagesimal.map(value => ConstNode[Minute](value))
 
   // Hours
 
-  val hours: Parser[ConstNode[Hour]] = P((("2" ~ CharIn('0' to '3')) | ("0" | "1") ~ digit | digit).!).map {
-    value => ConstNode[Hour](value.toInt)
-  }
+  val hours: Parser[ConstNode[Hour]] =
+    P((("2" ~ CharIn('0' to '3')) | ("0" | "1") ~ digit | digit).!).map {
+      value =>
+        ConstNode[Hour](value.toInt)
+    }
 
   // Day Of Month
 
-  val daysOfMonth: Parser[ConstNode[DayOfMonth]] = P(((("0" | "1" | "2") ~ digit) | ("3" ~ ("0" | "1")) | digit).!).map {
-    value => ConstNode[DayOfMonth](value.toInt)
-  }
+  val daysOfMonth: Parser[ConstNode[DayOfMonth]] =
+    P(((("0" | "1" | "2") ~ digit) | ("3" ~ ("0" | "1")) | digit).!).map {
+      value =>
+        ConstNode[DayOfMonth](value.toInt)
+    }
 
   // Month
 
-  private[this] val numericMonth = P((("1" ~ CharIn('0' to '2')) | ("0".? ~ digit)).!).map {
-    value => ConstNode[Month](value.toInt)
-  }.opaque("numeric month")
-  private[this] val textualMonth = P(StringIn(Months.textValues: _*).!).map { value =>
-    val index = Months.textValues.indexOf(value)
-    ConstNode[Month](index + 1, Some(value))
+  private[this] val numericMonth =
+    P((("1" ~ CharIn('0' to '2')) | ("0".? ~ digit)).!)
+      .map { value =>
+        ConstNode[Month](value.toInt)
+      }
+      .opaque("numeric month")
+  private[this] val textualMonth = P(StringIn(Months.textValues: _*).!).map {
+    value =>
+      val index = Months.textValues.indexOf(value)
+      ConstNode[Month](index + 1, Some(value))
   }
 
   val months: Parser[ConstNode[Month]] = textualMonth | numericMonth
@@ -70,11 +81,13 @@ package object parser extends NodeConversions {
 
   private[this] val numericDayOfWeek = P(CharIn('0' to '6').!)
     .map(value => ConstNode[DayOfWeek](value.toInt))
-  private[this] val textualDayOfWeek = P(StringIn(DaysOfWeek.textValues: _*).!).map { value =>
-    val index = DaysOfWeek.textValues.indexOf(value)
-    ConstNode[DayOfWeek](index, Some(value))
-  }
-  val daysOfWeek: Parser[ConstNode[DayOfWeek]] = numericDayOfWeek | textualDayOfWeek
+  private[this] val textualDayOfWeek =
+    P(StringIn(DaysOfWeek.textValues: _*).!).map { value =>
+      val index = DaysOfWeek.textValues.indexOf(value)
+      ConstNode[DayOfWeek](index, Some(value))
+    }
+  val daysOfWeek
+    : Parser[ConstNode[DayOfWeek]] = numericDayOfWeek | textualDayOfWeek
 
   //----------------------------------------
   // Field-Based Expression Atoms
@@ -86,25 +99,32 @@ package object parser extends NodeConversions {
   def any[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyNode[F]] =
     P("?").map(_ => AnyNode[F])
 
-  def between[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[BetweenNode[F]] =
+  def between[F <: CronField](p: Parser[ConstNode[F]])(
+      implicit unit: CronUnit[F]): Parser[BetweenNode[F]] =
     (p ~ "-" ~ p).map { case (min, max) => BetweenNode[F](min, max) }
 
-  def several[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[SeveralNode[F]] = {
-    def compose(p: Parser[EnumerableNode[F]])(implicit unit: CronUnit[F]): Parser[SeveralNode[F]] =
+  def several[F <: CronField](p: Parser[ConstNode[F]])(
+      implicit unit: CronUnit[F]): Parser[SeveralNode[F]] = {
+    def compose(p: Parser[EnumerableNode[F]])(
+        implicit unit: CronUnit[F]): Parser[SeveralNode[F]] =
       p.rep(min = 2, sep = ",")
         .map(values => SeveralNode[F](values.head, values.tail: _*))
 
     compose(between(p).map(between2Enumerable) | p.map(const2Enumerable))
   }
 
-  def every[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[EveryNode[F]] = {
-    def compose(p: Parser[DivisibleNode[F]])(implicit unit: CronUnit[F]): Parser[EveryNode[F]] =
-      (p ~ "/" ~/ digit.rep(1).!).map { case (base, freq) => EveryNode[F](base, freq.toInt) }
+  def every[F <: CronField](p: Parser[ConstNode[F]])(
+      implicit unit: CronUnit[F]): Parser[EveryNode[F]] = {
+    def compose(p: Parser[DivisibleNode[F]])(
+        implicit unit: CronUnit[F]): Parser[EveryNode[F]] =
+      (p ~ "/" ~/ digit.rep(1).!).map {
+        case (base, freq) => EveryNode[F](base, freq.toInt)
+      }
 
     compose(
       several(p).map(several2Divisible) |
-      between(p).map(between2Divisible) |
-      each[F].map(each2Divisible)
+        between(p).map(between2Divisible) |
+        each[F].map(each2Divisible)
     )
   }
 
@@ -112,7 +132,8 @@ package object parser extends NodeConversions {
   // AST Parsing & Building
   //----------------------------------------
 
-  def of[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[FieldNode[F]] = {
+  def of[F <: CronField](p: Parser[ConstNode[F]])(
+      implicit unit: CronUnit[F]): Parser[FieldNode[F]] = {
     every(p).map(every2Field) |
       several(p).map(several2Field) |
       between(p).map(between2Field) |
@@ -120,7 +141,8 @@ package object parser extends NodeConversions {
       each[F].map(each2Field)
   }
 
-  def withAny[F <: CronField](p: Parser[ConstNode[F]])(implicit unit: CronUnit[F]): Parser[FieldNodeWithAny[F]] = {
+  def withAny[F <: CronField](p: Parser[ConstNode[F]])(
+      implicit unit: CronUnit[F]): Parser[FieldNodeWithAny[F]] = {
     every(p).map(every2FieldWithAny) |
       several(p).map(several2FieldWithAny) |
       between(p).map(between2FieldWithAny) |
@@ -137,9 +159,10 @@ package object parser extends NodeConversions {
       (withAny(daysOfMonth) ~ " ").opaque("1-31") ~/
       (of(months) ~ " ").opaque("<month>") ~/
       withAny(daysOfWeek).opaque("<day-of-week>") ~/
-    End
-  ).map { case (sec, min, hour, day, month, weekDay) =>
-    CronExpr(sec, min, hour, day, month, weekDay)
+      End
+  ).map {
+    case (sec, min, hour, day, month, weekDay) =>
+      CronExpr(sec, min, hour, day, month, weekDay)
   }
 
 }

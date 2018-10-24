@@ -27,7 +27,8 @@ import org.scalacheck._
   */
 trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
 
-  private[this] def filterImpliedElems[F <: CronField](xs: List[EnumerableNode[F]]): List[EnumerableNode[F]] = {
+  private[this] def filterImpliedElems[F <: CronField](
+      xs: List[EnumerableNode[F]]): List[EnumerableNode[F]] = {
     xs.foldRight(List.empty[EnumerableNode[F]]) { (node, result) =>
       val alreadyImplied = result.exists(_.impliedBy(node))
       val impliedByOther = result.exists(x => node.impliedBy(x))
@@ -47,9 +48,10 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       implicit
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
-  ): Gen[ConstNode[F]] = for {
-    value <- Gen.choose(unit.min, unit.max)
-  } yield ConstNode(value)
+  ): Gen[ConstNode[F]] =
+    for {
+      value <- Gen.choose(unit.min, unit.max)
+    } yield ConstNode(value)
 
   def invalidConstGen[F <: CronField](
       implicit
@@ -62,10 +64,11 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       implicit
       unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
-  ): Gen[BetweenNode[F]] = for {
-    min  <- Gen.choose(unit.min, unit.max - 1)
-    max  <- Gen.choose(min + 1, unit.max)
-  } yield BetweenNode(ConstNode(min), ConstNode(max))
+  ): Gen[BetweenNode[F]] =
+    for {
+      min <- Gen.choose(unit.min, unit.max - 1)
+      max <- Gen.choose(min + 1, unit.max)
+    } yield BetweenNode(ConstNode(min), ConstNode(max))
 
   def invalidBetweenGen[F <: CronField](
       implicit
@@ -96,12 +99,14 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
     invalidBetweenGen[F].map(between2Enumerable)
   )
 
-  private[this] def severalGen0[F <: CronField](memberGen: Gen[EnumerableNode[F]])(
-    inspectElements: List[EnumerableNode[F]] => List[EnumerableNode[F]]
+  private[this] def severalGen0[F <: CronField](
+      memberGen: Gen[EnumerableNode[F]])(
+      inspectElements: List[EnumerableNode[F]] => List[EnumerableNode[F]]
   )(
-    implicit unit: CronUnit[F]
+      implicit unit: CronUnit[F]
   ): Gen[SeveralNode[F]] = {
-    Gen.choose(1, 5)
+    Gen
+      .choose(1, 5)
       .flatMap(size => Gen.listOfN(size, memberGen))
       .map(inspectElements)
       .map { elems =>
@@ -133,10 +138,11 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
 
   private[this] def everyGen0[F <: CronField](
       baseGen: Gen[DivisibleNode[F]]
-  )(implicit unit: CronUnit[F]): Gen[EveryNode[F]] = for {
-    base <- baseGen
-    freq <- Gen.posNum[Int]
-  } yield EveryNode(base, freq)
+  )(implicit unit: CronUnit[F]): Gen[EveryNode[F]] =
+    for {
+      base <- baseGen
+      freq <- Gen.posNum[Int]
+    } yield EveryNode(base, freq)
 
   def everyGen[F <: CronField](
       implicit
@@ -145,7 +151,8 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
   ): Gen[EveryNode[F]] =
     everyGen0(divisibleGen[F])
 
-  def nodeGen[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Gen[FieldNode[F]] =
+  def nodeGen[F <: CronField](implicit unit: CronUnit[F],
+                              ev: Enumerated[CronUnit[F]]): Gen[FieldNode[F]] =
     Gen.oneOf(
       eachGen[F].map(each2Field),
       constGen[F].map(const2Field),
@@ -154,7 +161,9 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       everyGen[F].map(every2Field)
     )
 
-  def nodeWithAnyGen[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Gen[FieldNodeWithAny[F]] =
+  def nodeWithAnyGen[F <: CronField](
+      implicit unit: CronUnit[F],
+      ev: Enumerated[CronUnit[F]]): Gen[FieldNodeWithAny[F]] =
     Gen.oneOf(
       anyGen[F].map(any2FieldWithAny),
       eachGen[F].map(each2FieldWithAny),

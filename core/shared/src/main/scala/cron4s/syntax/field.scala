@@ -25,15 +25,19 @@ import scala.language.higherKinds
 /**
   * Created by alonsodomin on 25/08/2016.
   */
-private[syntax] class FieldExprOps[E[_ <: CronField], F <: CronField](self: E[F], tc: FieldExpr[E, F])
-  extends EnumeratedOps[E[F]](self, tc) {
+private[syntax] class FieldExprOps[E[_ <: CronField], F <: CronField](
+    self: E[F],
+    tc: FieldExpr[E, F])
+    extends EnumeratedOps[E[F]](self, tc) {
 
   def matches: Predicate[Int] = tc.matches(self)
 
-  def implies[EE[_ <: CronField]](ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
+  def implies[EE[_ <: CronField]](ee: EE[F])(
+      implicit EE: FieldExpr[EE, F]): Boolean =
     tc.implies(self)(ee)
 
-  def impliedBy[EE[_ <: CronField]](ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
+  def impliedBy[EE[_ <: CronField]](ee: EE[F])(
+      implicit EE: FieldExpr[EE, F]): Boolean =
     tc.impliedBy(self)(ee)
 
   def unit: CronUnit[F] = tc.unit(self)
@@ -42,9 +46,8 @@ private[syntax] class FieldExprOps[E[_ <: CronField], F <: CronField](self: E[F]
 
 private[syntax] trait FieldExprSyntax extends EnumeratedSyntax {
 
-  implicit def toExprOps[E[_ <: CronField], F <: CronField]
-      (target: E[F])
-      (implicit tc: FieldExpr[E, F]): FieldExprOps[E, F] =
+  implicit def toExprOps[E[_ <: CronField], F <: CronField](target: E[F])(
+      implicit tc: FieldExpr[E, F]): FieldExprOps[E, F] =
     new FieldExprOps[E, F](target, tc)
 
 }

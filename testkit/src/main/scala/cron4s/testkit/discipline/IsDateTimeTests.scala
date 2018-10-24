@@ -37,25 +37,24 @@ trait IsDateTimeTests[DateTime] extends Laws {
   def laws: IsDateTimeLaws[DateTime]
 
   def dateTime[F <: CronField](implicit
-    arbDateTime: Arbitrary[DateTime],
-    arbFieldValue: Arbitrary[CronFieldValue[F]],
-    arbField: Arbitrary[F]
-  ): RuleSet = new DefaultRuleSet(
-    name = "dateTime",
-    parent = None,
-    "gettable" -> forAll(laws.gettable[F] _),
-    "immutability" -> forAll(laws.immutability[F] _),
-    "settable" -> forAll(laws.settable[F] _)
-  )
+                               arbDateTime: Arbitrary[DateTime],
+                               arbFieldValue: Arbitrary[CronFieldValue[F]],
+                               arbField: Arbitrary[F]): RuleSet =
+    new DefaultRuleSet(
+      name = "dateTime",
+      parent = None,
+      "gettable" -> forAll(laws.gettable[F] _),
+      "immutability" -> forAll(laws.immutability[F] _),
+      "settable" -> forAll(laws.settable[F] _)
+    )
 
 }
 
 object IsDateTimeTests {
 
   def apply[DateTime](implicit
-    dtEv: IsDateTime[DateTime],
-    eqEv: Eq[DateTime]
-  ): IsDateTimeTests[DateTime] =
+                      dtEv: IsDateTime[DateTime],
+                      eqEv: Eq[DateTime]): IsDateTimeTests[DateTime] =
     new IsDateTimeTests[DateTime] {
       val laws: IsDateTimeLaws[DateTime] = IsDateTimeLaws[DateTime]
     }

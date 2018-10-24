@@ -42,21 +42,18 @@ trait TestSettings extends Configuration {
 
 }
 
-
 trait Cron4sLawSuite extends CatsSuite
 
 trait SlowCron4sLawSuite extends SlowCatsSuite
 
-abstract class Cron4sPropSpec extends PropSpec
-  with TestSettings {
+abstract class Cron4sPropSpec extends PropSpec with TestSettings {
 
   override implicit val generatorDrivenConfig: PropertyCheckConfiguration =
     defaultPropertyCheckConfig
 
 }
 
-abstract class SlowCron4sPropSpec extends PropSpec
-  with TestSettings {
+abstract class SlowCron4sPropSpec extends PropSpec with TestSettings {
 
   override implicit val generatorDrivenConfig: PropertyCheckConfiguration =
     slowPropertyCheckConfig

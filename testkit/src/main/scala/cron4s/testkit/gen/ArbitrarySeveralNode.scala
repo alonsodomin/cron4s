@@ -28,7 +28,8 @@ trait ArbitrarySeveralNode extends NodeGenerators {
   implicit lazy val arbitrarySeveralSecond = Arbitrary(severalGen[Second])
   implicit lazy val arbitrarySeveralMinute = Arbitrary(severalGen[Minute])
   implicit lazy val arbitrarySeveralHour = Arbitrary(severalGen[Hour])
-  implicit lazy val arbitrarySeveralDayOfMonth = Arbitrary(severalGen[DayOfMonth])
+  implicit lazy val arbitrarySeveralDayOfMonth = Arbitrary(
+    severalGen[DayOfMonth])
   implicit lazy val arbitrarySeveralMonth = Arbitrary(severalGen[Month])
   implicit lazy val arbitrarySeveralDayOfWeek = Arbitrary(severalGen[DayOfWeek])
 

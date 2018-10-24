@@ -24,7 +24,7 @@ final case class DateCronExpr(
     daysOfMonth: DaysOfMonthNode,
     months: MonthsNode,
     daysOfWeek: DaysOfWeekNode
-  ) {
+) {
 
   private[cron4s] lazy val raw: RawDateCronExpr = Generic[DateCronExpr].to(this)
 
@@ -44,7 +44,7 @@ final case class TimeCronExpr(
     seconds: SecondsNode,
     minutes: MinutesNode,
     hours: HoursNode
-  ) {
+) {
 
   private[cron4s] lazy val raw: RawTimeCronExpr = Generic[TimeCronExpr].to(this)
 

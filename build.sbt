@@ -58,8 +58,7 @@ val commonSettings = Def.settings(
   consoleImports := Seq("cron4s._"),
   initialCommands in console := consoleImports.value
     .map(s => s"import $s")
-    .mkString("\n") + "\n",
-  scalafmtVersion in ThisBuild := "1.4.0",
+    .mkString("\n"),
   scalafmtOnCompile := true
 ) ++ unusedWarning
 

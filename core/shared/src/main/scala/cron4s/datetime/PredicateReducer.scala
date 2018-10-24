@@ -29,27 +29,33 @@ import shapeless._
 /**
   * Created by domingueza on 29/07/2016.
   */
-private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime])
-    (implicit M: MonoidK[Predicate]) {
+private[datetime] final class PredicateReducer[DateTime](
+    DT: IsDateTime[DateTime])(implicit M: MonoidK[Predicate]) {
 
   object asPredicate extends Poly1 {
     import CronField._
     import cats.syntax.either._
 
-    private[this] def predicateFor[N[_ <: CronField], F <: CronField]
-        (field: F, node: N[F])
-        (implicit expr: FieldExpr[N, F]): Predicate[DateTime] = {
+    private[this] def predicateFor[N[_ <: CronField], F <: CronField](
+        field: F,
+        node: N[F])(implicit expr: FieldExpr[N, F]): Predicate[DateTime] = {
       Predicate { dt =>
-        DT.get(dt, field).map(expr.matches(node)).getOrElse(M.empty[DateTime](dt))
+        DT.get(dt, field)
+          .map(expr.matches(node))
+          .getOrElse(M.empty[DateTime](dt))
       }
     }
 
-    implicit def caseSeconds     = at[SecondsNode](node => predicateFor(Second, node))
-    implicit def caseMinutes     = at[MinutesNode](node => predicateFor(Minute, node))
-    implicit def caseHours       = at[HoursNode](node => predicateFor(Hour, node))
-    implicit def caseDaysOfMonth = at[DaysOfMonthNode](node => predicateFor(DayOfMonth, node))
-    implicit def caseMonths      = at[MonthsNode](node => predicateFor(Month, node))
-    implicit def caseDaysOfWeek  = at[DaysOfWeekNode](node => predicateFor(DayOfWeek, node))
+    implicit def caseSeconds =
+      at[SecondsNode](node => predicateFor(Second, node))
+    implicit def caseMinutes =
+      at[MinutesNode](node => predicateFor(Minute, node))
+    implicit def caseHours = at[HoursNode](node => predicateFor(Hour, node))
+    implicit def caseDaysOfMonth =
+      at[DaysOfMonthNode](node => predicateFor(DayOfMonth, node))
+    implicit def caseMonths = at[MonthsNode](node => predicateFor(Month, node))
+    implicit def caseDaysOfWeek =
+      at[DaysOfWeekNode](node => predicateFor(DayOfWeek, node))
   }
 
   object fromRaw extends Poly1 {

@@ -32,7 +32,8 @@ import org.typelevel.discipline.Laws
 trait EnumeratedTests[A] extends Laws {
   def laws: EnumeratedLaws[A]
 
-  def enumerated(implicit arbAF: Arbitrary[A], arbFrom: Arbitrary[Int]): RuleSet = new DefaultRuleSet(
+  def enumerated(implicit arbAF: Arbitrary[A],
+                 arbFrom: Arbitrary[Int]): RuleSet = new DefaultRuleSet(
     name = "enumerated",
     parent = None,
     "min" -> forAll(laws.min _),

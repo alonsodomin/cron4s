@@ -29,16 +29,18 @@ package object validation {
     val dayFieldError = validateDayFields(expr)
     val fieldErrors = expr.raw.map(ops.validate).toList.flatten
 
-    val allErrors = dayFieldError.fold[List[ValidationError]](fieldErrors)(_ :: fieldErrors)
+    val allErrors =
+      dayFieldError.fold[List[ValidationError]](fieldErrors)(_ :: fieldErrors)
 
-    NonEmptyList.fromList(allErrors)
+    NonEmptyList
+      .fromList(allErrors)
       .map(errs => Left(InvalidCron(errs)))
       .getOrElse(Right(expr))
   }
 
   private def validateDayFields(expr: CronExpr) = {
     val dayOfMonth = expr.field[CronField.DayOfMonth].toString
-    val dayOfWeek  = expr.field[CronField.DayOfWeek].toString
+    val dayOfWeek = expr.field[CronField.DayOfWeek].toString
 
     if (dayOfMonth == dayOfWeek) {
       Some(InvalidFieldCombination(
@@ -46,9 +48,11 @@ package object validation {
       ))
     } else if ((dayOfMonth != "?" && dayOfWeek == "?") || (dayOfMonth == "?" && dayOfWeek != "?")) {
       None
-    } else Some(InvalidFieldCombination(
-      s"Either ${CronField.DayOfMonth} and ${CronField.DayOfWeek} must have a ? expression"
-    ))
+    } else
+      Some(
+        InvalidFieldCombination(
+          s"Either ${CronField.DayOfMonth} and ${CronField.DayOfWeek} must have a ? expression"
+        ))
   }
 
 }

@@ -26,17 +26,19 @@ trait FieldExpr[E[_ <: CronField], F <: CronField] extends Enumerated[E[F]] {
 
   def matches(e: E[F]): Predicate[Int]
 
-  def implies[EE[_ <: CronField]](e: E[F])(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean
+  def implies[EE[_ <: CronField]](e: E[F])(ee: EE[F])(
+      implicit EE: FieldExpr[EE, F]): Boolean
 
   final def impliedBy[EE[_ <: CronField]](e: E[F])(ee: EE[F])(
       implicit EE: FieldExpr[EE, F]
-    ): Boolean =
-      EE.implies(ee)(e)(this)
+  ): Boolean =
+    EE.implies(ee)(e)(this)
 
   def unit(e: E[F]): CronUnit[F]
 
 }
 
 object FieldExpr {
-  @inline def apply[E[_ <: CronField], F <: CronField](implicit ev: FieldExpr[E, F]): FieldExpr[E, F] = ev
+  @inline def apply[E[_ <: CronField], F <: CronField](
+      implicit ev: FieldExpr[E, F]): FieldExpr[E, F] = ev
 }

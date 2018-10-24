@@ -19,27 +19,32 @@ package cron4s.syntax
 import cron4s.CronField
 import cron4s.datetime.{IsDateTime, DateTimeNode}
 
-private[syntax] class DateTimeNodeOps[E[_ <: CronField], F <: CronField](self: E[F], tc: DateTimeNode[E, F]) {
+private[syntax] class DateTimeNodeOps[E[_ <: CronField], F <: CronField](
+    self: E[F],
+    tc: DateTimeNode[E, F]) {
 
-  def matchesIn[DateTime](dt: DateTime)(implicit DT: IsDateTime[DateTime]): Boolean =
+  def matchesIn[DateTime](dt: DateTime)(
+      implicit DT: IsDateTime[DateTime]): Boolean =
     tc.matchesIn(self, DT)(dt)
 
-  def nextIn[DateTime](dateTime: DateTime)(implicit DT: IsDateTime[DateTime]): Option[DateTime] =
+  def nextIn[DateTime](dateTime: DateTime)(
+      implicit DT: IsDateTime[DateTime]): Option[DateTime] =
     tc.nextIn(self, DT)(dateTime)
 
-  def prevIn[DateTime](dateTime: DateTime)(implicit DT: IsDateTime[DateTime]): Option[DateTime] =
+  def prevIn[DateTime](dateTime: DateTime)(
+      implicit DT: IsDateTime[DateTime]): Option[DateTime] =
     tc.prevIn(self, DT)(dateTime)
 
-  def stepIn[DateTime](dateTime: DateTime, step: Int)(implicit DT: IsDateTime[DateTime]): Option[DateTime] =
+  def stepIn[DateTime](dateTime: DateTime, step: Int)(
+      implicit DT: IsDateTime[DateTime]): Option[DateTime] =
     tc.stepIn(self, DT)(dateTime, step)
 
 }
 
 private[syntax] trait DateTimeNodeSyntax {
 
-  implicit def toDateTimeNodeOps[E[_ <: CronField], F <: CronField, DateTime]
-      (target: E[F])
-      (implicit tc0: DateTimeNode[E, F]): DateTimeNodeOps[E, F] =
+  implicit def toDateTimeNodeOps[E[_ <: CronField], F <: CronField, DateTime](
+      target: E[F])(implicit tc0: DateTimeNode[E, F]): DateTimeNodeOps[E, F] =
     new DateTimeNodeOps[E, F](target, tc0)
 
 }

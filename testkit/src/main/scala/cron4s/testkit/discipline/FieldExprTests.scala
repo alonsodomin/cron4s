@@ -29,19 +29,20 @@ import org.scalacheck.Prop._
 /**
   * Created by alonsodomin on 28/08/2016.
   */
-trait FieldExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[E[F]] {
+trait FieldExprTests[E[_ <: CronField], F <: CronField]
+    extends EnumeratedTests[E[F]] {
   def laws: FieldExprLaws[E, F]
 
   def expr[EE[_ <: CronField]](
-    implicit
-    arbEF: Arbitrary[E[F]],
-    arbEEF: Arbitrary[EE[F]],
-    arbFrom: Arbitrary[Int],
-    e: FieldExpr[EE, F]
+      implicit
+      arbEF: Arbitrary[E[F]],
+      arbEEF: Arbitrary[EE[F]],
+      arbFrom: Arbitrary[Int],
+      e: FieldExpr[EE, F]
   ): RuleSet = new DefaultRuleSet(
     name = "expr",
     parent = Some(enumerated),
-    "matchable"              -> forAll(laws.matchable _),
+    "matchable" -> forAll(laws.matchable _),
     "implicationCommutative" -> forAll(laws.implicationCommutative[EE] _),
     "implicationEquivalence" -> forAll(laws.implicationEquivalence[EE] _)
   )
@@ -49,6 +50,7 @@ trait FieldExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[
 }
 
 object FieldExprTests {
-  def apply[E[_ <: CronField], F <: CronField](implicit ev: FieldExpr[E, F]): FieldExprTests[E, F] =
+  def apply[E[_ <: CronField], F <: CronField](
+      implicit ev: FieldExpr[E, F]): FieldExprTests[E, F] =
     new FieldExprTests[E, F] { val laws = FieldExprLaws[E, F] }
 }

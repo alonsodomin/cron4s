@@ -32,14 +32,14 @@ import org.typelevel.discipline.Laws
 /**
   * Created by alonsodomin on 28/08/2016.
   */
-trait DateTimeNodeTests[E[_ <: CronField], F <: CronField, DateTime] extends Laws {
+trait DateTimeNodeTests[E[_ <: CronField], F <: CronField, DateTime]
+    extends Laws {
   def laws: DateTimeNodeLaws[E, F, DateTime]
 
   def dateTime(implicit
                arbNode: Arbitrary[E[F]],
                arbDateTime: Arbitrary[DateTime],
-               dateTimeEq: Eq[DateTime]
-  ): RuleSet = new DefaultRuleSet(
+               dateTimeEq: Eq[DateTime]): RuleSet = new DefaultRuleSet(
     name = "dateTimeNode",
     parent = None,
     "forward" -> forAll(laws.forward _),
@@ -51,10 +51,10 @@ trait DateTimeNodeTests[E[_ <: CronField], F <: CronField, DateTime] extends Law
 
 object DateTimeNodeTests {
 
-  def apply[E[_ <: CronField], F <: CronField, DateTime](implicit
-    dtEv: IsDateTime[DateTime],
-    expr: FieldExpr[E, F]
-  ): DateTimeNodeTests[E, F, DateTime] =
+  def apply[E[_ <: CronField], F <: CronField, DateTime](
+      implicit
+      dtEv: IsDateTime[DateTime],
+      expr: FieldExpr[E, F]): DateTimeNodeTests[E, F, DateTime] =
     new DateTimeNodeTests[E, F, DateTime] {
       val laws = DateTimeNodeLaws[E, F, DateTime]
     }
