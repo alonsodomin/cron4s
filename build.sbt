@@ -82,9 +82,7 @@ lazy val commonJsSettings = Seq(
     s"-P:scalajs:mapSourceURI:$a->$g/"
   },
   parallelExecution := false,
-  //scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
   jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
-  //jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv()
 )
 
 lazy val consoleSettings = Seq(
