@@ -17,7 +17,7 @@ object Dependencies {
     val discipline  = "0.10.0"
     val catalysts   = "0.6"
     
-    val jodaTime      = "2.10"
+    val jodaTime      = "2.10.1"
     val jodaConvert   = "2.1.1"
     
     val momentjs      = "0.8.1"
