@@ -11,7 +11,7 @@ object Dependencies {
   object version {
     val cats        = "1.1.0"
     val shapeless   = "2.3.3"
-    val fastparse   = "1.0.0"
+    val fastparse   = "2.0.5"
     val scalacheck  = "1.14.0"
     val scalatest   = "3.0.5"
     val discipline  = "0.10.0"
