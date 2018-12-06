@@ -21,7 +21,7 @@ object Dependencies {
     val jodaConvert   = "2.1.1"
     
     val momentjs      = "0.8.1"
-    val scalaJavaTime = "2.0.0-M13"
+    val scalaJavaTime = "2.0.0-RC1"
   }
 
   val macroParadise = compilerPlugin("org.scalamacros" % "paradise"       % "2.1.1" cross CrossVersion.full)
