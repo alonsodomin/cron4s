@@ -26,6 +26,10 @@ class CronExprArgumentSpec extends SlowCron4sLawSuite with CronGenerators {
 
   val argument: Argument[CronExpr] = Argument[CronExpr]
 
+  test("default metavar says is a cron expression") {
+    argument.defaultMetavar shouldBe "cron-expr"
+  }
+
   test("valid cron expressions can be parsed") {
     forAll { (expr: CronExpr) =>
       argument.read(expr.show) == expr.validNel[String]
