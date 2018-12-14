@@ -4,19 +4,18 @@ import Keys._
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType, _}
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
-import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSVersion
 
 object Dependencies {
 
   object version {
-    val cats        = "1.4.0"
+    val cats        = "1.5.0"
     val shapeless   = "2.3.3"
     val fastparse   = "1.0.0"
     val scalacheck  = "1.14.0"
     val scalatest   = "3.0.5"
     val discipline  = "0.10.0"
-    val catalysts   = "0.7"
+    val catalysts   = "0.8"
     
     val jodaTime      = "2.10.1"
     val jodaConvert   = "2.1.2"
