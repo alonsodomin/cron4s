@@ -90,4 +90,10 @@ class CronSpec extends FlatSpec with Matchers {
     Cron.unsafeParse(exprStr) shouldBe ValidExpr
   }
 
+  it should "compile a valid expression" in {
+    val expr = cron"17-30,5 * 12 * * ?"
+
+    expr shouldBe ValidExpr
+  }
+
 }
