@@ -3,6 +3,22 @@ layout: docs
 title: "What's New"
 ---
 
+## 0.5.0
+
+This version adds some features and upgrades some of the core dependencies.
+
+New features:
+
+ * [#125](https://github.com/alonsodomin/cron4s/pull/125): Add extension module for [decline](http://ben.kirw.in/decline/).
+   Find documentation about it in the [extensions](https://alonsodomin.github.io/cron4s/extensions.html) docs.
+
+Version upgrades:
+
+ * Scala 2.11.12 / Scala 2.12.8
+ * ScalaJS 0.6.26
+ * Cats 1.5.0
+ * Scala Java Time 2.0.0-RC1
+
 ## 0.4.4
 
 This is a maintenance release over 0.4.3:
