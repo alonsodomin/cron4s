@@ -16,7 +16,7 @@
 
 package cron4s.expr
 
-import cats.Show
+import cats.{Eq, Show}
 
 import shapeless._
 
@@ -51,6 +51,9 @@ final case class CronExpr(seconds: SecondsNode,
 }
 
 object CronExpr {
+
+  implicit val CronExprEq: Eq[CronExpr] =
+    Eq.fromUniversalEquals
 
   implicit val CronExprShow: Show[CronExpr] =
     Show.fromToString[CronExpr]

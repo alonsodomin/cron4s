@@ -91,7 +91,10 @@ object Dependencies {
   )
 
   lazy val circe = Def.settings(
-    libraryDependencies += "io.circe" %%% "circe-core" % version.circe
+    libraryDependencies ++= Seq(
+      "io.circe" %%% "circe-core"    % version.circe,
+      "io.circe" %%% "circe-testing" % version.circe % Test
+    )
   )
 
   lazy val decline = Def.settings(
