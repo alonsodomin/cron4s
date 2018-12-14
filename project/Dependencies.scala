@@ -17,6 +17,7 @@ object Dependencies {
     val discipline  = "0.10.0"
     val catalysts   = "0.8"
     val decline     = "0.6.0"
+    val circe       = "0.10.1"
     
     val jodaTime      = "2.10.1"
     val jodaConvert   = "2.2.0"
@@ -87,6 +88,10 @@ object Dependencies {
 
   lazy val momentjs = Def.settings(
     libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % version.momentjs,
+  )
+
+  lazy val circe = Def.settings(
+    libraryDependencies += "io.circe" %%% "circe-core" % version.circe
   )
 
   lazy val decline = Def.settings(

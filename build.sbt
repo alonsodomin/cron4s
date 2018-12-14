@@ -212,8 +212,8 @@ lazy val cron4sJS = (project in file(".js"))
   .settings(commonJsSettings: _*)
   .settings(publishSettings)
   .enablePlugins(ScalaJSPlugin)
-  .aggregate(coreJS, momentjs, declineJS, testkitJS, testsJS)
-  .dependsOn(coreJS, momentjs, declineJS, testkitJS, testsJS % Test)
+  .aggregate(coreJS, momentjs, circeJS, declineJS, testkitJS, testsJS)
+  .dependsOn(coreJS, momentjs, circeJS, declineJS, testkitJS, testsJS % Test)
 
 lazy val cron4sJVM = (project in file(".jvm"))
   .settings(
@@ -224,8 +224,8 @@ lazy val cron4sJVM = (project in file(".jvm"))
   .settings(commonJvmSettings)
   .settings(consoleSettings)
   .settings(publishSettings)
-  .aggregate(coreJVM, joda, declineJVM, testkitJVM, testsJVM)
-  .dependsOn(coreJVM, joda, declineJVM, testkitJVM, testsJVM % Test)
+  .aggregate(coreJVM, joda, circeJVM, declineJVM, testkitJVM, testsJVM)
+  .dependsOn(coreJVM, joda, circeJVM, declineJVM, testkitJVM, testsJVM % Test)
 
 lazy val docs = project
   .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, GhpagesPlugin)
@@ -331,6 +331,20 @@ lazy val momentjs = (project in file("time-lib/momentjs"))
   .dependsOn(coreJS, testkitJS % Test)
 
 // Extension modules
+
+lazy val circe = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("ext/circe"))
+  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+  .settings(
+    name := "circe",
+    moduleName := "cron4s-circe"
+  )
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(Dependencies.circe)
+  .dependsOn(core, testkit % Test)
+
+lazy val circeJVM = circe.jvm
+lazy val circeJS  = circe.js
 
 lazy val decline = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("ext/decline"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
