@@ -212,8 +212,8 @@ lazy val cron4sJS = (project in file(".js"))
   .settings(commonJsSettings: _*)
   .settings(publishSettings)
   .enablePlugins(ScalaJSPlugin)
-  .aggregate(coreJS, momentjs, testkitJS, testsJS)
-  .dependsOn(coreJS, momentjs, testkitJS, testsJS % Test)
+  .aggregate(coreJS, momentjs, declineJS, testkitJS, testsJS)
+  .dependsOn(coreJS, momentjs, declineJS, testkitJS, testsJS % Test)
 
 lazy val cron4sJVM = (project in file(".jvm"))
   .settings(
@@ -224,8 +224,8 @@ lazy val cron4sJVM = (project in file(".jvm"))
   .settings(commonJvmSettings)
   .settings(consoleSettings)
   .settings(publishSettings)
-  .aggregate(coreJVM, joda, testkitJVM, testsJVM)
-  .dependsOn(coreJVM, joda, testkitJVM, testsJVM % Test)
+  .aggregate(coreJVM, joda, declineJVM, testkitJVM, testsJVM)
+  .dependsOn(coreJVM, joda, declineJVM, testkitJVM, testsJVM % Test)
 
 lazy val docs = project
   .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, GhpagesPlugin)
@@ -329,6 +329,22 @@ lazy val momentjs = (project in file("time-lib/momentjs"))
   )
   .settings(Dependencies.momentjs)
   .dependsOn(coreJS, testkitJS % Test)
+
+// Extension modules
+
+lazy val decline = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("ext/decline"))
+  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+  .settings(
+    name := "decline",
+    moduleName := "cron4s-decline"
+  )
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(Dependencies.decline)
+  .dependsOn(core, testkit % Test)
+
+lazy val declineJVM = decline.jvm
+lazy val declineJS  = decline.js
 
 // Utility command aliases
 

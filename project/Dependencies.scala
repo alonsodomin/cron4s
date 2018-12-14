@@ -16,6 +16,7 @@ object Dependencies {
     val scalatest   = "3.0.5"
     val discipline  = "0.10.0"
     val catalysts   = "0.8"
+    val decline     = "0.6.0"
     
     val jodaTime      = "2.10.1"
     val jodaConvert   = "2.1.2"
@@ -83,6 +84,10 @@ object Dependencies {
 
   lazy val momentjs = Def.settings(
     libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % version.momentjs,
+  )
+
+  lazy val decline = Def.settings(
+    libraryDependencies += "com.monovore" %%% "decline" % version.decline
   )
 
 }

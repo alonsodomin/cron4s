@@ -23,6 +23,10 @@ options:
     url: docs/builtin_libs.html
     section: intro
 
+  - title: Extensions
+    url: docs/extensions.html
+    section: intro
+
   - title: Custom DateTime
     url: docs/custom_datetime.html
     section: intro
