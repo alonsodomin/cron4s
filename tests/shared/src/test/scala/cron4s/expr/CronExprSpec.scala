@@ -28,17 +28,22 @@ import org.scalatest.{FlatSpec, Matchers}
 class CronExprSpec extends FlatSpec with Matchers {
   import CronField._
 
-  val secondExpr     : SecondsNode     = ConstNode[Second](15)
-  val minuteExpr     : MinutesNode     = ConstNode[Minute](10)
-  val hourExpr       : HoursNode       = ConstNode[Hour](4)
-  val dayOfMonthExpr : DaysOfMonthNode = ConstNode[DayOfMonth](12)
-  val monthExpr      : MonthsNode      = ConstNode[Month](6)
-  val dayOfWeekExpr  : DaysOfWeekNode  = AnyNode[DayOfWeek]
+  val secondExpr: SecondsNode = ConstNode[Second](15)
+  val minuteExpr: MinutesNode = ConstNode[Minute](10)
+  val hourExpr: HoursNode = ConstNode[Hour](4)
+  val dayOfMonthExpr: DaysOfMonthNode = ConstNode[DayOfMonth](12)
+  val monthExpr: MonthsNode = ConstNode[Month](6)
+  val dayOfWeekExpr: DaysOfWeekNode = AnyNode[DayOfWeek]
 
   val timePart = TimeCronExpr(secondExpr, minuteExpr, hourExpr)
   val datePart = DateCronExpr(dayOfMonthExpr, monthExpr, dayOfWeekExpr)
 
-  val expr = CronExpr(secondExpr, minuteExpr, hourExpr, dayOfMonthExpr, monthExpr, dayOfWeekExpr)
+  val expr = CronExpr(secondExpr,
+                      minuteExpr,
+                      hourExpr,
+                      dayOfMonthExpr,
+                      monthExpr,
+                      dayOfWeekExpr)
 
   "field" should "return the expression for the correct cron field" in {
     expr.field[Second] shouldBe expr.seconds

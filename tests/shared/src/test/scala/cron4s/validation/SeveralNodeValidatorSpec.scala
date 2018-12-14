@@ -24,22 +24,28 @@ import cron4s.testkit.SlowCron4sPropSpec
 /**
   * Created by alonsodomin on 29/12/2016.
   */
-class SeveralNodeValidatorSpec extends SlowCron4sPropSpec with ValidatorPropSpec {
+class SeveralNodeValidatorSpec
+    extends SlowCron4sPropSpec
+    with ValidatorPropSpec {
   import CronField._
 
-  private[this] def check[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Unit = {
+  private[this] def check[F <: CronField](implicit unit: CronUnit[F],
+                                          ev: Enumerated[CronUnit[F]]): Unit = {
     val severalValidator = NodeValidator[SeveralNode[F]]
     val elemValidator = NodeValidator[EnumerableNode[F]]
 
-    property(s"SeveralNode[${unit.field}] with valid components should pass validation") {
+    property(
+      s"SeveralNode[${unit.field}] with valid components should pass validation") {
       forAll(severalGen[F]) { node =>
         severalValidator.validate(node) shouldBe List.empty[InvalidField]
       }
     }
 
-    property(s"SeveralNode[${unit.field}] with invalid members should contain the errors of its elements") {
+    property(
+      s"SeveralNode[${unit.field}] with invalid members should contain the errors of its elements") {
       forAll(invalidSeveralGen[F]) { node =>
-        val expectedMemberErrors = node.values.toList.flatMap(elemValidator.validate)
+        val expectedMemberErrors =
+          node.values.toList.flatMap(elemValidator.validate)
         severalValidator.validate(node) should contain allElementsOf expectedMemberErrors
       }
     }

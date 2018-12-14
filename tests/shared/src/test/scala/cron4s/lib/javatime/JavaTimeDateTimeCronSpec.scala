@@ -23,8 +23,18 @@ import cron4s.testkit.DateTimeCronTestKit
 /**
   * Created by alonsodomin on 29/01/2017.
   */
-class JavaLocalDateCronSpec extends DateTimeCronTestKit[LocalDate] with JavaLocalDateTestBase
-class JavaLocalTimeCronSpec extends DateTimeCronTestKit[LocalTime] with JavaLocalTimeTestBase
-class JavaLocalDateTimeCronSpec extends DateTimeCronTestKit[LocalDateTime] with JavaLocalDateTimeTestBase
-class JavaZonedDateTimeCronSpec extends DateTimeCronTestKit[ZonedDateTime] with JavaZonedDateTimeTestBase
-class JavaOffsetDateTimeCronSpec extends DateTimeCronTestKit[OffsetDateTime] with JavaOffsetDateTimeTestBase
+class JavaLocalDateCronSpec
+    extends DateTimeCronTestKit[LocalDate]
+    with JavaLocalDateTestBase
+class JavaLocalTimeCronSpec
+    extends DateTimeCronTestKit[LocalTime]
+    with JavaLocalTimeTestBase
+class JavaLocalDateTimeCronSpec
+    extends DateTimeCronTestKit[LocalDateTime]
+    with JavaLocalDateTimeTestBase
+class JavaZonedDateTimeCronSpec
+    extends DateTimeCronTestKit[ZonedDateTime]
+    with JavaZonedDateTimeTestBase
+class JavaOffsetDateTimeCronSpec
+    extends DateTimeCronTestKit[OffsetDateTime]
+    with JavaOffsetDateTimeTestBase

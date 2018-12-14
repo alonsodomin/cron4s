@@ -29,7 +29,8 @@ final case class Step private[cron4s] (amount: Int, direction: Direction) {
 }
 
 object Step {
-  def apply(stepSize: Int): Step = new Step(Math.abs(stepSize), Direction.ofSign(stepSize))
+  def apply(stepSize: Int): Step =
+    new Step(Math.abs(stepSize), Direction.ofSign(stepSize))
 }
 
 sealed abstract class Direction(private[cron4s] val sign: Int) {
@@ -70,12 +71,14 @@ trait Enumerated[A] {
           aRange.lastIndexWhere(from > _)
       }
 
-      def currentIdx = if (aRange.contains(from)) {
-        aRange.indexOf(from)
-      } else {
-        val correction = if (step.amount != 0) step.direction.reverse.sign else 0
-        nearestNeighbourIndex + correction
-      }
+      def currentIdx =
+        if (aRange.contains(from)) {
+          aRange.indexOf(from)
+        } else {
+          val correction =
+            if (step.amount != 0) step.direction.reverse.sign else 0
+          nearestNeighbourIndex + correction
+        }
 
       val pointer = currentIdx + (step.amount * step.direction.sign)
       val index = {

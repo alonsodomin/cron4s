@@ -26,9 +26,12 @@ import shapeless._
 package object datetime {
   import CronField._
 
-  private[datetime] type AnyCron = CronExpr :+: TimeCronExpr :+: DateCronExpr :+: CNil
+  private[datetime] type AnyCron =
+    CronExpr :+: TimeCronExpr :+: DateCronExpr :+: CNil
 
-  private[datetime] type FieldSeq = Second :: Minute :: Hour :: DayOfMonth :: Month :: DayOfWeek :: HNil
-  val FieldSeq: FieldSeq = Second :: Minute :: Hour :: DayOfMonth :: Month :: DayOfWeek :: HNil
+  private[datetime] type FieldSeq =
+    Second :: Minute :: Hour :: DayOfMonth :: Month :: DayOfWeek :: HNil
+  val FieldSeq
+    : FieldSeq = Second :: Minute :: Hour :: DayOfMonth :: Month :: DayOfWeek :: HNil
 
 }

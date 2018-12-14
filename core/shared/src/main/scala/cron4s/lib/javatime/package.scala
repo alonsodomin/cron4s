@@ -29,18 +29,27 @@ import cron4s.datetime.IsDateTime
 package object javatime {
   private[javatime] final val DayOfWeekOffset = 1
 
-  implicit lazy val javaLocalDateEq      : Eq[LocalDate]      = Eq.fromUniversalEquals[LocalDate]
-  implicit lazy val javaLocalTimeEq      : Eq[LocalTime]      = Eq.fromUniversalEquals[LocalTime]
-  implicit lazy val javaLocalDateTimeEq  : Eq[LocalDateTime]  = Eq.fromUniversalEquals[LocalDateTime]
-  implicit lazy val javaZonedDateTimeEq  : Eq[ZonedDateTime]  = Eq.fromUniversalEquals[ZonedDateTime]
-  implicit lazy val javaOffsetDateTimeEq : Eq[OffsetDateTime] = Eq.fromUniversalEquals[OffsetDateTime]
+  implicit lazy val javaLocalDateEq: Eq[LocalDate] =
+    Eq.fromUniversalEquals[LocalDate]
+  implicit lazy val javaLocalTimeEq: Eq[LocalTime] =
+    Eq.fromUniversalEquals[LocalTime]
+  implicit lazy val javaLocalDateTimeEq: Eq[LocalDateTime] =
+    Eq.fromUniversalEquals[LocalDateTime]
+  implicit lazy val javaZonedDateTimeEq: Eq[ZonedDateTime] =
+    Eq.fromUniversalEquals[ZonedDateTime]
+  implicit lazy val javaOffsetDateTimeEq: Eq[OffsetDateTime] =
+    Eq.fromUniversalEquals[OffsetDateTime]
 
-  implicit lazy val javaLocalDateShow      : Show[LocalDate]      = Show.fromToString
-  implicit lazy val javaLocalTimeShow      : Show[LocalTime]      = Show.fromToString
-  implicit lazy val javaLocalDateTimeShow  : Show[LocalDateTime]  = Show.fromToString
-  implicit lazy val javaZonedDateTimeShow  : Show[ZonedDateTime]  = Show.fromToString
-  implicit lazy val javaOffsetDateTimeShow : Show[OffsetDateTime] = Show.fromToString
+  implicit lazy val javaLocalDateShow: Show[LocalDate] = Show.fromToString
+  implicit lazy val javaLocalTimeShow: Show[LocalTime] = Show.fromToString
+  implicit lazy val javaLocalDateTimeShow: Show[LocalDateTime] =
+    Show.fromToString
+  implicit lazy val javaZonedDateTimeShow: Show[ZonedDateTime] =
+    Show.fromToString
+  implicit lazy val javaOffsetDateTimeShow: Show[OffsetDateTime] =
+    Show.fromToString
 
-  implicit def javaTemporalInstance[DT <: Temporal]: IsDateTime[DT] = new JavaTemporalInstance[DT]
+  implicit def javaTemporalInstance[DT <: Temporal]: IsDateTime[DT] =
+    new JavaTemporalInstance[DT]
 
 }

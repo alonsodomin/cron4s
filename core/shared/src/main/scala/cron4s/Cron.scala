@@ -26,7 +26,7 @@ import scala.util.{Failure, Success, Try}
 /**
   * Created by domingueza on 10/04/2017.
   */
-@JSExportTopLevel("cron4s.Cron")
+@JSExportTopLevel("Cron")
 object Cron {
 
   // Alias for parse

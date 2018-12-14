@@ -38,7 +38,8 @@ trait DateTimeCronLaws[E, DateTime] {
     val supportedRanges =
       DT.supportedFields(dt).flatMap(exprRanges.get)
 
-    val existsAny = supportedRanges.zip(fieldValues)
+    val existsAny = supportedRanges
+      .zip(fieldValues)
       .exists { case (range, value) => range.contains(value) }
 
     e.anyOf(dt) <-> existsAny
@@ -52,7 +53,8 @@ trait DateTimeCronLaws[E, DateTime] {
     val supportedRanges =
       DT.supportedFields(dt).flatMap(exprRanges.get)
 
-    val containsAll = supportedRanges.zip(fieldValues)
+    val containsAll = supportedRanges
+      .zip(fieldValues)
       .forall { case (range, value) => range.contains(value) }
 
     e.allOf(dt) <-> containsAll
@@ -72,9 +74,9 @@ trait DateTimeCronLaws[E, DateTime] {
 object DateTimeCronLaws {
 
   def apply[E, DateTime](
-    implicit
-    dt0: IsDateTime[DateTime],
-    TC0: DateTimeCron[E]
+      implicit
+      dt0: IsDateTime[DateTime],
+      TC0: DateTimeCron[E]
   ): DateTimeCronLaws[E, DateTime] =
     new DateTimeCronLaws[E, DateTime] {
       implicit val DT = dt0

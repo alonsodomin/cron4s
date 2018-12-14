@@ -25,24 +25,24 @@ import cron4s.expr.FieldSelector
   */
 private[syntax] class DateTimeCronOps[E](self: E, tc: DateTimeCron[E]) {
 
-  def allOf[DateTime](dt: DateTime)
-      (implicit DT: IsDateTime[DateTime]): Boolean =
+  def allOf[DateTime](dt: DateTime)(
+      implicit DT: IsDateTime[DateTime]): Boolean =
     tc.allOf(self, DT)(dt)
 
-  def anyOf[DateTime](dt: DateTime)
-      (implicit DT: IsDateTime[DateTime]): Boolean =
+  def anyOf[DateTime](dt: DateTime)(
+      implicit DT: IsDateTime[DateTime]): Boolean =
     tc.anyOf(self, DT)(dt)
 
-  def next[DateTime](from: DateTime)
-      (implicit DT: IsDateTime[DateTime]): Option[DateTime] =
+  def next[DateTime](from: DateTime)(
+      implicit DT: IsDateTime[DateTime]): Option[DateTime] =
     step(from, 1)
 
-  def prev[DateTime](from: DateTime)
-      (implicit DT: IsDateTime[DateTime]): Option[DateTime] =
+  def prev[DateTime](from: DateTime)(
+      implicit DT: IsDateTime[DateTime]): Option[DateTime] =
     step(from, -1)
 
-  def step[DateTime](from: DateTime, stepSize: Int)
-      (implicit DT: IsDateTime[DateTime]): Option[DateTime] =
+  def step[DateTime](from: DateTime, stepSize: Int)(
+      implicit DT: IsDateTime[DateTime]): Option[DateTime] =
     tc.step(self, DT)(from, stepSize)
 
   def ranges: Map[CronField, IndexedSeq[Int]] =
@@ -51,16 +51,16 @@ private[syntax] class DateTimeCronOps[E](self: E, tc: DateTimeCron[E]) {
   def supportedFields: List[CronField] =
     tc.supportedFields
 
-  def field[F <: CronField](implicit selector: FieldSelector[E, F]): selector.Out[F] =
+  def field[F <: CronField](
+      implicit selector: FieldSelector[E, F]): selector.Out[F] =
     tc.field[F](self)
 
 }
 
 private[syntax] trait DateTimeCronSyntax extends DateTimeCronFunctions {
 
-  implicit def toDateTimeCronOps[E, DateTime]
-      (target: E)
-      (implicit tc0: DateTimeCron[E]): DateTimeCronOps[E] =
+  implicit def toDateTimeCronOps[E, DateTime](target: E)(
+      implicit tc0: DateTimeCron[E]): DateTimeCronOps[E] =
     new DateTimeCronOps[E](target, tc0)
 
 }

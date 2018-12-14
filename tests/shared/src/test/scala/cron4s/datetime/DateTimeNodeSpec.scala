@@ -24,4 +24,6 @@ import cron4s.testkit.DateTimeNodeTestKit
 /**
   * Created by alonsodomin on 28/08/2016.
   */
-class DateTimeNodeSpec extends DateTimeNodeTestKit[LocalDateTime] with JavaLocalDateTimeTestBase
+class DateTimeNodeSpec
+    extends DateTimeNodeTestKit[LocalDateTime]
+    with JavaLocalDateTimeTestBase

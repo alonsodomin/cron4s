@@ -27,28 +27,31 @@ import org.scalacheck._
 trait CronGenerators extends NodeGenerators {
 
   private[this] val fullCronGen = for {
-    seconds     <- nodeGen[CronField.Second]
-    minutes     <- nodeGen[CronField.Minute]
-    hours       <- nodeGen[CronField.Hour]
+    seconds <- nodeGen[CronField.Second]
+    minutes <- nodeGen[CronField.Minute]
+    hours <- nodeGen[CronField.Hour]
     daysOfMonth <- nodeWithAnyGen[CronField.DayOfMonth]
-    months      <- nodeGen[CronField.Month]
-    daysOfWeek  <- nodeWithAnyGen[CronField.DayOfWeek]
+    months <- nodeGen[CronField.Month]
+    daysOfWeek <- nodeWithAnyGen[CronField.DayOfWeek]
   } yield CronExpr(seconds, minutes, hours, daysOfMonth, months, daysOfWeek)
 
   private[this] val timeCronGen = for {
-    seconds     <- nodeGen[CronField.Second]
-    minutes     <- nodeGen[CronField.Minute]
-    hours       <- nodeGen[CronField.Hour]
+    seconds <- nodeGen[CronField.Second]
+    minutes <- nodeGen[CronField.Minute]
+    hours <- nodeGen[CronField.Hour]
   } yield TimeCronExpr(seconds, minutes, hours)
 
   private[this] val dateCronGen = for {
     daysOfMonth <- nodeWithAnyGen[CronField.DayOfMonth]
-    months      <- nodeGen[CronField.Month]
-    daysOfWeek  <- nodeWithAnyGen[CronField.DayOfWeek]
+    months <- nodeGen[CronField.Month]
+    daysOfWeek <- nodeWithAnyGen[CronField.DayOfWeek]
   } yield DateCronExpr(daysOfMonth, months, daysOfWeek)
 
-  implicit lazy val arbitraryFullCron: Arbitrary[CronExpr]     = Arbitrary(fullCronGen)
-  implicit lazy val arbitraryTimeCron: Arbitrary[TimeCronExpr] = Arbitrary(timeCronGen)
-  implicit lazy val arbitraryDateCron: Arbitrary[DateCronExpr] = Arbitrary(dateCronGen)
+  implicit lazy val arbitraryFullCron: Arbitrary[CronExpr] = Arbitrary(
+    fullCronGen)
+  implicit lazy val arbitraryTimeCron: Arbitrary[TimeCronExpr] = Arbitrary(
+    timeCronGen)
+  implicit lazy val arbitraryDateCron: Arbitrary[DateCronExpr] = Arbitrary(
+    dateCronGen)
 
 }

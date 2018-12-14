@@ -23,6 +23,8 @@ import org.scalatest.prop.GeneratorDrivenPropertyChecks
 /**
   * Created by alonsodomin on 04/02/2017.
   */
-trait ValidatorPropSpec extends GeneratorDrivenPropertyChecks
-  with Matchers
-  with NodeGenerators { this: PropSpecLike => }
+trait ValidatorPropSpec
+    extends GeneratorDrivenPropertyChecks
+    with Matchers
+    with NodeGenerators { this: PropSpecLike =>
+}

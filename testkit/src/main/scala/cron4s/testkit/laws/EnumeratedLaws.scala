@@ -64,5 +64,7 @@ trait EnumeratedLaws[A] {
 }
 
 object EnumeratedLaws {
-  def apply[A](implicit ev: Enumerated[A]) = new EnumeratedLaws[A] { val TC = ev }
+  def apply[A](implicit ev: Enumerated[A]) = new EnumeratedLaws[A] {
+    val TC = ev
+  }
 }

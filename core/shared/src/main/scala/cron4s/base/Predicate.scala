@@ -28,8 +28,12 @@ trait Predicate[A] extends (A => Boolean) { self =>
 
   def apply(a: A): Boolean
 
-  def and(m: => Predicate[A]): Predicate[A] = Predicate { a => self(a) && m(a) }
-  def or(m: => Predicate[A]): Predicate[A] = Predicate { a => self(a) || m(a) }
+  def and(m: => Predicate[A]): Predicate[A] = Predicate { a =>
+    self(a) && m(a)
+  }
+  def or(m: => Predicate[A]): Predicate[A] = Predicate { a =>
+    self(a) || m(a)
+  }
 
   def &&(m: => Predicate[A]): Predicate[A] = and(m)
   def ||(m: => Predicate[A]): Predicate[A] = or(m)
@@ -47,7 +51,9 @@ object Predicate {
   implicit val contravariant = new Contravariant[Predicate] {
 
     def contramap[A, B](fa: Predicate[A])(f: B => A): Predicate[B] =
-      Predicate { b => fa(f(b)) }
+      Predicate { b =>
+        fa(f(b))
+      }
 
   }
 

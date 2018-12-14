@@ -26,7 +26,8 @@ import shapeless._
 /**
   * Created by alonsodomin on 23/01/2017.
   */
-final class FieldNode[F <: CronField](private[cron4s] val raw: RawFieldNode[F]) extends AnyVal {
+final class FieldNode[F <: CronField](private[cron4s] val raw: RawFieldNode[F])
+    extends AnyVal {
 
   override def toString: String = raw.fold(ops.show)
 
@@ -34,20 +35,22 @@ final class FieldNode[F <: CronField](private[cron4s] val raw: RawFieldNode[F]) 
 
 object FieldNode {
 
-  implicit def fieldNodeEq[F <: CronField]: Eq[FieldNode[F]] = Eq.fromUniversalEquals
+  implicit def fieldNodeEq[F <: CronField]: Eq[FieldNode[F]] =
+    Eq.fromUniversalEquals
 
   implicit def fieldNodeShow[F <: CronField]: Show[FieldNode[F]] =
     Show.fromToString[FieldNode[F]]
 
-  implicit def fieldNodeInstance[F <: CronField]: FieldExpr[FieldNode, F] = new FieldExpr[FieldNode, F] {
-    def matches(node: FieldNode[F]): Predicate[Int] =
-      node.raw.fold(ops.matches)
+  implicit def fieldNodeInstance[F <: CronField]: FieldExpr[FieldNode, F] =
+    new FieldExpr[FieldNode, F] {
+      def matches(node: FieldNode[F]): Predicate[Int] =
+        node.raw.fold(ops.matches)
 
-    def range(node: FieldNode[F]): IndexedSeq[Int] =
-      node.raw.fold(ops.range)
+      def range(node: FieldNode[F]): IndexedSeq[Int] =
+        node.raw.fold(ops.range)
 
-    def implies[EE[_ <: CronField]](node: FieldNode[F])(ee: EE[F])
-      (implicit EE: FieldExpr[EE, F]): Boolean = node.raw match {
+      def implies[EE[_ <: CronField]](node: FieldNode[F])(ee: EE[F])(
+          implicit EE: FieldExpr[EE, F]): Boolean = node.raw match {
         case Inl(each)                      => each.implies(ee)
         case Inr(Inl(const))                => const.implies(ee)
         case Inr(Inr(Inl(between)))         => between.implies(ee)
@@ -56,13 +59,15 @@ object FieldNode {
         case _                              => sys.error("Impossible!")
       }
 
-    def unit(node: FieldNode[F]): CronUnit[F] =
-      node.raw.fold(ops.unit)
-  }
+      def unit(node: FieldNode[F]): CronUnit[F] =
+        node.raw.fold(ops.unit)
+    }
 
 }
 
-final class FieldNodeWithAny[F <: CronField](private[cron4s] val raw: RawFieldNodeWithAny[F]) extends AnyVal {
+final class FieldNodeWithAny[F <: CronField](
+    private[cron4s] val raw: RawFieldNodeWithAny[F])
+    extends AnyVal {
 
   override def toString: String = raw.fold(ops.show)
 
@@ -70,12 +75,14 @@ final class FieldNodeWithAny[F <: CronField](private[cron4s] val raw: RawFieldNo
 
 object FieldNodeWithAny {
 
-  implicit def fieldNodeWithAnyEq[F <: CronField]: Eq[FieldNodeWithAny[F]] = Eq.fromUniversalEquals
+  implicit def fieldNodeWithAnyEq[F <: CronField]: Eq[FieldNodeWithAny[F]] =
+    Eq.fromUniversalEquals
 
   implicit def fieldNodeWithAnyShow[F <: CronField]: Show[FieldNodeWithAny[F]] =
     Show.fromToString[FieldNodeWithAny[F]]
 
-  implicit def fieldNodeInstance[F <: CronField]: FieldExpr[FieldNodeWithAny, F] =
+  implicit def fieldNodeInstance[F <: CronField]
+    : FieldExpr[FieldNodeWithAny, F] =
     new FieldExpr[FieldNodeWithAny, F] {
       def matches(node: FieldNodeWithAny[F]): Predicate[Int] =
         node.raw.fold(ops.matches)
@@ -83,11 +90,11 @@ object FieldNodeWithAny {
       def range(node: FieldNodeWithAny[F]): IndexedSeq[Int] =
         node.raw.fold(ops.range)
 
-      def implies[EE[_ <: CronField]](node: FieldNodeWithAny[F])(ee: EE[F])
-        (implicit EE: FieldExpr[EE, F]): Boolean = node.raw match {
-          case Inl(any)  => any.implies(ee)
-          case Inr(tail) => new FieldNode[F](tail).implies(ee)
-        }
+      def implies[EE[_ <: CronField]](node: FieldNodeWithAny[F])(ee: EE[F])(
+          implicit EE: FieldExpr[EE, F]): Boolean = node.raw match {
+        case Inl(any)  => any.implies(ee)
+        case Inr(tail) => new FieldNode[F](tail).implies(ee)
+      }
 
       def unit(node: FieldNodeWithAny[F]): CronUnit[F] =
         node.raw.fold(ops.unit)
@@ -95,7 +102,9 @@ object FieldNodeWithAny {
 
 }
 
-final class EnumerableNode[F <: CronField](private[cron4s] val raw: RawEnumerableNode[F]) extends AnyVal {
+final class EnumerableNode[F <: CronField](
+    private[cron4s] val raw: RawEnumerableNode[F])
+    extends AnyVal {
 
   override def toString: String = raw.fold(ops.show)
 
@@ -103,24 +112,26 @@ final class EnumerableNode[F <: CronField](private[cron4s] val raw: RawEnumerabl
 
 object EnumerableNode {
 
-  implicit def enumerableNodeEq[F <: CronField]: Eq[EnumerableNode[F]] = Eq.fromUniversalEquals
+  implicit def enumerableNodeEq[F <: CronField]: Eq[EnumerableNode[F]] =
+    Eq.fromUniversalEquals
 
   implicit def enumerableNodeShow[F <: CronField]: Show[EnumerableNode[F]] =
     Show.fromToString[EnumerableNode[F]]
 
-  implicit def enumerableNodeInstance[F <: CronField]: FieldExpr[EnumerableNode, F] =
+  implicit def enumerableNodeInstance[F <: CronField]
+    : FieldExpr[EnumerableNode, F] =
     new FieldExpr[EnumerableNode, F] {
       def matches(node: EnumerableNode[F]): Predicate[Int] =
         node.raw.fold(ops.matches)
 
-      def implies[EE[_ <: CronField]](node: EnumerableNode[F])(ee: EE[F])
-        (implicit EE: FieldExpr[EE, F]): Boolean = {
-          node.raw match {
-            case Inl(const)        => const.implies(ee)
-            case Inr(Inl(between)) => between.implies(ee)
-            case _                 => sys.error("Impossible!")
-          }
+      def implies[EE[_ <: CronField]](node: EnumerableNode[F])(ee: EE[F])(
+          implicit EE: FieldExpr[EE, F]): Boolean = {
+        node.raw match {
+          case Inl(const)        => const.implies(ee)
+          case Inr(Inl(between)) => between.implies(ee)
+          case _                 => sys.error("Impossible!")
         }
+      }
 
       def range(node: EnumerableNode[F]): IndexedSeq[Int] =
         node.raw.fold(ops.range)
@@ -131,7 +142,9 @@ object EnumerableNode {
 
 }
 
-final class DivisibleNode[F <: CronField](private[cron4s] val raw: RawDivisibleNode[F]) extends AnyVal {
+final class DivisibleNode[F <: CronField](
+    private[cron4s] val raw: RawDivisibleNode[F])
+    extends AnyVal {
 
   override def toString: String = raw.fold(ops.show)
 
@@ -139,23 +152,25 @@ final class DivisibleNode[F <: CronField](private[cron4s] val raw: RawDivisibleN
 
 object DivisibleNode {
 
-  implicit def divisibleNodeEq[F <: CronField]: Eq[DivisibleNode[F]] = Eq.fromUniversalEquals
+  implicit def divisibleNodeEq[F <: CronField]: Eq[DivisibleNode[F]] =
+    Eq.fromUniversalEquals
 
   implicit def divisibleNodeShow[F <: CronField]: Show[DivisibleNode[F]] =
     Show.fromToString[DivisibleNode[F]]
 
-  implicit def divisibleNodeInstance[F <: CronField]: FieldExpr[DivisibleNode, F] =
+  implicit def divisibleNodeInstance[F <: CronField]
+    : FieldExpr[DivisibleNode, F] =
     new FieldExpr[DivisibleNode, F] {
       def matches(node: DivisibleNode[F]): Predicate[Int] =
         node.raw.fold(ops.matches)
 
-      def implies[EE[_ <: CronField]](node: DivisibleNode[F])(ee: EE[F])
-        (implicit EE: FieldExpr[EE, F]): Boolean = node.raw match {
-          case Inl(each)              => each.implies(ee)
-          case Inr(Inl(between))      => between.implies(ee)
-          case Inr(Inr(Inl(several))) => several.implies(ee)
-          case _                      => sys.error("Impossible!")
-        }
+      def implies[EE[_ <: CronField]](node: DivisibleNode[F])(ee: EE[F])(
+          implicit EE: FieldExpr[EE, F]): Boolean = node.raw match {
+        case Inl(each)              => each.implies(ee)
+        case Inr(Inl(between))      => between.implies(ee)
+        case Inr(Inr(Inl(several))) => several.implies(ee)
+        case _                      => sys.error("Impossible!")
+      }
 
       def range(node: DivisibleNode[F]): IndexedSeq[Int] =
         node.raw.fold(ops.range)

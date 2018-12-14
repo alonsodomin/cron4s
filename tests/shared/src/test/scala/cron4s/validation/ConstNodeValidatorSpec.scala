@@ -24,19 +24,22 @@ import cron4s.testkit.Cron4sPropSpec
 /**
   * Created by alonsodomin on 29/12/2016.
   */
-class ConstNodeValidatorSpec extends Cron4sPropSpec
-  with ValidatorPropSpec {
+class ConstNodeValidatorSpec extends Cron4sPropSpec with ValidatorPropSpec {
 
   import CronField._
 
-  private[this] def check[F <: CronField](implicit unit: CronUnit[F], ev: Enumerated[CronUnit[F]]): Unit = {
-    property(s"ConstNode[${unit.field}] with value within range should pass validation") {
+  private[this] def check[F <: CronField](implicit unit: CronUnit[F],
+                                          ev: Enumerated[CronUnit[F]]): Unit = {
+    property(
+      s"ConstNode[${unit.field}] with value within range should pass validation") {
       forAll(constGen[F]) { node =>
-        NodeValidator[ConstNode[F]].validate(node) shouldBe List.empty[InvalidField]
+        NodeValidator[ConstNode[F]].validate(node) shouldBe List
+          .empty[InvalidField]
       }
     }
 
-    property(s"ConstNode[${unit.field}] with value outside range should return a field error") {
+    property(
+      s"ConstNode[${unit.field}] with value outside range should return a field error") {
       forAll(invalidConstGen[F]) { node =>
         val expectedError = InvalidField(
           unit.field,

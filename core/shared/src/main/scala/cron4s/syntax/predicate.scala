@@ -26,22 +26,36 @@ import cron4s.base.Predicate
   */
 trait PredicateSyntax {
 
-  def always[A](value: => Boolean): Predicate[A] = Predicate { _ => value }
+  def always[A](value: => Boolean): Predicate[A] = Predicate { _ =>
+    value
+  }
 
-  def not[A](m: Predicate[A]): Predicate[A] = Predicate { a => !m(a) }
+  def not[A](m: Predicate[A]): Predicate[A] = Predicate { a =>
+    !m(a)
+  }
 
-  def equalTo[A: Eq](a: A): Predicate[A] = Predicate { b => Eq[A].eqv(a, b) }
+  def equalTo[A: Eq](a: A): Predicate[A] = Predicate { b =>
+    Eq[A].eqv(a, b)
+  }
 
-  def noneOf[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
+  def noneOf[C[_], A](c: C[Predicate[A]])(
+      implicit ev: Foldable[C]): Predicate[A] =
     not(allOf(c))
 
-  def anyOf[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
-    Predicate { a => ev.exists(c)(_(a)) }
+  def anyOf[C[_], A](c: C[Predicate[A]])(
+      implicit ev: Foldable[C]): Predicate[A] =
+    Predicate { a =>
+      ev.exists(c)(_(a))
+    }
 
-  def allOf[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
-    Predicate { a => ev.forall(c)(_(a)) }
+  def allOf[C[_], A](c: C[Predicate[A]])(
+      implicit ev: Foldable[C]): Predicate[A] =
+    Predicate { a =>
+      ev.forall(c)(_(a))
+    }
 
-  def asOf[C[_]: Foldable, A](c: C[Predicate[A]])(implicit M: MonoidK[Predicate]): Predicate[A] =
+  def asOf[C[_]: Foldable, A](c: C[Predicate[A]])(
+      implicit M: MonoidK[Predicate]): Predicate[A] =
     c.foldLeft(M.empty[A])((a, b) => M.combineK(a, b))
 
 }

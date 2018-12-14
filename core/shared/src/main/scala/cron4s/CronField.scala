@@ -44,7 +44,8 @@ object CronField extends CronFieldInstances {
   sealed trait DayOfWeek extends CronField
   case object DayOfWeek extends DayOfWeek
 
-  final val All: List[CronField] = List(Second, Minute, Hour, DayOfMonth, Month, DayOfWeek)
+  final val All: List[CronField] =
+    List(Second, Minute, Hour, DayOfMonth, Month, DayOfWeek)
 
 }
 

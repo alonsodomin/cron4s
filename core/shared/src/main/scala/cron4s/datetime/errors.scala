@@ -25,6 +25,6 @@ object DateTimeError {
 }
 
 final case class UnsupportedField(field: CronField)
-  extends DateTimeError(s"Field $field is not supported")
+    extends DateTimeError(s"Field $field is not supported")
 final case class InvalidFieldValue(field: CronField, value: Int)
-  extends DateTimeError(s"Value $value is not valid for field $field")
+    extends DateTimeError(s"Value $value is not valid for field $field")

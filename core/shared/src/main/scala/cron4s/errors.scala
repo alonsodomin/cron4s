@@ -23,14 +23,16 @@ import cats.syntax.show._
 /**
   * Created by alonsodomin on 30/08/2016.
   */
-sealed abstract class Error(description: => String) extends Exception(description)
+sealed abstract class Error(description: => String)
+    extends Exception(description)
 
 object Error {
   implicit val errorShow: Show[Error] = Show.show(_.getMessage)
 }
 
 final case class ParseFailed(expected: String, found: String, position: Int)
-  extends Error(s"Expected '$expected' at position $position but found '$found'")
+    extends Error(
+      s"Expected '$expected' at position $position but found '$found'")
 
 sealed trait ValidationError
 object ValidationError {
@@ -41,9 +43,10 @@ object ValidationError {
 }
 
 final case class InvalidCron(reason: NonEmptyList[ValidationError])
-  extends Error(reason.toList.map(_.show).mkString(", "))
+    extends Error(reason.toList.map(_.show).mkString(", "))
 
-final case class InvalidField(field: CronField, msg: String) extends ValidationError
+final case class InvalidField(field: CronField, msg: String)
+    extends ValidationError
 object InvalidField {
   implicit val invalidFieldShow: Show[InvalidField] = Show.show { err =>
     s"${err.field}: ${err.msg}"
@@ -52,5 +55,6 @@ object InvalidField {
 
 final case class InvalidFieldCombination(msg: String) extends ValidationError
 object InvalidFieldCombination {
-  implicit val invalidFieldCombinationShow: Show[InvalidFieldCombination] = Show.show(_.msg)
+  implicit val invalidFieldCombinationShow: Show[InvalidFieldCombination] =
+    Show.show(_.msg)
 }

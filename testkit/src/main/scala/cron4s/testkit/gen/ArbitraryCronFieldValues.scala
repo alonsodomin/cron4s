@@ -30,7 +30,8 @@ trait ArbitraryCronFieldValues {
   import CronField._
   import CronUnit._
 
-  def cronFieldValueGen[F <: CronField](unit: CronUnit[F])(implicit ev: Enumerated[CronUnit[F]]): Gen[CronFieldValue[F]] = {
+  def cronFieldValueGen[F <: CronField](unit: CronUnit[F])(
+      implicit ev: Enumerated[CronUnit[F]]): Gen[CronFieldValue[F]] = {
     val valueGen = unit match {
       case DaysOfMonth => Gen.choose(1, 28)
       case _           => Gen.choose(unit.min, unit.max)
@@ -45,11 +46,13 @@ trait ArbitraryCronFieldValues {
     Arbitrary(cronFieldValueGen(Minutes))
   implicit lazy val arbitraryHourValue: Arbitrary[CronFieldValue[Hour]] =
     Arbitrary(cronFieldValueGen(Hours))
-  implicit lazy val arbitraryDayOfMonthValue: Arbitrary[CronFieldValue[DayOfMonth]] =
+  implicit lazy val arbitraryDayOfMonthValue
+    : Arbitrary[CronFieldValue[DayOfMonth]] =
     Arbitrary(cronFieldValueGen(DaysOfMonth))
   implicit lazy val arbitraryMonthValue: Arbitrary[CronFieldValue[Month]] =
     Arbitrary(cronFieldValueGen(Months))
-  implicit lazy val arbitraryDayOfWeekValue: Arbitrary[CronFieldValue[DayOfWeek]] =
+  implicit lazy val arbitraryDayOfWeekValue
+    : Arbitrary[CronFieldValue[DayOfWeek]] =
     Arbitrary(cronFieldValueGen(DaysOfWeek))
 
 }
