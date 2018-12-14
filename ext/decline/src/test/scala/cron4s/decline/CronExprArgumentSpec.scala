@@ -16,15 +16,11 @@
 
 package cron4s.decline
 
-import cats.implicits._
-
 import com.monovore.decline.Argument
 
 import cron4s.expr.CronExpr
 import cron4s.testkit._
 import cron4s.testkit.gen.CronGenerators
-
-import org.scalatest._
 
 class CronExprArgumentSpec extends SlowCron4sLawSuite with CronGenerators {
 
