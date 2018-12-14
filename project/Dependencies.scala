@@ -23,6 +23,8 @@ object Dependencies {
     
     val momentjs      = "0.8.1"
     val scalaJavaTime = "2.0.0-RC1"
+
+    val contextual = "1.1.0"
   }
 
   val macroParadise = compilerPlugin("org.scalamacros" % "paradise"       % "2.1.1" cross CrossVersion.full)
@@ -31,9 +33,10 @@ object Dependencies {
 
   lazy val core = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
-      "com.chuusai"   %%% "shapeless" % version.shapeless,
-      "org.typelevel" %%% "cats-core" % version.cats,
-      "com.lihaoyi"   %%% "fastparse" % version.fastparse
+      "com.chuusai"    %%% "shapeless" % version.shapeless,
+      "org.typelevel"  %%% "cats-core" % version.cats,
+      "com.lihaoyi"    %%% "fastparse" % version.fastparse,
+      "com.propensive" %%% "contextual" % version.contextual
     )
   }
 

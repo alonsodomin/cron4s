@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-import cron4s.syntax.AllSyntax
-import cron4s.expr.NodeConversions
+package cron4s
+
+import cats.implicits._
 
 import contextual._
 
-package object cron4s extends AllSyntax with NodeConversions {
+import cron4s.expr.CronExpr
 
-  implicit class Cron4sStringContext(sc: StringContext) {
-    val cron = Prefix(CronInterpolator, sc)
+object CronInterpolator extends Verifier[CronExpr] {
+  def check(input: String) = Cron(input).leftMap {
+    case parseErr: ParseFailed => parseErr.position -> parseErr.getMessage
+    case other: Error          => 0 -> other.getMessage
   }
-
 }
