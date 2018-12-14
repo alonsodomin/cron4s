@@ -341,7 +341,7 @@ lazy val decline = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pu
   .settings(commonSettings)
   .settings(publishSettings)
   .settings(Dependencies.decline)
-  .dependsOn(core)
+  .dependsOn(core, testkit % Test)
 
 lazy val declineJVM = decline.jvm
 lazy val declineJS  = decline.js

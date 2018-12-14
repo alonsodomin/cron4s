@@ -87,7 +87,7 @@ object Dependencies {
   )
 
   lazy val decline = Def.settings(
-    libraryDependencies += "com.monovore" %% "decline" % version.decline
+    libraryDependencies += "com.monovore" %%% "decline" % version.decline
   )
 
 }

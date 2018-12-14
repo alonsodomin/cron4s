@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-package cron4s
+package cron4s.decline
 
-import cats.data.ValidatedNel
 import cats.implicits._
 
 import com.monovore.decline.Argument
 
 import cron4s.expr.CronExpr
+import cron4s.testkit._
+import cron4s.testkit.gen.CronGenerators
 
-package object decline {
+import org.scalatest._
 
-  implicit val cronExprArgument: Argument[CronExpr] = new Argument[CronExpr] {
-    def defaultMetavar: String = "cron-expr"
+class CronExprArgumentSpec extends SlowCron4sLawSuite with CronGenerators {
 
-    def read(str: String): ValidatedNel[String, CronExpr] = {
-      Cron(str).leftMap(_.getMessage).toValidatedNel
+  val argument: Argument[CronExpr] = Argument[CronExpr]
+
+  test("valid cron expressions can be parsed") {
+    forAll { (expr: CronExpr) =>
+      argument.read(expr.show) == expr.validNel[String]
     }
   }
 
