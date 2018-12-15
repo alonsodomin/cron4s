@@ -17,7 +17,9 @@
 package cron4s.testkit.gen
 
 import cron4s.CronField
-import cron4s.expr.{CronExpr, DateCronExpr, TimeCronExpr}
+import cron4s.expr._
+
+import shapeless._
 
 import org.scalacheck._
 
@@ -26,13 +28,21 @@ import org.scalacheck._
   */
 trait CronGenerators extends NodeGenerators {
 
+  private[this] def chooseDaysOfWeek(
+      daysOfMonth: DaysOfMonthNode): Gen[DaysOfWeekNode] = {
+    daysOfMonth.raw match {
+      case Inl(_) => nodeWithAnyGen[CronField.DayOfWeek] // any
+      case _      => anyGen[CronField.DayOfWeek].map(any2FieldWithAny)
+    }
+  }
+
   private[this] val fullCronGen = for {
     seconds <- nodeGen[CronField.Second]
     minutes <- nodeGen[CronField.Minute]
     hours <- nodeGen[CronField.Hour]
     daysOfMonth <- nodeWithAnyGen[CronField.DayOfMonth]
     months <- nodeGen[CronField.Month]
-    daysOfWeek <- nodeWithAnyGen[CronField.DayOfWeek]
+    daysOfWeek <- chooseDaysOfWeek(daysOfMonth)
   } yield CronExpr(seconds, minutes, hours, daysOfMonth, months, daysOfWeek)
 
   private[this] val timeCronGen = for {
@@ -44,7 +54,7 @@ trait CronGenerators extends NodeGenerators {
   private[this] val dateCronGen = for {
     daysOfMonth <- nodeWithAnyGen[CronField.DayOfMonth]
     months <- nodeGen[CronField.Month]
-    daysOfWeek <- nodeWithAnyGen[CronField.DayOfWeek]
+    daysOfWeek <- chooseDaysOfWeek(daysOfMonth)
   } yield DateCronExpr(daysOfMonth, months, daysOfWeek)
 
   implicit lazy val arbitraryFullCron: Arbitrary[CronExpr] = Arbitrary(
