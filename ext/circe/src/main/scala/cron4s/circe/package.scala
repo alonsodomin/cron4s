@@ -25,9 +25,13 @@ import io.circe.{Encoder, Decoder}
 package object circe {
 
   implicit val cronExprEncoder: Encoder[CronExpr] =
-    Encoder[String].contramap(_.show)
+    Encoder[String].contramap(expr => {
+      println(s"encoding $expr"); expr.toString
+    })
 
   implicit val cronExprDecoder: Decoder[CronExpr] =
-    Decoder[String].emap(Cron.onlyParse(_).leftMap(_.getMessage))
+    Decoder[String].emap(json => {
+      println(s"decoding $json"); Cron(json).leftMap(_.getMessage)
+    })
 
 }

@@ -21,6 +21,8 @@ import contextual._
 
 package object cron4s extends AllSyntax with NodeConversions {
 
+  type CronExpr = expr.CronExpr
+
   implicit class Cron4sStringContext(sc: StringContext) {
     val cron = Prefix(CronInterpolator, sc)
   }
