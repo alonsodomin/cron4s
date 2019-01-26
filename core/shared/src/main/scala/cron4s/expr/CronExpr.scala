@@ -26,12 +26,14 @@ import shapeless._
   *
   * @author Antonio Alonso Dominguez
   */
-final case class CronExpr(seconds: SecondsNode,
-                          minutes: MinutesNode,
-                          hours: HoursNode,
-                          daysOfMonth: DaysOfMonthNode,
-                          months: MonthsNode,
-                          daysOfWeek: DaysOfWeekNode) {
+final case class CronExpr(
+    seconds: SecondsNode,
+    minutes: MinutesNode,
+    hours: HoursNode,
+    daysOfMonth: DaysOfMonthNode,
+    months: MonthsNode,
+    daysOfWeek: DaysOfWeekNode
+  ) {
 
   private[cron4s] lazy val raw: RawCronExpr = Generic[CronExpr].to(this)
 

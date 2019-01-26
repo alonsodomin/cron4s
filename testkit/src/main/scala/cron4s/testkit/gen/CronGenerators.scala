@@ -29,7 +29,8 @@ import org.scalacheck._
 trait CronGenerators extends NodeGenerators {
 
   private[this] def chooseDaysOfWeek(
-      daysOfMonth: DaysOfMonthNode): Gen[DaysOfWeekNode] = {
+      daysOfMonth: DaysOfMonthNode
+  ): Gen[DaysOfWeekNode] = {
     daysOfMonth.raw match {
       case Inl(_) => nodeWithAnyGen[CronField.DayOfWeek] // any
       case _      => anyGen[CronField.DayOfWeek].map(any2FieldWithAny)
@@ -57,11 +58,11 @@ trait CronGenerators extends NodeGenerators {
     daysOfWeek <- chooseDaysOfWeek(daysOfMonth)
   } yield DateCronExpr(daysOfMonth, months, daysOfWeek)
 
-  implicit lazy val arbitraryFullCron: Arbitrary[CronExpr] = Arbitrary(
-    fullCronGen)
-  implicit lazy val arbitraryTimeCron: Arbitrary[TimeCronExpr] = Arbitrary(
-    timeCronGen)
-  implicit lazy val arbitraryDateCron: Arbitrary[DateCronExpr] = Arbitrary(
-    dateCronGen)
+  implicit lazy val arbitraryFullCron: Arbitrary[CronExpr] =
+    Arbitrary(fullCronGen)
+  implicit lazy val arbitraryTimeCron: Arbitrary[TimeCronExpr] =
+    Arbitrary(timeCronGen)
+  implicit lazy val arbitraryDateCron: Arbitrary[DateCronExpr] =
+    Arbitrary(dateCronGen)
 
 }

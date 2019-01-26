@@ -28,6 +28,6 @@ package object circe {
     Encoder[String].contramap(_.show)
 
   implicit val cronExprDecoder: Decoder[CronExpr] =
-    Decoder[String].emap(Cron(_).leftMap(_.getMessage))
+    Decoder[String].emap(Cron.onlyParse(_).leftMap(_.getMessage))
 
 }

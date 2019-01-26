@@ -141,7 +141,7 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
   )(implicit unit: CronUnit[F]): Gen[EveryNode[F]] =
     for {
       base <- baseGen
-      freq <- Gen.posNum[Int]
+      freq <- Gen.posNum[Int] suchThat (n => base.range.size % n == 0)
     } yield EveryNode(base, freq)
 
   def everyGen[F <: CronField](
@@ -151,8 +151,11 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
   ): Gen[EveryNode[F]] =
     everyGen0(divisibleGen[F])
 
-  def nodeGen[F <: CronField](implicit unit: CronUnit[F],
-                              ev: Enumerated[CronUnit[F]]): Gen[FieldNode[F]] =
+  def nodeGen[F <: CronField](
+      implicit
+      unit: CronUnit[F],
+      ev: Enumerated[CronUnit[F]]
+  ): Gen[FieldNode[F]] =
     Gen.oneOf(
       eachGen[F].map(each2Field),
       constGen[F].map(const2Field),

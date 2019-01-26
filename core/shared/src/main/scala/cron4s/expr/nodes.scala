@@ -142,9 +142,10 @@ final class ConstNode[F <: CronField] private (val value: Int,
 
 object ConstNode {
 
-  @inline def apply[F <: CronField](value: Int,
-                                    textValue: Option[String] = None)(
-      implicit unit: CronUnit[F]): ConstNode[F] =
+  @inline def apply[F <: CronField](
+      value: Int,
+      textValue: Option[String] = None
+  )(implicit unit: CronUnit[F]): ConstNode[F] =
     new ConstNode(value, textValue, unit)
 
   implicit def constNodeEq[F <: CronField]: Eq[ConstNode[F]] =
