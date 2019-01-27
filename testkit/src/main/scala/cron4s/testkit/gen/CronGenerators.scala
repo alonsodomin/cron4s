@@ -32,7 +32,7 @@ trait CronGenerators extends NodeGenerators {
       daysOfMonth: DaysOfMonthNode
   ): Gen[DaysOfWeekNode] = {
     daysOfMonth.raw match {
-      case Inl(_) => nodeWithAnyGen[CronField.DayOfWeek] // any
+      case Inl(_) => nodeGen[CronField.DayOfWeek].map(field2FieldWithAny) // any
       case _      => anyGen[CronField.DayOfWeek].map(any2FieldWithAny)
     }
   }

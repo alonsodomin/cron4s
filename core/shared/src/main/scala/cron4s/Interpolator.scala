@@ -20,8 +20,6 @@ import cats.implicits._
 
 import contextual._
 
-import cron4s.expr.CronExpr
-
 object CronInterpolator extends Verifier[CronExpr] {
   def check(input: String) = Cron(input).leftMap {
     case parseErr: ParseFailed => parseErr.position -> parseErr.getMessage

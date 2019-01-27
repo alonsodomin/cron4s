@@ -24,8 +24,9 @@ import shapeless._
 package object expr {
 
   private[expr] type RawFieldNode[F <: CronField] =
-    EachNode[F] :+: ConstNode[F] :+: BetweenNode[F] :+: SeveralNode[F] :+: EveryNode[
-      F] :+: CNil
+    EachNode[F] :+: ConstNode[F] :+: BetweenNode[F] :+: SeveralNode[F] :+:
+      EveryNode[F] :+: CNil
+
   private[expr] type RawFieldNodeWithAny[F <: CronField] =
     AnyNode[F] :+: RawFieldNode[F]
 

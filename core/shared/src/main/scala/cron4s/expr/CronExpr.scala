@@ -56,15 +56,14 @@ final case class CronExpr(
 object CronExpr {
 
   implicit val CronExprEq: Eq[CronExpr] =
-    Eq.fromUniversalEquals
-//    Eq.instance { (lhs, rhs) =>
-//      lhs.seconds === rhs.seconds &&
-//      lhs.minutes === rhs.minutes &&
-//      lhs.hours === rhs.hours &&
-//      lhs.daysOfMonth === rhs.daysOfMonth &&
-//      lhs.months === rhs.months &&
-//      lhs.daysOfWeek === rhs.daysOfWeek
-//    }
+    Eq.instance { (lhs, rhs) =>
+      lhs.seconds === rhs.seconds &&
+      lhs.minutes === rhs.minutes &&
+      lhs.hours === rhs.hours &&
+      lhs.daysOfMonth === rhs.daysOfMonth &&
+      lhs.months === rhs.months &&
+      lhs.daysOfWeek === rhs.daysOfWeek
+    }
 
   implicit val CronExprShow: Show[CronExpr] =
     Show.fromToString[CronExpr]

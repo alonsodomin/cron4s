@@ -16,7 +16,7 @@
 
 package cron4s
 
-import cron4s.expr.{CronExpr, DateCronExpr, TimeCronExpr}
+import cron4s.expr.{DateCronExpr, TimeCronExpr}
 
 import shapeless._
 

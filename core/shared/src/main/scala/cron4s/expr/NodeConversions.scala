@@ -68,6 +68,10 @@ private[cron4s] trait NodeConversions {
       node: EveryNode[F]): FieldNodeWithAny[F] =
     new FieldNodeWithAny(Coproduct[RawFieldNodeWithAny[F]](node))
 
+  implicit def field2FieldWithAny[F <: CronField](
+      node: FieldNode[F]): FieldNodeWithAny[F] =
+    new FieldNodeWithAny[F](node.raw.embed[RawFieldNodeWithAny[F]])
+
   implicit def const2Enumerable[F <: CronField](
       node: ConstNode[F]): EnumerableNode[F] =
     new EnumerableNode(Coproduct[RawEnumerableNode[F]](node))
@@ -87,4 +91,12 @@ private[cron4s] trait NodeConversions {
   implicit def several2Divisible[F <: CronField](
       node: SeveralNode[F]): DivisibleNode[F] =
     new DivisibleNode(Coproduct[RawDivisibleNode[F]](node))
+
+  implicit def enumerable2Field[F <: CronField](
+      node: EnumerableNode[F]): FieldNode[F] =
+    new FieldNode[F](node.raw.embed[RawFieldNode[F]])
+
+  implicit def divisible2Field[F <: CronField](
+      node: DivisibleNode[F]): FieldNode[F] =
+    new FieldNode[F](node.raw.embed[RawFieldNode[F]])
 }

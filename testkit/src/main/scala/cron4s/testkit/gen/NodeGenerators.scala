@@ -161,7 +161,10 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       constGen[F].map(const2Field),
       betweenGen[F].map(between2Field),
       severalGen[F].map(several2Field),
-      everyGen[F].map(every2Field)
+      everyGen[F].map { x =>
+        if (x.freq == 1) divisible2Field(x.base)
+        else every2Field(x)
+      }
     )
 
   def nodeWithAnyGen[F <: CronField](
@@ -173,7 +176,10 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       constGen[F].map(const2FieldWithAny),
       betweenGen[F].map(between2FieldWithAny),
       severalGen[F].map(several2FieldWithAny),
-      everyGen[F].map(every2FieldWithAny)
+      everyGen[F].map { x =>
+        if (x.freq == 1) field2FieldWithAny(divisible2Field(x.base))
+        else every2FieldWithAny(x)
+      }
     )
 
 }

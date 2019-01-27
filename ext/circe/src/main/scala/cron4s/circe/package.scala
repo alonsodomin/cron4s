@@ -16,22 +16,16 @@
 
 package cron4s
 
-import cats.implicits._
-
-import cron4s.expr.CronExpr
+import cats.syntax.either._
 
 import io.circe.{Encoder, Decoder}
 
 package object circe {
 
   implicit val cronExprEncoder: Encoder[CronExpr] =
-    Encoder[String].contramap(expr => {
-      println(s"encoding $expr"); expr.toString
-    })
+    Encoder[String].contramap(_.toString)
 
   implicit val cronExprDecoder: Decoder[CronExpr] =
-    Decoder[String].emap(json => {
-      println(s"decoding $json"); Cron(json).leftMap(_.getMessage)
-    })
+    Decoder[String].emap(Cron.parse(_).leftMap(_.getMessage))
 
 }
