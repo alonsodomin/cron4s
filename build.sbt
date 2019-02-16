@@ -138,6 +138,7 @@ lazy val coverageSettings = Seq(
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   mimaPreviousArtifacts := Set(organization.value %% s"cron4s-$module" % "0.4.5"),
   mimaBackwardIssueFilters += "0.4.5" -> Seq(
+    ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.Error.this"),
     ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package$"),
     ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package"),
     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.apply"),
