@@ -16,13 +16,16 @@
 
 package cron4s
 
-import cats.implicits._
+import cats.syntax.either._
 
-import contextual._
+import io.circe.{Encoder, Decoder}
 
-object CronInterpolator extends Verifier[CronExpr] {
-  def check(input: String) = Cron(input).leftMap {
-    case parseErr: ParseFailed => parseErr.position -> parseErr.getMessage
-    case other: Error          => 0 -> other.getMessage
-  }
+package object circe {
+
+  implicit val cronExprEncoder: Encoder[CronExpr] =
+    Encoder[String].contramap(_.toString)
+
+  implicit val cronExprDecoder: Decoder[CronExpr] =
+    Decoder[String].emap(Cron.parse(_).leftMap(_.getMessage))
+
 }

@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package cron4s
+package cron4s.circe
 
-import cats.implicits._
+import cron4s.expr.CronExpr
+import cron4s.testkit._
+import cron4s.testkit.gen.CronGenerators
 
-import contextual._
+import io.circe.testing.{
+  CodecTests,
+  ArbitraryInstances => CirceArbitraryInstances
+}
 
-object CronInterpolator extends Verifier[CronExpr] {
-  def check(input: String) = Cron(input).leftMap {
-    case parseErr: ParseFailed => parseErr.position -> parseErr.getMessage
-    case other: Error          => 0 -> other.getMessage
-  }
+class CronExprCodecSpec
+    extends SlowCron4sLawSuite
+    with CronGenerators
+    with CirceArbitraryInstances {
+
+  checkAll("Codec[CronExpr]", CodecTests[CronExpr].codec)
+
 }

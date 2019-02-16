@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package cron4s.parser
+package cron4s
 
-import cron4s._
 import cron4s.expr._
-import cron4s.testkit.gen.{ArbitraryEachNode, NodeGenerators}
-import cron4s.syntax.field._
+import cron4s.parser._
 import cron4s.testkit.Cron4sPropSpec
+import cron4s.testkit.gen.{ArbitraryEachNode, NodeGenerators}
 
 import fastparse.all._
 

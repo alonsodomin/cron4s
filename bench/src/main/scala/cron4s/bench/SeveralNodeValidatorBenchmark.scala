@@ -31,8 +31,8 @@ import org.openjdk.jmh.annotations._
 class SeveralNodeValidatorBenchmark {
   import CronField._
 
-  val _simpleValid = SeveralNode(ConstNode[Second](35))
-  val _simpleInvalid = SeveralNode(ConstNode[Second](67))
+  val _simpleValid = SeveralNode(ConstNode[Second](35), ConstNode[Second](40))
+  val _simpleInvalid = SeveralNode(ConstNode[Second](61), ConstNode[Second](67))
 
   val _threeConstValid = SeveralNode(
     ConstNode[Second](4),
@@ -46,18 +46,26 @@ class SeveralNodeValidatorBenchmark {
   )
 
   val _rangeValid = SeveralNode(
-    BetweenNode[Second](ConstNode(4), ConstNode(10)))
+    ConstNode[Second](0),
+    BetweenNode[Second](ConstNode(4), ConstNode(10))
+  )
   val _rangeInvalid = SeveralNode(
-    BetweenNode[Second](ConstNode(10), ConstNode(4)))
+    ConstNode[Second](0),
+    BetweenNode[Second](ConstNode(10), ConstNode(4))
+  )
   val _rangeInvalidConst = SeveralNode(
-    BetweenNode[Second](ConstNode(-6), ConstNode(61)))
+    ConstNode[Second](0),
+    BetweenNode[Second](ConstNode(-6), ConstNode(61))
+  )
 
   val _constImpliedByRange = SeveralNode(
     ConstNode[Second](23),
-    BetweenNode[Second](ConstNode(17), ConstNode(30)))
+    BetweenNode[Second](ConstNode(17), ConstNode(30))
+  )
   val _constImpliedByRangeReverse = SeveralNode(
     BetweenNode[Second](ConstNode(17), ConstNode(30)),
-    ConstNode[Second](23))
+    ConstNode[Second](23)
+  )
 
   @Benchmark
   def simpleValid(): List[InvalidField] = {

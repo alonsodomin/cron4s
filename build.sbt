@@ -1,7 +1,6 @@
-import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
+import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 import com.typesafe.sbt.pgp.PgpKeys
-
-import com.typesafe.tools.mima.plugin.MimaKeys.mimaPreviousArtifacts
+import com.typesafe.tools.mima.core._
 import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 
 import scala.xml.transform.{RewriteRule, RuleTransformer}
@@ -137,8 +136,17 @@ lazy val coverageSettings = Seq(
 )
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
-  mimaPreviousArtifacts := Set(
-    "com.github.alonsodomin.cron4s" %% s"cron4s-${module}" % "0.4.4")
+  mimaPreviousArtifacts := Set(organization.value %% s"cron4s-$module" % "0.4.5"),
+  mimaBackwardIssueFilters += "0.4.5" -> Seq(
+    ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package$"),
+    ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package"),
+    ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.apply"),
+    ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.this"),
+    ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.FieldNodeWithAny.fieldNodeInstance"),
+    ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.field2FieldWithAny"),
+    ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.enumerable2Field"),
+    ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.divisible2Field"),
+  )
 )
 
 lazy val docsMappingsAPIDir = settingKey[String](
@@ -212,8 +220,8 @@ lazy val cron4sJS = (project in file(".js"))
   .settings(commonJsSettings: _*)
   .settings(publishSettings)
   .enablePlugins(ScalaJSPlugin)
-  .aggregate(coreJS, momentjs, declineJS, testkitJS, testsJS)
-  .dependsOn(coreJS, momentjs, declineJS, testkitJS, testsJS % Test)
+  .aggregate(coreJS, momentjs, circeJS, declineJS, testkitJS, testsJS)
+  .dependsOn(coreJS, momentjs, circeJS, declineJS, testkitJS, testsJS % Test)
 
 lazy val cron4sJVM = (project in file(".jvm"))
   .settings(
@@ -224,8 +232,8 @@ lazy val cron4sJVM = (project in file(".jvm"))
   .settings(commonJvmSettings)
   .settings(consoleSettings)
   .settings(publishSettings)
-  .aggregate(coreJVM, joda, declineJVM, testkitJVM, testsJVM)
-  .dependsOn(coreJVM, joda, declineJVM, testkitJVM, testsJVM % Test)
+  .aggregate(coreJVM, joda, circeJVM, declineJVM, testkitJVM, testsJVM)
+  .dependsOn(coreJVM, joda, circeJVM, declineJVM, testkitJVM, testsJVM % Test)
 
 lazy val docs = project
   .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, GhpagesPlugin)
@@ -332,6 +340,20 @@ lazy val momentjs = (project in file("time-lib/momentjs"))
 
 // Extension modules
 
+lazy val circe = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("ext/circe"))
+  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+  .settings(
+    name := "circe",
+    moduleName := "cron4s-circe"
+  )
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(Dependencies.circe)
+  .dependsOn(core, testkit % Test)
+
+lazy val circeJVM = circe.jvm
+lazy val circeJS  = circe.js
+
 lazy val decline = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("ext/decline"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
@@ -354,3 +376,4 @@ addCommandAlias("validateJVM",
                 ";testJVM;cron4sJVM/mimaReportBinaryIssues;makeMicrosite")
 addCommandAlias("validateJS", "testJS")
 addCommandAlias("rebuild", ";clean;validateJS;validateJVM")
+addCommandAlias("compileAll", ";clean;test:compile")

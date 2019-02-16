@@ -18,8 +18,6 @@ package cron4s
 
 import cats.data.NonEmptyList
 
-import cron4s.expr.CronExpr
-
 /**
   * Created by alonsodomin on 30/08/2016.
   */

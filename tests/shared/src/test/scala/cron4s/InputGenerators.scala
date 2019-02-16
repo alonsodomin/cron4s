@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package cron4s.parser
+package cron4s
 
-import cron4s.CronUnit
-
-import org.scalacheck._
+import org.scalacheck.{Arbitrary, Gen}
 
 /**
   * Created by alonsodomin on 13/01/2016.

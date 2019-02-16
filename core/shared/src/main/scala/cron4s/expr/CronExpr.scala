@@ -16,7 +16,8 @@
 
 package cron4s.expr
 
-import cats.Show
+import cats.{Eq, Show}
+import cats.implicits._
 
 import shapeless._
 
@@ -25,12 +26,14 @@ import shapeless._
   *
   * @author Antonio Alonso Dominguez
   */
-final case class CronExpr(seconds: SecondsNode,
-                          minutes: MinutesNode,
-                          hours: HoursNode,
-                          daysOfMonth: DaysOfMonthNode,
-                          months: MonthsNode,
-                          daysOfWeek: DaysOfWeekNode) {
+final case class CronExpr(
+    seconds: SecondsNode,
+    minutes: MinutesNode,
+    hours: HoursNode,
+    daysOfMonth: DaysOfMonthNode,
+    months: MonthsNode,
+    daysOfWeek: DaysOfWeekNode
+) {
 
   private[cron4s] lazy val raw: RawCronExpr = Generic[CronExpr].to(this)
 
@@ -51,6 +54,16 @@ final case class CronExpr(seconds: SecondsNode,
 }
 
 object CronExpr {
+
+  implicit val CronExprEq: Eq[CronExpr] =
+    Eq.instance { (lhs, rhs) =>
+      lhs.seconds === rhs.seconds &&
+      lhs.minutes === rhs.minutes &&
+      lhs.hours === rhs.hours &&
+      lhs.daysOfMonth === rhs.daysOfMonth &&
+      lhs.months === rhs.months &&
+      lhs.daysOfWeek === rhs.daysOfWeek
+    }
 
   implicit val CronExprShow: Show[CronExpr] =
     Show.fromToString[CronExpr]

@@ -81,7 +81,7 @@ object FieldNodeWithAny {
   implicit def fieldNodeWithAnyShow[F <: CronField]: Show[FieldNodeWithAny[F]] =
     Show.fromToString[FieldNodeWithAny[F]]
 
-  implicit def fieldNodeInstance[F <: CronField]
+  implicit def fieldNodeWithAnyInstance[F <: CronField]
     : FieldExpr[FieldNodeWithAny, F] =
     new FieldExpr[FieldNodeWithAny, F] {
       def matches(node: FieldNodeWithAny[F]): Predicate[Int] =

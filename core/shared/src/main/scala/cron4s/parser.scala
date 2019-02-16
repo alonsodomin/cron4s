@@ -20,10 +20,8 @@ import cron4s.expr._
 
 import fastparse.all._
 
-/**
-  * Created by alonsodomin on 15/12/2016.
-  */
-package object parser extends NodeConversions {
+private[cron4s] object parser {
+
   import CronField._
   import CronUnit._
 
@@ -94,37 +92,47 @@ package object parser extends NodeConversions {
   //----------------------------------------
 
   def each[F <: CronField](implicit unit: CronUnit[F]): Parser[EachNode[F]] =
-    P("*").map(_ => EachNode[F])
+    P("*" ~ &(" " | "/" | End)).map(_ => EachNode[F])
 
   def any[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyNode[F]] =
-    P("?").map(_ => AnyNode[F])
+    P("?" ~ &(" " | End)).map(_ => AnyNode[F])
 
-  def between[F <: CronField](p: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]): Parser[BetweenNode[F]] =
-    (p ~ "-" ~ p).map { case (min, max) => BetweenNode[F](min, max) }
+  def between[F <: CronField](p: Parser[ConstNode[F]],
+                              lookAhead: Boolean = true)(
+      implicit unit: CronUnit[F]
+  ): Parser[BetweenNode[F]] = {
+    val range = p ~ "-" ~ p
+    val parser = if (lookAhead) {
+      range ~ &(" " | "/" | End)
+    } else range
+
+    parser.map { case (min, max) => BetweenNode[F](min, max) }
+  }
 
   def several[F <: CronField](p: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]): Parser[SeveralNode[F]] = {
-    def compose(p: Parser[EnumerableNode[F]])(
-        implicit unit: CronUnit[F]): Parser[SeveralNode[F]] =
-      p.rep(min = 2, sep = ",")
-        .map(values => SeveralNode[F](values.head, values.tail: _*))
+      implicit unit: CronUnit[F]
+  ): Parser[SeveralNode[F]] = {
+    def compose(p: Parser[EnumerableNode[F]]): Parser[SeveralNode[F]] =
+      p.rep(min = 2, sep = ",").map { values =>
+        SeveralNode.fromSeq(values).get
+      }
 
-    compose(between(p).map(between2Enumerable) | p.map(const2Enumerable))
+    compose(
+      between(p, lookAhead = false).map(between2Enumerable) | p.map(
+        const2Enumerable))
   }
 
   def every[F <: CronField](p: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]): Parser[EveryNode[F]] = {
-    def compose(p: Parser[DivisibleNode[F]])(
-        implicit unit: CronUnit[F]): Parser[EveryNode[F]] =
+      implicit unit: CronUnit[F]
+  ): Parser[EveryNode[F]] = {
+    def compose(p: Parser[DivisibleNode[F]]): Parser[EveryNode[F]] =
       (p ~ "/" ~/ digit.rep(1).!).map {
         case (base, freq) => EveryNode[F](base, freq.toInt)
       }
 
     compose(
-      several(p).map(several2Divisible) |
-        between(p).map(between2Divisible) |
-        each[F].map(each2Divisible)
+      each[F].map(each2Divisible) | between(p)
+        .map(between2Divisible) | several(p).map(several2Divisible)
     )
   }
 
@@ -134,9 +142,8 @@ package object parser extends NodeConversions {
 
   def of[F <: CronField](p: Parser[ConstNode[F]])(
       implicit unit: CronUnit[F]): Parser[FieldNode[F]] = {
-    every(p).map(every2Field) |
-      several(p).map(several2Field) |
-      between(p).map(between2Field) |
+    every(p).map(every2Field) | between(p).map(between2Field) | several(p).map(
+      several2Field) |
       p.map(const2Field) |
       each[F].map(each2Field)
   }
@@ -144,8 +151,8 @@ package object parser extends NodeConversions {
   def withAny[F <: CronField](p: Parser[ConstNode[F]])(
       implicit unit: CronUnit[F]): Parser[FieldNodeWithAny[F]] = {
     every(p).map(every2FieldWithAny) |
-      several(p).map(several2FieldWithAny) |
       between(p).map(between2FieldWithAny) |
+      several(p).map(several2FieldWithAny) |
       p.map(const2FieldWithAny) |
       each[F].map(each2FieldWithAny) |
       any[F].map(any2FieldWithAny)
@@ -153,12 +160,12 @@ package object parser extends NodeConversions {
 
   val cron: Parser[CronExpr] = P(
     Start ~
-      (of(seconds) ~ " ").opaque("0-59") ~/
-      (of(minutes) ~ " ").opaque("0-59") ~/
-      (of(hours) ~ " ").opaque("0-23") ~/
-      (withAny(daysOfMonth) ~ " ").opaque("1-31") ~/
-      (of(months) ~ " ").opaque("<month>") ~/
-      withAny(daysOfWeek).opaque("<day-of-week>") ~/
+      (of(seconds) ~ " ") ~/
+      (of(minutes) ~ " ") ~/
+      (of(hours) ~ " ") ~/
+      (withAny(daysOfMonth) ~ " ") ~/
+      (of(months) ~ " ") ~/
+      withAny(daysOfWeek) ~/
       End
   ).map {
     case (sec, min, hour, day, month, weekDay) =>

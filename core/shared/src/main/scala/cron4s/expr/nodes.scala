@@ -51,6 +51,8 @@ final class EachNode[F <: CronField] private (val unit: CronUnit[F])
     case _              => false
   }
 
+  override lazy val hashCode: Int = toString.hashCode()
+
   lazy val range: IndexedSeq[Int] = unit.range
 
   override val toString = "*"
@@ -90,6 +92,8 @@ final class AnyNode[F <: CronField] private (val unit: CronUnit[F])
     case _: AnyNode[F] => true
     case _             => false
   }
+
+  override lazy val hashCode: Int = toString.hashCode()
 
   lazy val range: IndexedSeq[Int] = unit.range
 
@@ -133,6 +137,8 @@ final class ConstNode[F <: CronField] private (val value: Int,
     case _                  => false
   }
 
+  override lazy val hashCode: Int = value.hashCode()
+
   lazy val range: IndexedSeq[Int] = Vector(value)
 
   override lazy val toString: String =
@@ -142,9 +148,10 @@ final class ConstNode[F <: CronField] private (val value: Int,
 
 object ConstNode {
 
-  @inline def apply[F <: CronField](value: Int,
-                                    textValue: Option[String] = None)(
-      implicit unit: CronUnit[F]): ConstNode[F] =
+  @inline def apply[F <: CronField](
+      value: Int,
+      textValue: Option[String] = None
+  )(implicit unit: CronUnit[F]): ConstNode[F] =
     new ConstNode(value, textValue, unit)
 
   implicit def constNodeEq[F <: CronField]: Eq[ConstNode[F]] =
@@ -180,6 +187,9 @@ final class BetweenNode[F <: CronField] private (val begin: ConstNode[F],
       (this.begin === node.begin) && (this.end === node.end)
     case _ => false
   }
+
+  override lazy val hashCode: Int =
+    begin.hashCode * 31 + end.hashCode * 31
 
   lazy val range: IndexedSeq[Int] = {
     val min = Math.min(begin.value, end.value)
@@ -227,7 +237,8 @@ object BetweenNode {
 }
 
 final class SeveralNode[F <: CronField] private (
-    val values: NonEmptyList[EnumerableNode[F]],
+    val head: EnumerableNode[F],
+    val tail: NonEmptyList[EnumerableNode[F]],
     val unit: CronUnit[F])
     extends Node[F] {
 
@@ -235,6 +246,11 @@ final class SeveralNode[F <: CronField] private (
     case node: SeveralNode[F] => this.values === node.values
     case _                    => false
   }
+
+  lazy val values: NonEmptyList[EnumerableNode[F]] = head :: tail
+
+  override lazy val hashCode: Int =
+    values.map(_.hashCode() * 31).reduce
 
   lazy val range: IndexedSeq[Int] =
     values.toList.view.flatMap(_.range).distinct.sorted.toIndexedSeq
@@ -247,9 +263,26 @@ final class SeveralNode[F <: CronField] private (
 object SeveralNode {
 
   @inline def apply[F <: CronField](
-      head: EnumerableNode[F],
-      tail: EnumerableNode[F]*)(implicit unit: CronUnit[F]): SeveralNode[F] =
-    new SeveralNode(NonEmptyList.of(head, tail: _*), unit)
+      first: EnumerableNode[F],
+      second: EnumerableNode[F],
+      tail: EnumerableNode[F]*
+  )(implicit unit: CronUnit[F]): SeveralNode[F] =
+    new SeveralNode(first, NonEmptyList.of(second, tail: _*), unit)
+
+  def fromSeq[F <: CronField](xs: Seq[EnumerableNode[F]])(
+      implicit unit: CronUnit[F]
+  ): Option[SeveralNode[F]] = {
+    def splitSeq(
+        xs: Seq[EnumerableNode[F]]
+    ): Option[(EnumerableNode[F], EnumerableNode[F], Seq[EnumerableNode[F]])] = {
+      if (xs.length < 2) None
+      else Some((xs.head, xs.tail.head, xs.tail.tail))
+    }
+
+    splitSeq(xs).map {
+      case (first, second, tail) => SeveralNode(first, second, tail: _*)
+    }
+  }
 
   implicit def severalNodeEq[F <: CronField]: Eq[SeveralNode[F]] =
     Eq.fromUniversalEquals
@@ -286,6 +319,9 @@ final class EveryNode[F <: CronField] private (val base: DivisibleNode[F],
       (this.base === node.base) && (this.freq === node.freq)
     case _ => false
   }
+
+  override lazy val hashCode: Int =
+    base.hashCode() * 31 + freq
 
   lazy val range: IndexedSeq[Int] = {
     val elements = Stream

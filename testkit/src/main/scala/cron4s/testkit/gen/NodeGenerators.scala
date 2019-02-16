@@ -66,8 +66,8 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       ev: Enumerated[CronUnit[F]]
   ): Gen[BetweenNode[F]] =
     for {
-      min <- Gen.choose(unit.min, unit.max - 1)
-      max <- Gen.choose(min + 1, unit.max)
+      min <- Gen.choose(unit.min, (unit.max / 2) - 1)
+      max <- Gen.choose(unit.max / 2, unit.max)
     } yield BetweenNode(ConstNode(min), ConstNode(max))
 
   def invalidBetweenGen[F <: CronField](
@@ -106,12 +106,12 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       implicit unit: CronUnit[F]
   ): Gen[SeveralNode[F]] = {
     Gen
-      .choose(1, 5)
+      .choose(4, 10)
       .flatMap(size => Gen.listOfN(size, memberGen))
       .map(inspectElements)
-      .map { elems =>
-        SeveralNode[F](elems.head, elems.tail: _*)
-      }
+      .map(SeveralNode.fromSeq[F])
+      .suchThat(_.nonEmpty)
+      .map(_.get)
   }
 
   def severalGen[F <: CronField](
@@ -141,7 +141,8 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
   )(implicit unit: CronUnit[F]): Gen[EveryNode[F]] =
     for {
       base <- baseGen
-      freq <- Gen.posNum[Int]
+      freq <- Gen.choose(1, base.range.length) retryUntil (n =>
+        base.range.size % n == 0)
     } yield EveryNode(base, freq)
 
   def everyGen[F <: CronField](
@@ -151,14 +152,23 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
   ): Gen[EveryNode[F]] =
     everyGen0(divisibleGen[F])
 
-  def nodeGen[F <: CronField](implicit unit: CronUnit[F],
-                              ev: Enumerated[CronUnit[F]]): Gen[FieldNode[F]] =
+  def nodeGen[F <: CronField](
+      implicit
+      unit: CronUnit[F],
+      ev: Enumerated[CronUnit[F]]
+  ): Gen[FieldNode[F]] =
     Gen.oneOf(
       eachGen[F].map(each2Field),
       constGen[F].map(const2Field),
       betweenGen[F].map(between2Field),
-      severalGen[F].map(several2Field),
-      everyGen[F].map(every2Field)
+      severalGen[F].map { xs =>
+        if (xs.values.length > 1) several2Field(xs)
+        else enumerable2Field(xs.values.head)
+      },
+      everyGen[F].map { x =>
+        if (x.freq == 1) divisible2Field(x.base)
+        else every2Field(x)
+      }
     )
 
   def nodeWithAnyGen[F <: CronField](
@@ -169,8 +179,14 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       eachGen[F].map(each2FieldWithAny),
       constGen[F].map(const2FieldWithAny),
       betweenGen[F].map(between2FieldWithAny),
-      severalGen[F].map(several2FieldWithAny),
-      everyGen[F].map(every2FieldWithAny)
+      severalGen[F].map { xs =>
+        if (xs.values.length > 1) several2FieldWithAny(xs)
+        else field2FieldWithAny(enumerable2Field(xs.values.head))
+      },
+      everyGen[F].map { x =>
+        if (x.freq == 1) field2FieldWithAny(divisible2Field(x.base))
+        else every2FieldWithAny(x)
+      }
     )
 
 }
