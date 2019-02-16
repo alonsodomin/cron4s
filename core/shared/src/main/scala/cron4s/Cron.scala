@@ -16,8 +16,6 @@
 
 package cron4s
 
-import cron4s.expr._
-
 import fastparse.all._
 
 import scala.scalajs.js.annotation.JSExportTopLevel

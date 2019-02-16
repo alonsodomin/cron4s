@@ -21,8 +21,6 @@ import cats.implicits._
 
 import com.monovore.decline.Argument
 
-import cron4s.expr.CronExpr
-
 package object decline {
 
   implicit val cronExprArgument: Argument[CronExpr] = new Argument[CronExpr] {
