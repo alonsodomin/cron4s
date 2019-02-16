@@ -27,7 +27,9 @@ private[cron4s] object parser {
 
   private[this] val digit = P(CharIn('0' to '9'))
   private[this] val sexagesimal =
-    P(((CharIn('1' to '5') ~ digit) | ("0" ~ digit) | digit).!).map(_.toInt)
+    P(((CharIn('1' to '5') ~ digit) | ("0" ~ digit) | digit).!)
+      .map(_.toInt)
+      .opaque("0-59")
 
   //----------------------------------------
   // Individual Expression Atoms
