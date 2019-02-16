@@ -20,10 +20,8 @@ import cron4s.expr._
 
 import fastparse.all._
 
-/**
-  * Created by alonsodomin on 15/12/2016.
-  */
-package object parser extends NodeConversions {
+private[cron4s] object parser {
+
   import CronField._
   import CronUnit._
 

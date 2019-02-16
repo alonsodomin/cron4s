@@ -1,7 +1,6 @@
-import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
+import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 import com.typesafe.sbt.pgp.PgpKeys
-
-import com.typesafe.tools.mima.plugin.MimaKeys.mimaPreviousArtifacts
+import com.typesafe.tools.mima.core._
 import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 
 import scala.xml.transform.{RewriteRule, RuleTransformer}
@@ -137,8 +136,14 @@ lazy val coverageSettings = Seq(
 )
 
 def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
-  mimaPreviousArtifacts := Set(
-    "com.github.alonsodomin.cron4s" %% s"cron4s-${module}" % "0.4.4")
+  mimaPreviousArtifacts := Set(organization.value %% s"cron4s-$module" % "0.4.5"),
+  mimaBackwardIssueFilters += "0.4.5" -> Seq(
+    ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package$"),
+    ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package"),
+    ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.apply"),
+    ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.this"),
+    ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.FieldNodeWithAny.fieldNodeInstance")
+  )
 )
 
 lazy val docsMappingsAPIDir = settingKey[String](

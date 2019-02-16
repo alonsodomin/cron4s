@@ -141,7 +141,8 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
   )(implicit unit: CronUnit[F]): Gen[EveryNode[F]] =
     for {
       base <- baseGen
-      freq <- Gen.choose(1, base.range.length) retryUntil (n => base.range.size % n == 0)
+      freq <- Gen.choose(1, base.range.length) retryUntil (n =>
+        base.range.size % n == 0)
     } yield EveryNode(base, freq)
 
   def everyGen[F <: CronField](
