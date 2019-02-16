@@ -373,3 +373,4 @@ addCommandAlias("validateJVM",
                 ";testJVM;cron4sJVM/mimaReportBinaryIssues;makeMicrosite")
 addCommandAlias("validateJS", "testJS")
 addCommandAlias("rebuild", ";clean;validateJS;validateJVM")
+addCommandAlias("compileAll", ";clean;test:compile")
