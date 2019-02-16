@@ -52,7 +52,7 @@ class NodeRangeBenchmark {
         .map(value => ConstNode[Minute](value))
         .map(const2Enumerable)
 
-    SeveralNode(minutes.head, minutes.tail: _*)
+    SeveralNode.fromSeq(minutes).get
   }
 
   val severalBetweenNode: SeveralNode[Minute] = {
@@ -65,7 +65,7 @@ class NodeRangeBenchmark {
       }
       .map(between2Enumerable)
 
-    SeveralNode[Minute](minuteRanges.head, minuteRanges.tail: _*)
+    SeveralNode.fromSeq[Minute](minuteRanges).get
   }
 
   val everyEachNode = EveryNode(eachNode, 10)

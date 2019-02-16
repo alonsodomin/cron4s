@@ -45,15 +45,10 @@ class NodeMatcherBenchmark {
     val minutes = for {
       value <- CronUnit.Minutes.range
     } yield const2Enumerable(ConstNode[CronField.Minute](value))
-    SeveralNode(minutes.head, minutes.tail: _*)
+    SeveralNode.fromSeq(minutes).get
   }
-  val severalBetweenNode: SeveralNode[CronField.Minute] = {
-    val betweenNode: BetweenNode[CronField.Minute] = BetweenNode(
-      ConstNode[CronField.Minute](CronUnit.Minutes.min),
-      ConstNode[CronField.Minute](CronUnit.Minutes.max)
-    )
-    SeveralNode(betweenNode)
-  }
+  val severalBetweenNode: SeveralNode[CronField.Minute] =
+    SeveralNode(constNode, betweenNode)
   val everyEachNode = EveryNode(eachNode, 1)
 
   @Benchmark
