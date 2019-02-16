@@ -324,6 +324,7 @@ lazy val joda = (project in file("time-lib/joda"))
   .settings(commonJvmSettings)
   .settings(publishSettings)
   .settings(Dependencies.joda)
+  .settings(mimaSettings("joda"))
   .dependsOn(coreJVM, testkitJVM % Test)
 
 lazy val momentjs = (project in file("time-lib/momentjs"))

@@ -22,22 +22,55 @@ import scala.scalajs.js.annotation.JSExportTopLevel
 import scala.util.{Failure, Success, Try}
 
 /**
-  * Created by domingueza on 10/04/2017.
+  * The entry point for parsing cron expressions
+  *
+  * @author Antonio Alonso Dominguez
   */
 @JSExportTopLevel("Cron")
 object Cron {
 
-  // Alias for parse
+  /**
+    * Parses the given cron expression into a cron AST using Either as return type. This is a short-hand for
+    * `Cron.parse(...)`
+    *
+    * @param e a cron expression
+    * @return an Either representing the failure or the actual parsed cron AST
+    * @example val cron = Cron("10-35 2,4,6 * ? * *")
+    */
   def apply(e: String): Either[Error, CronExpr] = parse(e)
 
+  /**
+    * Parses the given cron expression into a cron AST using Either as return type
+    *
+    * @param e a cron expression
+    * @return an Either representing the failure or the actual parsed cron AST
+    * @example val cron = Cron.parse("10-35 2,4,6 * ? * *")
+    */
   def parse(e: String): Either[Error, CronExpr] =
     parse0(e).right.flatMap(validation.validateCron)
 
+  /**
+    * Parses the given cron expression into a cron AST using Try as return type
+    *
+    * @param e a cron expression
+    * @return a Try representing the failure or the actual parsed cron AST
+    * @example val cron = Cron.tryParse("10-35 2,4,6 * ? * *")
+    */
   def tryParse(e: String): Try[CronExpr] = parse(e) match {
     case Left(err)   => Failure(err)
     case Right(expr) => Success(expr)
   }
 
+  /**
+    * Parses the given cron expression into a cron AST. This method will throw an exception in case the
+    * given cron expression is invalid
+    *
+    * @param e a cron expression
+    * @return a cron AST
+    * @throws Error in case the cron expression is invalid
+    * @example val cron = Cron.unsafeParse("10-35 2,4,6 * ? * *")
+    */
+  @throws(classOf[Error])
   def unsafeParse(e: String): CronExpr = parse(e) match {
     case Left(err)   => throw err
     case Right(expr) => expr

@@ -97,7 +97,7 @@ val compileFails = cron"10-65 * * * * *"
 
 Now compare that error to the previous one returned by `Cron.unsafeParse`, which was a runtime check. As you can see,
 the compile time error is more helpful but it has its limitations, being the most important one the fact that the
-expression text needs to be resolvable at compile time, if for some reason you are reading your expression as an
+expression text needs to be resolvable at compile time. If for some reason you are reading your expression as an
 input into your program, you should still fallback to the previous methods.
 
 #### Validation errors

@@ -36,7 +36,7 @@ libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s-decline" % "x.
 And now you will need some imports:
 
 ```tut:silent
-import cron4s.expr.CronExpr
+import cron4s.CronExpr
 import cron4s.decline._
 import com.monovore.decline._
 ```
