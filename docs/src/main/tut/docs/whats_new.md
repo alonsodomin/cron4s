@@ -5,7 +5,13 @@ title: "What's New"
 
 ## 0.5.0
 
-This version adds some features and upgrades some of the core dependencies.
+This version adds some features and upgrades some of the core dependencies. This version **is not binary compatible**
+with the 0.4.x series.
+
+Bug Fixes:
+
+ * Fixed a parser inconsistency error in which the string representation of a given cron AST could be parsed into a
+   different (although equivalent) one. This was fixed as part of the work for [#127](https://github.com/alonsodomin/cron4s/pull/127).
 
 New features:
 
@@ -19,7 +25,7 @@ Version upgrades:
 
  * Scala 2.11.12 / Scala 2.12.8
  * ScalaJS 0.6.26
- * Cats 1.5.0
+ * Cats 1.6.0
  * Scala Java Time 2.0.0-RC1
 
 ## 0.4.4
