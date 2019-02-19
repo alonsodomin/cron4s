@@ -135,8 +135,8 @@ lazy val coverageSettings = Seq(
   coverageExcludedPackages := "cron4s\\.bench\\..*"
 )
 
-def mimaSettings(module: String): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
-  mimaPreviousArtifacts := Set(organization.value %% s"cron4s-$module" % "0.4.5"),
+def mimaSettings(module: String, versions: Set[String]): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
+  mimaPreviousArtifacts := versions.map(organization.value %% s"cron4s-$module" % _),
   mimaBackwardIssueFilters += "0.4.5" -> Seq(
     ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.Error.this"),
     ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package$"),
@@ -258,7 +258,7 @@ lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("core"))
   .jvmSettings(commonJvmSettings)
   .jvmSettings(consoleSettings)
   .jvmSettings(Dependencies.coreJVM)
-  .jvmSettings(mimaSettings("core"))
+  .jvmSettings(mimaSettings("core", Set("0.4.5", "0.5.0")))
 
 lazy val coreJS = core.js
 lazy val coreJVM = core.jvm
@@ -277,7 +277,7 @@ lazy val testkit =
     .jsSettings(commonJsSettings)
     .jvmSettings(commonJvmSettings)
     .jvmSettings(consoleSettings)
-    .jvmSettings(mimaSettings("testkit"))
+    .jvmSettings(mimaSettings("testkit", Set("0.4.5", "0.5.0")))
     .dependsOn(core)
 
 lazy val testkitJS = testkit.js
@@ -325,7 +325,7 @@ lazy val joda = (project in file("time-lib/joda"))
   .settings(commonJvmSettings)
   .settings(publishSettings)
   .settings(Dependencies.joda)
-  .settings(mimaSettings("joda"))
+  .settings(mimaSettings("joda", Set("0.4.5", "0.5.0")))
   .dependsOn(coreJVM, testkitJVM % Test)
 
 lazy val momentjs = (project in file("time-lib/momentjs"))
@@ -351,6 +351,7 @@ lazy val circe = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure
   .settings(commonSettings)
   .settings(publishSettings)
   .settings(Dependencies.circe)
+  .settings(mimaSettings("circe", Set("0.5.0")))
   .dependsOn(core, testkit % Test)
 
 lazy val circeJVM = circe.jvm
@@ -365,6 +366,7 @@ lazy val decline = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pu
   .settings(commonSettings)
   .settings(publishSettings)
   .settings(Dependencies.decline)
+  .settings(mimaSettings("decline", Set("0.5.0")))
   .dependsOn(core, testkit % Test)
 
 lazy val declineJVM = decline.jvm
