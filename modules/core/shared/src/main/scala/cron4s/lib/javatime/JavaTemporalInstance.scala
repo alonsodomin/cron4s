@@ -76,11 +76,10 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal]
     def adjust(realVal: Int)(dt: DT): Try[DT] =
       Try(dt.`with`(temporalField, realVal.toLong).asInstanceOf[DT])
 
-    def postAdjust(dt: DT): Try[DT] = {
+    def postAdjust(dt: DT): Try[DT] =
       if (dt.isSupported(ChronoField.MILLI_OF_SECOND)) {
         Try(dt.`with`(ChronoField.MILLI_OF_SECOND, 0).asInstanceOf[DT])
       } else Success(dt)
-    }
 
     if (!dateTime.isSupported(temporalField)) UnsupportedField(field).asLeft
     else {

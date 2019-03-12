@@ -42,7 +42,7 @@ trait FieldExprTests[E[_ <: CronField], F <: CronField]
   ): RuleSet = new DefaultRuleSet(
     name = "expr",
     parent = Some(enumerated),
-    "matchable" -> forAll(laws.matchable _),
+    "matchable"              -> forAll(laws.matchable _),
     "implicationCommutative" -> forAll(laws.implicationCommutative[EE] _),
     "implicationEquivalence" -> forAll(laws.implicationEquivalence[EE] _)
   )

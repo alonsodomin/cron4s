@@ -29,11 +29,11 @@ trait DateTimeTestKitBase[DateTime] {
 
   implicit final lazy val arbitraryDateTime: Arbitrary[DateTime] = Arbitrary(
     for {
-      second <- Gen.choose(Seconds.min, Seconds.max)
-      minute <- Gen.choose(Minutes.min, Minutes.max)
-      hour <- Gen.choose(Hours.min, Hours.max)
-      year <- Gen.choose(1990, 2020)
-      yearMonth <- Gen.choose(Months.min, Months.max).map(YearMonth.of(year, _))
+      second     <- Gen.choose(Seconds.min, Seconds.max)
+      minute     <- Gen.choose(Minutes.min, Minutes.max)
+      hour       <- Gen.choose(Hours.min, Hours.max)
+      year       <- Gen.choose(1990, 2020)
+      yearMonth  <- Gen.choose(Months.min, Months.max).map(YearMonth.of(year, _))
       dayOfMonth <- Gen.choose(DaysOfMonth.min, yearMonth.lengthOfMonth())
     } yield
       createDateTime(second,

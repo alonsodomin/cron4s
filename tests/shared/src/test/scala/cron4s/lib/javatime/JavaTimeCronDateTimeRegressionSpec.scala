@@ -31,7 +31,7 @@ class JavaTimeCronDateTimeRegressionSpec extends FlatSpec with Matchers {
     val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
 
     val Right(cron) = Cron("* */10 * * * ?")
-    val Some(next) = cron.next(from)
+    val Some(next)  = cron.next(from)
 
     from.until(next, ChronoUnit.SECONDS) <= 600 shouldBe true
   }
@@ -40,7 +40,7 @@ class JavaTimeCronDateTimeRegressionSpec extends FlatSpec with Matchers {
     val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
 
     val Right(cron) = Cron("* */10 * * * ?")
-    val Some(next) = cron.next(from)
+    val Some(next)  = cron.next(from)
 
     next.getLong(ChronoField.MILLI_OF_SECOND) shouldBe 0
   }
@@ -49,7 +49,7 @@ class JavaTimeCronDateTimeRegressionSpec extends FlatSpec with Matchers {
     val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
 
     val Right(cron) = Cron("* */10 * * * ?")
-    val Some(next) = cron.next(from)
+    val Some(next)  = cron.next(from)
 
     println(next)
     from.until(next, ChronoUnit.SECONDS) shouldBe 17L

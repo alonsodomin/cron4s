@@ -42,7 +42,7 @@ trait DateTimeNodeTests[E[_ <: CronField], F <: CronField, DateTime]
                dateTimeEq: Eq[DateTime]): RuleSet = new DefaultRuleSet(
     name = "dateTimeNode",
     parent = None,
-    "forward" -> forAll(laws.forward _),
+    "forward"   -> forAll(laws.forward _),
     "backwards" -> forAll(laws.backwards _),
     "matchable" -> forAll(laws.matchable _)
   )

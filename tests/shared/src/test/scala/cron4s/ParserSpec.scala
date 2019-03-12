@@ -41,14 +41,13 @@ class ParserSpec
 
   def verifyParsed[F <: CronField, N <: Node[F]](
       parser: Parser[N],
-      input: String)(verify: N => Boolean): Boolean = {
+      input: String)(verify: N => Boolean): Boolean =
     parser.parse(input) match {
       case Parsed.Success(parsed, _) => verify(parsed)
       case err: Parsed.Failure =>
         println(ParseError(err).failure.msg)
         false
     }
-  }
 
   // Utility methods to help with type inference
 
@@ -73,7 +72,7 @@ class ParserSpec
       expected: List[Either[String, (A, A)]]
   )(
       verify: (ConstNode[F], String) => Boolean
-  ): Boolean = {
+  ): Boolean =
     verifyParsed[F, SeveralNode[F]](parser, input) { expr =>
       if (expr.values.toList.size == expected.size) {
         val matches = expr.values.toList.zip(expected).map {
@@ -93,7 +92,6 @@ class ParserSpec
         !matches.contains(false)
       } else false
     }
-  }
 
   // --------------------------------------------------------------
   // Properties for the individual parsers

@@ -23,6 +23,6 @@ import contextual._
 object CronInterpolator extends Verifier[CronExpr] {
   def check(input: String) = Cron(input).leftMap {
     case parseErr: ParseFailed => parseErr.position -> parseErr.getMessage
-    case other: Error          => 0 -> other.getMessage
+    case other: Error          => 0                 -> other.getMessage
   }
 }

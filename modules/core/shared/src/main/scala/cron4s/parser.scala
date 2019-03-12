@@ -143,22 +143,20 @@ private[cron4s] object parser {
   //----------------------------------------
 
   def of[F <: CronField](p: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]): Parser[FieldNode[F]] = {
+      implicit unit: CronUnit[F]): Parser[FieldNode[F]] =
     every(p).map(every2Field) | between(p).map(between2Field) | several(p).map(
       several2Field) |
       p.map(const2Field) |
       each[F].map(each2Field)
-  }
 
   def withAny[F <: CronField](p: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]): Parser[FieldNodeWithAny[F]] = {
+      implicit unit: CronUnit[F]): Parser[FieldNodeWithAny[F]] =
     every(p).map(every2FieldWithAny) |
       between(p).map(between2FieldWithAny) |
       several(p).map(several2FieldWithAny) |
       p.map(const2FieldWithAny) |
       each[F].map(each2FieldWithAny) |
       any[F].map(any2FieldWithAny)
-  }
 
   val cron: Parser[CronExpr] = P(
     Start ~

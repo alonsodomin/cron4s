@@ -40,12 +40,12 @@ object PredicateTests extends Laws {
     new DefaultRuleSet(
       name = "Predicate",
       parent = None,
-      "negation" -> forAll(PredicateLaws.negation[A] _),
+      "negation"    -> forAll(PredicateLaws.negation[A] _),
       "conjunction" -> forAll(PredicateLaws.conjuction[A] _),
       "disjunction" -> forAll(PredicateLaws.disjunction[A] _),
-      "noMatch" -> forAll(PredicateLaws.noMatch[F, A] _),
-      "someMatch" -> forAll(PredicateLaws.someMatch[F, A] _),
-      "allMatch" -> forAll(PredicateLaws.allMatch[F, A] _)
+      "noMatch"     -> forAll(PredicateLaws.noMatch[F, A] _),
+      "someMatch"   -> forAll(PredicateLaws.someMatch[F, A] _),
+      "allMatch"    -> forAll(PredicateLaws.allMatch[F, A] _)
     )
 
 }

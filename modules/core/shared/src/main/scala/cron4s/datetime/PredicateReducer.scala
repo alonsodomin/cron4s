@@ -38,13 +38,12 @@ private[datetime] final class PredicateReducer[DateTime](
 
     private[this] def predicateFor[N[_ <: CronField], F <: CronField](
         field: F,
-        node: N[F])(implicit expr: FieldExpr[N, F]): Predicate[DateTime] = {
+        node: N[F])(implicit expr: FieldExpr[N, F]): Predicate[DateTime] =
       Predicate { dt =>
         DT.get(dt, field)
           .map(expr.matches(node))
           .getOrElse(M.empty[DateTime](dt))
       }
-    }
 
     implicit def caseSeconds =
       at[SecondsNode](node => predicateFor(Second, node))

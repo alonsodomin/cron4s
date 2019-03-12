@@ -76,7 +76,7 @@ object Cron {
     case Right(expr) => expr
   }
 
-  private[this] def parse0(e: String): Either[ParseFailed, CronExpr] = {
+  private[this] def parse0(e: String): Either[ParseFailed, CronExpr] =
     parser.cron.parse(e) match {
       case Parsed.Success(expr, _) =>
         Right(expr)
@@ -86,6 +86,5 @@ object Cron {
         val found = input.repr.literalize(input.slice(idx, idx + 20))
         Left(ParseFailed(extra.traced.expected, found, idx))
     }
-  }
 
 }

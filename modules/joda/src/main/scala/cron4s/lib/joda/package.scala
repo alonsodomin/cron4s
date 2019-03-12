@@ -35,9 +35,9 @@ package object joda {
   implicit val jodaLocalDateTimeEq: Eq[LocalDateTime] =
     Eq.fromUniversalEquals[LocalDateTime]
 
-  implicit val jodaDateTimeShow: Show[DateTime] = Show.fromToString
-  implicit val jodaLocalDateShow: Show[LocalDate] = Show.fromToString
-  implicit val jodaLocalTimeShow: Show[LocalTime] = Show.fromToString
+  implicit val jodaDateTimeShow: Show[DateTime]           = Show.fromToString
+  implicit val jodaLocalDateShow: Show[LocalDate]         = Show.fromToString
+  implicit val jodaLocalTimeShow: Show[LocalTime]         = Show.fromToString
   implicit val jodaLocalDateTimeShow: Show[LocalDateTime] = Show.fromToString
 
   implicit val jodaDateTimeInstance: IsDateTime[DateTime] =

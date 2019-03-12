@@ -32,7 +32,7 @@ class SeveralNodeValidatorSpec
   private[this] def check[F <: CronField](implicit unit: CronUnit[F],
                                           ev: Enumerated[CronUnit[F]]): Unit = {
     val severalValidator = NodeValidator[SeveralNode[F]]
-    val elemValidator = NodeValidator[EnumerableNode[F]]
+    val elemValidator    = NodeValidator[EnumerableNode[F]]
 
     property(
       s"SeveralNode[${unit.field}] with valid components should pass validation") {

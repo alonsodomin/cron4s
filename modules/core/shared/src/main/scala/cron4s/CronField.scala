@@ -27,22 +27,22 @@ sealed trait CronField extends Serializable
 object CronField extends CronFieldInstances {
 
   sealed trait Second extends CronField
-  case object Second extends Second
+  case object Second  extends Second
 
   sealed trait Minute extends CronField
-  case object Minute extends Minute
+  case object Minute  extends Minute
 
   sealed trait Hour extends CronField
-  case object Hour extends Hour
+  case object Hour  extends Hour
 
   sealed trait DayOfMonth extends CronField
-  case object DayOfMonth extends DayOfMonth
+  case object DayOfMonth  extends DayOfMonth
 
   sealed trait Month extends CronField
-  case object Month extends Month
+  case object Month  extends Month
 
   sealed trait DayOfWeek extends CronField
-  case object DayOfWeek extends DayOfWeek
+  case object DayOfWeek  extends DayOfWeek
 
   final val All: List[CronField] =
     List(Second, Minute, Hour, DayOfMonth, Month, DayOfWeek)

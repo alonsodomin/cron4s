@@ -25,11 +25,11 @@ import org.scalacheck.Arbitrary
   */
 trait ArbitraryEveryNode extends NodeGenerators {
 
-  implicit lazy val arbitraryEverySecond = Arbitrary(everyGen[Second])
-  implicit lazy val arbitraryEveryMinute = Arbitrary(everyGen[Minute])
-  implicit lazy val arbitraryEveryHour = Arbitrary(everyGen[Hour])
+  implicit lazy val arbitraryEverySecond     = Arbitrary(everyGen[Second])
+  implicit lazy val arbitraryEveryMinute     = Arbitrary(everyGen[Minute])
+  implicit lazy val arbitraryEveryHour       = Arbitrary(everyGen[Hour])
   implicit lazy val arbitraryEveryDayOfMonth = Arbitrary(everyGen[DayOfMonth])
-  implicit lazy val arbitraryEveryMonth = Arbitrary(everyGen[Month])
-  implicit lazy val arbitraryEveryDayOfWeek = Arbitrary(everyGen[DayOfWeek])
+  implicit lazy val arbitraryEveryMonth      = Arbitrary(everyGen[Month])
+  implicit lazy val arbitraryEveryDayOfWeek  = Arbitrary(everyGen[DayOfWeek])
 
 }

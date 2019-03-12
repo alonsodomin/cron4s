@@ -28,12 +28,12 @@ import org.scalatest.{FlatSpec, Matchers}
 class CronExprSpec extends FlatSpec with Matchers {
   import CronField._
 
-  val secondExpr: SecondsNode = ConstNode[Second](15)
-  val minuteExpr: MinutesNode = ConstNode[Minute](10)
-  val hourExpr: HoursNode = ConstNode[Hour](4)
+  val secondExpr: SecondsNode         = ConstNode[Second](15)
+  val minuteExpr: MinutesNode         = ConstNode[Minute](10)
+  val hourExpr: HoursNode             = ConstNode[Hour](4)
   val dayOfMonthExpr: DaysOfMonthNode = ConstNode[DayOfMonth](12)
-  val monthExpr: MonthsNode = ConstNode[Month](6)
-  val dayOfWeekExpr: DaysOfWeekNode = AnyNode[DayOfWeek]
+  val monthExpr: MonthsNode           = ConstNode[Month](6)
+  val dayOfWeekExpr: DaysOfWeekNode   = AnyNode[DayOfWeek]
 
   val timePart = TimeCronExpr(secondExpr, minuteExpr, hourExpr)
   val datePart = DateCronExpr(dayOfMonthExpr, monthExpr, dayOfWeekExpr)

@@ -29,7 +29,7 @@ import scala.annotation.tailrec
 private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
 
   private type ResetPrevFn = DateTime => Option[DateTime]
-  private type StepST = Option[(ResetPrevFn, DateTime, Step)]
+  private type StepST      = Option[(ResetPrevFn, DateTime, Step)]
 
   private val identityReset: ResetPrevFn = Some(_)
 
@@ -40,7 +40,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
     def attemptSet(dt: DateTime,
                    step: Step,
                    newValue: Int,
-                   carryOver: Int): Option[(DateTime, Int)] = {
+                   carryOver: Int): Option[(DateTime, Int)] =
       DT.set(dt, node.unit.field, newValue)
         .map(_ -> carryOver)
         .recover {
@@ -53,7 +53,6 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
             dt -> newCarryOver
         }
         .toOption
-    }
 
     stepState.flatMap {
       case (resetPrevious, from, step) =>
@@ -88,14 +87,14 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   private[this] def stepOverMonth(prev: StepST, expr: MonthsNode): StepST =
     for {
       (_, dt, s @ Step(carryOver, dir)) <- stepNode(prev, expr)
-      newDateTime <- DT.plus(dt, carryOver * 12 * dir.sign, DateTimeUnit.Months)
+      newDateTime                       <- DT.plus(dt, carryOver * 12 * dir.sign, DateTimeUnit.Months)
     } yield (identityReset, newDateTime, s.copy(amount = 0))
 
   private[this] def stepOverDayOfWeek(prev: StepST,
                                       expr: DaysOfWeekNode): StepST =
     for {
       (_, dt, s @ Step(carryOver, dir)) <- stepNode(prev, expr)
-      newDateTime <- DT.plus(dt, carryOver * dir.sign, DateTimeUnit.Weeks)
+      newDateTime                       <- DT.plus(dt, carryOver * dir.sign, DateTimeUnit.Weeks)
     } yield (identityReset, newDateTime, s.copy(amount = 0))
 
   object stepPerNode extends Poly2 {
@@ -107,7 +106,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       at[StepST, HoursNode]((step, node) => stepNode(step, node))
     implicit def caseDaysOfMonth =
       at[StepST, DaysOfMonthNode]((step, node) => stepNode(step, node))
-    implicit def caseMonths = at[StepST, MonthsNode](stepOverMonth)
+    implicit def caseMonths     = at[StepST, MonthsNode](stepOverMonth)
     implicit def caseDaysOfWeek = at[StepST, DaysOfWeekNode](stepOverDayOfWeek)
   }
 
@@ -120,7 +119,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
         st @ (resetTime, _, _) <- expr.timePart.raw
           .foldLeft(stepSt)(stepPerNode)
         (_, dt, step) <- dateWithoutDOW.foldLeft(Some(st): StepST)(stepPerNode)
-        result <- stepOverDayOfWeek(Some((resetTime, dt, step)), daysOfWeekNode)
+        result        <- stepOverDayOfWeek(Some((resetTime, dt, step)), daysOfWeekNode)
       } yield result
     }
     implicit def caseDateExpr =
@@ -136,7 +135,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       Some((identityReset, dt, step.copy(amount = 1)))
 
     @tailrec
-    def go(stepSt: StepST, iteration: Int): StepST = {
+    def go(stepSt: StepST, iteration: Int): StepST =
       if (iteration == step.amount) stepSt
       else {
         cron.foldLeft(stepSt)(foldInternalExpr) match {
@@ -146,7 +145,6 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
           case None => None
         }
       }
-    }
 
     go(initial(from), 0).map(_._2)
   }

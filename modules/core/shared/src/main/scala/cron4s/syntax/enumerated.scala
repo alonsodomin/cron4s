@@ -30,7 +30,7 @@ private[syntax] class EnumeratedOps[A](self: A, tc: Enumerated[A]) {
     tc.step(self, from, step)
   def next(from: Int): Option[Int] = tc.next(self)(from)
   def prev(from: Int): Option[Int] = tc.prev(self)(from)
-  def range: IndexedSeq[Int] = tc.range(self)
+  def range: IndexedSeq[Int]       = tc.range(self)
 }
 
 private[syntax] trait EnumeratedSyntax {

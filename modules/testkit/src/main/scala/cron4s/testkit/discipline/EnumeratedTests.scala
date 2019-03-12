@@ -36,15 +36,15 @@ trait EnumeratedTests[A] extends Laws {
                  arbFrom: Arbitrary[Int]): RuleSet = new DefaultRuleSet(
     name = "enumerated",
     parent = None,
-    "min" -> forAll(laws.min _),
-    "max" -> forAll(laws.max _),
-    "forward" -> forAll(laws.forward _),
-    "backwards" -> forAll(laws.backwards _),
-    "fromMinToMinForwards" -> forAll(laws.fromMinToMinForwards _),
-    "fromMaxToMaxForwards" -> forAll(laws.fromMaxToMaxForwards _),
-    "fromMinToMaxForwards" -> forAll(laws.fromMinToMaxForwards _),
+    "min"                   -> forAll(laws.min _),
+    "max"                   -> forAll(laws.max _),
+    "forward"               -> forAll(laws.forward _),
+    "backwards"             -> forAll(laws.backwards _),
+    "fromMinToMinForwards"  -> forAll(laws.fromMinToMinForwards _),
+    "fromMaxToMaxForwards"  -> forAll(laws.fromMaxToMaxForwards _),
+    "fromMinToMaxForwards"  -> forAll(laws.fromMinToMaxForwards _),
     "fromMinToMaxBackwards" -> forAll(laws.fromMinToMaxBackwards _),
-    "fromMaxToMinForwards" -> forAll(laws.fromMaxToMinForwards _),
+    "fromMaxToMinForwards"  -> forAll(laws.fromMaxToMinForwards _),
     "fromMaxToMinBackwards" -> forAll(laws.fromMaxToMinBackwards _)
   )
 

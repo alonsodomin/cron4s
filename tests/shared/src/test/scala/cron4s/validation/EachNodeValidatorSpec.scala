@@ -32,14 +32,13 @@ class EachNodeValidatorSpec
 
   private[this] def check[F <: CronField](
       implicit unit: CronUnit[F],
-      arbNode: Arbitrary[EachNode[F]]): Unit = {
+      arbNode: Arbitrary[EachNode[F]]): Unit =
     property(s"EachNode[${unit.field}] should always pass validation") {
       forAll { (node: EachNode[F]) =>
         NodeValidator[EachNode[F]].validate(node) shouldBe List
           .empty[InvalidField]
       }
     }
-  }
 
   check[Second]
   check[Minute]

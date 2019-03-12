@@ -38,10 +38,9 @@ sealed abstract class Direction(private[cron4s] val sign: Int) {
 }
 object Direction {
 
-  def ofSign(step: Int): Direction = {
+  def ofSign(step: Int): Direction =
     if (step >= 0) Forward
     else Backwards
-  }
 
   case object Forward extends Direction(1) {
     def reverse: Direction = Backwards
@@ -56,7 +55,7 @@ trait Enumerated[A] {
   def min(a: A): Int = range(a).min
   def max(a: A): Int = range(a).max
 
-  def step(a: A, from: Int, step: Step): Option[(Int, Int)] = {
+  def step(a: A, from: Int, step: Step): Option[(Int, Int)] =
     if (step.amount == Int.MinValue || step.amount == Int.MaxValue) None
     else {
       val aRange = range(a)
@@ -92,18 +91,16 @@ trait Enumerated[A] {
         pointer
       }
 
-      val newValue = aRange(index)
+      val newValue  = aRange(index)
       val carryOver = offset / aRange.size
 
       if (newValue != from || carryOver != 0) (newValue, carryOver).some
       else none
     }
-  }
 
-  def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] = {
+  def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] =
     if (stepSize == Int.MinValue || stepSize == Int.MaxValue) None
     else step(a, from, Step(stepSize))
-  }
 
   def next(a: A)(from: Int): Option[Int] = step(a)(from, 1).map(_._1)
   def prev(a: A)(from: Int): Option[Int] = step(a)(from, -1).map(_._1)

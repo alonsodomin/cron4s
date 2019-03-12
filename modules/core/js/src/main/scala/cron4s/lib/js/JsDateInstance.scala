@@ -99,7 +99,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       case Month      => setter(_.setUTCMonth(value - 1))
       case DayOfWeek =>
         val dayToSet = (value % DaysInWeek) + 1
-        val offset = dayToSet - dateTime.getUTCDay()
+        val offset   = dayToSet - dateTime.getUTCDay()
         setter(d => d.setUTCDate(d.getUTCDate() + offset))
     }
 

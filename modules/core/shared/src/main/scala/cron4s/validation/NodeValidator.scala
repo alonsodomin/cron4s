@@ -58,14 +58,13 @@ private[validation] trait NodeValidatorInstances
       ev: Enumerated[CronUnit[F]]
   ): NodeValidator[ConstNode[F]] = new NodeValidator[ConstNode[F]] {
 
-    def validate(node: ConstNode[F]): List[InvalidField] = {
+    def validate(node: ConstNode[F]): List[InvalidField] =
       if (node.value < node.unit.min || node.value > node.unit.max) {
         List(InvalidField(
           node.unit.field,
           s"Value ${node.value} is out of bounds for field: ${node.unit.field}"
         ))
       } else List.empty
-    }
 
   }
 
@@ -145,7 +144,7 @@ private[validation] trait NodeValidatorInstances
   ): NodeValidator[EveryNode[F]] = new NodeValidator[EveryNode[F]] {
     def validate(node: EveryNode[F]): List[InvalidField] = {
       lazy val baseErrors = NodeValidator[DivisibleNode[F]].validate(node.base)
-      val evenlyDivided = (node.base.range.size % node.freq) == 0
+      val evenlyDivided   = (node.base.range.size % node.freq) == 0
       if (!evenlyDivided) {
         InvalidField(
           node.unit.field,

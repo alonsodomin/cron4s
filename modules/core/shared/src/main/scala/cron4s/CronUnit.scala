@@ -78,7 +78,7 @@ private[cron4s] trait CronUnits {
 
   implicit case object Seconds extends AbstractCronUnit[Second](Second, 0, 59)
   implicit case object Minutes extends AbstractCronUnit[Minute](Minute, 0, 59)
-  implicit case object Hours extends AbstractCronUnit[Hour](Hour, 0, 23)
+  implicit case object Hours   extends AbstractCronUnit[Hour](Hour, 0, 23)
   implicit case object DaysOfMonth
       extends AbstractCronUnit[DayOfMonth](DayOfMonth, 1, 31)
   implicit case object Months extends AbstractCronUnit[Month](Month, 1, 12) {
@@ -112,11 +112,11 @@ private[cron4s] trait CronUnitInstances extends CronUnits {
       override def range(fL: CronUnit[F]): IndexedSeq[Int] = unit.range
     }
 
-  implicit val secondsInstance = enumerated(Seconds)
-  implicit val minutesInstance = enumerated(Minutes)
-  implicit val hoursInstance = enumerated(Hours)
+  implicit val secondsInstance     = enumerated(Seconds)
+  implicit val minutesInstance     = enumerated(Minutes)
+  implicit val hoursInstance       = enumerated(Hours)
   implicit val daysOfMonthInstance = enumerated(DaysOfMonth)
-  implicit val monthsInstance = enumerated(Months)
-  implicit val daysOfWeekInstance = enumerated(DaysOfWeek)
+  implicit val monthsInstance      = enumerated(Months)
+  implicit val daysOfWeekInstance  = enumerated(DaysOfWeek)
 
 }

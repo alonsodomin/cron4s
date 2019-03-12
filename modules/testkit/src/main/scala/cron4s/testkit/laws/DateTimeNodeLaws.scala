@@ -54,9 +54,9 @@ object DateTimeNodeLaws {
       TC0: DateTimeNode[E, F]
   ): DateTimeNodeLaws[E, F, DateTime] =
     new DateTimeNodeLaws[E, F, DateTime] {
-      implicit val DT = dt0
+      implicit val DT   = dt0
       implicit val expr = expr0
-      implicit val TC = TC0
+      implicit val TC   = TC0
     }
 
 }

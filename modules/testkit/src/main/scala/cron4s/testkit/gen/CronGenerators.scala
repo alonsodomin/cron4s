@@ -30,32 +30,31 @@ trait CronGenerators extends NodeGenerators {
 
   private[this] def chooseDaysOfWeek(
       daysOfMonth: DaysOfMonthNode
-  ): Gen[DaysOfWeekNode] = {
+  ): Gen[DaysOfWeekNode] =
     daysOfMonth.raw match {
       case Inl(_) => nodeGen[CronField.DayOfWeek].map(field2FieldWithAny) // any
       case _      => anyGen[CronField.DayOfWeek].map(any2FieldWithAny)
     }
-  }
 
   private[this] val fullCronGen = for {
-    seconds <- nodeGen[CronField.Second]
-    minutes <- nodeGen[CronField.Minute]
-    hours <- nodeGen[CronField.Hour]
+    seconds     <- nodeGen[CronField.Second]
+    minutes     <- nodeGen[CronField.Minute]
+    hours       <- nodeGen[CronField.Hour]
     daysOfMonth <- nodeWithAnyGen[CronField.DayOfMonth]
-    months <- nodeGen[CronField.Month]
-    daysOfWeek <- chooseDaysOfWeek(daysOfMonth)
+    months      <- nodeGen[CronField.Month]
+    daysOfWeek  <- chooseDaysOfWeek(daysOfMonth)
   } yield CronExpr(seconds, minutes, hours, daysOfMonth, months, daysOfWeek)
 
   private[this] val timeCronGen = for {
     seconds <- nodeGen[CronField.Second]
     minutes <- nodeGen[CronField.Minute]
-    hours <- nodeGen[CronField.Hour]
+    hours   <- nodeGen[CronField.Hour]
   } yield TimeCronExpr(seconds, minutes, hours)
 
   private[this] val dateCronGen = for {
     daysOfMonth <- nodeWithAnyGen[CronField.DayOfMonth]
-    months <- nodeGen[CronField.Month]
-    daysOfWeek <- chooseDaysOfWeek(daysOfMonth)
+    months      <- nodeGen[CronField.Month]
+    daysOfWeek  <- chooseDaysOfWeek(daysOfMonth)
   } yield DateCronExpr(daysOfMonth, months, daysOfWeek)
 
   implicit lazy val arbitraryFullCron: Arbitrary[CronExpr] =

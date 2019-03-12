@@ -75,7 +75,7 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
       step: Int): Option[DateTime] = {
     import cats.syntax.either._
     for {
-      current <- DT.get(dateTime, expr.unit.field).toOption
+      current  <- DT.get(dateTime, expr.unit.field).toOption
       newValue <- expr.step(current, step).map(_._1)
       adjusted <- DT.set(dateTime, expr.unit.field, newValue).toOption
     } yield adjusted

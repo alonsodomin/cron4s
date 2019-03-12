@@ -26,9 +26,8 @@ package object decline {
   implicit val cronExprArgument: Argument[CronExpr] = new Argument[CronExpr] {
     def defaultMetavar: String = "cron-expr"
 
-    def read(str: String): ValidatedNel[String, CronExpr] = {
+    def read(str: String): ValidatedNel[String, CronExpr] =
       Cron(str).leftMap(_.getMessage).toValidatedNel
-    }
   }
 
 }

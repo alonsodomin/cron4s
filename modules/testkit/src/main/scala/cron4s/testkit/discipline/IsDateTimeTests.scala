@@ -43,9 +43,9 @@ trait IsDateTimeTests[DateTime] extends Laws {
     new DefaultRuleSet(
       name = "dateTime",
       parent = None,
-      "gettable" -> forAll(laws.gettable[F] _),
+      "gettable"     -> forAll(laws.gettable[F] _),
       "immutability" -> forAll(laws.immutability[F] _),
-      "settable" -> forAll(laws.settable[F] _)
+      "settable"     -> forAll(laws.settable[F] _)
     )
 
 }

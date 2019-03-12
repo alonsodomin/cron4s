@@ -45,7 +45,7 @@ class BetweenNodeValidatorSpec
       forAll(invalidBetweenGen[F]) { node =>
         val constErrors = {
           val beginErrors = NodeValidator[ConstNode[F]].validate(node.begin)
-          val endErrors = NodeValidator[ConstNode[F]].validate(node.end)
+          val endErrors   = NodeValidator[ConstNode[F]].validate(node.end)
 
           beginErrors ::: endErrors
         }

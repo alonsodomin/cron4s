@@ -126,10 +126,9 @@ private[joda] final class JodaDateTimeInstance extends JodaInstance[DateTime] {
     Try(dateTime.plus(period)).toOption
 
   override protected def getField(dateTime: DateTime,
-                                  field: DateTimeFieldType): Option[Int] = {
+                                  field: DateTimeFieldType): Option[Int] =
     if (dateTime.isSupported(field)) Some(dateTime.get(field))
     else None
-  }
 
   override protected def setField(
       dateTime: DateTime,
@@ -158,10 +157,9 @@ private[joda] abstract class JodaLocalBaseInstance[DT <: BaseLocal]
     dateTime.isSupported(field)
 
   override protected def getField(dateTime: DT,
-                                  field: DateTimeFieldType): Option[Int] = {
+                                  field: DateTimeFieldType): Option[Int] =
     if (dateTime.isSupported(field)) Some(dateTime.get(field))
     else None
-  }
 
 }
 

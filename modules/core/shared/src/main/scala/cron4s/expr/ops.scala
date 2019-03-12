@@ -28,12 +28,12 @@ import shapeless._
 private[cron4s] object ops {
 
   object matches extends Poly1 {
-    implicit def caseEach[F <: CronField] = at[EachNode[F]](_.matches)
-    implicit def caseAny[F <: CronField] = at[AnyNode[F]](_.matches)
-    implicit def caseConst[F <: CronField] = at[ConstNode[F]](_.matches)
+    implicit def caseEach[F <: CronField]    = at[EachNode[F]](_.matches)
+    implicit def caseAny[F <: CronField]     = at[AnyNode[F]](_.matches)
+    implicit def caseConst[F <: CronField]   = at[ConstNode[F]](_.matches)
     implicit def caseBetween[F <: CronField] = at[BetweenNode[F]](_.matches)
     implicit def caseSeveral[F <: CronField] = at[SeveralNode[F]](_.matches)
-    implicit def caseEvery[F <: CronField] = at[EveryNode[F]](_.matches)
+    implicit def caseEvery[F <: CronField]   = at[EveryNode[F]](_.matches)
 
     implicit def caseField[F <: CronField] =
       at[FieldNode[F]](_.raw.fold(matches))
@@ -46,12 +46,12 @@ private[cron4s] object ops {
   }
 
   object range extends Poly1 {
-    implicit def caseEach[F <: CronField] = at[EachNode[F]](_.range)
-    implicit def caseAny[F <: CronField] = at[AnyNode[F]](_.range)
-    implicit def caseConst[F <: CronField] = at[ConstNode[F]](_.range)
+    implicit def caseEach[F <: CronField]    = at[EachNode[F]](_.range)
+    implicit def caseAny[F <: CronField]     = at[AnyNode[F]](_.range)
+    implicit def caseConst[F <: CronField]   = at[ConstNode[F]](_.range)
     implicit def caseBetween[F <: CronField] = at[BetweenNode[F]](_.range)
     implicit def caseSeveral[F <: CronField] = at[SeveralNode[F]](_.range)
-    implicit def caseEvery[F <: CronField] = at[EveryNode[F]](_.range)
+    implicit def caseEvery[F <: CronField]   = at[EveryNode[F]](_.range)
 
     implicit def caseField[F <: CronField] = at[FieldNode[F]](_.raw.fold(range))
     implicit def caseFieldWithAny[F <: CronField] =
@@ -92,12 +92,12 @@ private[cron4s] object ops {
   }
 
   object unit extends Poly1 {
-    implicit def caseEach[F <: CronField] = at[EachNode[F]](_.unit)
-    implicit def caseAny[F <: CronField] = at[AnyNode[F]](_.unit)
-    implicit def caseConst[F <: CronField] = at[ConstNode[F]](_.unit)
+    implicit def caseEach[F <: CronField]    = at[EachNode[F]](_.unit)
+    implicit def caseAny[F <: CronField]     = at[AnyNode[F]](_.unit)
+    implicit def caseConst[F <: CronField]   = at[ConstNode[F]](_.unit)
     implicit def caseBetween[F <: CronField] = at[BetweenNode[F]](_.unit)
     implicit def caseSeveral[F <: CronField] = at[SeveralNode[F]](_.unit)
-    implicit def caseEvery[F <: CronField] = at[EveryNode[F]](_.unit)
+    implicit def caseEvery[F <: CronField]   = at[EveryNode[F]](_.unit)
 
     implicit def caseField[F <: CronField] = at[FieldNode[F]](_.raw.fold(unit))
     implicit def caseFieldWithAny[F <: CronField] =

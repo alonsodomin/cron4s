@@ -29,12 +29,12 @@ import org.scalatest.FlatSpec
   */
 object CronDateTimeTestKit {
 
-  final val OnlyTuesdaysAt12 = Cron.unsafeParse("0 0 12 ? * 1")
+  final val OnlyTuesdaysAt12     = Cron.unsafeParse("0 0 12 ? * 1")
   final val EachMinutesOnSundays = Cron.unsafeParse("0 * * ? * 6")
 
   // https://github.com/alonsodomin/cron4s/issues/59
   final val BetweenDayOfWeek = Cron.unsafeParse("0 0 0 ? * 1-3")
-  final val BetweenMonth = Cron.unsafeParse("0 0 0 * 4-10 ?")
+  final val BetweenMonth     = Cron.unsafeParse("0 0 0 * 4-10 ?")
 
   // https://github.com/alonsodomin/cron4s/issues/56
   final val Every10Minutes = Cron.unsafeParse("* */10 * * * ?")
@@ -92,7 +92,7 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show]
 
     for ((expr, initial, stepSize, expected) <- samples) {
       val Some(returnedDateTime) = expr.step(initial, stepSize)
-      val matchesExpected = test.eqv(returnedDateTime, expected)
+      val matchesExpected        = test.eqv(returnedDateTime, expected)
 
       assert(
         matchesExpected,

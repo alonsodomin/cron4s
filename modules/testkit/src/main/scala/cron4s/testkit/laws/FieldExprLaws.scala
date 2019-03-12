@@ -37,16 +37,14 @@ trait FieldExprLaws[E[_ <: CronField], F <: CronField]
   def implicationCommutative[EE[_ <: CronField]](left: E[F], right: EE[F])(
       implicit
       EE: FieldExpr[EE, F]
-  ): IsEq[Boolean] = {
+  ): IsEq[Boolean] =
     left.implies(right) <-> right.impliedBy(left)
-  }
 
   def implicationEquivalence[EE[_ <: CronField]](left: E[F], right: EE[F])(
       implicit
       EE: FieldExpr[EE, F]
-  ): IsEq[Boolean] = {
+  ): IsEq[Boolean] =
     (left.impliedBy(right) && right.impliedBy(left)) <-> (left.range == right.range)
-  }
 
 }
 

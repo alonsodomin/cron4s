@@ -125,13 +125,12 @@ object EnumerableNode {
         node.raw.fold(ops.matches)
 
       def implies[EE[_ <: CronField]](node: EnumerableNode[F])(ee: EE[F])(
-          implicit EE: FieldExpr[EE, F]): Boolean = {
+          implicit EE: FieldExpr[EE, F]): Boolean =
         node.raw match {
           case Inl(const)        => const.implies(ee)
           case Inr(Inl(between)) => between.implies(ee)
           case _                 => sys.error("Impossible!")
         }
-      }
 
       def range(node: EnumerableNode[F]): IndexedSeq[Int] =
         node.raw.fold(ops.range)

@@ -40,10 +40,10 @@ trait DateTimeCronTests[E, DateTime] extends Laws {
                    dateTimeEq: Eq[DateTime]): RuleSet = new DefaultRuleSet(
     name = "dateTimeCron",
     parent = None,
-    "matchAll" -> forAll(laws.matchAll _),
-    "matchAny" -> forAll(laws.matchAny _),
-    "forwards" -> forAll(laws.forwards _),
-    "backwards" -> forAll(laws.backwards _),
+    "matchAll"        -> forAll(laws.matchAll _),
+    "matchAny"        -> forAll(laws.matchAny _),
+    "forwards"        -> forAll(laws.forwards _),
+    "backwards"       -> forAll(laws.backwards _),
     "supportedFields" -> forAll(laws.supportedFieldsEquality _)
   )
 

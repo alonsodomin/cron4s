@@ -29,7 +29,7 @@ trait InputGenerators {
   // Generators of valid parsable values
   // --------------------------------------------------------------
 
-  private[this] def withLeadingZero(base: Int): Gen[String] = {
+  private[this] def withLeadingZero(base: Int): Gen[String] =
     if (base < 10) {
       arbitrary[Boolean].map { doubleDigit =>
         if (doubleDigit) {
@@ -37,15 +37,14 @@ trait InputGenerators {
         } else base.toString
       }
     } else base.toString
-  }
 
   private[this] def rangedIntGen(min: Int,
                                  max: Int): Gen[(String, (Int, Int))] =
     for {
-      start <- Gen.choose(min, max)
-      end <- Gen.choose(start, max)
+      start    <- Gen.choose(min, max)
+      end      <- Gen.choose(start, max)
       startStr <- withLeadingZero(start)
-      endStr <- withLeadingZero(end)
+      endStr   <- withLeadingZero(end)
     } yield (s"$startStr-$endStr", (start, end))
 
   private[this] def sequencedGen[A](constGen: Gen[String],
@@ -99,7 +98,7 @@ trait InputGenerators {
   val nameMonthsGen: Gen[String] = Gen.oneOf(Months.textValues)
   val namedMonthsRangeGen: Gen[(String, (String, String))] = for {
     start <- Gen.oneOf(Months.textValues)
-    end <- Gen.oneOf(Months.textValues)
+    end   <- Gen.oneOf(Months.textValues)
   } yield (s"$start-$end", (start, end))
   val namedMonthsSeqGen: Gen[(String, List[Either[String, (String, String)]])] =
     sequencedGen(nameMonthsGen, namedMonthsRangeGen)
@@ -107,7 +106,7 @@ trait InputGenerators {
   val numericDaysOfWeekGen: Gen[String] = Gen.choose(0, 6).map(_.toString)
   val numericDaysOfWeekRangeGen: Gen[(String, (Int, Int))] = for {
     start <- Gen.choose(0, 6)
-    end <- Gen.choose(start, 6)
+    end   <- Gen.choose(start, 6)
   } yield (s"$start-$end", (start, end))
   val numericDaysOfWeekSeqGen: Gen[(String, List[Either[String, (Int, Int)]])] =
     sequencedGen(numericDaysOfWeekGen, numericDaysOfWeekRangeGen)
@@ -115,7 +114,7 @@ trait InputGenerators {
   val namedDaysOfWeekGen: Gen[String] = Gen.oneOf(DaysOfWeek.textValues)
   val namedDaysOfWeekRangeGen: Gen[(String, (String, String))] = for {
     start <- Gen.oneOf(DaysOfWeek.textValues)
-    end <- Gen.oneOf(DaysOfWeek.textValues)
+    end   <- Gen.oneOf(DaysOfWeek.textValues)
   } yield (s"$start-$end", (start, end))
   val namedDaysOfWeekSeqGen
     : Gen[(String, List[Either[String, (String, String)]])] =

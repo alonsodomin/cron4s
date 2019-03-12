@@ -25,7 +25,7 @@ package object validation {
 
   def validateCron(expr: CronExpr): Either[InvalidCron, CronExpr] = {
     val dayFieldError = validateDayFields(expr)
-    val fieldErrors = expr.raw.map(ops.validate).toList.flatten
+    val fieldErrors   = expr.raw.map(ops.validate).toList.flatten
 
     val allErrors =
       dayFieldError.fold[List[ValidationError]](fieldErrors)(_ :: fieldErrors)
@@ -38,7 +38,7 @@ package object validation {
 
   private def validateDayFields(expr: CronExpr) = {
     val dayOfMonth = expr.field[CronField.DayOfMonth].toString
-    val dayOfWeek = expr.field[CronField.DayOfWeek].toString
+    val dayOfWeek  = expr.field[CronField.DayOfWeek].toString
 
     if (dayOfMonth == dayOfWeek) {
       Some(InvalidFieldCombination(

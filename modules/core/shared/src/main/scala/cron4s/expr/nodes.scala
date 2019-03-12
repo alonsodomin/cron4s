@@ -274,10 +274,9 @@ object SeveralNode {
   ): Option[SeveralNode[F]] = {
     def splitSeq(
         xs: Seq[EnumerableNode[F]]
-    ): Option[(EnumerableNode[F], EnumerableNode[F], Seq[EnumerableNode[F]])] = {
+    ): Option[(EnumerableNode[F], EnumerableNode[F], Seq[EnumerableNode[F]])] =
       if (xs.length < 2) None
       else Some((xs.head, xs.tail.head, xs.tail.tail))
-    }
 
     splitSeq(xs).map {
       case (first, second, tail) => SeveralNode(first, second, tail: _*)

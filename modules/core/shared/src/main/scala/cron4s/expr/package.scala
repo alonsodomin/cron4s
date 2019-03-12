@@ -36,12 +36,12 @@ package object expr {
   private[expr] type RawDivisibleNode[F <: CronField] =
     EachNode[F] :+: BetweenNode[F] :+: SeveralNode[F] :+: CNil
 
-  type SecondsNode = FieldNode[CronField.Second]
-  type MinutesNode = FieldNode[CronField.Minute]
-  type HoursNode = FieldNode[CronField.Hour]
+  type SecondsNode     = FieldNode[CronField.Second]
+  type MinutesNode     = FieldNode[CronField.Minute]
+  type HoursNode       = FieldNode[CronField.Hour]
   type DaysOfMonthNode = FieldNodeWithAny[CronField.DayOfMonth]
-  type MonthsNode = FieldNode[CronField.Month]
-  type DaysOfWeekNode = FieldNodeWithAny[CronField.DayOfWeek]
+  type MonthsNode      = FieldNode[CronField.Month]
+  type DaysOfWeekNode  = FieldNodeWithAny[CronField.DayOfWeek]
 
   private[cron4s] type RawTimeCronExpr =
     SecondsNode :: MinutesNode :: HoursNode :: HNil

@@ -31,7 +31,7 @@ class JSDateCronRegressionSpec extends FlatSpec with Matchers {
     val from = new Date("2017-02-18T16:39:42.541")
 
     val Right(cron) = Cron("* */10 * * * ?")
-    val Some(next) = cron.next(from)
+    val Some(next)  = cron.next(from)
 
     (next.getTime() - from.getTime()) <= 600000 shouldBe true
   }
@@ -40,7 +40,7 @@ class JSDateCronRegressionSpec extends FlatSpec with Matchers {
     val from = new Date("2017-02-18T16:39:42.541")
 
     val Right(cron) = Cron("* */10 * ? * *")
-    val Some(next) = cron.next(from)
+    val Some(next)  = cron.next(from)
 
     next.getMilliseconds() shouldBe 0
   }

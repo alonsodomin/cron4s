@@ -23,8 +23,8 @@ sealed trait DateTimeUnit
 object DateTimeUnit {
   case object Seconds extends DateTimeUnit
   case object Minutes extends DateTimeUnit
-  case object Hours extends DateTimeUnit
-  case object Days extends DateTimeUnit
-  case object Weeks extends DateTimeUnit
-  case object Months extends DateTimeUnit
+  case object Hours   extends DateTimeUnit
+  case object Days    extends DateTimeUnit
+  case object Weeks   extends DateTimeUnit
+  case object Months  extends DateTimeUnit
 }
