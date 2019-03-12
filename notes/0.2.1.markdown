@@ -1,6 +1,0 @@
-cron4s 0.2.1 is a maintenance release over 0.2.0. The
-list of changes in this release are:
-
- * Documentation has been improved published as a [microsite](https://alonsodomin.github.io/cron4s)
- * `timePart` and `datePart` fields in `CronExpr` expose field based accessors.
- * `repr` accessor in `CronExpr` is now private
