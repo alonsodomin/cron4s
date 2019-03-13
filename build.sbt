@@ -148,7 +148,9 @@ def mimaSettings(module: String, versions: Set[String]): Seq[Setting[_]] = mimaD
       ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.divisible2Field"),
     ),
     "0.5.0" -> Seq(
-      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.expected")
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.expected"),
+      ProblemFilters.exclude[MissingClassProblem]("cron4s.parser$"),
+      ProblemFilters.exclude[MissingClassProblem]("cron4s.parser")
     )
   )
 )
