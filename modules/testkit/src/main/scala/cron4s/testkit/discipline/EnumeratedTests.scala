@@ -32,21 +32,21 @@ import org.typelevel.discipline.Laws
 trait EnumeratedTests[A] extends Laws {
   def laws: EnumeratedLaws[A]
 
-  def enumerated(implicit arbAF: Arbitrary[A],
-                 arbFrom: Arbitrary[Int]): RuleSet = new DefaultRuleSet(
-    name = "enumerated",
-    parent = None,
-    "min"                   -> forAll(laws.min _),
-    "max"                   -> forAll(laws.max _),
-    "forward"               -> forAll(laws.forward _),
-    "backwards"             -> forAll(laws.backwards _),
-    "fromMinToMinForwards"  -> forAll(laws.fromMinToMinForwards _),
-    "fromMaxToMaxForwards"  -> forAll(laws.fromMaxToMaxForwards _),
-    "fromMinToMaxForwards"  -> forAll(laws.fromMinToMaxForwards _),
-    "fromMinToMaxBackwards" -> forAll(laws.fromMinToMaxBackwards _),
-    "fromMaxToMinForwards"  -> forAll(laws.fromMaxToMinForwards _),
-    "fromMaxToMinBackwards" -> forAll(laws.fromMaxToMinBackwards _)
-  )
+  def enumerated(implicit arbAF: Arbitrary[A], arbFrom: Arbitrary[Int]): RuleSet =
+    new DefaultRuleSet(
+      name = "enumerated",
+      parent = None,
+      "min"                   -> forAll(laws.min _),
+      "max"                   -> forAll(laws.max _),
+      "forward"               -> forAll(laws.forward _),
+      "backwards"             -> forAll(laws.backwards _),
+      "fromMinToMinForwards"  -> forAll(laws.fromMinToMinForwards _),
+      "fromMaxToMaxForwards"  -> forAll(laws.fromMaxToMaxForwards _),
+      "fromMinToMaxForwards"  -> forAll(laws.fromMinToMaxForwards _),
+      "fromMinToMaxBackwards" -> forAll(laws.fromMinToMaxBackwards _),
+      "fromMaxToMinForwards"  -> forAll(laws.fromMaxToMinForwards _),
+      "fromMaxToMinBackwards" -> forAll(laws.fromMaxToMinBackwards _)
+    )
 
 }
 

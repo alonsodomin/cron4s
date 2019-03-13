@@ -33,10 +33,12 @@ import org.typelevel.discipline.Laws
   */
 object PredicateTests extends Laws {
 
-  def predicate[F[_]: Foldable, A](implicit
-                                   arbPred: Arbitrary[Predicate[A]],
-                                   arbFold: Arbitrary[F[Predicate[A]]],
-                                   arbA: Arbitrary[A]): RuleSet =
+  def predicate[F[_]: Foldable, A](
+      implicit
+      arbPred: Arbitrary[Predicate[A]],
+      arbFold: Arbitrary[F[Predicate[A]]],
+      arbA: Arbitrary[A]
+  ): RuleSet =
     new DefaultRuleSet(
       name = "Predicate",
       parent = None,

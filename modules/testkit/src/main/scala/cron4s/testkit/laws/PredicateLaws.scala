@@ -31,26 +31,19 @@ object PredicateLaws {
   def negation[A](self: Predicate[A], a: A): IsEq[Boolean] =
     (!self).apply(a) <-> !self.apply(a)
 
-  def conjuction[A](self: Predicate[A],
-                    other: Predicate[A],
-                    value: A): IsEq[Boolean] =
+  def conjuction[A](self: Predicate[A], other: Predicate[A], value: A): IsEq[Boolean] =
     (self && other)(value) <-> (self(value) && other(value))
 
-  def disjunction[A](self: Predicate[A],
-                     other: Predicate[A],
-                     value: A): IsEq[Boolean] =
+  def disjunction[A](self: Predicate[A], other: Predicate[A], value: A): IsEq[Boolean] =
     (self || other)(value) <-> (self(value) || other(value))
 
-  def noMatch[F[_], A](preds: F[Predicate[A]], value: A)(
-      implicit F: Foldable[F]): IsEq[Boolean] =
+  def noMatch[F[_], A](preds: F[Predicate[A]], value: A)(implicit F: Foldable[F]): IsEq[Boolean] =
     noneOf(preds).apply(value) <-> not(allOf(preds))(value)
 
-  def someMatch[F[_], A](preds: F[Predicate[A]], value: A)(
-      implicit F: Foldable[F]): IsEq[Boolean] =
+  def someMatch[F[_], A](preds: F[Predicate[A]], value: A)(implicit F: Foldable[F]): IsEq[Boolean] =
     anyOf(preds).apply(value) <-> preds.exists(_(value))
 
-  def allMatch[F[_], A](preds: F[Predicate[A]], value: A)(
-      implicit F: Foldable[F]): IsEq[Boolean] =
+  def allMatch[F[_], A](preds: F[Predicate[A]], value: A)(implicit F: Foldable[F]): IsEq[Boolean] =
     allOf(preds).apply(value) <-> preds.forall(_(value))
 
 }

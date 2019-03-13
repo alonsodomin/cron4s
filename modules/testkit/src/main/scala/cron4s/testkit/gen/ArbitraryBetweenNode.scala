@@ -25,12 +25,11 @@ import org.scalacheck.Arbitrary
   */
 trait ArbitraryBetweenNode extends NodeGenerators {
 
-  implicit lazy val arbitraryBetweenSecond = Arbitrary(betweenGen[Second])
-  implicit lazy val arbitraryBetweenMinute = Arbitrary(betweenGen[Minute])
-  implicit lazy val arbitraryBetweenHour   = Arbitrary(betweenGen[Hour])
-  implicit lazy val arbitraryBetweenDayOfMonth = Arbitrary(
-    betweenGen[DayOfMonth])
-  implicit lazy val arbitraryBetweenMonth     = Arbitrary(betweenGen[Month])
-  implicit lazy val arbitraryBetweenDayOfWeek = Arbitrary(betweenGen[DayOfWeek])
+  implicit lazy val arbitraryBetweenSecond     = Arbitrary(betweenGen[Second])
+  implicit lazy val arbitraryBetweenMinute     = Arbitrary(betweenGen[Minute])
+  implicit lazy val arbitraryBetweenHour       = Arbitrary(betweenGen[Hour])
+  implicit lazy val arbitraryBetweenDayOfMonth = Arbitrary(betweenGen[DayOfMonth])
+  implicit lazy val arbitraryBetweenMonth      = Arbitrary(betweenGen[Month])
+  implicit lazy val arbitraryBetweenDayOfWeek  = Arbitrary(betweenGen[DayOfWeek])
 
 }

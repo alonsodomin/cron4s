@@ -30,8 +30,7 @@ object Error {
 }
 
 final case class ParseFailed(expected: String, found: String, position: Int)
-    extends Error(
-      s"Expected '$expected' at position $position but found '$found'")
+    extends Error(s"Expected '$expected' at position $position but found '$found'")
 
 sealed trait ValidationError
 object ValidationError {
@@ -44,8 +43,7 @@ object ValidationError {
 final case class InvalidCron(reason: NonEmptyList[ValidationError])
     extends Error(reason.toList.map(_.show).mkString(", "))
 
-final case class InvalidField(field: CronField, msg: String)
-    extends ValidationError
+final case class InvalidField(field: CronField, msg: String) extends ValidationError
 object InvalidField {
   implicit val invalidFieldShow: Show[InvalidField] = Show.show { err =>
     s"${err.field}: ${err.msg}"

@@ -29,8 +29,7 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
     *
     * @return true if there is a field in this date-time that matches this expression
     */
-  def matchesIn[DateTime](expr: E[F],
-                          DT: IsDateTime[DateTime]): Predicate[DateTime] =
+  def matchesIn[DateTime](expr: E[F], DT: IsDateTime[DateTime]): Predicate[DateTime] =
     Predicate { dt =>
       import cats.syntax.either._
       val current = DT.get(dt, expr.unit.field)
@@ -45,8 +44,7 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
     * @return the next date-time
     */
   @inline
-  def nextIn[DateTime](expr: E[F], DT: IsDateTime[DateTime])(
-      dateTime: DateTime): Option[DateTime] =
+  def nextIn[DateTime](expr: E[F], DT: IsDateTime[DateTime])(dateTime: DateTime): Option[DateTime] =
     stepIn(expr, DT)(dateTime, 1)
 
   /**
@@ -57,8 +55,7 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
     * @return the next date-time
     */
   @inline
-  def prevIn[DateTime](expr: E[F], DT: IsDateTime[DateTime])(
-      dateTime: DateTime): Option[DateTime] =
+  def prevIn[DateTime](expr: E[F], DT: IsDateTime[DateTime])(dateTime: DateTime): Option[DateTime] =
     stepIn(expr, DT)(dateTime, -1)
 
   /**
@@ -70,9 +67,10 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
     * @param step step size
     * @return a date-time that is an amount of given steps from the given one
     */
-  def stepIn[DateTime](expr: E[F], DT: IsDateTime[DateTime])(
-      dateTime: DateTime,
-      step: Int): Option[DateTime] = {
+  def stepIn[DateTime](
+      expr: E[F],
+      DT: IsDateTime[DateTime]
+  )(dateTime: DateTime, step: Int): Option[DateTime] = {
     import cats.syntax.either._
     for {
       current  <- DT.get(dateTime, expr.unit.field).toOption
@@ -86,10 +84,12 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
 object DateTimeNode {
 
   @inline def apply[E[_ <: CronField], F <: CronField](
-      implicit ev: DateTimeNode[E, F]): DateTimeNode[E, F] = ev
+      implicit ev: DateTimeNode[E, F]
+  ): DateTimeNode[E, F] = ev
 
   implicit def derive[E[_ <: CronField], F <: CronField](
-      implicit E0: FieldExpr[E, F]): DateTimeNode[E, F] =
+      implicit E0: FieldExpr[E, F]
+  ): DateTimeNode[E, F] =
     new DateTimeNode[E, F] {
       implicit val E = E0
     }

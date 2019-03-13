@@ -33,14 +33,16 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
 
   private val identityReset: ResetPrevFn = Some(_)
 
-  private[this] def stepNode[N[_ <: CronField], F <: CronField](
-      stepState: StepST,
-      node: N[F])(implicit expr: FieldExpr[N, F]): StepST = {
+  private[this] def stepNode[N[_ <: CronField], F <: CronField](stepState: StepST, node: N[F])(
+      implicit expr: FieldExpr[N, F]
+  ): StepST = {
 
-    def attemptSet(dt: DateTime,
-                   step: Step,
-                   newValue: Int,
-                   carryOver: Int): Option[(DateTime, Int)] =
+    def attemptSet(
+        dt: DateTime,
+        step: Step,
+        newValue: Int,
+        carryOver: Int
+    ): Option[(DateTime, Int)] =
       DT.set(dt, node.unit.field, newValue)
         .map(_ -> carryOver)
         .recover {
@@ -62,8 +64,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
             case Direction.Backwards => node.max
           }
 
-          resetPrevious.andThen(
-            _.flatMap(DT.set(_, node.unit.field, resetValue).toOption))
+          resetPrevious.andThen(_.flatMap(DT.set(_, node.unit.field, resetValue).toOption))
         }
 
         DT.get(from, node.unit.field).toOption.flatMap { currentValue =>
@@ -90,8 +91,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       newDateTime                       <- DT.plus(dt, carryOver * 12 * dir.sign, DateTimeUnit.Months)
     } yield (identityReset, newDateTime, s.copy(amount = 0))
 
-  private[this] def stepOverDayOfWeek(prev: StepST,
-                                      expr: DaysOfWeekNode): StepST =
+  private[this] def stepOverDayOfWeek(prev: StepST, expr: DaysOfWeekNode): StepST =
     for {
       (_, dt, s @ Step(carryOver, dir)) <- stepNode(prev, expr)
       newDateTime                       <- DT.plus(dt, carryOver * dir.sign, DateTimeUnit.Weeks)
@@ -123,11 +123,9 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       } yield result
     }
     implicit def caseDateExpr =
-      at[StepST, DateCronExpr]((stepSt, expr) =>
-        expr.raw.foldLeft(stepSt)(stepPerNode))
+      at[StepST, DateCronExpr]((stepSt, expr) => expr.raw.foldLeft(stepSt)(stepPerNode))
     implicit def caseTimeExpr =
-      at[StepST, TimeCronExpr]((stepSt, expr) =>
-        expr.raw.foldLeft(stepSt)(stepPerNode))
+      at[StepST, TimeCronExpr]((stepSt, expr) => expr.raw.foldLeft(stepSt)(stepPerNode))
   }
 
   def run(cron: AnyCron, from: DateTime, step: Step): Option[DateTime] = {

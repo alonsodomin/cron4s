@@ -36,8 +36,7 @@ object CronSpec {
   final val InvalidExprs = List(AllEachExpr, AnyDaysExpr)
 
   final val ValidExpr = CronExpr(
-    SeveralNode(BetweenNode[Second](ConstNode(17), ConstNode(30)),
-                ConstNode[Second](5)),
+    SeveralNode(BetweenNode[Second](ConstNode(17), ConstNode(30)), ConstNode[Second](5)),
     EachNode[Minute],
     ConstNode[Hour](12),
     EachNode[DayOfMonth],
@@ -51,8 +50,8 @@ class CronSpec extends FlatSpec with Matchers {
   import CronSpec._
 
   "Cron" should "not parse an expression with all *" in {
-    val expectedError = InvalidFieldCombination(
-      "Fields DayOfMonth and DayOfWeek can't both have the expression: *")
+    val expectedError =
+      InvalidFieldCombination("Fields DayOfMonth and DayOfWeek can't both have the expression: *")
 
     val parsed = Cron(AllEachExpr)
     parsed shouldBe Left(InvalidCron(NonEmptyList.of(expectedError)))
@@ -66,8 +65,8 @@ class CronSpec extends FlatSpec with Matchers {
   }
 
   it should "not parse an expression with ? in both DayOfMonth and DayOfWeek" in {
-    val expectedError = InvalidFieldCombination(
-      "Fields DayOfMonth and DayOfWeek can't both have the expression: ?")
+    val expectedError =
+      InvalidFieldCombination("Fields DayOfMonth and DayOfWeek can't both have the expression: ?")
 
     val parsed = Cron(AnyDaysExpr)
     parsed shouldBe Left(InvalidCron(NonEmptyList.of(expectedError)))

@@ -43,8 +43,7 @@ sealed trait Node[F <: CronField] {
 
 }
 
-final class EachNode[F <: CronField] private (val unit: CronUnit[F])
-    extends Node[F] {
+final class EachNode[F <: CronField] private (val unit: CronUnit[F]) extends Node[F] {
 
   override def equals(other: Any): Boolean = other match {
     case _: EachNode[F] => true
@@ -74,7 +73,8 @@ object EachNode {
       def unit(node: EachNode[F]): CronUnit[F] = node.unit
 
       def implies[EE[_ <: CronField]](node: EachNode[F])(ee: EE[F])(
-          implicit EE: FieldExpr[EE, F]): Boolean = true
+          implicit EE: FieldExpr[EE, F]
+      ): Boolean = true
 
       def matches(node: EachNode[F]): Predicate[Int] = Predicate { x =>
         x >= min(node) && x <= max(node)
@@ -85,8 +85,7 @@ object EachNode {
 
 }
 
-final class AnyNode[F <: CronField] private (val unit: CronUnit[F])
-    extends Node[F] {
+final class AnyNode[F <: CronField] private (val unit: CronUnit[F]) extends Node[F] {
 
   override def equals(other: Any): Boolean = other match {
     case _: AnyNode[F] => true
@@ -116,7 +115,8 @@ object AnyNode {
       def unit(node: AnyNode[F]): CronUnit[F] = node.unit
 
       def implies[EE[_ <: CronField]](node: AnyNode[F])(ee: EE[F])(
-          implicit EE: FieldExpr[EE, F]): Boolean = true
+          implicit EE: FieldExpr[EE, F]
+      ): Boolean = true
 
       def matches(node: AnyNode[F]): Predicate[Int] = Predicate { x =>
         x >= min(node) && x <= max(node)
@@ -127,10 +127,11 @@ object AnyNode {
 
 }
 
-final class ConstNode[F <: CronField] private (val value: Int,
-                                               val textValue: Option[String],
-                                               val unit: CronUnit[F])
-    extends Node[F] {
+final class ConstNode[F <: CronField] private (
+    val value: Int,
+    val textValue: Option[String],
+    val unit: CronUnit[F]
+) extends Node[F] {
 
   override def equals(other: Any): Boolean = other match {
     case node: ConstNode[F] => this.value === node.value
@@ -166,8 +167,9 @@ object ConstNode {
 
       def matches(node: ConstNode[F]): Predicate[Int] = equalTo(node.value)
 
-      def implies[EE[_ <: CronField]](node: ConstNode[F])(ee: EE[F])(
-          implicit EE: FieldExpr[EE, F]): Boolean = {
+      def implies[EE[_ <: CronField]](
+          node: ConstNode[F]
+      )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean = {
         val range = ee.range
         (range.size == 1) && range.contains(node.value)
       }
@@ -177,10 +179,11 @@ object ConstNode {
 
 }
 
-final class BetweenNode[F <: CronField] private (val begin: ConstNode[F],
-                                                 val end: ConstNode[F],
-                                                 val unit: CronUnit[F])
-    extends Node[F] {
+final class BetweenNode[F <: CronField] private (
+    val begin: ConstNode[F],
+    val end: ConstNode[F],
+    val unit: CronUnit[F]
+) extends Node[F] {
 
   override def equals(other: Any): Boolean = other match {
     case node: BetweenNode[F] =>
@@ -205,7 +208,8 @@ final class BetweenNode[F <: CronField] private (val begin: ConstNode[F],
 object BetweenNode {
 
   @inline def apply[F <: CronField](begin: ConstNode[F], end: ConstNode[F])(
-      implicit unit: CronUnit[F]): BetweenNode[F] =
+      implicit unit: CronUnit[F]
+  ): BetweenNode[F] =
     new BetweenNode(begin, end, unit)
 
   implicit def betweenNodeEq[F <: CronField]: Eq[BetweenNode[F]] =
@@ -215,7 +219,8 @@ object BetweenNode {
     Show.fromToString[BetweenNode[F]]
 
   implicit def betweenNodeInstance[F <: CronField](
-      implicit elemExpr: FieldExpr[ConstNode, F]): FieldExpr[BetweenNode, F] =
+      implicit elemExpr: FieldExpr[ConstNode, F]
+  ): FieldExpr[BetweenNode, F] =
     new FieldExpr[BetweenNode, F] {
 
       def unit(node: BetweenNode[F]): CronUnit[F] = node.unit
@@ -226,8 +231,9 @@ object BetweenNode {
         else false
       }
 
-      def implies[EE[_ <: CronField]](node: BetweenNode[F])(ee: EE[F])(
-          implicit EE: FieldExpr[EE, F]): Boolean =
+      def implies[EE[_ <: CronField]](
+          node: BetweenNode[F]
+      )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
         (node.min <= ee.min) && (node.max >= ee.max)
 
       def range(node: BetweenNode[F]): IndexedSeq[Int] = node.range
@@ -239,8 +245,8 @@ object BetweenNode {
 final class SeveralNode[F <: CronField] private (
     val head: EnumerableNode[F],
     val tail: NonEmptyList[EnumerableNode[F]],
-    val unit: CronUnit[F])
-    extends Node[F] {
+    val unit: CronUnit[F]
+) extends Node[F] {
 
   override def equals(other: Any): Boolean = other match {
     case node: SeveralNode[F] => this.values === node.values
@@ -290,16 +296,17 @@ object SeveralNode {
     Show.fromToString[SeveralNode[F]]
 
   implicit def severalNodeInstance[F <: CronField](
-      implicit elemExpr: FieldExpr[EnumerableNode, F])
-    : FieldExpr[SeveralNode, F] =
+      implicit elemExpr: FieldExpr[EnumerableNode, F]
+  ): FieldExpr[SeveralNode, F] =
     new FieldExpr[SeveralNode, F] {
       def unit(node: SeveralNode[F]): CronUnit[F] = node.unit
 
       def matches(node: SeveralNode[F]): Predicate[Int] =
         anyOf(node.values.map(_.matches))
 
-      def implies[EE[_ <: CronField]](node: SeveralNode[F])(ee: EE[F])(
-          implicit EE: FieldExpr[EE, F]): Boolean =
+      def implies[EE[_ <: CronField]](
+          node: SeveralNode[F]
+      )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
         range(node).containsSlice(ee.range)
 
       def range(node: SeveralNode[F]): IndexedSeq[Int] = node.range
@@ -308,10 +315,11 @@ object SeveralNode {
 
 }
 
-final class EveryNode[F <: CronField] private (val base: DivisibleNode[F],
-                                               val freq: Int,
-                                               val unit: CronUnit[F])
-    extends Node[F] {
+final class EveryNode[F <: CronField] private (
+    val base: DivisibleNode[F],
+    val freq: Int,
+    val unit: CronUnit[F]
+) extends Node[F] {
 
   override def equals(other: Any): Boolean = other match {
     case node: EveryNode[F] =>
@@ -342,7 +350,8 @@ final class EveryNode[F <: CronField] private (val base: DivisibleNode[F],
 object EveryNode {
 
   @inline def apply[F <: CronField](base: DivisibleNode[F], freq: Int)(
-      implicit unit: CronUnit[F]): EveryNode[F] =
+      implicit unit: CronUnit[F]
+  ): EveryNode[F] =
     new EveryNode(base, freq, unit)
 
   implicit def everyNodeEq[F <: CronField]: Eq[EveryNode[F]] =
@@ -359,8 +368,9 @@ object EveryNode {
       def matches(node: EveryNode[F]): Predicate[Int] =
         anyOf(range(node).map(equalTo(_)).toList)
 
-      def implies[EE[_ <: CronField]](node: EveryNode[F])(ee: EE[F])(
-          implicit EE: FieldExpr[EE, F]): Boolean =
+      def implies[EE[_ <: CronField]](
+          node: EveryNode[F]
+      )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
         range(node).containsSlice(ee.range)
 
       def range(node: EveryNode[F]): IndexedSeq[Int] = node.range

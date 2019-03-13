@@ -29,8 +29,7 @@ import org.scalacheck.Prop._
 /**
   * Created by alonsodomin on 28/08/2016.
   */
-trait FieldExprTests[E[_ <: CronField], F <: CronField]
-    extends EnumeratedTests[E[F]] {
+trait FieldExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[E[F]] {
   def laws: FieldExprLaws[E, F]
 
   def expr[EE[_ <: CronField]](
@@ -50,7 +49,6 @@ trait FieldExprTests[E[_ <: CronField], F <: CronField]
 }
 
 object FieldExprTests {
-  def apply[E[_ <: CronField], F <: CronField](
-      implicit ev: FieldExpr[E, F]): FieldExprTests[E, F] =
+  def apply[E[_ <: CronField], F <: CronField](implicit ev: FieldExpr[E, F]): FieldExprTests[E, F] =
     new FieldExprTests[E, F] { val laws = FieldExprLaws[E, F] }
 }

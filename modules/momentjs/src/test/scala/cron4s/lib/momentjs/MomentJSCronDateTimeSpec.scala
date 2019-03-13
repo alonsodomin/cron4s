@@ -23,6 +23,4 @@ import moment.Date
 /**
   * Created by alonsodomin on 11/04/2017.
   */
-class MomentJSCronDateTimeSpec
-    extends CronDateTimeTestKit[Date]
-    with MomentJSTestBase
+class MomentJSCronDateTimeSpec extends CronDateTimeTestKit[Date] with MomentJSTestBase
