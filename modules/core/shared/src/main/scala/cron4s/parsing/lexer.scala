@@ -20,87 +20,96 @@ package parsing
 import scala.util.parsing.input._
 import scala.util.parsing.combinator._
 
-sealed trait Token extends Positional
-object Token {
-  case class Sexagesimal(value: Int) extends Token
-  case class Decimal(value: Int)     extends Token
-  case class Literal(value: String)  extends Token
-  case class Hyphen()                extends Token
-  case class Slash()                 extends Token
-  case class Comma()                 extends Token
-  case class Star()                  extends Token
-  case class Question()              extends Token
-  case class Separator()             extends Token
+sealed trait CronToken extends Positional
+object CronToken {
+  case class Number(value: Int) extends CronToken {
+    override def toString = value.toString
+  }
+  case class Text(value: String) extends CronToken {
+    override def toString = value.toString
+  }
+  case object Hyphen extends CronToken {
+    override def toString = "-"
+  }
+  case object Slash extends CronToken {
+    override def toString = "/"
+  }
+  case object Comma extends CronToken {
+    override def toString = ","
+  }
+  case object Asterisk extends CronToken {
+    override def toString = "*"
+  }
+  case object QuestionMark extends CronToken {
+    override def toString = "?"
+  }
+  case object Blank extends CronToken {
+    override def toString = " "
+  }
 }
 
-object Lexer extends RegexParsers {
-  import Token._
+object CronLexer extends RegexParsers with BaseParser {
+  import CronToken._
 
   override def skipWhitespace = false
   override val whiteSpace     = "[ \t\r\f]+".r
 
-  private val sexagesimal = positioned {
-    """[1-5][0-9]|0[0-9]|[0-9]""".r ^^ { x =>
-      Sexagesimal(x.toInt)
-    }
-  }
-
-  private val decimal = positioned {
+  private val number = positioned {
     """\d+""".r ^^ { x =>
-      Decimal(x.toInt)
+      Number(x.toInt)
     }
   }
 
-  private val literal = positioned {
-    """[a-zA-Z]+""".r ^^ { Literal(_) }
+  private val text = positioned {
+    """[a-zA-Z]+""".r ^^ { Text(_) }
   }
 
-  private val star = positioned {
+  private val asterisk = positioned {
     """\*""".r ^^ { _ =>
-      Star()
+      Asterisk
     }
   }
 
-  private val question = positioned {
+  private val questionMark = positioned {
     """\?""".r ^^ { _ =>
-      Question()
+      QuestionMark
     }
   }
 
   private val hyphen = positioned {
     """\-""".r ^^ { _ =>
-      Hyphen()
+      Hyphen
     }
   }
 
   private val slash = positioned {
     """\/""".r ^^ { _ =>
-      Slash()
+      Slash
     }
   }
 
   private val comma = positioned {
     ",".r ^^ { _ =>
-      Comma()
+      Comma
     }
   }
 
-  private val separator = positioned {
-    whiteSpace.map(_ => Separator())
+  private val blank = positioned {
+    whiteSpace.map(_ => Blank)
   }
 
-  private lazy val tokens: Parser[List[Token]] = {
+  private lazy val tokens: Parser[List[CronToken]] = {
     phrase(
       rep1(
-        sexagesimal | decimal | literal | hyphen | slash | comma | star | question | separator
+        number | text | hyphen | slash | comma | asterisk | questionMark | blank
       )
     )
   }
 
-  def apply(expr: String): Either[LexerError, List[Token]] =
+  def tokenize(expr: String): Either[ParseFailed, List[CronToken]] =
     parse(tokens, expr) match {
-      case NoSuccess(msg, next) => Left(LexerError(msg, next.pos.column))
-      case Success(result, _)   => Right(result)
+      case err: NoSuccess     => Left(handleError(err))
+      case Success(result, _) => Right(result)
     }
 
 }

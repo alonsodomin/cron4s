@@ -22,31 +22,31 @@ import cron4s.expr._
 import scala.util.parsing.input._
 import scala.util.parsing.combinator._
 
-class TokenReader(tokens: List[Token]) extends Reader[Token] {
-  override def first: Token        = tokens.head
-  override def atEnd: Boolean      = tokens.isEmpty
-  override def pos: Position       = NoPosition
-  override def rest: Reader[Token] = new TokenReader(tokens.tail)
+class CronTokenReader(tokens: List[CronToken]) extends Reader[CronToken] {
+  override def first: CronToken        = tokens.head
+  override def atEnd: Boolean          = tokens.isEmpty
+  override def pos: Position           = tokens.headOption.map(_.pos).getOrElse(NoPosition)
+  override def rest: Reader[CronToken] = new CronTokenReader(tokens.tail)
 }
 
-object Parser extends Parsers {
+object CronParser extends Parsers with BaseParser {
   import CronField._
   import CronUnit._
-  import Token._
+  import CronToken._
 
-  override type Elem = Token
+  override type Elem = CronToken
 
   private val sexagesimal: Parser[Int] =
-    accept("sexagesimal", { case Sexagesimal(s) => s })
+    accept("sexagesimal", { case Number(s) if s >= 0 && s < 60 => s })
 
   private val decimal: Parser[Int] =
-    accept("decimal", { case Decimal(d) => d })
+    accept("decimal", { case Number(d) if d >= 0 => d })
 
   private val literal: Parser[String] =
-    accept("literal", { case Literal(l) => l })
+    accept("literal", { case Text(l) => l })
 
-  private val separator: Parser[Char] =
-    accept("separator", { case Separator() => ' ' })
+  private val blank: Parser[Char] =
+    accept("blank", { case Blank => ' ' })
 
   //----------------------------------------
   // Individual Expression Atoms
@@ -65,12 +65,12 @@ object Parser extends Parsers {
   // Hours
 
   val hours: Parser[ConstNode[Hour]] =
-    decimal.filter(_ < 24).map(ConstNode[Hour](_))
+    decimal.filter(x => (x >= 0) && (x < 24)).map(ConstNode[Hour](_))
 
   // Days Of Month
 
   val daysOfMonth: Parser[ConstNode[DayOfMonth]] =
-    decimal.filter(_ <= 31).map(ConstNode[DayOfMonth](_))
+    decimal.filter(x => (x >= 1) && (x <= 31)).map(ConstNode[DayOfMonth](_))
 
   // Months
 
@@ -105,21 +105,21 @@ object Parser extends Parsers {
   //----------------------------------------
 
   def each[F <: CronField](implicit unit: CronUnit[F]): Parser[EachNode[F]] =
-    accept("each", { case Star() => EachNode[F] })
+    accept("*", { case Asterisk => EachNode[F] })
 
   def any[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyNode[F]] =
-    accept("any", { case Question() => AnyNode[F] })
+    accept("?", { case QuestionMark => AnyNode[F] })
 
   def between[F <: CronField](base: Parser[ConstNode[F]])(
       implicit unit: CronUnit[F]
   ): Parser[BetweenNode[F]] =
-    ((base <~ Hyphen()) ~ base) ^^ { case min ~ max => BetweenNode[F](min, max) }
+    ((base <~ Hyphen) ~ base) ^^ { case min ~ max => BetweenNode[F](min, max) }
 
   def several[F <: CronField](base: Parser[ConstNode[F]])(
       implicit unit: CronUnit[F]
   ): Parser[SeveralNode[F]] = {
     def compose(b: Parser[EnumerableNode[F]]) =
-      repsep(b, Comma())
+      repsep(b, Comma)
         .filter(_.length > 1)
         .map(values => SeveralNode.fromSeq[F](values).get)
 
@@ -130,7 +130,7 @@ object Parser extends Parsers {
       implicit unit: CronUnit[F]
   ): Parser[EveryNode[F]] = {
     def compose(b: Parser[DivisibleNode[F]]) =
-      ((b <~ Slash()) ~ decimal) ^^ {
+      ((b <~ Slash) ~ decimal.filter(_ > 0)) ^^ {
         case exp ~ freq => EveryNode[F](exp, freq)
       }
 
@@ -165,22 +165,22 @@ object Parser extends Parsers {
       any[F].map(any2FieldWithAny)
 
   val cron: Parser[CronExpr] = {
-    (field(seconds) <~ separator) ~
-      (field(minutes) <~ separator) ~
-      (field(hours) <~ separator) ~
-      (fieldWithAny(daysOfMonth) <~ separator) ~
-      (field(months) <~ separator) ~
+    (field(seconds) <~ blank) ~
+      (field(minutes) <~ blank) ~
+      (field(hours) <~ blank) ~
+      (fieldWithAny(daysOfMonth) <~ blank) ~
+      (field(months) <~ blank) ~
       fieldWithAny(daysOfWeek) ^^ {
       case sec ~ min ~ hour ~ day ~ month ~ weekDay =>
         CronExpr(sec, min, hour, day, month, weekDay)
     }
   }
 
-  def apply(tokens: List[Token]): Either[LexerError, CronExpr] = {
-    val reader = new TokenReader(tokens)
+  def read(tokens: List[CronToken]): Either[_root_.cron4s.Error, CronExpr] = {
+    val reader = new CronTokenReader(tokens)
     cron(reader) match {
-      case NoSuccess(msg, _) => Left(LexerError(msg, -1))
-      case Success(expr, _)  => Right(expr)
+      case err: NoSuccess   => Left(handleError(err))
+      case Success(expr, _) => Right(expr)
     }
   }
 

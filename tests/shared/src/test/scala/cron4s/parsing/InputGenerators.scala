@@ -15,6 +15,7 @@
  */
 
 package cron4s
+package parsing
 
 import org.scalacheck.{Arbitrary, Gen}
 

@@ -29,9 +29,8 @@ object Error {
   implicit val errorShow: Show[Error] = Show.show(_.getMessage)
 }
 
-final case class LexerError(msg: String, position: Int) extends Error(s"$position: $msg")
-final case class ParseFailed(expected: String, found: String, position: Int)
-    extends Error(s"Expected '$expected' at position $position but found '$found'")
+final case class ParseFailed(msg: String, found: String, position: Int)
+    extends Error(s"$msg at position $position but found '$found'")
 
 sealed trait ValidationError
 object ValidationError {
