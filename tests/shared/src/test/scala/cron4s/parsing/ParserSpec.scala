@@ -17,6 +17,8 @@
 package cron4s
 package parsing
 
+import cats.syntax.either._
+
 import cron4s.expr._
 import cron4s.testkit.Cron4sPropSpec
 import cron4s.testkit.gen.{ArbitraryEachNode, NodeGenerators}

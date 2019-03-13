@@ -16,6 +16,8 @@
 
 package cron4s
 
+import cats.syntax.either._
+
 import cron4s.parsing._
 
 import scala.scalajs.js.annotation.JSExportTopLevel
@@ -37,6 +39,7 @@ object Cron {
     * @return an Either representing the failure or the actual parsed cron AST
     * @example val cron = Cron("10-35 2,4,6 * ? * *")
     */
+  @inline
   def apply(e: String): Either[Error, CronExpr] = parse(e)
 
   /**
@@ -46,6 +49,7 @@ object Cron {
     * @return an Either representing the failure or the actual parsed cron AST
     * @example val cron = Cron.parse("10-35 2,4,6 * ? * *")
     */
+  @inline
   def parse(e: String): Either[Error, CronExpr] =
     parse0(e).right.flatMap(validation.validateCron)
 

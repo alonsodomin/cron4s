@@ -135,16 +135,21 @@ lazy val coverageSettings = Seq(
 
 def mimaSettings(module: String, versions: Set[String]): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   mimaPreviousArtifacts := versions.map(organization.value %% s"cron4s-$module" % _),
-  mimaBackwardIssueFilters += "0.4.5" -> Seq(
-    ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.Error.this"),
-    ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package$"),
-    ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package"),
-    ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.apply"),
-    ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.this"),
-    ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.FieldNodeWithAny.fieldNodeInstance"),
-    ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.field2FieldWithAny"),
-    ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.enumerable2Field"),
-    ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.divisible2Field"),
+  mimaBackwardIssueFilters ++= Map(
+    "0.4.5" -> Seq(
+      ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.Error.this"),
+      ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package$"),
+      ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package"),
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.apply"),
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.this"),
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.FieldNodeWithAny.fieldNodeInstance"),
+      ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.field2FieldWithAny"),
+      ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.enumerable2Field"),
+      ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.divisible2Field"),
+    ),
+    "0.5.0" -> Seq(
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.expected")
+    )
   )
 )
 
