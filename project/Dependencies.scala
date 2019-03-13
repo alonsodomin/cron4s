@@ -11,7 +11,6 @@ object Dependencies {
   object version {
     val cats        = "1.6.0"
     val shapeless   = "2.3.3"
-    val fastparse   = "1.0.0"
     val scalacheck  = "1.14.0"
     val scalatest   = "3.0.5"
     val discipline  = "0.10.0"
@@ -37,7 +36,6 @@ object Dependencies {
     libraryDependencies ++= compilerPlugins ++ Seq(
       "com.chuusai"    %%% "shapeless"  % version.shapeless,
       "org.typelevel"  %%% "cats-core"  % version.cats,
-      "com.lihaoyi"    %%% "fastparse"  % version.fastparse,
       "com.propensive" %%% "contextual" % version.contextual,
 
       "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parser,
