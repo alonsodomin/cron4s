@@ -38,12 +38,7 @@ class CronExprSpec extends FlatSpec with Matchers {
   val timePart = TimeCronExpr(secondExpr, minuteExpr, hourExpr)
   val datePart = DateCronExpr(dayOfMonthExpr, monthExpr, dayOfWeekExpr)
 
-  val expr = CronExpr(secondExpr,
-                      minuteExpr,
-                      hourExpr,
-                      dayOfMonthExpr,
-                      monthExpr,
-                      dayOfWeekExpr)
+  val expr = CronExpr(secondExpr, minuteExpr, hourExpr, dayOfMonthExpr, monthExpr, dayOfWeekExpr)
 
   "field" should "return the expression for the correct cron field" in {
     expr.field[Second] shouldBe expr.seconds

@@ -28,8 +28,7 @@ import scala.util.{Success, Try}
 /**
   * Created by alonsodomin on 30/01/2017.
   */
-private[javatime] final class JavaTemporalInstance[DT <: Temporal]
-    extends IsDateTime[DT] {
+private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDateTime[DT] {
   import CronField._
   import DateTimeUnit._
 
@@ -43,8 +42,7 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal]
       case DayOfWeek  => ChronoField.DAY_OF_WEEK
     }
 
-  private[this] def asTemporalUnit[F <: CronField](
-      unit: DateTimeUnit): TemporalUnit = unit match {
+  private[this] def asTemporalUnit[F <: CronField](unit: DateTimeUnit): TemporalUnit = unit match {
     case Seconds => ChronoUnit.SECONDS
     case Minutes => ChronoUnit.MINUTES
     case Hours   => ChronoUnit.HOURS
@@ -59,8 +57,7 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal]
   def supportedFields(dateTime: DT): List[CronField] =
     CronField.All.filter(f => dateTime.isSupported(asTemporalField(f)))
 
-  override def get[F <: CronField](dateTime: DT,
-                                   field: F): Either[DateTimeError, Int] = {
+  override def get[F <: CronField](dateTime: DT, field: F): Either[DateTimeError, Int] = {
     val temporalField = asTemporalField(field)
 
     val offset = if (field == DayOfWeek) -DayOfWeekOffset else 0
@@ -68,9 +65,11 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal]
     else (dateTime.get(temporalField) + offset).asRight
   }
 
-  override def set[F <: CronField](dateTime: DT,
-                                   field: F,
-                                   value: Int): Either[DateTimeError, DT] = {
+  override def set[F <: CronField](
+      dateTime: DT,
+      field: F,
+      value: Int
+  ): Either[DateTimeError, DT] = {
     val temporalField = asTemporalField(field)
 
     def adjust(realVal: Int)(dt: DT): Try[DT] =

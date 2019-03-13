@@ -48,17 +48,15 @@ private[cron4s] object parser {
   // Hours
 
   val hours: Parser[ConstNode[Hour]] =
-    P((("2" ~ CharIn('0' to '3')) | ("0" | "1") ~ digit | digit).!).map {
-      value =>
-        ConstNode[Hour](value.toInt)
+    P((("2" ~ CharIn('0' to '3')) | ("0" | "1") ~ digit | digit).!).map { value =>
+      ConstNode[Hour](value.toInt)
     }
 
   // Day Of Month
 
   val daysOfMonth: Parser[ConstNode[DayOfMonth]] =
-    P(((("0" | "1" | "2") ~ digit) | ("3" ~ ("0" | "1")) | digit).!).map {
-      value =>
-        ConstNode[DayOfMonth](value.toInt)
+    P(((("0" | "1" | "2") ~ digit) | ("3" ~ ("0" | "1")) | digit).!).map { value =>
+      ConstNode[DayOfMonth](value.toInt)
     }
 
   // Month
@@ -69,10 +67,9 @@ private[cron4s] object parser {
         ConstNode[Month](value.toInt)
       }
       .opaque("numeric month")
-  private[this] val textualMonth = P(StringIn(Months.textValues: _*).!).map {
-    value =>
-      val index = Months.textValues.indexOf(value)
-      ConstNode[Month](index + 1, Some(value))
+  private[this] val textualMonth = P(StringIn(Months.textValues: _*).!).map { value =>
+    val index = Months.textValues.indexOf(value)
+    ConstNode[Month](index + 1, Some(value))
   }
 
   val months: Parser[ConstNode[Month]] = textualMonth | numericMonth
@@ -86,8 +83,7 @@ private[cron4s] object parser {
       val index = DaysOfWeek.textValues.indexOf(value)
       ConstNode[DayOfWeek](index, Some(value))
     }
-  val daysOfWeek
-    : Parser[ConstNode[DayOfWeek]] = numericDayOfWeek | textualDayOfWeek
+  val daysOfWeek: Parser[ConstNode[DayOfWeek]] = numericDayOfWeek | textualDayOfWeek
 
   //----------------------------------------
   // Field-Based Expression Atoms
@@ -99,8 +95,7 @@ private[cron4s] object parser {
   def any[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyNode[F]] =
     P("?" ~ &(" " | End)).map(_ => AnyNode[F])
 
-  def between[F <: CronField](p: Parser[ConstNode[F]],
-                              lookAhead: Boolean = true)(
+  def between[F <: CronField](p: Parser[ConstNode[F]], lookAhead: Boolean = true)(
       implicit unit: CronUnit[F]
   ): Parser[BetweenNode[F]] = {
     val range = p ~ "-" ~ p
@@ -119,9 +114,7 @@ private[cron4s] object parser {
         SeveralNode.fromSeq(values).get
       }
 
-    compose(
-      between(p, lookAhead = false).map(between2Enumerable) | p.map(
-        const2Enumerable))
+    compose(between(p, lookAhead = false).map(between2Enumerable) | p.map(const2Enumerable))
   }
 
   def every[F <: CronField](p: Parser[ConstNode[F]])(
@@ -142,15 +135,16 @@ private[cron4s] object parser {
   // AST Parsing & Building
   //----------------------------------------
 
-  def of[F <: CronField](p: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]): Parser[FieldNode[F]] =
-    every(p).map(every2Field) | between(p).map(between2Field) | several(p).map(
-      several2Field) |
+  def of[F <: CronField](
+      p: Parser[ConstNode[F]]
+  )(implicit unit: CronUnit[F]): Parser[FieldNode[F]] =
+    every(p).map(every2Field) | between(p).map(between2Field) | several(p).map(several2Field) |
       p.map(const2Field) |
       each[F].map(each2Field)
 
-  def withAny[F <: CronField](p: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]): Parser[FieldNodeWithAny[F]] =
+  def withAny[F <: CronField](
+      p: Parser[ConstNode[F]]
+  )(implicit unit: CronUnit[F]): Parser[FieldNodeWithAny[F]] =
     every(p).map(every2FieldWithAny) |
       between(p).map(between2FieldWithAny) |
       several(p).map(several2FieldWithAny) |

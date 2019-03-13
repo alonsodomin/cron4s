@@ -42,8 +42,7 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
     * @return list of the supported fields
     */
   override def supportedFields(dateTime: DT): List[CronField] =
-    CronField.All.filter(field =>
-      isSupported(dateTime, asDateTimeFieldType(field)))
+    CronField.All.filter(field => isSupported(dateTime, asDateTimeFieldType(field)))
 
   /**
     * Getter access for a specific field in a date-time
@@ -53,8 +52,7 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
     * @tparam F the CronField type
     * @return value of the field
     */
-  override def get[F <: CronField](dateTime: DT,
-                                   field: F): Either[DateTimeError, Int] = {
+  override def get[F <: CronField](dateTime: DT, field: F): Either[DateTimeError, Int] = {
     val jodaField = asDateTimeFieldType(field)
     if (isSupported(dateTime, jodaField)) {
       val offset = if (field == DayOfWeek) -1 else 0
@@ -76,9 +74,11 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
     * @tparam F the CronField type
     * @return a new date-time with the given field set to the new value
     */
-  override def set[F <: CronField](dateTime: DT,
-                                   field: F,
-                                   value: Int): Either[DateTimeError, DT] = {
+  override def set[F <: CronField](
+      dateTime: DT,
+      field: F,
+      value: Int
+  ): Either[DateTimeError, DT] = {
     val offset = if (field == DayOfWeek) 1 else 0
     setField(dateTime, field, value + offset)
   }
@@ -93,8 +93,7 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
       case DateTimeUnit.Weeks   => Weeks.weeks(amount)
     }
 
-  protected def asDateTimeFieldType[F <: CronField](
-      field: F): DateTimeFieldType = field match {
+  protected def asDateTimeFieldType[F <: CronField](field: F): DateTimeFieldType = field match {
     case Second     => DateTimeFieldType.secondOfMinute()
     case Minute     => DateTimeFieldType.minuteOfHour()
     case Hour       => DateTimeFieldType.hourOfDay()
@@ -109,31 +108,27 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
 
   protected def getField(dateTime: DT, field: DateTimeFieldType): Option[Int]
 
-  protected def setField(dateTime: DT,
-                         field: CronField,
-                         value: Int): Either[DateTimeError, DT]
+  protected def setField(dateTime: DT, field: CronField, value: Int): Either[DateTimeError, DT]
 
 }
 
 private[joda] final class JodaDateTimeInstance extends JodaInstance[DateTime] {
 
-  override protected def isSupported(dateTime: DateTime,
-                                     field: DateTimeFieldType): Boolean =
+  override protected def isSupported(dateTime: DateTime, field: DateTimeFieldType): Boolean =
     dateTime.isSupported(field)
 
-  override protected def plusPeriod(dateTime: DateTime,
-                                    period: ReadablePeriod): Option[DateTime] =
+  override protected def plusPeriod(dateTime: DateTime, period: ReadablePeriod): Option[DateTime] =
     Try(dateTime.plus(period)).toOption
 
-  override protected def getField(dateTime: DateTime,
-                                  field: DateTimeFieldType): Option[Int] =
+  override protected def getField(dateTime: DateTime, field: DateTimeFieldType): Option[Int] =
     if (dateTime.isSupported(field)) Some(dateTime.get(field))
     else None
 
   override protected def setField(
       dateTime: DateTime,
       field: CronField,
-      value: Int): Either[DateTimeError, DateTime] = {
+      value: Int
+  ): Either[DateTimeError, DateTime] = {
     val fieldType = asDateTimeFieldType(field)
 
     if (dateTime.isSupported(fieldType)) {
@@ -149,31 +144,30 @@ private[joda] final class JodaDateTimeInstance extends JodaInstance[DateTime] {
 
 }
 
-private[joda] abstract class JodaLocalBaseInstance[DT <: BaseLocal]
-    extends JodaInstance[DT] {
+private[joda] abstract class JodaLocalBaseInstance[DT <: BaseLocal] extends JodaInstance[DT] {
 
-  override protected def isSupported(dateTime: DT,
-                                     field: DateTimeFieldType): Boolean =
+  override protected def isSupported(dateTime: DT, field: DateTimeFieldType): Boolean =
     dateTime.isSupported(field)
 
-  override protected def getField(dateTime: DT,
-                                  field: DateTimeFieldType): Option[Int] =
+  override protected def getField(dateTime: DT, field: DateTimeFieldType): Option[Int] =
     if (dateTime.isSupported(field)) Some(dateTime.get(field))
     else None
 
 }
 
-private[joda] final class JodaLocalTimeInstance
-    extends JodaLocalBaseInstance[LocalTime] {
+private[joda] final class JodaLocalTimeInstance extends JodaLocalBaseInstance[LocalTime] {
 
-  override protected def plusPeriod(dateTime: LocalTime,
-                                    period: ReadablePeriod): Option[LocalTime] =
+  override protected def plusPeriod(
+      dateTime: LocalTime,
+      period: ReadablePeriod
+  ): Option[LocalTime] =
     Some(dateTime.plus(period))
 
   override protected def setField(
       dateTime: LocalTime,
       field: CronField,
-      value: Int): Either[DateTimeError, LocalTime] = {
+      value: Int
+  ): Either[DateTimeError, LocalTime] = {
     val fieldType = asDateTimeFieldType(field)
 
     if (dateTime.isSupported(fieldType)) {
@@ -189,17 +183,19 @@ private[joda] final class JodaLocalTimeInstance
 
 }
 
-private[joda] final class JodaLocalDateInstance
-    extends JodaLocalBaseInstance[LocalDate] {
+private[joda] final class JodaLocalDateInstance extends JodaLocalBaseInstance[LocalDate] {
 
-  override protected def plusPeriod(dateTime: LocalDate,
-                                    period: ReadablePeriod): Option[LocalDate] =
+  override protected def plusPeriod(
+      dateTime: LocalDate,
+      period: ReadablePeriod
+  ): Option[LocalDate] =
     Try(dateTime.plus(period)).toOption
 
   override protected def setField(
       dateTime: LocalDate,
       field: CronField,
-      value: Int): Either[DateTimeError, LocalDate] = {
+      value: Int
+  ): Either[DateTimeError, LocalDate] = {
     val fieldType = asDateTimeFieldType(field)
 
     if (dateTime.isSupported(fieldType)) {
@@ -211,18 +207,19 @@ private[joda] final class JodaLocalDateInstance
 
 }
 
-private[joda] final class JodaLocalDateTimeInstance
-    extends JodaLocalBaseInstance[LocalDateTime] {
+private[joda] final class JodaLocalDateTimeInstance extends JodaLocalBaseInstance[LocalDateTime] {
 
   override protected def plusPeriod(
       dateTime: LocalDateTime,
-      period: ReadablePeriod): Option[LocalDateTime] =
+      period: ReadablePeriod
+  ): Option[LocalDateTime] =
     Try(dateTime.plus(period)).toOption
 
   override protected def setField(
       dateTime: LocalDateTime,
       field: CronField,
-      value: Int): Either[DateTimeError, LocalDateTime] = {
+      value: Int
+  ): Either[DateTimeError, LocalDateTime] = {
     val fieldType = asDateTimeFieldType(field)
 
     if (dateTime.isSupported(fieldType)) {

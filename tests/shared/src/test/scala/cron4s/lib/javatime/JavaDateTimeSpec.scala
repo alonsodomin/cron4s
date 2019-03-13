@@ -24,17 +24,12 @@ import cron4s.testkit.IsDateTimeTestKit
   * Created by alonsodomin on 29/08/2016.
   */
 class JavaLocalDateSpec
-    extends IsDateTimeTestKit[LocalDate]("JavaLocalDate")
-    with JavaLocalDateTestBase
+    extends IsDateTimeTestKit[LocalDate]("JavaLocalDate") with JavaLocalDateTestBase
 class JavaLocalTimeSpec
-    extends IsDateTimeTestKit[LocalTime]("JavaLocalTime")
-    with JavaLocalTimeTestBase
+    extends IsDateTimeTestKit[LocalTime]("JavaLocalTime") with JavaLocalTimeTestBase
 class JavaLocalDateTimeSpec
-    extends IsDateTimeTestKit[LocalDateTime]("JavaLocalDateTime")
-    with JavaLocalDateTimeTestBase
+    extends IsDateTimeTestKit[LocalDateTime]("JavaLocalDateTime") with JavaLocalDateTimeTestBase
 class JavaZonedDateTimeSpec
-    extends IsDateTimeTestKit[ZonedDateTime]("JavaZonedDateTime")
-    with JavaZonedDateTimeTestBase
+    extends IsDateTimeTestKit[ZonedDateTime]("JavaZonedDateTime") with JavaZonedDateTimeTestBase
 class JavaOffsetDateTimeSpec
-    extends IsDateTimeTestKit[OffsetDateTime]("JavaOffsetDateTime")
-    with JavaOffsetDateTimeTestBase
+    extends IsDateTimeTestKit[OffsetDateTime]("JavaOffsetDateTime") with JavaOffsetDateTimeTestBase

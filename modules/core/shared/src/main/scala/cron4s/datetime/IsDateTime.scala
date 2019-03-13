@@ -30,9 +30,7 @@ import scala.annotation.implicitNotFound
 )
 trait IsDateTime[DateTime] {
 
-  def plus(dateTime: DateTime,
-           amount: Int,
-           unit: DateTimeUnit): Option[DateTime]
+  def plus(dateTime: DateTime, amount: Int, unit: DateTimeUnit): Option[DateTime]
 
   /**
     * List of the fields supported by this date time representation
@@ -50,8 +48,7 @@ trait IsDateTime[DateTime] {
     * @tparam F the CronField type
     * @return value of the field
     */
-  def get[F <: CronField](dateTime: DateTime,
-                          field: F): Either[DateTimeError, Int]
+  def get[F <: CronField](dateTime: DateTime, field: F): Either[DateTimeError, Int]
 
   /**
     * Setter access for a specific field in a date-time
@@ -62,13 +59,10 @@ trait IsDateTime[DateTime] {
     * @tparam F the CronField type
     * @return a new date-time with the given field set to the new value
     */
-  def set[F <: CronField](dateTime: DateTime,
-                          field: F,
-                          value: Int): Either[DateTimeError, DateTime]
+  def set[F <: CronField](dateTime: DateTime, field: F, value: Int): Either[DateTimeError, DateTime]
 
 }
 
 object IsDateTime {
-  @inline def apply[DateTime](
-      implicit ev: IsDateTime[DateTime]): IsDateTime[DateTime] = ev
+  @inline def apply[DateTime](implicit ev: IsDateTime[DateTime]): IsDateTime[DateTime] = ev
 }

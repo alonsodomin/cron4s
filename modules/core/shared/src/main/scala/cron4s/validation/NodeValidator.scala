@@ -44,8 +44,7 @@ object NodeValidator extends NodeValidatorInstances {
 
 }
 
-private[validation] trait NodeValidatorInstances
-    extends LowPriorityNodeValidatorInstances {
+private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidatorInstances {
 
   implicit def eachValidator[F <: CronField]: NodeValidator[EachNode[F]] =
     NodeValidator.alwaysValid[EachNode[F]]
@@ -60,10 +59,12 @@ private[validation] trait NodeValidatorInstances
 
     def validate(node: ConstNode[F]): List[InvalidField] =
       if (node.value < node.unit.min || node.value > node.unit.max) {
-        List(InvalidField(
-          node.unit.field,
-          s"Value ${node.value} is out of bounds for field: ${node.unit.field}"
-        ))
+        List(
+          InvalidField(
+            node.unit.field,
+            s"Value ${node.value} is out of bounds for field: ${node.unit.field}"
+          )
+        )
       } else List.empty
 
   }
@@ -98,12 +99,12 @@ private[validation] trait NodeValidatorInstances
   ): NodeValidator[SeveralNode[F]] = new NodeValidator[SeveralNode[F]] {
     val elemValidator = NodeValidator[EnumerableNode[F]]
 
-    def implicationErrorMsg(that: EnumerableNode[F],
-                            impliedBy: EnumerableNode[F]): String =
+    def implicationErrorMsg(that: EnumerableNode[F], impliedBy: EnumerableNode[F]): String =
       s"Value '${that.show}' is implied by '${impliedBy.show}'"
 
-    def checkImplication(curr: EnumerableNode[F])
-      : State[List[EnumerableNode[F]], List[List[InvalidField]]] = {
+    def checkImplication(
+        curr: EnumerableNode[F]
+    ): State[List[EnumerableNode[F]], List[List[InvalidField]]] = {
       lazy val currField = curr.unit.field
 
       def impliedByError(elem: EnumerableNode[F]): List[InvalidField] =
@@ -131,8 +132,7 @@ private[validation] trait NodeValidatorInstances
         // do not check for element implication
         if (elemErrors.isEmpty) checkImplication(elem)
         else
-          State.pure[List[EnumerableNode[F]], List[List[InvalidField]]](
-            List(elemErrors))
+          State.pure[List[EnumerableNode[F]], List[List[InvalidField]]](List(elemErrors))
       }
       validation.map(_.flatten).runEmptyA.value
     }

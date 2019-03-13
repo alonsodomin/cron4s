@@ -35,8 +35,7 @@ private[syntax] class EnumeratedOps[A](self: A, tc: Enumerated[A]) {
 
 private[syntax] trait EnumeratedSyntax {
 
-  implicit def toEnumeratedOps[A](target: A)(
-      implicit tc: Enumerated[A]): EnumeratedOps[A] =
+  implicit def toEnumeratedOps[A](target: A)(implicit tc: Enumerated[A]): EnumeratedOps[A] =
     new EnumeratedOps[A](target, tc)
 
 }

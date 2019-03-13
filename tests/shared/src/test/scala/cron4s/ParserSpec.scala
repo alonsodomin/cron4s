@@ -30,18 +30,15 @@ import org.scalatest.prop.GeneratorDrivenPropertyChecks
   * Created by alonsodomin on 13/01/2016.
   */
 class ParserSpec
-    extends Cron4sPropSpec
-    with GeneratorDrivenPropertyChecks
-    with InputGenerators
-    with NodeGenerators
-    with ArbitraryEachNode {
+    extends Cron4sPropSpec with GeneratorDrivenPropertyChecks with InputGenerators
+    with NodeGenerators with ArbitraryEachNode {
 
   import CronField._
   import CronUnit._
 
-  def verifyParsed[F <: CronField, N <: Node[F]](
-      parser: Parser[N],
-      input: String)(verify: N => Boolean): Boolean =
+  def verifyParsed[F <: CronField, N <: Node[F]](parser: Parser[N], input: String)(
+      verify: N => Boolean
+  ): Boolean =
     parser.parse(input) match {
       case Parsed.Success(parsed, _) => verify(parsed)
       case err: Parsed.Failure =>
@@ -52,7 +49,8 @@ class ParserSpec
   // Utility methods to help with type inference
 
   def verifyConst[F <: CronField](parser: Parser[ConstNode[F]], input: String)(
-      verify: ConstNode[F] => Boolean): Boolean =
+      verify: ConstNode[F] => Boolean
+  ): Boolean =
     verifyParsed[F, ConstNode[F]](parser, input)(verify)
 
   def verifyEach(parser: Parser[EachNode[CronField]], input: String): Boolean =
@@ -61,9 +59,9 @@ class ParserSpec
   def verifyAny(parser: Parser[AnyNode[CronField]], input: String): Boolean =
     verifyParsed[CronField, AnyNode[CronField]](parser, input)(_ => true)
 
-  def verifyBetween[F <: CronField](
-      parser: Parser[BetweenNode[F]],
-      input: String)(verify: BetweenNode[F] => Boolean): Boolean =
+  def verifyBetween[F <: CronField](parser: Parser[BetweenNode[F]], input: String)(
+      verify: BetweenNode[F] => Boolean
+  ): Boolean =
     verifyParsed[F, BetweenNode[F]](parser, input)(verify)
 
   def verifySeveral[F <: CronField, A](
@@ -83,8 +81,7 @@ class ParserSpec
 
               case Right((start, end)) =>
                 exprPart.raw.select[BetweenNode[F]].exists { part =>
-                  verify(part.begin, start.toString) && verify(part.end,
-                                                               end.toString)
+                  verify(part.begin, start.toString) && verify(part.end, end.toString)
                 }
             }
         }
@@ -98,8 +95,7 @@ class ParserSpec
   // --------------------------------------------------------------
 
   val eachParserGen: Gen[Parser[EachNode[CronField]]] =
-    Gen.oneOf(
-      CronUnit.All.map(each(_).asInstanceOf[Parser[EachNode[CronField]]]))
+    Gen.oneOf(CronUnit.All.map(each(_).asInstanceOf[Parser[EachNode[CronField]]]))
 
   property("should be able to parse an asterisk in any field") {
     forAll(eachParserGen) { parser =>
@@ -110,7 +106,8 @@ class ParserSpec
   val anyParserGen: Gen[Parser[AnyNode[CronField]]] =
     Gen.oneOf(
       Seq(any[DayOfMonth], any[DayOfWeek])
-        .map(_.asInstanceOf[Parser[AnyNode[CronField]]]))
+        .map(_.asInstanceOf[Parser[AnyNode[CronField]]])
+    )
 
   property("should be able to parse a question mark in any field") {
     forAll(anyParserGen) { parser =>
@@ -160,8 +157,7 @@ class ParserSpec
   property("should be able to parse named months") {
     forAll(nameMonthsGen) { x =>
       verifyConst(months, x) { expr =>
-        expr.textValue.contains(x) && expr.matches(
-          Months.textValues.indexOf(x) + 1)
+        expr.textValue.contains(x) && expr.matches(Months.textValues.indexOf(x) + 1)
       }
     }
   }
@@ -174,8 +170,7 @@ class ParserSpec
   property("should be able to parse named days of week") {
     forAll(namedDaysOfWeekGen) { x =>
       verifyConst(daysOfWeek, x) { expr =>
-        expr.textValue.contains(x) && expr.matches(
-          DaysOfWeek.textValues.indexOf(x))
+        expr.textValue.contains(x) && expr.matches(DaysOfWeek.textValues.indexOf(x))
       }
     }
   }
@@ -305,8 +300,7 @@ class ParserSpec
     }
   }
 
-  property(
-    "should be able to parse sequences of numeric days of week expressions") {
+  property("should be able to parse sequences of numeric days of week expressions") {
     forAll(numericDaysOfWeekSeqGen) {
       case (input, values) =>
         verifySeveral(several(daysOfWeek), input, values) { (expr, expected) =>
@@ -314,8 +308,7 @@ class ParserSpec
         }
     }
   }
-  property(
-    "should be able to parse sequences of named days of week expressions") {
+  property("should be able to parse sequences of named days of week expressions") {
     forAll(namedDaysOfWeekSeqGen) {
       case (input, values) =>
         verifySeveral(several(daysOfWeek), input, values) { (expr, expected) =>

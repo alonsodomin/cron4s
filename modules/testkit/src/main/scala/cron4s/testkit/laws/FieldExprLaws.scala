@@ -25,8 +25,7 @@ import cron4s.syntax.field._
 /**
   * Created by alonsodomin on 28/08/2016.
   */
-trait FieldExprLaws[E[_ <: CronField], F <: CronField]
-    extends EnumeratedLaws[E[F]] {
+trait FieldExprLaws[E[_ <: CronField], F <: CronField] extends EnumeratedLaws[E[F]] {
   implicit def TC: FieldExpr[E, F]
 
   def matchable(expr: E[F], value: Int): IsEq[Boolean] = {

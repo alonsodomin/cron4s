@@ -24,16 +24,15 @@ import cron4s.testkit.SlowCron4sPropSpec
 /**
   * Created by alonsodomin on 29/12/2016.
   */
-class BetweenNodeValidatorSpec
-    extends SlowCron4sPropSpec
-    with ValidatorPropSpec {
+class BetweenNodeValidatorSpec extends SlowCron4sPropSpec with ValidatorPropSpec {
 
   import CronField._
 
-  private[this] def check[F <: CronField](implicit unit: CronUnit[F],
-                                          ev: Enumerated[CronUnit[F]]): Unit = {
-    property(
-      s"BetweenNode[${unit.field}] with valid components should pass validation") {
+  private[this] def check[F <: CronField](
+      implicit unit: CronUnit[F],
+      ev: Enumerated[CronUnit[F]]
+  ): Unit = {
+    property(s"BetweenNode[${unit.field}] with valid components should pass validation") {
       forAll(betweenGen[F]) { node =>
         NodeValidator[BetweenNode[F]].validate(node) shouldBe List
           .empty[InvalidField]
@@ -41,7 +40,8 @@ class BetweenNodeValidatorSpec
     }
 
     property(
-      s"BetweenNode[${unit.field}] with invalid components return the accumulated errors of its components") {
+      s"BetweenNode[${unit.field}] with invalid components return the accumulated errors of its components"
+    ) {
       forAll(invalidBetweenGen[F]) { node =>
         val constErrors = {
           val beginErrors = NodeValidator[ConstNode[F]].validate(node.begin)
@@ -55,7 +55,8 @@ class BetweenNodeValidatorSpec
               InvalidField(
                 unit.field,
                 s"${node.begin.value} should be less than ${node.end.value}"
-              ))
+              )
+            )
           else List.empty[InvalidField]
         }
         val expectedErrors = constErrors ::: rangeErrors

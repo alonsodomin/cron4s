@@ -26,16 +26,14 @@ import org.scalacheck.Arbitrary
 /**
   * Created by alonsodomin on 10/02/2017.
   */
-class AnyNodeValidatorSpec
-    extends Cron4sPropSpec
-    with ValidatorPropSpec
-    with ArbitratyAnyNode {
+class AnyNodeValidatorSpec extends Cron4sPropSpec with ValidatorPropSpec with ArbitratyAnyNode {
 
   import CronField._
 
   private[this] def check[F <: CronField](
       implicit unit: CronUnit[F],
-      arbNode: Arbitrary[AnyNode[F]]): Unit =
+      arbNode: Arbitrary[AnyNode[F]]
+  ): Unit =
     property(s"EachNode[${unit.field}] should always pass validation") {
       forAll { (node: AnyNode[F]) =>
         NodeValidator[AnyNode[F]].validate(node) shouldBe List

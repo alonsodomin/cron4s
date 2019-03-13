@@ -26,17 +26,15 @@ import org.scalacheck.{Arbitrary, Gen}
 trait ArbitraryCronField {
   import CronField._
 
-  implicit lazy val arbitrarySecond: Arbitrary[Second] = Arbitrary(
-    Gen.const(Second: Second))
-  implicit lazy val arbitraryMinute: Arbitrary[Minute] = Arbitrary(
-    Gen.const(Minute: Minute))
-  implicit lazy val arbitraryHour: Arbitrary[Hour] = Arbitrary(
-    Gen.const(Hour: Hour))
+  implicit lazy val arbitrarySecond: Arbitrary[Second] = Arbitrary(Gen.const(Second: Second))
+  implicit lazy val arbitraryMinute: Arbitrary[Minute] = Arbitrary(Gen.const(Minute: Minute))
+  implicit lazy val arbitraryHour: Arbitrary[Hour]     = Arbitrary(Gen.const(Hour: Hour))
   implicit lazy val arbitraryDayOfMonth: Arbitrary[DayOfMonth] = Arbitrary(
-    Gen.const(DayOfMonth: DayOfMonth))
-  implicit lazy val arbitraryMonth: Arbitrary[Month] = Arbitrary(
-    Gen.const(Month: Month))
+    Gen.const(DayOfMonth: DayOfMonth)
+  )
+  implicit lazy val arbitraryMonth: Arbitrary[Month] = Arbitrary(Gen.const(Month: Month))
   implicit lazy val arbitraryDayOfWeek: Arbitrary[DayOfWeek] = Arbitrary(
-    Gen.const(DayOfWeek: DayOfWeek))
+    Gen.const(DayOfWeek: DayOfWeek)
+  )
 
 }

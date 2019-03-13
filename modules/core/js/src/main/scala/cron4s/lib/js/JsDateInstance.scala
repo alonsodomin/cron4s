@@ -19,12 +19,7 @@ package cron4s.lib.js
 import cats.syntax.either._
 
 import cron4s.CronField
-import cron4s.datetime.{
-  DateTimeError,
-  DateTimeUnit,
-  InvalidFieldValue,
-  IsDateTime
-}
+import cron4s.datetime.{DateTimeError, DateTimeUnit, InvalidFieldValue, IsDateTime}
 
 import scala.scalajs.js.Date
 
@@ -40,9 +35,11 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
   @inline
   override def supportedFields(dateTime: Date): List[CronField] = CronField.All
 
-  override def plus(dateTime: Date,
-                    amount: Int,
-                    unit: DateTimeUnit): Option[Date] = {
+  override def plus(
+      dateTime: Date,
+      amount: Int,
+      unit: DateTimeUnit
+  ): Option[Date] = {
     def setter(set: Date => Unit): Date = {
       val newDateTime = new Date(dateTime.getTime())
       set(newDateTime)
@@ -62,8 +59,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
     }
   }
 
-  override def get[F <: CronField](dateTime: Date,
-                                   field: F): Either[DateTimeError, Int] = {
+  override def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeError, Int] = {
     val value = field match {
       case Second     => dateTime.getUTCSeconds()
       case Minute     => dateTime.getUTCMinutes()
@@ -82,9 +78,11 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
     Right(value)
   }
 
-  override def set[F <: CronField](dateTime: Date,
-                                   field: F,
-                                   value: Int): Either[DateTimeError, Date] = {
+  override def set[F <: CronField](
+      dateTime: Date,
+      field: F,
+      value: Int
+  ): Either[DateTimeError, Date] = {
     def setter(setter: Date => Unit): Date = {
       val newDateTime = new Date(dateTime.getTime())
       setter(newDateTime)

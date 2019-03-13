@@ -38,24 +38,20 @@ trait PredicateSyntax {
     Eq[A].eqv(a, b)
   }
 
-  def noneOf[C[_], A](c: C[Predicate[A]])(
-      implicit ev: Foldable[C]): Predicate[A] =
+  def noneOf[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
     not(allOf(c))
 
-  def anyOf[C[_], A](c: C[Predicate[A]])(
-      implicit ev: Foldable[C]): Predicate[A] =
+  def anyOf[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
     Predicate { a =>
       ev.exists(c)(_(a))
     }
 
-  def allOf[C[_], A](c: C[Predicate[A]])(
-      implicit ev: Foldable[C]): Predicate[A] =
+  def allOf[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
     Predicate { a =>
       ev.forall(c)(_(a))
     }
 
-  def asOf[C[_]: Foldable, A](c: C[Predicate[A]])(
-      implicit M: MonoidK[Predicate]): Predicate[A] =
+  def asOf[C[_]: Foldable, A](c: C[Predicate[A]])(implicit M: MonoidK[Predicate]): Predicate[A] =
     c.foldLeft(M.empty[A])((a, b) => M.combineK(a, b))
 
 }

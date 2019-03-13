@@ -34,10 +34,12 @@ import org.typelevel.discipline.Laws
 trait DateTimeCronTests[E, DateTime] extends Laws {
   def laws: DateTimeCronLaws[E, DateTime]
 
-  def dateTimeCron(implicit
-                   arbE: Arbitrary[E],
-                   arbDateTime: Arbitrary[DateTime],
-                   dateTimeEq: Eq[DateTime]): RuleSet = new DefaultRuleSet(
+  def dateTimeCron(
+      implicit
+      arbE: Arbitrary[E],
+      arbDateTime: Arbitrary[DateTime],
+      dateTimeEq: Eq[DateTime]
+  ): RuleSet = new DefaultRuleSet(
     name = "dateTimeCron",
     parent = None,
     "matchAll"        -> forAll(laws.matchAll _),
@@ -53,7 +55,8 @@ object DateTimeCronTests {
   def apply[E, DateTime](
       implicit
       dtEv: IsDateTime[DateTime],
-      cron: DateTimeCron[E]): DateTimeCronTests[E, DateTime] =
+      cron: DateTimeCron[E]
+  ): DateTimeCronTests[E, DateTime] =
     new DateTimeCronTests[E, DateTime] {
       val laws = DateTimeCronLaws[E, DateTime]
     }

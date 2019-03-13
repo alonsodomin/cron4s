@@ -25,71 +25,67 @@ import cron4s.testkit.DateTimeTestKitBase
   */
 trait JavaLocalDateTestBase extends DateTimeTestKitBase[LocalDate] {
 
-  def createDateTime(seconds: Int,
-                     minutes: Int,
-                     hours: Int,
-                     dayOfMonth: Int,
-                     month: Int,
-                     year: Int): LocalDate =
+  def createDateTime(
+      seconds: Int,
+      minutes: Int,
+      hours: Int,
+      dayOfMonth: Int,
+      month: Int,
+      year: Int
+  ): LocalDate =
     LocalDate.of(year, month, dayOfMonth)
 }
 
 trait JavaLocalTimeTestBase extends DateTimeTestKitBase[LocalTime] {
 
-  def createDateTime(seconds: Int,
-                     minutes: Int,
-                     hours: Int,
-                     dayOfMonth: Int,
-                     month: Int,
-                     year: Int): LocalTime =
+  def createDateTime(
+      seconds: Int,
+      minutes: Int,
+      hours: Int,
+      dayOfMonth: Int,
+      month: Int,
+      year: Int
+  ): LocalTime =
     LocalTime.of(hours, minutes, seconds)
 }
 
 trait JavaLocalDateTimeTestBase extends DateTimeTestKitBase[LocalDateTime] {
 
-  def createDateTime(seconds: Int,
-                     minutes: Int,
-                     hours: Int,
-                     dayOfMonth: Int,
-                     month: Int,
-                     year: Int): LocalDateTime =
+  def createDateTime(
+      seconds: Int,
+      minutes: Int,
+      hours: Int,
+      dayOfMonth: Int,
+      month: Int,
+      year: Int
+  ): LocalDateTime =
     LocalDateTime.of(year, month, dayOfMonth, hours, minutes, seconds)
 
 }
 
 trait JavaZonedDateTimeTestBase extends DateTimeTestKitBase[ZonedDateTime] {
 
-  def createDateTime(seconds: Int,
-                     minutes: Int,
-                     hours: Int,
-                     dayOfMonth: Int,
-                     month: Int,
-                     year: Int): ZonedDateTime =
-    ZonedDateTime.of(year,
-                     month,
-                     dayOfMonth,
-                     hours,
-                     minutes,
-                     seconds,
-                     0,
-                     ZoneOffset.UTC)
+  def createDateTime(
+      seconds: Int,
+      minutes: Int,
+      hours: Int,
+      dayOfMonth: Int,
+      month: Int,
+      year: Int
+  ): ZonedDateTime =
+    ZonedDateTime.of(year, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
 }
 
 trait JavaOffsetDateTimeTestBase extends DateTimeTestKitBase[OffsetDateTime] {
 
-  def createDateTime(seconds: Int,
-                     minutes: Int,
-                     hours: Int,
-                     dayOfMonth: Int,
-                     month: Int,
-                     year: Int): OffsetDateTime =
-    OffsetDateTime.of(year,
-                      month,
-                      dayOfMonth,
-                      hours,
-                      minutes,
-                      seconds,
-                      0,
-                      ZoneOffset.UTC)
+  def createDateTime(
+      seconds: Int,
+      minutes: Int,
+      hours: Int,
+      dayOfMonth: Int,
+      month: Int,
+      year: Int
+  ): OffsetDateTime =
+    OffsetDateTime.of(year, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
 
 }

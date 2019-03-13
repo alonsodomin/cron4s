@@ -36,10 +36,12 @@ import org.typelevel.discipline.Laws
 trait IsDateTimeTests[DateTime] extends Laws {
   def laws: IsDateTimeLaws[DateTime]
 
-  def dateTime[F <: CronField](implicit
-                               arbDateTime: Arbitrary[DateTime],
-                               arbFieldValue: Arbitrary[CronFieldValue[F]],
-                               arbField: Arbitrary[F]): RuleSet =
+  def dateTime[F <: CronField](
+      implicit
+      arbDateTime: Arbitrary[DateTime],
+      arbFieldValue: Arbitrary[CronFieldValue[F]],
+      arbField: Arbitrary[F]
+  ): RuleSet =
     new DefaultRuleSet(
       name = "dateTime",
       parent = None,
@@ -52,9 +54,11 @@ trait IsDateTimeTests[DateTime] extends Laws {
 
 object IsDateTimeTests {
 
-  def apply[DateTime](implicit
-                      dtEv: IsDateTime[DateTime],
-                      eqEv: Eq[DateTime]): IsDateTimeTests[DateTime] =
+  def apply[DateTime](
+      implicit
+      dtEv: IsDateTime[DateTime],
+      eqEv: Eq[DateTime]
+  ): IsDateTimeTests[DateTime] =
     new IsDateTimeTests[DateTime] {
       val laws: IsDateTimeLaws[DateTime] = IsDateTimeLaws[DateTime]
     }

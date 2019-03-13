@@ -20,15 +20,10 @@ import cron4s.expr.CronExpr
 import cron4s.testkit._
 import cron4s.testkit.gen.CronGenerators
 
-import io.circe.testing.{
-  CodecTests,
-  ArbitraryInstances => CirceArbitraryInstances
-}
+import io.circe.testing.{CodecTests, ArbitraryInstances => CirceArbitraryInstances}
 
 class CronExprCodecSpec
-    extends SlowCron4sLawSuite
-    with CronGenerators
-    with CirceArbitraryInstances {
+    extends SlowCron4sLawSuite with CronGenerators with CirceArbitraryInstances {
 
   checkAll("Codec[CronExpr]", CodecTests[CronExpr].codec)
 

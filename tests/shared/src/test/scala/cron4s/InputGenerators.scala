@@ -38,8 +38,7 @@ trait InputGenerators {
       }
     } else base.toString
 
-  private[this] def rangedIntGen(min: Int,
-                                 max: Int): Gen[(String, (Int, Int))] =
+  private[this] def rangedIntGen(min: Int, max: Int): Gen[(String, (Int, Int))] =
     for {
       start    <- Gen.choose(min, max)
       end      <- Gen.choose(start, max)
@@ -47,9 +46,10 @@ trait InputGenerators {
       endStr   <- withLeadingZero(end)
     } yield (s"$startStr-$endStr", (start, end))
 
-  private[this] def sequencedGen[A](constGen: Gen[String],
-                                    rangeGen: Gen[(String, (A, A))])
-    : Gen[(String, List[Either[String, (A, A)]])] = {
+  private[this] def sequencedGen[A](
+      constGen: Gen[String],
+      rangeGen: Gen[(String, (A, A))]
+  ): Gen[(String, List[Either[String, (A, A)]])] = {
     val eitherConstOrRange = for {
       const <- constGen.map(v => v -> Left(v))
       range <- rangeGen.map {
@@ -116,8 +116,7 @@ trait InputGenerators {
     start <- Gen.oneOf(DaysOfWeek.textValues)
     end   <- Gen.oneOf(DaysOfWeek.textValues)
   } yield (s"$start-$end", (start, end))
-  val namedDaysOfWeekSeqGen
-    : Gen[(String, List[Either[String, (String, String)]])] =
+  val namedDaysOfWeekSeqGen: Gen[(String, List[Either[String, (String, String)]])] =
     sequencedGen(namedDaysOfWeekGen, namedDaysOfWeekRangeGen)
 
 }

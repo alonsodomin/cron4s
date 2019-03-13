@@ -19,12 +19,7 @@ package cron4s.lib.momentjs
 import cats.syntax.either._
 
 import cron4s.CronField
-import cron4s.datetime.{
-  DateTimeError,
-  DateTimeUnit,
-  InvalidFieldValue,
-  IsDateTime
-}
+import cron4s.datetime.{DateTimeError, DateTimeUnit, InvalidFieldValue, IsDateTime}
 
 import moment._
 
@@ -37,9 +32,7 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
 
   val DaysInWeek = 7
 
-  override def plus(dateTime: Date,
-                    amount: Int,
-                    unit: DateTimeUnit): Option[Date] =
+  override def plus(dateTime: Date, amount: Int, unit: DateTimeUnit): Option[Date] =
     Some(unit match {
       case Seconds => dateTime.add(amount, Units.Second)
       case Minutes => dateTime.add(amount, Units.Minute)
@@ -66,8 +59,7 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
     * @tparam F the CronField type
     * @return value of the field
     */
-  override def get[F <: CronField](dateTime: Date,
-                                   field: F): Either[DateTimeError, Int] =
+  override def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeError, Int] =
     Right(field match {
       case Second     => dateTime.second()
       case Minute     => dateTime.minute()
@@ -92,9 +84,11 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
     * @tparam F the CronField type
     * @return a new date-time with the given field set to the new value
     */
-  override def set[F <: CronField](dateTime: Date,
-                                   field: F,
-                                   value: Int): Either[DateTimeError, Date] = {
+  override def set[F <: CronField](
+      dateTime: Date,
+      field: F,
+      value: Int
+  ): Either[DateTimeError, Date] = {
     def setter(f: Date => Unit): Date = {
       val newDateTime = Moment(dateTime)
       f(newDateTime)

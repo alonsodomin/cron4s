@@ -69,25 +69,20 @@ private[cron4s] object ops {
       at[AnyNode[F]](show.show)
     implicit def caseConst[F <: CronField](implicit show: Show[ConstNode[F]]) =
       at[ConstNode[F]](show.show)
-    implicit def caseBetween[F <: CronField](
-        implicit show: Show[BetweenNode[F]]) =
+    implicit def caseBetween[F <: CronField](implicit show: Show[BetweenNode[F]]) =
       at[BetweenNode[F]](show.show)
-    implicit def caseSeveral[F <: CronField](
-        implicit show: Show[SeveralNode[F]]) =
+    implicit def caseSeveral[F <: CronField](implicit show: Show[SeveralNode[F]]) =
       at[SeveralNode[F]](show.show)
     implicit def caseEvery[F <: CronField](implicit show: Show[EveryNode[F]]) =
       at[EveryNode[F]](show.show)
 
     implicit def caseField[F <: CronField](implicit show: Show[FieldNode[F]]) =
       at[FieldNode[F]](show.show)
-    implicit def caseFieldWithAny[F <: CronField](
-        implicit show: Show[FieldNodeWithAny[F]]) =
+    implicit def caseFieldWithAny[F <: CronField](implicit show: Show[FieldNodeWithAny[F]]) =
       at[FieldNodeWithAny[F]](show.show)
-    implicit def caseEnumerable[F <: CronField](
-        implicit show: Show[EnumerableNode[F]]) =
+    implicit def caseEnumerable[F <: CronField](implicit show: Show[EnumerableNode[F]]) =
       at[EnumerableNode[F]](show.show)
-    implicit def caseDivisble[F <: CronField](
-        implicit show: Show[DivisibleNode[F]]) =
+    implicit def caseDivisble[F <: CronField](implicit show: Show[DivisibleNode[F]]) =
       at[DivisibleNode[F]](show.show)
   }
 
