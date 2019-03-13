@@ -49,6 +49,14 @@ object Cron {
   def parse(e: String): Either[Error, CronExpr] =
     parse0(e).right.flatMap(validation.validateCron)
 
+  def parse2(e: String): Either[Error, CronExpr] = {
+    import cron4s.parsing._
+    for {
+      tokens <- Lexer(e)
+      expr   <- Parser(tokens)
+    } yield expr
+  }
+
   /**
     * Parses the given cron expression into a cron AST using Try as return type
     *
