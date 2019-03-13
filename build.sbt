@@ -39,6 +39,12 @@ val commonSettings = Def.settings(
       "scm:git:git@github.com:alonsodomin/cron4s.git"
     )
   ),
+  developers += Developer(
+    "alonsodomin",
+    "A. Alonso Dominguez",
+    "",
+    url("https://github.com/alonsodomin")
+  ),
   scalacOptions ++= Seq(
     "-encoding",
     "UTF-8",
@@ -112,15 +118,7 @@ lazy val publishSettings = Seq(
 
       }
     }).transform(node).head
-  },
-  pomExtra :=
-    <developers>
-      <developer>
-        <id>alonsodomin</id>
-        <name>Antonio Alonso Dominguez</name>
-        <url>https://github.com/alonsodomin</url>
-      </developer>
-    </developers>
+  }
 )
 
 lazy val noPublishSettings = publishSettings ++ Seq(
@@ -168,8 +166,10 @@ lazy val docSettings = Seq(
   fork in (ScalaUnidoc, unidoc) := true,
   autoAPIMappings := true,
   docsMappingsAPIDir := "api",
-  addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc),
-                       docsMappingsAPIDir),
+  addMappingsToSiteDir(
+    mappings in (ScalaUnidoc, packageDoc),
+    docsMappingsAPIDir
+  ),
   ghpagesNoJekyll := false,
   git.remoteRepo := "https://github.com/alonsodomin/cron4s.git",
   unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(coreJVM),
