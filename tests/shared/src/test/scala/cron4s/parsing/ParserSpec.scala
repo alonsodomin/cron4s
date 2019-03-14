@@ -15,13 +15,13 @@
  */
 
 package cron4s
+package parsing
+
+import cats.syntax.either._
 
 import cron4s.expr._
-import cron4s.parser._
 import cron4s.testkit.Cron4sPropSpec
 import cron4s.testkit.gen.{ArbitraryEachNode, NodeGenerators}
-
-import fastparse.all._
 
 import org.scalacheck.Gen
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
@@ -35,16 +35,21 @@ class ParserSpec
 
   import CronField._
   import CronUnit._
+  import CronParser._
 
   def verifyParsed[F <: CronField, N <: Node[F]](parser: Parser[N], input: String)(
       verify: N => Boolean
-  ): Boolean =
-    parser.parse(input) match {
-      case Parsed.Success(parsed, _) => verify(parsed)
-      case err: Parsed.Failure =>
-        println(ParseError(err).failure.msg)
-        false
+  ): Boolean = {
+    def readField(tokens: List[CronToken]) = {
+      val reader = new CronTokenReader(tokens)
+      parser(reader) match {
+        case Success(result, _) => verify(result)
+        case err: NoSuccess     => false
+      }
     }
+
+    CronLexer.tokenize(input).map(readField).getOrElse(false)
+  }
 
   // Utility methods to help with type inference
 

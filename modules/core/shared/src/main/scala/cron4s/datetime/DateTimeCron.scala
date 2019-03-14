@@ -75,7 +75,7 @@ private[datetime] final class FullCron extends DateTimeCron[CronExpr] {
       implicit M: MonoidK[Predicate]
   ): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime](dt)
-    reducer.run(Coproduct[AnyCron](expr))
+    reducer.run(expr)
   }
 
   def step[DateTime](
@@ -83,7 +83,7 @@ private[datetime] final class FullCron extends DateTimeCron[CronExpr] {
       dt: IsDateTime[DateTime]
   )(from: DateTime, amount: Int): Option[DateTime] = {
     val stepper = new Stepper[DateTime](dt)
-    stepper.run(Coproduct[AnyCron](expr), from, Step(amount))
+    stepper.run(expr, from, Step(amount))
   }
 
   def ranges(expr: CronExpr): Map[CronField, IndexedSeq[Int]] =
@@ -100,7 +100,7 @@ private[datetime] final class TimeCron extends DateTimeCron[TimeCronExpr] {
       implicit M: MonoidK[Predicate]
   ): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime](dt)
-    reducer.run(Coproduct[AnyCron](expr))
+    reducer.run(expr)
   }
 
   def step[DateTime](
@@ -108,7 +108,7 @@ private[datetime] final class TimeCron extends DateTimeCron[TimeCronExpr] {
       dt: IsDateTime[DateTime]
   )(from: DateTime, stepSize: Int): Option[DateTime] = {
     val stepper = new Stepper[DateTime](dt)
-    stepper.run(Coproduct[AnyCron](expr), from, Step(stepSize))
+    stepper.run(expr, from, Step(stepSize))
   }
 
   def ranges(expr: TimeCronExpr): Map[CronField, IndexedSeq[Int]] =
@@ -126,7 +126,7 @@ private[datetime] final class DateCron extends DateTimeCron[DateCronExpr] {
       implicit M: MonoidK[Predicate]
   ): Predicate[DateTime] = {
     val reducer = new PredicateReducer[DateTime](dt)
-    reducer.run(Coproduct[AnyCron](expr))
+    reducer.run(expr)
   }
 
   def step[DateTime](
@@ -134,7 +134,7 @@ private[datetime] final class DateCron extends DateTimeCron[DateCronExpr] {
       dt: IsDateTime[DateTime]
   )(from: DateTime, stepSize: Int): Option[DateTime] = {
     val stepper = new Stepper[DateTime](dt)
-    stepper.run(Coproduct[AnyCron](expr), from, Step(stepSize))
+    stepper.run(expr, from, Step(stepSize))
   }
 
   def ranges(expr: DateCronExpr): Map[CronField, IndexedSeq[Int]] =

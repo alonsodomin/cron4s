@@ -29,6 +29,15 @@ package object datetime {
   private[datetime] type AnyCron =
     CronExpr :+: TimeCronExpr :+: DateCronExpr :+: CNil
 
+  private[datetime] implicit def cronExpr2AnyCron(cron: CronExpr): AnyCron =
+    Coproduct[AnyCron](cron)
+
+  private[datetime] implicit def timeExpr2AnyCron(cron: TimeCronExpr): AnyCron =
+    Coproduct[AnyCron](cron)
+
+  private[datetime] implicit def dateExpr2AnyCron(cron: DateCronExpr): AnyCron =
+    Coproduct[AnyCron](cron)
+
   private[datetime] type FieldSeq =
     Second :: Minute :: Hour :: DayOfMonth :: Month :: DayOfWeek :: HNil
   val FieldSeq: FieldSeq = Second :: Minute :: Hour :: DayOfMonth :: Month :: DayOfWeek :: HNil

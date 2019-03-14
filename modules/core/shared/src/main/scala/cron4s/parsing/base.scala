@@ -15,14 +15,13 @@
  */
 
 package cron4s
+package parsing
 
-import cats.implicits._
+import scala.util.parsing.combinator.Parsers
 
-import contextual._
+private[parsing] trait BaseParser extends Parsers {
 
-object CronInterpolator extends Verifier[CronExpr] {
-  def check(input: String) = Cron.parse(input).leftMap {
-    case parseErr: ParseFailed => (parseErr.position - 1) -> parseErr.getMessage
-    case other: Error          => 0                       -> other.getMessage
-  }
+  protected def handleError(err: NoSuccess): ParseFailed =
+    ParseFailed(err.msg, err.next.first.toString, err.next.pos.column)
+
 }

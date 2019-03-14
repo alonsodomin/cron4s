@@ -16,7 +16,9 @@
 
 package cron4s
 
-import fastparse.all._
+import cats.syntax.either._
+
+import cron4s.parsing._
 
 import scala.scalajs.js.annotation.JSExportTopLevel
 import scala.util.{Failure, Success, Try}
@@ -37,6 +39,7 @@ object Cron {
     * @return an Either representing the failure or the actual parsed cron AST
     * @example val cron = Cron("10-35 2,4,6 * ? * *")
     */
+  @inline
   def apply(e: String): Either[Error, CronExpr] = parse(e)
 
   /**
@@ -46,6 +49,7 @@ object Cron {
     * @return an Either representing the failure or the actual parsed cron AST
     * @example val cron = Cron.parse("10-35 2,4,6 * ? * *")
     */
+  @inline
   def parse(e: String): Either[Error, CronExpr] =
     parse0(e).right.flatMap(validation.validateCron)
 
@@ -76,15 +80,9 @@ object Cron {
     case Right(expr) => expr
   }
 
-  private[this] def parse0(e: String): Either[ParseFailed, CronExpr] =
-    parser.cron.parse(e) match {
-      case Parsed.Success(expr, _) =>
-        Right(expr)
-
-      case Parsed.Failure(_, idx, extra) =>
-        val input = extra.input
-        val found = input.repr.literalize(input.slice(idx, idx + 20))
-        Left(ParseFailed(extra.traced.expected, found, idx))
-    }
-
+  private[this] def parse0(e: String): Either[Error, CronExpr] =
+    for {
+      tokens <- CronLexer.tokenize(e)
+      expr   <- CronParser.read(tokens)
+    } yield expr
 }
