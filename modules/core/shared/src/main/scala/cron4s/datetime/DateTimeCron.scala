@@ -22,8 +22,6 @@ import cron4s.CronField
 import cron4s.base.{Predicate, Step}
 import cron4s.expr._
 
-import shapeless.Coproduct
-
 /**
   * Created by alonsodomin on 14/01/2017.
   */

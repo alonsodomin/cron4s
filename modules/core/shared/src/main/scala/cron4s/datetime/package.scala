@@ -20,6 +20,8 @@ import cron4s.expr.{DateCronExpr, TimeCronExpr}
 
 import shapeless._
 
+import scala.language.implicitConversions
+
 /**
   * Created by alonsodomin on 24/01/2017.
   */
