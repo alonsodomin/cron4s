@@ -37,15 +37,16 @@ before_install:
 install:
   - scripts/travis-setup.sh
 
+script:
+  - scripts/travis-build.sh
+
 stages:
-  - name: build
+  - name: test
   - name: release
     if: (branch = master AND type = push) OR (tag IS present)
 
 jobs:
   include:
-    - stage: build
-      script: scripts/travis-build.sh
     - stage: release
       script: sbt ci-release
 
