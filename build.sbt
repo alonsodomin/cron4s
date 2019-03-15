@@ -59,6 +59,8 @@ val commonSettings = Def.settings(
     "-language:existentials",
     "-Ypartial-unification"
   ),
+  apiURL := Some(url("https://alonsodomin.github.io/cron4s/api/")),
+  autoAPIMappings := true,
   parallelExecution in Test := false,
   consoleImports := Seq("cron4s._"),
   initialCommands in console := consoleImports.value
@@ -97,13 +99,6 @@ lazy val consoleSettings = Seq(
 lazy val publishSettings = Seq(
   publishMavenStyle := true,
   publishArtifact in Test := false,
-  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-  autoAPIMappings := true,
-  apiURL := Some(url("https://alonsodomin.github.io/cron4s/api/")),
-  publishTo := Some(
-    if (isSnapshot.value) Opts.resolver.sonatypeSnapshots
-    else Opts.resolver.sonatypeStaging
-  ),
   // don't include scoverage as a dependency in the pom
   // see issue #980
   // this code was copied from https://github.com/mongodb/mongo-spark
@@ -171,7 +166,6 @@ lazy val docSettings = Seq(
   micrositeDocumentationUrl := "docs",
   fork in tut := true,
   fork in (ScalaUnidoc, unidoc) := true,
-  autoAPIMappings := true,
   docsMappingsAPIDir := "api",
   addMappingsToSiteDir(
     mappings in (ScalaUnidoc, packageDoc),
@@ -179,7 +173,7 @@ lazy val docSettings = Seq(
   ),
   ghpagesNoJekyll := false,
   git.remoteRepo := "https://github.com/alonsodomin/cron4s.git",
-  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(coreJVM),
+  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(coreJVM, circeJVM, declineJVM, joda, momentjs, testkitJVM),
   scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
     "-Xfatal-warnings",
     "-doc-source-url",
@@ -190,33 +184,9 @@ lazy val docSettings = Seq(
   )
 )
 
-lazy val releaseSettings = {
-  import ReleaseTransformations._
-
-  Seq(
-    sonatypeProfileName := "com.github.alonsodomin",
-    releaseCrossBuild := true,
-    releaseProcess := Seq[ReleaseStep](
-      checkSnapshotDependencies,
-      inquireVersions,
-      runClean,
-      runTest,
-      setReleaseVersion,
-      commitReleaseVersion,
-      tagRelease,
-      publishArtifacts,
-      setNextVersion,
-      commitNextVersion,
-      releaseStepCommand("sonatypeReleaseAll"),
-      pushChanges
-    )
-  )
-}
-
 lazy val cron4s = (project in file("."))
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .settings(releaseSettings)
   .aggregate(cron4sJS, cron4sJVM, docs, bench)
 
 lazy val cron4sJS = (project in file(".js"))

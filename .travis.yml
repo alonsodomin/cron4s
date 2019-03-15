@@ -32,15 +32,22 @@ addons:
 
 before_install:
   - export PATH=${PATH}:./vendor/bundle
+  - git fetch --tags
 
 install:
   - scripts/travis-setup.sh
 
-script:
-  - scripts/travis-build.sh
+stages:
+  - name: build
+  - name: release
+    if: (branch = master AND type = push) OR (tag IS present)
 
-after_success:
-  - scripts/travis-coverage.sh
+jobs:
+  include:
+    - stage: build
+      script: scripts/travis-build.sh
+    - stage: release
+      script: sbt ci-release
 
 branches:
   only:
