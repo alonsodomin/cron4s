@@ -219,6 +219,10 @@ lazy val docs = project
   .settings(commonSettings)
   .settings(noPublishSettings)
   .settings(docSettings)
+  .settings(
+    tutSourceDirectory := baseDirectory.value / "src",
+    resourceDirectory := baseDirectory.value / "resources"
+  )
   .dependsOn(cron4sJVM)
 
 lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))
