@@ -30,7 +30,7 @@ class EveryNodeValidatorRegressionSpec extends FlatSpec with Matchers {
   import CronField._
 
   "An Every node" should "pass validation if it's evenly divided" in {
-    val eachNode = EachNode[Second]
+    val eachNode  = EachNode[Second]
     val everyNode = EveryNode[Second](eachNode, 12)
 
     val returnedErrors = NodeValidator[EveryNode[Second]].validate(everyNode)
@@ -38,12 +38,13 @@ class EveryNodeValidatorRegressionSpec extends FlatSpec with Matchers {
   }
 
   it should "not pass validation if it is not evenly divided" in {
-    val eachNode = EachNode[Second]
+    val eachNode  = EachNode[Second]
     val everyNode = EveryNode[Second](eachNode, 13)
 
     val expectedError = InvalidField(
       Second,
-      s"Step '${everyNode.freq}' does not evenly divide the value '${everyNode.base.show}'")
+      s"Step '${everyNode.freq}' does not evenly divide the value '${everyNode.base.show}'"
+    )
 
     val returnedErrors = NodeValidator[EveryNode[Second]].validate(everyNode)
     returnedErrors shouldBe List(expectedError)

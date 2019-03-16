@@ -24,6 +24,4 @@ import cron4s.testkit.DateTimeCronTestKit
 /**
   * Created by alonsodomin on 29/01/2017.
   */
-class DateTimeCronSpec
-    extends DateTimeCronTestKit[LocalDateTime]
-    with JavaLocalDateTimeTestBase
+class DateTimeCronSpec extends DateTimeCronTestKit[LocalDateTime] with JavaLocalDateTimeTestBase

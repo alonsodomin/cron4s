@@ -11,17 +11,17 @@ object Dependencies {
   object version {
     val cats        = "1.6.0"
     val shapeless   = "2.3.3"
-    val fastparse   = "1.0.0"
     val scalacheck  = "1.14.0"
     val scalatest   = "3.0.6"
     val discipline  = "0.10.0"
     val catalysts   = "0.8"
     val decline     = "0.6.1"
     val circe       = "0.11.1"
-    
+    val parser      = "1.1.1"
+
     val jodaTime      = "2.10.1"
     val jodaConvert   = "2.2.0"
-    
+
     val momentjs      = "0.8.1"
     val scalaJavaTime = "2.0.0-RC1"
 
@@ -34,10 +34,11 @@ object Dependencies {
 
   lazy val core = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
-      "com.chuusai"    %%% "shapeless" % version.shapeless,
-      "org.typelevel"  %%% "cats-core" % version.cats,
-      "com.lihaoyi"    %%% "fastparse" % version.fastparse,
-      "com.propensive" %%% "contextual" % version.contextual
+      "com.chuusai"    %%% "shapeless"  % version.shapeless,
+      "org.typelevel"  %%% "cats-core"  % version.cats,
+      "com.propensive" %%% "contextual" % version.contextual,
+
+      "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parser,
     )
   }
 

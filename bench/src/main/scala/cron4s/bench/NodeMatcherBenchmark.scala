@@ -35,7 +35,7 @@ class NodeMatcherBenchmark {
 
   final val ValueToMatch = 30
 
-  val eachNode = EachNode[CronField.Minute]
+  val eachNode  = EachNode[CronField.Minute]
   val constNode = ConstNode[CronField.Minute](30)
   val betweenNode = BetweenNode(
     ConstNode[CronField.Minute](CronUnit.Minutes.min),
@@ -52,33 +52,27 @@ class NodeMatcherBenchmark {
   val everyEachNode = EveryNode(eachNode, 1)
 
   @Benchmark
-  def matchEachNode(): Boolean = {
+  def matchEachNode(): Boolean =
     EachNode[CronField.Minute].matches(ValueToMatch)
-  }
 
   @Benchmark
-  def matchConstNode(): Boolean = {
+  def matchConstNode(): Boolean =
     constNode.matches(ValueToMatch)
-  }
 
   @Benchmark
-  def matchBetweenNode(): Boolean = {
+  def matchBetweenNode(): Boolean =
     betweenNode.matches(ValueToMatch)
-  }
 
   @Benchmark
-  def matchSeveralNodeEnumerated(): Boolean = {
+  def matchSeveralNodeEnumerated(): Boolean =
     severalEnumeratedNode.matches(ValueToMatch)
-  }
 
   @Benchmark
-  def matchSeveralNodeBetween(): Boolean = {
+  def matchSeveralNodeBetween(): Boolean =
     severalBetweenNode.matches(ValueToMatch)
-  }
 
   @Benchmark
-  def matchEveryEachNode(): Boolean = {
+  def matchEveryEachNode(): Boolean =
     everyEachNode.matches(ValueToMatch)
-  }
 
 }

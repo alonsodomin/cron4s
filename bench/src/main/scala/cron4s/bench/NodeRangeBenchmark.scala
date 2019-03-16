@@ -35,7 +35,7 @@ class NodeRangeBenchmark {
   import CronField._
   import CronUnit._
 
-  val eachNode = EachNode[Minute]
+  val eachNode  = EachNode[Minute]
   val constNode = ConstNode[Minute](30)
 
   val betweenNode: BetweenNode[Minute] = BetweenNode(
@@ -56,7 +56,7 @@ class NodeRangeBenchmark {
   }
 
   val severalBetweenNode: SeveralNode[Minute] = {
-    val unit = CronUnit[CronField.Minute]
+    val unit      = CronUnit[CronField.Minute]
     val chunkSize = unit.max / 10
 
     val minuteRanges = (unit.min to unit.max by chunkSize)
@@ -68,8 +68,8 @@ class NodeRangeBenchmark {
     SeveralNode.fromSeq[Minute](minuteRanges).get
   }
 
-  val everyEachNode = EveryNode(eachNode, 10)
-  val everySeveralConstNode = EveryNode(severalConstNode, 10)
+  val everyEachNode           = EveryNode(eachNode, 10)
+  val everySeveralConstNode   = EveryNode(severalConstNode, 10)
   val everySeveralBetweenNode = EveryNode(severalBetweenNode, 10)
 
   @Benchmark

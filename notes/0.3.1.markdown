@@ -1,7 +1,0 @@
-[cron4s](https://alonsodomin.github.io/cron4s) 0.3.1 is an incremental update with the following changes:
-
- - [(#39)](https://github.com/alonsodomin/cron4s/issues/39) Fixed type signature in summon method for type class `DateTimeCron`
- - [(#41)](https://github.com/alonsodomin/cron4s/issues/41) Support for Joda's partial date times: LocalDate, LocalTime, LocalDateTime
- - [(#45)](https://github.com/alonsodomin/cron4s/pull/45) Do no reference tests modules in parent POM as a compile dependency
- - [(#52)](https://github.com/alonsodomin/cron4s/pull/52) Preserve _step inertia_ when calculating a next or previous date, initially reported as [(#50)](https://github.com/alonsodomin/cron4s/issues/50)
- - [(#51)](https://github.com/alonsodomin/cron4s/issues/51) Reset milliseconds in DateTime return values

@@ -39,6 +39,12 @@ val commonSettings = Def.settings(
       "scm:git:git@github.com:alonsodomin/cron4s.git"
     )
   ),
+  developers += Developer(
+    "alonsodomin",
+    "A. Alonso Dominguez",
+    "",
+    url("https://github.com/alonsodomin")
+  ),
   scalacOptions ++= Seq(
     "-encoding",
     "UTF-8",
@@ -53,6 +59,8 @@ val commonSettings = Def.settings(
     "-language:existentials",
     "-Ypartial-unification"
   ),
+  apiURL := Some(url("https://alonsodomin.github.io/cron4s/api/")),
+  autoAPIMappings := true,
   parallelExecution in Test := false,
   consoleImports := Seq("cron4s._"),
   initialCommands in console := consoleImports.value
@@ -91,13 +99,6 @@ lazy val consoleSettings = Seq(
 lazy val publishSettings = Seq(
   publishMavenStyle := true,
   publishArtifact in Test := false,
-  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-  autoAPIMappings := true,
-  apiURL := Some(url("https://alonsodomin.github.io/cron4s/api/")),
-  publishTo := Some(
-    if (isSnapshot.value) Opts.resolver.sonatypeSnapshots
-    else Opts.resolver.sonatypeStaging
-  ),
   // don't include scoverage as a dependency in the pom
   // see issue #980
   // this code was copied from https://github.com/mongodb/mongo-spark
@@ -112,15 +113,7 @@ lazy val publishSettings = Seq(
 
       }
     }).transform(node).head
-  },
-  pomExtra :=
-    <developers>
-      <developer>
-        <id>alonsodomin</id>
-        <name>Antonio Alonso Dominguez</name>
-        <url>https://github.com/alonsodomin</url>
-      </developer>
-    </developers>
+  }
 )
 
 lazy val noPublishSettings = publishSettings ++ Seq(
@@ -137,16 +130,23 @@ lazy val coverageSettings = Seq(
 
 def mimaSettings(module: String, versions: Set[String]): Seq[Setting[_]] = mimaDefaultSettings ++ Seq(
   mimaPreviousArtifacts := versions.map(organization.value %% s"cron4s-$module" % _),
-  mimaBackwardIssueFilters += "0.4.5" -> Seq(
-    ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.Error.this"),
-    ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package$"),
-    ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package"),
-    ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.apply"),
-    ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.this"),
-    ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.FieldNodeWithAny.fieldNodeInstance"),
-    ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.field2FieldWithAny"),
-    ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.enumerable2Field"),
-    ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.divisible2Field"),
+  mimaBackwardIssueFilters ++= Map(
+    "0.4.5" -> Seq(
+      ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.Error.this"),
+      ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package$"),
+      ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package"),
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.apply"),
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.this"),
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.FieldNodeWithAny.fieldNodeInstance"),
+      ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.field2FieldWithAny"),
+      ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.enumerable2Field"),
+      ProblemFilters.exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.divisible2Field"),
+    ),
+    "0.5.0" -> Seq(
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.expected"),
+      ProblemFilters.exclude[MissingClassProblem]("cron4s.parser$"),
+      ProblemFilters.exclude[MissingClassProblem]("cron4s.parser")
+    )
   )
 )
 
@@ -166,13 +166,14 @@ lazy val docSettings = Seq(
   micrositeDocumentationUrl := "docs",
   fork in tut := true,
   fork in (ScalaUnidoc, unidoc) := true,
-  autoAPIMappings := true,
   docsMappingsAPIDir := "api",
-  addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc),
-                       docsMappingsAPIDir),
+  addMappingsToSiteDir(
+    mappings in (ScalaUnidoc, packageDoc),
+    docsMappingsAPIDir
+  ),
   ghpagesNoJekyll := false,
   git.remoteRepo := "https://github.com/alonsodomin/cron4s.git",
-  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(coreJVM),
+  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(coreJVM, circeJVM, declineJVM, joda, momentjs, testkitJVM),
   scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
     "-Xfatal-warnings",
     "-doc-source-url",
@@ -183,33 +184,9 @@ lazy val docSettings = Seq(
   )
 )
 
-lazy val releaseSettings = {
-  import ReleaseTransformations._
-
-  Seq(
-    sonatypeProfileName := "com.github.alonsodomin",
-    releaseCrossBuild := true,
-    releaseProcess := Seq[ReleaseStep](
-      checkSnapshotDependencies,
-      inquireVersions,
-      runClean,
-      runTest,
-      setReleaseVersion,
-      commitReleaseVersion,
-      tagRelease,
-      publishArtifacts,
-      setNextVersion,
-      commitNextVersion,
-      releaseStepCommand("sonatypeReleaseAll"),
-      pushChanges
-    )
-  )
-}
-
 lazy val cron4s = (project in file("."))
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .settings(releaseSettings)
   .aggregate(cron4sJS, cron4sJVM, docs, bench)
 
 lazy val cron4sJS = (project in file(".js"))
@@ -244,7 +221,7 @@ lazy val docs = project
   .settings(docSettings)
   .dependsOn(cron4sJVM)
 
-lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("core"))
+lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
     name := "core",
@@ -265,7 +242,7 @@ lazy val coreJVM = core.jvm
 
 lazy val testkit =
   (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file(
-    "testkit"))
+    "modules/testkit"))
     .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
     .settings(
       name := "testkit",
@@ -314,7 +291,7 @@ lazy val bench = (project in file("bench"))
 
 // DateTime library extensions
 
-lazy val joda = (project in file("time-lib/joda"))
+lazy val joda = (project in file("modules/joda"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
     name := "joda",
@@ -328,7 +305,7 @@ lazy val joda = (project in file("time-lib/joda"))
   .settings(mimaSettings("joda", Set("0.4.5", "0.5.0")))
   .dependsOn(coreJVM, testkitJVM % Test)
 
-lazy val momentjs = (project in file("time-lib/momentjs"))
+lazy val momentjs = (project in file("modules/momentjs"))
   .enablePlugins(AutomateHeaderPlugin, ScalaJSPlugin, ScalafmtPlugin)
   .settings(commonSettings)
   .settings(commonJsSettings)
@@ -342,7 +319,7 @@ lazy val momentjs = (project in file("time-lib/momentjs"))
 
 // Extension modules
 
-lazy val circe = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("ext/circe"))
+lazy val circe = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("modules/circe"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
     name := "circe",
@@ -357,7 +334,7 @@ lazy val circe = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure
 lazy val circeJVM = circe.jvm
 lazy val circeJS  = circe.js
 
-lazy val decline = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("ext/decline"))
+lazy val decline = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("modules/decline"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
     name := "decline",

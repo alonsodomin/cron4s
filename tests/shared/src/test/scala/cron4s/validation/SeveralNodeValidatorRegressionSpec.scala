@@ -30,8 +30,8 @@ class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
   import CronField._
 
   "A series of nodes" should "not be valid if any of them implies the other" in {
-    val node1 = ConstNode[Minute](23)
-    val node2 = BetweenNode[Minute](ConstNode(10), ConstNode(24))
+    val node1       = ConstNode[Minute](23)
+    val node2       = BetweenNode[Minute](ConstNode(10), ConstNode(24))
     val severalNode = SeveralNode[Minute](node1, node2)
 
     val returnedErrors =
@@ -41,12 +41,13 @@ class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
       InvalidField(
         Minute,
         s"Value '${node1.show}' is implied by '${node2.show}'"
-      ))
+      )
+    )
   }
 
   it should "not fail if they overlap without full implication" in {
-    val node1 = BetweenNode[Minute](ConstNode(6), ConstNode(12))
-    val node2 = BetweenNode[Minute](ConstNode(10), ConstNode(24))
+    val node1       = BetweenNode[Minute](ConstNode(6), ConstNode(12))
+    val node2       = BetweenNode[Minute](ConstNode(10), ConstNode(24))
     val severalNode = SeveralNode[Minute](node1, node2)
 
     val returnedErrors =
@@ -55,49 +56,41 @@ class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
   }
 
   it should "include both error messages when implication is bidirectional" in {
-    val node1 = ConstNode[Second](10)
-    val node2 = ConstNode[Second](10)
+    val node1       = ConstNode[Second](10)
+    val node2       = ConstNode[Second](10)
     val severalNode = SeveralNode[Second](node1, node2)
 
     val returnedErrors =
       NodeValidator[SeveralNode[Second]].validate(severalNode)
     returnedErrors shouldBe List(
-      InvalidField(Second,
-                   s"Value '${node1.show}' is implied by '${node2.show}'"),
-      InvalidField(Second,
-                   s"Value '${node2.show}' is implied by '${node1.show}'")
+      InvalidField(Second, s"Value '${node1.show}' is implied by '${node2.show}'"),
+      InvalidField(Second, s"Value '${node2.show}' is implied by '${node1.show}'")
     )
   }
 
   it should "accumulate all the implication errors" in {
-    val node1 = ConstNode[Month](5)
-    val node2 = BetweenNode[Month](ConstNode(2), ConstNode(6))
-    val node3 = BetweenNode[Month](ConstNode(4), ConstNode(8))
+    val node1       = ConstNode[Month](5)
+    val node2       = BetweenNode[Month](ConstNode(2), ConstNode(6))
+    val node3       = BetweenNode[Month](ConstNode(4), ConstNode(8))
     val severalNode = SeveralNode[Month](node1, node2, node3)
 
     val returnedErrors = NodeValidator[SeveralNode[Month]].validate(severalNode)
     returnedErrors shouldBe List(
-      InvalidField(Month,
-                   s"Value '${node1.show}' is implied by '${node2.show}'"),
-      InvalidField(Month,
-                   s"Value '${node1.show}' is implied by '${node3.show}'")
+      InvalidField(Month, s"Value '${node1.show}' is implied by '${node2.show}'"),
+      InvalidField(Month, s"Value '${node1.show}' is implied by '${node3.show}'")
     )
   }
 
   it should "not check for implication of elements when a subexpression is invalid" in {
-    val node1 = ConstNode[Second](23)
-    val node2 = BetweenNode[Second](ConstNode(-390), ConstNode(120))
+    val node1       = ConstNode[Second](23)
+    val node2       = BetweenNode[Second](ConstNode(-390), ConstNode(120))
     val severalNode = SeveralNode[Second](node1, node2)
 
     val returnedErrors =
       NodeValidator[SeveralNode[Second]].validate(severalNode)
     returnedErrors shouldBe List(
-      InvalidField(
-        Second,
-        s"Value ${node2.begin.show} is out of bounds for field: Second"),
-      InvalidField(
-        Second,
-        s"Value ${node2.end.show} is out of bounds for field: Second")
+      InvalidField(Second, s"Value ${node2.begin.show} is out of bounds for field: Second"),
+      InvalidField(Second, s"Value ${node2.end.show} is out of bounds for field: Second")
     )
   }
 

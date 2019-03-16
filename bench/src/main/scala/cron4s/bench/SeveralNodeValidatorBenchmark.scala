@@ -31,7 +31,7 @@ import org.openjdk.jmh.annotations._
 class SeveralNodeValidatorBenchmark {
   import CronField._
 
-  val _simpleValid = SeveralNode(ConstNode[Second](35), ConstNode[Second](40))
+  val _simpleValid   = SeveralNode(ConstNode[Second](35), ConstNode[Second](40))
   val _simpleInvalid = SeveralNode(ConstNode[Second](61), ConstNode[Second](67))
 
   val _threeConstValid = SeveralNode(
@@ -68,48 +68,39 @@ class SeveralNodeValidatorBenchmark {
   )
 
   @Benchmark
-  def simpleValid(): List[InvalidField] = {
+  def simpleValid(): List[InvalidField] =
     NodeValidator[SeveralNode[Second]].validate(_simpleValid)
-  }
 
   @Benchmark
-  def simpleInvalid(): List[InvalidField] = {
+  def simpleInvalid(): List[InvalidField] =
     NodeValidator[SeveralNode[Second]].validate(_simpleInvalid)
-  }
 
   @Benchmark
-  def threeConstValid(): List[InvalidField] = {
+  def threeConstValid(): List[InvalidField] =
     NodeValidator[SeveralNode[Second]].validate(_threeConstValid)
-  }
 
   @Benchmark
-  def threeConstInvalid(): List[InvalidField] = {
+  def threeConstInvalid(): List[InvalidField] =
     NodeValidator[SeveralNode[Second]].validate(_threeConstInvalid)
-  }
 
   @Benchmark
-  def rangeValid(): List[InvalidField] = {
+  def rangeValid(): List[InvalidField] =
     NodeValidator[SeveralNode[Second]].validate(_rangeValid)
-  }
 
   @Benchmark
-  def rangeInvalid(): List[InvalidField] = {
+  def rangeInvalid(): List[InvalidField] =
     NodeValidator[SeveralNode[Second]].validate(_rangeInvalid)
-  }
 
   @Benchmark
-  def rangeInvalidConst(): List[InvalidField] = {
+  def rangeInvalidConst(): List[InvalidField] =
     NodeValidator[SeveralNode[Second]].validate(_rangeInvalidConst)
-  }
 
   @Benchmark
-  def constImpliedByRange(): List[InvalidField] = {
+  def constImpliedByRange(): List[InvalidField] =
     NodeValidator[SeveralNode[Second]].validate(_constImpliedByRange)
-  }
 
   @Benchmark
-  def constImpliedByRangeReverse(): List[InvalidField] = {
+  def constImpliedByRangeReverse(): List[InvalidField] =
     NodeValidator[SeveralNode[Second]].validate(_constImpliedByRangeReverse)
-  }
 
 }
