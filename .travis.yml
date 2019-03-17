@@ -22,6 +22,8 @@ cache:
     - $HOME/.nvm
 
 env:
+  - TEST="validateJS"
+  - TEST="validateJVM"
   global:
     - TRAVIS_NODE_VERSION="5"
 
@@ -34,25 +36,27 @@ before_install:
   - export PATH=${PATH}:./vendor/bundle
   - git fetch --tags
 
+install:
+  - pip install --user codecov
+
 script:
 #  - scripts/travis-build.sh
   - sbt ++$TRAVIS_SCALA_VERSION $TEST
 
 stages:
   - name: test
+  - name: coverage
   - name: release
     if: (branch = master AND type = push) OR (tag IS present)
 
 jobs:
   include:
-    - env: TEST="validateJS"
-    - env: TEST="validateJVM"
-      install: pip install --user codecov
-      after_success: sbt ++$TRAVIS_SCALA_VERSION codacyCoverage && codecov
-
     - env: TEST="docs"
       install: gem install jekyll -v 3.2.1
       script: sbt ++$TRAVIS_SCALA_VERSION makeMicrosite
+
+    - stage: coverage
+      script: sbt ++$TRAVIS_SCALA_VERSION codacyCoverage && codecov
 
     - stage: release
       script: scripts/travis-release.sh
