@@ -49,7 +49,7 @@ jobs:
 
     - env: TEST="JVM Tests"
       install: pip install --user codecov
-      script: sbt ++$TRAVIS_SCALA_VERSION coverage validateJVM coverageReport coverageAggregate codacyCoverage
+      script: sbt ++$TRAVIS_SCALA_VERSION coverage validateJVM coverageReport coverageAggregate codacyCoverage && codecov
 
     - env: TEST="docs"
       install: gem install jekyll -v 3.2.1
