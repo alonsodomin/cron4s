@@ -13,7 +13,51 @@ Idiomatic Cron expression parsing in Scala and ScalaJS.
 
 ## Documentation
 
-Please, take a look at the [official documentation](https://alonsodomin.github.io/cron4s) for instructions on how to use this library.
+Please, take a look at the [user guide](https://alonsodomin.github.io/cron4s) for instructions on how to use this library. The remaining of this section will be focused on information for other developers.
+
+### Building
+
+`cron4s` is built using [SBT](https://www.scala-sbt.org):
+
+```bash
+git clone https://github.com/alonsodomin/cron4s
+cd cron4s
+sbt test
+```
+
+The user documentation is built/generated using [`sbt-microsites`](https://47deg.github.io/sbt-microsites/) and requires [Jekyll](https://jekyllrb.com) to be installed in the local machine. To generate and browse the latest docs from master follow these steps from the project's root folder:
+
+```bash
+sbt makeMicrosite
+cd docs/target/site
+jekyll serve
+```
+
+Then make your browser point to http://127.0.0.1:4000/cron4s and that's all.
+
+### Cross building
+
+`cron4s` is cross-built and published for several versions of Scala. The different set of versions are configured in the [`.travis.yml`](https://github.com/alonsodomin/cron4s/blob/master/.travis.yml) file in the `scala` section. For example:
+
+```yaml
+scala:
+  - 2.11.12
+  - 2.12.8
+```
+
+Supporting additional Scala versions is a matter of adding a new version to that section and then make the codebase compile against it whilst preserving backwards compatibility. The easies way to check that compatibility is triggering a cross build with SBT:
+
+```bash
+sbt +test
+```
+
+### Repository Automation
+
+There is some sort of automation configured in this repository to easy the management of some _tedious or repetitive_ tasks:
+
+ * **Version upgrades**: The [Scala Steward](https://github.com/fthomas/scala-steward) will be producing pull requests with version upgrades of this library dependencies.
+ * **Auto-merge**: [Mergify](https://mergify.io) is installed in this repo to do auto-merge of pull requests that meet a given criteria. This said criteria can be modified in the [configuration file](https://github.com/alonsodomin/cron4s/blob/master/.mergify.yml) at the project's root folder.
+ * **Travis Release**: [Travis CI](https://travis-ci.org/alonsodomin/cron4s) has been configured, not just to build the project, but also to be able to release to Maven Central with minimal user interaction. Pushing a tag in the repo with the version number will sign an publish such a release in Maven Central, non-tagged commits to `master` will be published as `SNAPSHOT`.  
 
 ## License
 

@@ -1,5 +1,4 @@
 import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
-import com.typesafe.sbt.pgp.PgpKeys
 import com.typesafe.tools.mima.core._
 import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 

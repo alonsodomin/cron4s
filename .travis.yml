@@ -48,7 +48,7 @@ stages:
 jobs:
   include:
     - stage: release
-      script: sbt ci-release
+      script: sbt ci-release publishMicrosite
 
 branches:
   only:
