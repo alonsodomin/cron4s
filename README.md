@@ -33,7 +33,7 @@ cd docs/target/site
 jekyll serve
 ```
 
-Then make your browser point to http://127.0.0.1:4000/cron4s and that's all.
+Then make your browser point to <http://127.0.0.1:4000/cron4s> and that's all.
 
 ### Cross building
 
@@ -53,11 +53,11 @@ sbt +test
 
 ### Repository Automation
 
-There is some sort of automation configured in this repository to easy the management of some _tedious or repetitive_ tasks:
+There is some sort of automation configured in this repository to ease the management of some _tedious or repetitive_ tasks:
 
- * **Version upgrades**: The [Scala Steward](https://github.com/fthomas/scala-steward) will be producing pull requests with version upgrades of this library dependencies.
- * **Auto-merge**: [Mergify](https://mergify.io) is installed in this repo to do auto-merge of pull requests that meet a given criteria. This said criteria can be modified in the [configuration file](https://github.com/alonsodomin/cron4s/blob/master/.mergify.yml) at the project's root folder.
- * **Travis Release**: [Travis CI](https://travis-ci.org/alonsodomin/cron4s) has been configured, not just to build the project, but also to be able to release to Maven Central with minimal user interaction. Pushing a tag in the repo with the version number will sign an publish such a release in Maven Central, non-tagged commits to `master` will be published as `SNAPSHOT`.  
+* **Version upgrades**: The [Scala Steward](https://github.com/fthomas/scala-steward) will be producing pull requests with version upgrades of this library dependencies.
+* **Auto-merge**: [Mergify](https://mergify.io) is installed in this repo to do auto-merge of pull requests that meet a given criteria. This said criteria can be modified in the [.mergify](https://github.com/alonsodomin/cron4s/blob/master/.mergify.yml) at the project's root folder.
+* **Travis Release**: [Travis CI](https://travis-ci.org/alonsodomin/cron4s) has been configured, not just to build the project, but also to be able to release to Maven Central with minimal user interaction. Pushing a tag in the repo with the version number will sign and publish such a release in Maven Central, non-tagged commits to `master` will be published as `SNAPSHOT`.  
 
 ## License
 
