@@ -1,38 +1,38 @@
 options:
 
   - title: First steps
-    url: docs/index.html
+    url: userguide/index.html
     section: intro
 
   - title: What's New?
-    url: docs/whats_new.html
+    url: userguide/whats_new.html
     section: intro
 
   - title: Working with Time
-    url: docs/time_usage.html
+    url: userguide/time_usage.html
     section: intro
 
     nested_options:
       - title: Matching
-        url: docs/time_usage/matching.html
+        url: userguide/time_usage/matching.html
 
       - title: Forwards & Backwards
-        url: docs/time_usage/forward_backwards.html
+        url: userguide/time_usage/forward_backwards.html
 
   - title: Built-in libs
-    url: docs/builtin_libs.html
+    url: userguide/builtin_libs.html
     section: intro
 
   - title: Extensions
-    url: docs/extensions.html
+    url: userguide/extensions.html
     section: intro
 
   - title: Custom DateTime
-    url: docs/custom_datetime.html
+    url: userguide/custom_datetime.html
     section: intro
 
   - title: API Docs
-    url: api/index.html
+    url: userguide/index.html
     section: intro
 
   - title: Migration Guides
@@ -40,7 +40,7 @@ options:
 
     nested_options:
       - title: 0.3.x -> 0.4.x
-        url: docs/migration/0_4_0.html
+        url: userguide/migration/0_4_0.html
 
       - title: 0.2.x -> 0.3.0
-        url: docs/migration/0_3_0.html
+        url: userguide/migration/0_3_0.html

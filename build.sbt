@@ -162,7 +162,7 @@ lazy val docSettings = Seq(
   micrositeGitterChannel := true,
   micrositeHomepage := "https://alonsodomin.github.io/cron4s",
   micrositeBaseUrl := "/cron4s",
-  micrositeDocumentationUrl := "docs",
+  micrositeDocumentationUrl := "userguide",
   fork in tut := true,
   fork in (ScalaUnidoc, unidoc) := true,
   docsMappingsAPIDir := "api",
@@ -181,6 +181,13 @@ lazy val docSettings = Seq(
     baseDirectory.in(LocalRootProject).value.getAbsolutePath,
     "-diagrams"
   )
+) ++ docPublishSettings
+
+lazy val docPublishSettings = Seq(
+  micrositePushSiteWith := {
+    if (isTravisBuild.value) GitHub4s else GHPagesPlugin
+  },
+  micrositeGithubToken := sys.env.get("GITHUB_MICROSITES_TOKEN"),
 )
 
 lazy val cron4s = (project in file("."))
@@ -218,10 +225,6 @@ lazy val docs = project
   .settings(commonSettings)
   .settings(noPublishSettings)
   .settings(docSettings)
-  .settings(
-    tutSourceDirectory := baseDirectory.value / "src",
-    resourceDirectory := baseDirectory.value / "resources"
-  )
   .dependsOn(cron4sJVM)
 
 lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))

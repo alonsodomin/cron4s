@@ -48,7 +48,7 @@ stages:
 jobs:
   include:
     - stage: release
-      script: sbt ci-release publishMicrosite
+      script: scripts/travis-release.sh
 
 branches:
   only:
