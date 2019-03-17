@@ -34,8 +34,9 @@ before_install:
   - export PATH=${PATH}:./vendor/bundle
   - git fetch --tags
 
-#script:
+script:
 #  - scripts/travis-build.sh
+  - sbt ++$TRAVIS_SCALA_VERSION $TEST
 
 stages:
   - name: test
@@ -44,12 +45,10 @@ stages:
 
 jobs:
   include:
-    - env: TEST="JS Tests"
-      script: sbt ++$TRAVIS_SCALA_VERSION validateJS
-
-    - env: TEST="JVM Tests"
+    - env: TEST="validateJS"
+    - env: TEST="validateJVM"
       install: pip install --user codecov
-      script: sbt ++$TRAVIS_SCALA_VERSION coverage validateJVM coverageReport coverageAggregate codacyCoverage && codecov
+      after_success: sbt ++$TRAVIS_SCALA_VERSION codacyCoverage && codecov
 
     - env: TEST="docs"
       install: gem install jekyll -v 3.2.1
