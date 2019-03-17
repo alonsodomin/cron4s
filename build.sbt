@@ -359,8 +359,7 @@ lazy val declineJS  = decline.js
 
 addCommandAlias("testJVM", "cron4sJVM/test")
 addCommandAlias("testJS", "cron4sJS/test")
-addCommandAlias("validateJVM",
-                ";testJVM;cron4sJVM/mimaReportBinaryIssues;makeMicrosite")
+addCommandAlias("validateJVM", ";testJVM;cron4sJVM/mimaReportBinaryIssues")
 addCommandAlias("validateJS", "testJS")
 addCommandAlias("rebuild", ";clean;validateJS;validateJVM")
 addCommandAlias("compileAll", ";clean;test:compile")
