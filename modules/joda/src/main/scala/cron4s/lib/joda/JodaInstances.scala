@@ -78,10 +78,8 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
       dateTime: DT,
       field: F,
       value: Int
-  ): Either[DateTimeError, DT] = {
-    val offset = if (field == DayOfWeek) 1 else 0
-    setField(dateTime, field, value + offset)
-  }
+  ): Either[DateTimeError, DT] =
+    setField(dateTime, field, value)
 
   protected def asPeriod(amount: Int, unit: DateTimeUnit): ReadablePeriod =
     unit match {

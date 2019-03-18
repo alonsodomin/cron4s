@@ -59,7 +59,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
     }
   }
 
-  override def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeError, Int] = {
+  override def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeError, Int] =
     val value = field match {
       case Second     => dateTime.getUTCSeconds()
       case Minute     => dateTime.getUTCMinutes()
@@ -67,16 +67,9 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       case DayOfMonth => dateTime.getUTCDate()
       case Month      => dateTime.getUTCMonth() + 1
       case DayOfWeek =>
-        val dayOfWeek = {
-          val idx = dateTime.getUTCDay() - 1
-          if (idx < 0) DaysInWeek + idx
-          else idx
-        }
-        dayOfWeek
-    }
-
-    Right(value)
-  }
+        val jsDay = dateTime.getUTCDay()
+        if (jsDay == 0) DaysInWeek else jsDay
+    })
 
   override def set[F <: CronField](
       dateTime: Date,
@@ -96,9 +89,8 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       case DayOfMonth => setter(_.setUTCDate(value))
       case Month      => setter(_.setUTCMonth(value - 1))
       case DayOfWeek =>
-        val dayToSet = (value % DaysInWeek) + 1
-        val offset   = dayToSet - dateTime.getUTCDay()
-        setter(d => d.setUTCDate(d.getUTCDate() + offset))
+        val dayToSet = (value % DaysInWeek)
+        setter(_.setUTCDate(dayToSet))
     }
 
     def assignmentSucceeded(date: Date) =

@@ -27,7 +27,6 @@ import cron4s.datetime.IsDateTime
   * Created by alonsodomin on 11/12/2016.
   */
 package object javatime {
-  private[javatime] final val DayOfWeekOffset = 1
 
   implicit lazy val javaLocalDateEq: Eq[LocalDate] =
     Eq.fromUniversalEquals[LocalDate]

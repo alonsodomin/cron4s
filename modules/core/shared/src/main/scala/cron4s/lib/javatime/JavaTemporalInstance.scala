@@ -60,9 +60,8 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
   override def get[F <: CronField](dateTime: DT, field: F): Either[DateTimeError, Int] = {
     val temporalField = asTemporalField(field)
 
-    val offset = if (field == DayOfWeek) -DayOfWeekOffset else 0
     if (!dateTime.isSupported(temporalField)) UnsupportedField(field).asLeft
-    else (dateTime.get(temporalField) + offset).asRight
+    else dateTime.get(temporalField).asRight
   }
 
   override def set[F <: CronField](
@@ -82,9 +81,8 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
 
     if (!dateTime.isSupported(temporalField)) UnsupportedField(field).asLeft
     else {
-      val realVal = if (field == DayOfWeek) value + DayOfWeekOffset else value
       Either
-        .fromTry(adjust(realVal)(dateTime).flatMap(postAdjust))
+        .fromTry(adjust(value)(dateTime).flatMap(postAdjust))
         .leftMap(_ => InvalidFieldValue(field, value))
     }
   }

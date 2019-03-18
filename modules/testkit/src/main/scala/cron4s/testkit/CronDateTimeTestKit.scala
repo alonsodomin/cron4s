@@ -73,7 +73,7 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show] extends FlatS
     ),
     (
       BetweenDayOfWeek,
-      createDateTime(0, 0, 2, 7, 3, 2016),
+      createDateTime(0, 0, 2, 6, 3, 2016),
       -1,
       createDateTime(0, 0, 0, 3, 3, 2016)
     ),

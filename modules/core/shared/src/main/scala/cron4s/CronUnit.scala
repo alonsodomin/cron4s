@@ -96,7 +96,7 @@ private[cron4s] trait CronUnits {
       "dec"
     )
   }
-  implicit case object DaysOfWeek extends AbstractCronUnit[DayOfWeek](DayOfWeek, 0, 6) {
+  implicit case object DaysOfWeek extends AbstractCronUnit[DayOfWeek](DayOfWeek, 1, 7) {
     val textValues = IndexedSeq("mon", "tue", "wed", "thu", "fri", "sat", "sun")
   }
 

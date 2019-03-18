@@ -89,11 +89,14 @@ object CronParser extends Parsers with BaseParser {
   // Days Of Week
 
   private[this] val numericDaysOfWeek =
-    decimal.filter(_ < 7).map(ConstNode[DayOfWeek](_))
+    decimal.filter(_ <= 7).map { value =>
+      val dow = if (value == 0) 7 else value
+      ConstNode[DayOfWeek](dow)
+    }
 
   private[this] val textualDaysOfWeek =
     literal.filter(DaysOfWeek.textValues.contains).map { value =>
-      val index = DaysOfWeek.textValues.indexOf(value)
+      val index = DaysOfWeek.textValues.indexOf(value) + 1
       ConstNode[DayOfWeek](index, Some(value))
     }
 

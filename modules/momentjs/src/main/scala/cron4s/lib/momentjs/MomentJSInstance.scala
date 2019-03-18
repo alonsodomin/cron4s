@@ -67,12 +67,8 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
       case DayOfMonth => dateTime.date()
       case Month      => dateTime.month() + 1
       case DayOfWeek =>
-        val dayOfWeek = {
-          val idx = dateTime.day() - 1
-          if (idx < 0) DaysInWeek + idx
-          else idx
-        }
-        dayOfWeek
+        val jsDay = dateTime.day()
+        if (jsDay == 0) DaysInWeek else jsDay
     })
 
   /**
@@ -101,8 +97,8 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
       case Hour       => setter(_.hour(value.toDouble))
       case DayOfMonth => setter(_.date(value.toDouble))
       case Month      => setter(_.month((value - 1).toDouble))
-      case DayOfWeek =>
-        val dayToSet = (value % DaysInWeek) + 1
+      case DayOfWeek  =>
+        val dayToSet = (value % DaysInWeek)
         setter(_.day(dayToSet.toDouble))
     }
 
