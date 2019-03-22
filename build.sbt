@@ -1,5 +1,4 @@
 import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
-import com.typesafe.sbt.pgp.PgpKeys
 import com.typesafe.tools.mima.core._
 import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 
@@ -163,7 +162,7 @@ lazy val docSettings = Seq(
   micrositeGitterChannel := true,
   micrositeHomepage := "https://alonsodomin.github.io/cron4s",
   micrositeBaseUrl := "/cron4s",
-  micrositeDocumentationUrl := "docs",
+  micrositeDocumentationUrl := "userguide",
   fork in tut := true,
   fork in (ScalaUnidoc, unidoc) := true,
   docsMappingsAPIDir := "api",
@@ -182,6 +181,13 @@ lazy val docSettings = Seq(
     baseDirectory.in(LocalRootProject).value.getAbsolutePath,
     "-diagrams"
   )
+) ++ docPublishSettings
+
+lazy val docPublishSettings = Seq(
+  micrositePushSiteWith := {
+    if (isTravisBuild.value) GitHub4s else GHPagesPlugin
+  },
+  micrositeGithubToken := sys.env.get("GITHUB_MICROSITES_TOKEN"),
 )
 
 lazy val cron4s = (project in file("."))
@@ -353,8 +359,14 @@ lazy val declineJS  = decline.js
 
 addCommandAlias("testJVM", "cron4sJVM/test")
 addCommandAlias("testJS", "cron4sJS/test")
-addCommandAlias("validateJVM",
-                ";testJVM;cron4sJVM/mimaReportBinaryIssues;makeMicrosite")
+addCommandAlias("validateJVM", Seq(
+    "coverage",
+    "testJVM",
+    "coverageReport",
+    "coverageAggregate",
+    "cron4sJVM/mimaReportBinaryIssues"
+  ).mkString(";", ";", "")
+)
 addCommandAlias("validateJS", "testJS")
 addCommandAlias("rebuild", ";clean;validateJS;validateJVM")
 addCommandAlias("compileAll", ";clean;test:compile")
