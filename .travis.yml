@@ -35,31 +35,18 @@ before_install:
   - git fetch --tags
 
 install:
-  - pip install --user codecov
+  - scripts/travis-setup.sh
 
 script:
-#  - scripts/travis-build.sh
-  - sbt ++$TRAVIS_SCALA_VERSION $TEST
+  - scripts/travis-build.sh
 
 stages:
   - name: test
-  - name: coverage
   - name: release
     if: (branch = master AND type = push) OR (tag IS present)
 
 jobs:
   include:
-    - env: TEST="validateJS"
-
-    - env: TEST="validateJVM"
-
-    - env: TEST="docs"
-      install: gem install jekyll -v 3.2.1
-      script: sbt ++$TRAVIS_SCALA_VERSION makeMicrosite
-
-    - stage: coverage
-      script: sbt ++$TRAVIS_SCALA_VERSION codacyCoverage && codecov
-
     - stage: release
       script: scripts/travis-release.sh
 
