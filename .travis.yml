@@ -22,8 +22,6 @@ cache:
     - $HOME/.nvm
 
 env:
-  - TEST="validateJS"
-  - TEST="validateJVM"
   global:
     - TRAVIS_NODE_VERSION="5"
 
@@ -51,6 +49,10 @@ stages:
 
 jobs:
   include:
+    - env: TEST="validateJS"
+
+    - env: TEST="validateJVM"
+
     - env: TEST="docs"
       install: gem install jekyll -v 3.2.1
       script: sbt ++$TRAVIS_SCALA_VERSION makeMicrosite
