@@ -45,7 +45,7 @@ scala:
   - 2.12.8
 ```
 
-Supporting additional Scala versions is a matter of adding a new version to that section and then make the codebase compile against it whilst preserving backwards compatibility. The easies way to check that compatibility is triggering a cross build with SBT:
+Supporting additional Scala versions is a matter of adding a new version to that section and then make the codebase compile against it whilst preserving backwards compatibility. The easiest way to check that compatibility is triggering a cross build with SBT:
 
 ```bash
 sbt +test
