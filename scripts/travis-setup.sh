@@ -7,5 +7,8 @@ gem update --system
 echo "Installing Jekyll..."
 gem install jekyll -v 3.2.1
 
+echo "Installing JSDom..."
+npm install jsdom
+
 echo "Installing Codecov..."
 pip install --user codecov
