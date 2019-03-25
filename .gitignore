@@ -95,3 +95,4 @@ build
 # Metals #
 ##########
 .metals/
+.bloop/
