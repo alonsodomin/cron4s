@@ -15,7 +15,7 @@ object Dependencies {
     val scalatest   = "3.0.5"
     val discipline  = "0.10.0"
     val catalysts   = "0.8"
-    val decline     = "0.6.1"
+    val decline     = "0.6.2"
     val circe       = "0.11.1"
     val parser      = "1.1.1"
 
