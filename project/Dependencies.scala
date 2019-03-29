@@ -104,7 +104,10 @@ object Dependencies {
   )
 
   lazy val doobie = Def.settings(
-    libraryDependencies += "org.tpolecat" %% "doobie-core" % version.doobie
+    libraryDependencies ++= Seq(
+      "org.tpolecat" %% "doobie-core" % version.doobie,
+      "org.tpolecat" %% "doobie-h2"   % version.doobie % Test
+    )
   )
 
 }
