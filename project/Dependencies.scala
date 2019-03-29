@@ -18,6 +18,7 @@ object Dependencies {
     val decline     = "0.6.2"
     val circe       = "0.11.1"
     val parser      = "1.1.1"
+    val doobie      = "0.6.0"
 
     val jodaTime      = "2.10.1"
     val jodaConvert   = "2.2.0"
@@ -100,6 +101,10 @@ object Dependencies {
 
   lazy val decline = Def.settings(
     libraryDependencies += "com.monovore" %%% "decline" % version.decline
+  )
+
+  lazy val doobie = Def.settings(
+    libraryDependencies += "org.tpolecat" %% "doobie-core" % version.doobie
   )
 
 }
