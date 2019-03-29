@@ -216,8 +216,8 @@ lazy val cron4sJVM = (project in file(".jvm"))
   .settings(commonJvmSettings)
   .settings(consoleSettings)
   .settings(publishSettings)
-  .aggregate(coreJVM, joda, circeJVM, declineJVM, testkitJVM, testsJVM)
-  .dependsOn(coreJVM, joda, circeJVM, declineJVM, testkitJVM, testsJVM % Test)
+  .aggregate(coreJVM, joda, doobie, circeJVM, declineJVM, testkitJVM, testsJVM)
+  .dependsOn(coreJVM, joda, doobie, circeJVM, declineJVM, testkitJVM, testsJVM % Test)
 
 lazy val docs = project
   .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, GhpagesPlugin)
@@ -292,6 +292,7 @@ lazy val bench = (project in file("bench"))
   )
   .settings(commonSettings)
   .settings(noPublishSettings)
+  .settings(commonJvmSettings)
   .enablePlugins(JmhPlugin)
   .dependsOn(coreJVM)
 
@@ -335,6 +336,8 @@ lazy val circe = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure
   .settings(publishSettings)
   .settings(Dependencies.circe)
   .settings(mimaSettings("circe", Set("0.5.0")))
+  .jvmSettings(commonJvmSettings)
+  .jsSettings(commonJsSettings)
   .dependsOn(core, testkit % Test)
 
 lazy val circeJVM = circe.jvm
@@ -350,10 +353,25 @@ lazy val decline = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pu
   .settings(publishSettings)
   .settings(Dependencies.decline)
   .settings(mimaSettings("decline", Set("0.5.0")))
+  .jvmSettings(commonJvmSettings)
+  .jsSettings(commonJsSettings)
   .dependsOn(core, testkit % Test)
 
 lazy val declineJVM = decline.jvm
 lazy val declineJS  = decline.js
+
+lazy val doobie = (project in file("modules/doobie"))
+  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+  .settings(
+    name := "doobie",
+    moduleName := "cron4s-doobie"
+  )
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(commonJvmSettings)
+  .settings(mimaSettings("doobie", Set()))
+  .settings(Dependencies.doobie)
+  .dependsOn(coreJVM, testkitJVM % Test)
 
 // Utility command aliases
 
