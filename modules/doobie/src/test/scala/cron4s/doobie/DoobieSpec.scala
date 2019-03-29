@@ -21,6 +21,7 @@ import cats.effect.{IO, ContextShift}
 
 import _root_.doobie._
 import _root_.doobie.implicits._
+import _root_.doobie.util.invariant._
 
 import org.scalatest._
 
@@ -63,7 +64,7 @@ class DoobieSpec extends FlatSpec with Matchers {
       .query[Meeting]
       .unique
 
-  "CronExpr" should "be usable as a member of a storable data structure" in {
+  "Doobie" should "store and retrieve a cron expression as a member of a storable data structure" in {
     val standUpMeeting = Meeting(
       "Daily stand-up",
       "Daily team morning stand-up meeting",
@@ -77,6 +78,12 @@ class DoobieSpec extends FlatSpec with Matchers {
 
     val loadedMeeting = tx.transact(xa).unsafeRunSync()
     loadedMeeting shouldBe standUpMeeting
+  }
+
+  it should "throw a SecondaryValidationFailed in case the cron expression is invalid" in {
+    assertThrows[SecondaryValidationFailed[CronExpr]] {
+      sql"select '0- 0 30 * * ?'".query[CronExpr].unique.transact(xa).unsafeRunSync()
+    }
   }
 
 }
