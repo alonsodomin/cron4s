@@ -8,8 +8,9 @@ sbt_cmd="sbt ++$TRAVIS_SCALA_VERSION"
 
 build_js="$sbt_cmd validateJS"
 build_jvm="$sbt_cmd validateJVM"
+build_docs="$sbt_cmd makeMicrosite"
 
-build_all="$build_js && $build_jvm"
+build_all="$build_js && $build_jvm && $build_docs"
 
 eval $build_all
 
