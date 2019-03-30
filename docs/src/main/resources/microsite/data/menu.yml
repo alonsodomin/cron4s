@@ -2,8 +2,13 @@ options:
 
   # User Guide
 
-  - title: User Guide
+  - title: Getting Started
     url: userguide/index.html
+    menu_type: userguide
+    menu_section: userguide
+
+  - title: The Cron4s AST
+    url: userguide/ast.html
     menu_type: userguide
     menu_section: userguide
 
