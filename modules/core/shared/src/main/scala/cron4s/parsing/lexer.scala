@@ -46,6 +46,18 @@ object CronToken {
   case object Blank extends CronToken {
     override def toString = " "
   }
+
+  case object Last extends CronToken {
+    override def toString = "L"
+  }
+
+  case object WeekDay extends CronToken {
+    override def toString = "W"
+  }
+
+  case object Hash extends CronToken {
+    override def toString = "#"
+  }
 }
 
 object CronLexer extends RegexParsers with BaseParser {
@@ -98,10 +110,28 @@ object CronLexer extends RegexParsers with BaseParser {
     whiteSpace.map(_ => Blank)
   }
 
+  private val last = positioned {
+    "L".r ^^ { _ =>
+      Last
+    }
+  }
+
+  private val weekDay = positioned {
+    "W".r ^^ { _ =>
+      WeekDay
+    }
+  }
+
+  private val hash = positioned {
+    "#".r ^^ { _ =>
+      Hash
+    }
+  }
+
   private lazy val tokens: Parser[List[CronToken]] = {
     phrase(
       rep1(
-        number | text | hyphen | slash | comma | asterisk | questionMark | blank
+        number | text | hyphen | slash | comma | asterisk | questionMark | last | weekDay | hash | blank
       )
     )
   }
