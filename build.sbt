@@ -23,6 +23,17 @@ lazy val unusedWarning = Seq(
   scalacOptions in Tut := (scalacOptions in (Compile, console)).value
 )
 
+lazy val compilerPlugins = Seq(
+  libraryDependencies ++= {
+    import Dependencies._
+
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, n)) if n <= 12 => Seq(macroParadise, kindProjector)
+      case _                       => Seq(kindProjector)
+    }
+  }
+)
+
 val commonSettings = Def.settings(
   name := "cron4s",
   organization := "com.github.alonsodomin.cron4s",
@@ -55,8 +66,13 @@ val commonSettings = Def.settings(
     "-language:implicitConversions",
     "-language:higherKinds",
     "-language:existentials",
-    "-Ypartial-unification"
   ),
+  scalacOptions ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, n)) if n <= 12 => Seq("-Ypartial-unification")
+      case _                       => Nil
+    }
+  },
   apiURL := Some(url("https://alonsodomin.github.io/cron4s/api/")),
   autoAPIMappings := true,
   parallelExecution in Test := false,
@@ -64,8 +80,8 @@ val commonSettings = Def.settings(
   initialCommands in console := consoleImports.value
     .map(s => s"import $s")
     .mkString("\n"),
-  scalafmtOnCompile := true
-) ++ unusedWarning
+  scalafmtOnCompile := true,
+) ++ unusedWarning ++ compilerPlugins
 
 lazy val commonJvmSettings = Seq(
   fork in Test := true

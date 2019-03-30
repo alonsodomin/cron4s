@@ -35,10 +35,9 @@ object Dependencies {
   val kindProjector = compilerPlugin(
     "org.typelevel" % "kind-projector" % "0.10.3" cross CrossVersion.binary
   )
-  lazy val compilerPlugins = Seq(macroParadise, kindProjector)
 
   lazy val core = Def.settings {
-    libraryDependencies ++= compilerPlugins ++ Seq(
+    libraryDependencies ++= Seq(
       "com.chuusai"            %%% "shapeless"                % version.shapeless,
       "org.typelevel"          %%% "cats-core"                % version.cats,
       "com.propensive"         %%% "contextual"               % version.contextual,      
@@ -55,7 +54,7 @@ object Dependencies {
   }
 
   lazy val testkit = Def.settings {
-    libraryDependencies ++= compilerPlugins ++ Seq(
+    libraryDependencies ++= Seq(
       "org.typelevel"  %%% "cats-laws"          % version.cats,
       "org.typelevel"  %%% "cats-testkit"       % version.cats,
       "org.typelevel"  %%% "discipline"         % version.discipline,
@@ -66,7 +65,7 @@ object Dependencies {
   }
 
   lazy val tests = Def.settings {
-    libraryDependencies ++= compilerPlugins ++ Seq(
+    libraryDependencies ++= Seq(
       "org.scalatest" %%% "scalatest" % version.scalatest % Test
     )
   }
