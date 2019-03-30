@@ -20,6 +20,7 @@ import cats.laws._
 
 import cron4s.CronField
 import cron4s.expr.FieldExpr
+import cron4s.syntax.enumerated._
 import cron4s.syntax.field._
 
 /**

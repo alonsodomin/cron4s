@@ -38,10 +38,10 @@ trait DateTimeNodeLaws[E[_ <: CronField], F <: CronField, DateTime] {
   }
 
   def forward(e: E[F], from: DateTime): IsEq[Option[DateTime]] =
-    e.nextIn(from) <-> e.stepIn(from, 1)
+    e.nextIn(from) <-> e.stepIn(from, 1).toOption
 
   def backwards(e: E[F], from: DateTime): IsEq[Option[DateTime]] =
-    e.prevIn(from) <-> e.stepIn(from, -1)
+    e.prevIn(from) <-> e.stepIn(from, -1).toOption
 
 }
 
