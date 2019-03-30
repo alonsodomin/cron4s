@@ -1,8 +1,3 @@
----
-layout: docs
-title: "What's New"
----
-
 ## 0.5.0
 
 This version adds some features and upgrades some of the core dependencies. This version **is not binary compatible**

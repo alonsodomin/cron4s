@@ -1,9 +1,8 @@
 ---
 layout: docs
 title: "Working with Time"
+section: "userguide"
 ---
-
-## Working with Time
 
 There are two different things that we can do with it: Using it as a matcher against _DateTime_ objects
 and obtaining the next or previous _DateTime_ to a given one according to the parsed expression.

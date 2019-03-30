@@ -1,8 +1,8 @@
 import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 import com.typesafe.tools.mima.core._
 import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
-
 import scala.xml.transform.{RewriteRule, RuleTransformer}
+import microsites._
 
 lazy val consoleImports =
   settingKey[Seq[String]]("Base imports in the console")
@@ -171,8 +171,20 @@ lazy val docSettings = Seq(
   micrositeGithubRepo := "cron4s",
   micrositeGitterChannel := true,
   micrositeHomepage := "https://alonsodomin.github.io/cron4s",
-  micrositeBaseUrl := "/cron4s",
-  micrositeDocumentationUrl := "userguide",
+  micrositeBaseUrl := "cron4s",
+  micrositeDocumentationUrl := "/cron4s/api/cron4s/index.html",
+  micrositeDocumentationLabelDescription := "API Documentation",
+  micrositeExtraMdFiles := Map(
+    file("CHANGELOG.md") -> ExtraMdFileConfig(
+      "changelog.md",
+      "page",
+      Map(
+        "title" -> "Change Log",
+        "section" -> "changelog",
+        "position" -> "3"
+      )
+    )
+  ),
   fork in tut := true,
   fork in (ScalaUnidoc, unidoc) := true,
   docsMappingsAPIDir := "api",

@@ -1,46 +1,80 @@
 options:
 
-  - title: First steps
-    url: userguide/index.html
-    section: intro
+  # User Guide
 
-  - title: What's New?
-    url: userguide/whats_new.html
-    section: intro
+  - title: Getting Started
+    url: userguide/index.html
+    menu_type: userguide
+    menu_section: userguide
+
+  - title: The Cron4s AST
+    url: userguide/ast.html
+    menu_type: userguide
+    menu_section: userguide
 
   - title: Working with Time
     url: userguide/time_usage.html
-    section: intro
+    menu_type: userguide
+    menu_section: timeusage
 
     nested_options:
       - title: Matching
         url: userguide/time_usage/matching.html
+        menu_section: timeusage
 
       - title: Forwards & Backwards
         url: userguide/time_usage/forward_backwards.html
+        menu_section: timeusage
 
   - title: Built-in libs
     url: userguide/builtin_libs.html
-    section: intro
-
-  - title: Extensions
-    url: userguide/extensions.html
-    section: intro
+    menu_type: userguide
+    menu_section: userguide
 
   - title: Custom DateTime
     url: userguide/custom_datetime.html
     section: intro
 
-  - title: API Docs
-    url: userguide/index.html
-    section: intro
+  # Extensions
+
+  - title: Extensions
+    url: extensions/index.html
+    menu_type: extensions
+
+  - title: Circe
+    url: extensions/circe.html
+    menu_type: extensions
+
+  - title: Decline
+    url: extensions/decline.html
+    menu_type: extensions
+
+  - title: Doobie
+    url: extensions/doobie.html
+    menu_type: extensions
+
+  # Change Log
+
+  - title: Change Log
+    url: changelog.html
+    menu_type: changelog
+    menu_section: changelog
+
+  # Migration Guides
 
   - title: Migration Guides
-    section: intro
+    url: migration/index.html
+    menu_type: migration
 
-    nested_options:
-      - title: 0.3.x -> 0.4.x
-        url: userguide/migration/0_4_0.html
+  - title: 0.4.0 -> 0.4.1
+    url: migration/0_4_1.html
+    menu_type: migration
 
-      - title: 0.2.x -> 0.3.0
-        url: userguide/migration/0_3_0.html
+  - title: 0.3.x -> 0.4.x
+    url: migration/0_4_0.html
+    menu_type: migration
+
+  - title: 0.2.x -> 0.3.0
+    url: migration/0_3_0.html
+    menu_type: migration
+    
