@@ -6,7 +6,7 @@ section: "extensions"
 
 The [`doobie`](https://tpolecat.github.io/doobie/) module adds support for reading and writing `CronExpr` to a database via JDBC. Since JDBC is a JVM-only concept this module can not be used with non-JVM targets. To use it, add the corresponding dependency to your project in SBT:
 
-```
+```scala
 libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s-doobie" % "x.y.z"
 ```
 

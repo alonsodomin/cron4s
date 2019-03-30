@@ -77,8 +77,4 @@ options:
   - title: 0.2.x -> 0.3.0
     url: migration/0_3_0.html
     menu_type: migration
-
-  - title: API Docs
-    url: userguide/index.html
-    section: intro
     

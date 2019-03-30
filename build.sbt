@@ -172,7 +172,8 @@ lazy val docSettings = Seq(
   micrositeGitterChannel := true,
   micrositeHomepage := "https://alonsodomin.github.io/cron4s",
   micrositeBaseUrl := "cron4s",
-  micrositeDocumentationUrl := "userguide",
+  micrositeDocumentationUrl := "/cron4s/api/cron4s/index.html",
+  micrositeDocumentationLabelDescription := "API Documentation",
   micrositeExtraMdFiles := Map(
     file("CHANGELOG.md") -> ExtraMdFileConfig(
       "changelog.md",
