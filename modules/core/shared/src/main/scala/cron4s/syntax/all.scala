@@ -21,5 +21,6 @@ package cron4s.syntax
   */
 private[cron4s] trait AllSyntax
     extends DateTimeCronSyntax with DateTimeNodeSyntax with FieldExprSyntax with PredicateSyntax
+    with CronStringSyntax
 
 object all extends AllSyntax

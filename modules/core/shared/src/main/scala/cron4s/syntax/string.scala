@@ -15,14 +15,28 @@
  */
 
 package cron4s
+package syntax
 
-import cats.implicits._
+private[syntax] trait CronStringSyntax {
 
-import contextual._
+  implicit def toCronStringInterpolator(sc: StringContext): CronStringInterpolator =
+    new CronStringInterpolator(sc)
 
-object CronInterpolator extends Verifier[CronExpr] {
-  def check(input: String) = Cron.parse(input).leftMap {
-    case parseErr: ParseFailed => (parseErr.position - 1) -> parseErr.getMessage
-    case other: Error          => 0                       -> other.getMessage
+}
+
+final class CronStringInterpolator(val sc: StringContext) extends AnyVal {
+  def cron(args: Any*): CronExpr = {
+    val literals = sc.parts.iterator
+    val holes    = args.iterator
+    val buf      = new StringBuffer(literals.next)
+
+    while (literals.hasNext) {
+      buf.append(holes.next)
+      buf.append(literals.next)
+    }
+
+    Cron.unsafeParse(buf.toString)
   }
 }
+
+object string extends CronStringSyntax
