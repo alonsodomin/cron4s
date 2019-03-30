@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package cron4s.datetime
+package cron4s
+package datetime
 
-import cron4s.CronField
 import cron4s.expr.FieldExpr
 import cron4s.base._
-import cron4s.syntax.field._
 
 trait DateTimeNode[E[_ <: CronField], F <: CronField] {
   implicit def E: FieldExpr[E, F]
@@ -44,8 +43,10 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
     * @return the next date-time
     */
   @inline
-  def nextIn[DateTime](expr: E[F], DT: IsDateTime[DateTime])(dateTime: DateTime): Option[DateTime] =
-    stepIn(expr, DT)(dateTime, 1)
+  final def nextIn[DateTime](expr: E[F], DT: IsDateTime[DateTime])(
+      dateTime: DateTime
+  ): Option[DateTime] =
+    stepIn(expr, DT)(dateTime, 1).toOption
 
   /**
     * Calculates the previous date-time to a given one considering only the field
@@ -55,8 +56,10 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
     * @return the next date-time
     */
   @inline
-  def prevIn[DateTime](expr: E[F], DT: IsDateTime[DateTime])(dateTime: DateTime): Option[DateTime] =
-    stepIn(expr, DT)(dateTime, -1)
+  final def prevIn[DateTime](expr: E[F], DT: IsDateTime[DateTime])(
+      dateTime: DateTime
+  ): Option[DateTime] =
+    stepIn(expr, DT)(dateTime, -1).toOption
 
   /**
     * Calculates a date-time that is in either the past or the future relative
@@ -70,12 +73,12 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
   def stepIn[DateTime](
       expr: E[F],
       DT: IsDateTime[DateTime]
-  )(dateTime: DateTime, step: Int): Option[DateTime] = {
+  )(dateTime: DateTime, step: Int): Either[StepError, DateTime] = {
     import cats.syntax.either._
     for {
-      current  <- DT.get(dateTime, expr.unit.field).toOption
+      current  <- DT.get(dateTime, expr.unit.field).leftMap(_.asInstanceOf[StepError])
       newValue <- expr.step(current, step).map(_._1)
-      adjusted <- DT.set(dateTime, expr.unit.field, newValue).toOption
+      adjusted <- DT.set(dateTime, expr.unit.field, newValue).leftMap(_.asInstanceOf[StepError])
     } yield adjusted
   }
 

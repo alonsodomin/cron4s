@@ -14,17 +14,26 @@
  * limitations under the License.
  */
 
-package cron4s.datetime
+package cron4s
+package expr
 
-import cats.Eq
-import cron4s.CronField
+import cron4s.base.Step
+import cron4s.datetime.IsDateTime
 
-sealed abstract class DateTimeError(msg: String) extends Exception(msg)
-object DateTimeError {
-  implicit val dateTimeErrorEq: Eq[DateTimeError] = Eq.fromUniversalEquals
+sealed trait Constraint[F <: CronField] {
+  def step[DT: IsDateTime](from: DT, step: Step): Either[StepError, (Int, DT)]
 }
 
-final case class UnsupportedField(field: CronField)
-    extends DateTimeError(s"Field $field is not supported")
-final case class InvalidFieldValue(field: CronField, value: Int)
-    extends DateTimeError(s"Value $value is not valid for field $field")
+case class EachConstraint[F <: CronField](unit: CronUnit[F]) extends Constraint[F] {
+  def step[DT](from: DT, step: Step)(
+      implicit DT: IsDateTime[DT]
+  ): Either[StepError, (Int, DT)] =
+    if (!DT.supportedFields(from).contains(unit.field)) Left(UnsupportedField(unit.field))
+    else {
+      for {
+        currValue <- DT.get(from, unit.field)
+
+      } yield ()
+      ???
+    }
+}

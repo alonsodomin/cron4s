@@ -14,98 +14,58 @@
  * limitations under the License.
  */
 
-package cron4s.base
+package cron4s
+package base
 
 import cats.implicits._
 
-/**
-  * Created by alonsodomin on 23/08/2016.
-  */
-final case class Step private[cron4s] (amount: Int, direction: Direction) {
-  require(amount >= 0, "Step amount must be a positive integer")
-
-  def reverse: Step = copy(direction = direction.reverse)
-
-}
-
-object Step {
-  def apply(stepSize: Int): Step =
-    new Step(Math.abs(stepSize), Direction.ofSign(stepSize))
-}
-
-sealed abstract class Direction(private[cron4s] val sign: Int) {
-  def reverse: Direction
-}
-object Direction {
-
-  def ofSign(step: Int): Direction =
-    if (step >= 0) Forward
-    else Backwards
-
-  case object Forward extends Direction(1) {
-    def reverse: Direction = Backwards
-  }
-  case object Backwards extends Direction(-1) {
-    def reverse: Direction = Forward
-  }
-}
-
-trait Enumerated[A] {
+trait Enumerated[A] extends Steppable[A, Int] {
 
   def min(a: A): Int = range(a).min
   def max(a: A): Int = range(a).max
 
-  def step(a: A, from: Int, step: Step): Option[(Int, Int)] =
-    if (step.amount == Int.MinValue || step.amount == Int.MaxValue) None
-    else {
-      val aRange = range(a)
+  def range(a: A): IndexedSeq[Int]
 
-      def nearestNeighbourIndex = step.direction match {
-        case Direction.Forward =>
-          val idx = aRange.indexWhere(from < _)
-          if (idx == -1) aRange.size
-          else idx
+  final def step(a: A, from: Int, step: Step): Either[StepError, (Int, Int)] = {
+    val aRange = range(a)
 
-        case Direction.Backwards =>
-          aRange.lastIndexWhere(from > _)
-      }
+    def nearestNeighbourIndex = step.direction match {
+      case Direction.Forward =>
+        val idx = aRange.indexWhere(from < _)
+        if (idx == -1) aRange.size
+        else idx
 
-      def currentIdx =
-        if (aRange.contains(from)) {
-          aRange.indexOf(from)
-        } else {
-          val correction =
-            if (step.amount != 0) step.direction.reverse.sign else 0
-          nearestNeighbourIndex + correction
-        }
-
-      val pointer = currentIdx + (step.amount * step.direction.sign)
-      val index = {
-        val mod = pointer % aRange.size
-        if (mod < 0) aRange.size + mod
-        else mod
-      }
-      val offset = if (pointer < 0) {
-        pointer - (aRange.size - 1)
-      } else {
-        pointer
-      }
-
-      val newValue  = aRange(index)
-      val carryOver = offset / aRange.size
-
-      if (newValue != from || carryOver != 0) (newValue, carryOver).some
-      else none
+      case Direction.Backwards =>
+        aRange.lastIndexWhere(from > _)
     }
 
-  def step(a: A)(from: Int, stepSize: Int): Option[(Int, Int)] =
-    if (stepSize == Int.MinValue || stepSize == Int.MaxValue) None
-    else step(a, from, Step(stepSize))
+    def currentIdx =
+      if (aRange.contains(from)) {
+        aRange.indexOf(from)
+      } else {
+        val correction =
+          if (step.amount != 0) step.direction.reverse.sign else 0
+        nearestNeighbourIndex + correction
+      }
 
-  def next(a: A)(from: Int): Option[Int] = step(a)(from, 1).map(_._1)
-  def prev(a: A)(from: Int): Option[Int] = step(a)(from, -1).map(_._1)
+    val pointer = currentIdx + (step.amount * step.direction.sign)
+    val index = {
+      val mod = pointer % aRange.size
+      if (mod < 0) aRange.size + mod
+      else mod
+    }
+    val offset = if (pointer < 0) {
+      pointer - (aRange.size - 1)
+    } else {
+      pointer
+    }
 
-  def range(a: A): IndexedSeq[Int]
+    val newValue  = aRange(index)
+    val carryOver = offset / aRange.size
+
+    (newValue, carryOver).asRight
+  }
+
 }
 
 object Enumerated {

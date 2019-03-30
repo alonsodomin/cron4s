@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package cron4s.datetime
+package cron4s
+package datetime
 
 import cats.syntax.either._
 
-import cron4s._
 import cron4s.base.{Direction, Step}
 import cron4s.expr._
 
@@ -28,10 +28,10 @@ import scala.annotation.tailrec
 
 private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
 
-  private type ResetPrevFn = DateTime => Option[DateTime]
+  private type ResetPrevFn = DateTime => Either[StepError, DateTime]
   private type StepST      = Option[(ResetPrevFn, DateTime, Step)]
 
-  private val identityReset: ResetPrevFn = Some(_)
+  private val identityReset: ResetPrevFn = Right(_)
 
   private[this] def stepNode[N[_ <: CronField], F <: CronField](stepState: StepST, node: N[F])(
       implicit expr: FieldExpr[N, F]
@@ -42,7 +42,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
         step: Step,
         newValue: Int,
         carryOver: Int
-    ): Option[(DateTime, Int)] =
+    ): Either[StepError, (DateTime, Int)] =
       DT.set(dt, node.unit.field, newValue)
         .map(_ -> carryOver)
         .recover {
@@ -54,22 +54,21 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
             }
             dt -> newCarryOver
         }
-        .toOption
 
     stepState.flatMap {
       case (resetPrevious, from, step) =>
-        def resetThis: DateTime => Option[DateTime] = {
+        def resetThis: DateTime => Either[StepError, DateTime] = {
           val resetValue = step.direction match {
             case Direction.Forward   => node.min
             case Direction.Backwards => node.max
           }
 
-          resetPrevious.andThen(_.flatMap(DT.set(_, node.unit.field, resetValue).toOption))
+          resetPrevious.andThen(_.flatMap(DT.set(_, node.unit.field, resetValue)))
         }
 
         DT.get(from, node.unit.field).toOption.flatMap { currentValue =>
           node.step(currentValue, step) match {
-            case Some((newValue, carryOver)) =>
+            case Right((newValue, carryOver)) =>
               // Attempt to set a new value in the field and reset previous fields
               attemptSet(from, step, newValue, carryOver)
                 .flatMap { case (dt, co) => resetPrevious(dt).map(_ -> co) }
@@ -77,8 +76,9 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
                   case (dt, co) =>
                     (resetThis, dt, step.copy(amount = Math.abs(co)))
                 }
+                .toOption
 
-            case None =>
+            case Left(_) =>
               Some((resetThis, from, step.copy(amount = 0)))
           }
         }

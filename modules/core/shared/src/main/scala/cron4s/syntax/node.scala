@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package cron4s.syntax
+package cron4s
+package syntax
 
 import cron4s.CronField
 import cron4s.datetime.{IsDateTime, DateTimeNode}
@@ -35,7 +36,7 @@ private[syntax] class DateTimeNodeOps[E[_ <: CronField], F <: CronField](
 
   def stepIn[DateTime](dateTime: DateTime, step: Int)(
       implicit DT: IsDateTime[DateTime]
-  ): Option[DateTime] =
+  ): Either[StepError, DateTime] =
     tc.stepIn(self, DT)(dateTime, step)
 
 }

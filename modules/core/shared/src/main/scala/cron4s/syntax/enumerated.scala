@@ -18,25 +18,17 @@ package cron4s.syntax
 
 import cron4s.base.{Step, Enumerated}
 
-/**
-  * Created by alonsodomin on 23/08/2016.
-  */
-private[syntax] class EnumeratedOps[A](self: A, tc: Enumerated[A]) {
+private[syntax] class EnumeratedOps[T](self: T, tc: Enumerated[T]) {
   def max: Int = tc.max(self)
   def min: Int = tc.min(self)
-  def step(from: Int, stepSize: Int): Option[(Int, Int)] =
-    tc.step(self)(from, stepSize)
-  def step(from: Int, step: Step): Option[(Int, Int)] =
-    tc.step(self, from, step)
-  def next(from: Int): Option[Int] = tc.next(self)(from)
-  def prev(from: Int): Option[Int] = tc.prev(self)(from)
-  def range: IndexedSeq[Int]       = tc.range(self)
+
+  def range: IndexedSeq[Int] = tc.range(self)
 }
 
 private[syntax] trait EnumeratedSyntax {
 
-  implicit def toEnumeratedOps[A](target: A)(implicit tc: Enumerated[A]): EnumeratedOps[A] =
-    new EnumeratedOps[A](target, tc)
+  implicit def toEnumeratedOps[T](target: T)(implicit tc: Enumerated[T]): EnumeratedOps[T] =
+    new EnumeratedOps[T](target, tc)
 
 }
 

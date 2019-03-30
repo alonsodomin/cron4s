@@ -55,3 +55,13 @@ object InvalidFieldCombination {
   implicit val invalidFieldCombinationShow: Show[InvalidFieldCombination] =
     Show.show(_.msg)
 }
+
+sealed abstract class StepError(msg: String) extends Error(msg)
+case class StepSizeOutOfRange(stepSize: Int)
+    extends StepError(s"Step size $stepSize is out of range")
+
+sealed abstract class DateTimeStepError(msg: String) extends StepError(msg)
+final case class UnsupportedField(field: CronField)
+    extends DateTimeStepError(s"Field $field is not supported")
+final case class InvalidFieldValue(field: CronField, value: Int)
+    extends DateTimeStepError(s"Value $value is not valid for field $field")

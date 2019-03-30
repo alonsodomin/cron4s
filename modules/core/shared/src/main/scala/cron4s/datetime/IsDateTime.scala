@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package cron4s.datetime
+package cron4s
+package datetime
 
 import cron4s.CronField
 
@@ -48,7 +49,7 @@ trait IsDateTime[DateTime] {
     * @tparam F the CronField type
     * @return value of the field
     */
-  def get[F <: CronField](dateTime: DateTime, field: F): Either[DateTimeError, Int]
+  def get[F <: CronField](dateTime: DateTime, field: F): Either[DateTimeStepError, Int]
 
   /**
     * Setter access for a specific field in a date-time
@@ -59,7 +60,11 @@ trait IsDateTime[DateTime] {
     * @tparam F the CronField type
     * @return a new date-time with the given field set to the new value
     */
-  def set[F <: CronField](dateTime: DateTime, field: F, value: Int): Either[DateTimeError, DateTime]
+  def set[F <: CronField](
+      dateTime: DateTime,
+      field: F,
+      value: Int
+  ): Either[DateTimeStepError, DateTime]
 
 }
 

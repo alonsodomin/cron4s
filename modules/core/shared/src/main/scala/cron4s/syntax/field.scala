@@ -28,7 +28,7 @@ import scala.language.higherKinds
 private[syntax] class FieldExprOps[E[_ <: CronField], F <: CronField](
     self: E[F],
     tc: FieldExpr[E, F]
-) extends EnumeratedOps[E[F]](self, tc) {
+) {
 
   def matches: Predicate[Int] = tc.matches(self)
 
@@ -42,7 +42,7 @@ private[syntax] class FieldExprOps[E[_ <: CronField], F <: CronField](
 
 }
 
-private[syntax] trait FieldExprSyntax extends EnumeratedSyntax {
+private[syntax] trait FieldExprSyntax {
 
   implicit def toExprOps[E[_ <: CronField], F <: CronField](
       target: E[F]

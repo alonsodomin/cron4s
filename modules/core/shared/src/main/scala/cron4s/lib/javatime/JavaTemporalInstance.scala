@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package cron4s.lib.javatime
+package cron4s
+package lib.javatime
 
 import java.time.temporal._
 
@@ -57,7 +58,7 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
   def supportedFields(dateTime: DT): List[CronField] =
     CronField.All.filter(f => dateTime.isSupported(asTemporalField(f)))
 
-  override def get[F <: CronField](dateTime: DT, field: F): Either[DateTimeError, Int] = {
+  override def get[F <: CronField](dateTime: DT, field: F): Either[DateTimeStepError, Int] = {
     val temporalField = asTemporalField(field)
 
     val offset = if (field == DayOfWeek) -DayOfWeekOffset else 0
@@ -69,7 +70,7 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
       dateTime: DT,
       field: F,
       value: Int
-  ): Either[DateTimeError, DT] = {
+  ): Either[DateTimeStepError, DT] = {
     val temporalField = asTemporalField(field)
 
     def adjust(realVal: Int)(dt: DT): Try[DT] =

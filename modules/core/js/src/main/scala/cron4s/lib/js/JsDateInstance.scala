@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package cron4s.lib.js
+package cron4s
+package lib.js
 
 import cats.syntax.either._
 
 import cron4s.CronField
-import cron4s.datetime.{DateTimeError, DateTimeUnit, InvalidFieldValue, IsDateTime}
+import cron4s.datetime.{DateTimeUnit, IsDateTime}
 
 import scala.scalajs.js.Date
 
@@ -59,7 +60,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
     }
   }
 
-  override def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeError, Int] = {
+  override def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeStepError, Int] = {
     val value = field match {
       case Second     => dateTime.getUTCSeconds()
       case Minute     => dateTime.getUTCMinutes()
@@ -82,7 +83,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       dateTime: Date,
       field: F,
       value: Int
-  ): Either[DateTimeError, Date] = {
+  ): Either[DateTimeStepError, Date] = {
     def setter(setter: Date => Unit): Date = {
       val newDateTime = new Date(dateTime.getTime())
       setter(newDateTime)
