@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package cron4s.lib.momentjs
+package cron4s
+package lib.momentjs
 
 import cats.syntax.either._
 
 import cron4s.CronField
-import cron4s.datetime.{DateTimeError, DateTimeUnit, InvalidFieldValue, IsDateTime}
+import cron4s.datetime.{DateTimeUnit, IsDateTime}
 
 import moment._
 
@@ -59,7 +60,7 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
     * @tparam F the CronField type
     * @return value of the field
     */
-  override def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeError, Int] =
+  override def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeStepError, Int] =
     Right(field match {
       case Second     => dateTime.second()
       case Minute     => dateTime.minute()
@@ -88,7 +89,7 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
       dateTime: Date,
       field: F,
       value: Int
-  ): Either[DateTimeError, Date] = {
+  ): Either[DateTimeStepError, Date] = {
     def setter(f: Date => Unit): Date = {
       val newDateTime = Moment(dateTime)
       f(newDateTime)
