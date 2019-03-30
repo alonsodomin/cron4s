@@ -1,9 +1,8 @@
 ---
 layout: docs
 title: "Custom DateTime"
+section: "userguide"
 ---
-
-## Custom DateTime
 
 As already mentioned in [Built-in libs](builtin_libs.html), **cron4s** comes with support for some DateTime libraries
 out of the box. But implementations of DateTime are many, both in the JVM and in JavaScript and adding support for all
@@ -15,7 +14,7 @@ get all the profit that the library provides with very little effort. This is du
 design and, in fact, there is nothing in the internals of the library tied to the _built-in_ lib support, all of them
 are implemented the same way as we are going to see right now.
 
-### `IsDateTime` typeclass
+## `IsDateTime` typeclass
 
 All comes down to one single (and very simple) typeclass: `cron4s.datetime.IsDateTime`. Providing an implicit instance
 of this trait is enough to be able to use your favourite library.
@@ -65,7 +64,7 @@ cron.next(myTime)
 cron.timePart.next(myTime)
 ```
 
-### Testing
+## Testing
 
 Running a series of expressions in a REPL is not enough to be 100% confident that our implementation is correct.
 **cron4s** provides with the `cron4s-testkit` module which includes laws and base test classes to help in this task.

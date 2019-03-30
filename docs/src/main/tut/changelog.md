@@ -1,6 +1,8 @@
 ---
-layout: docs
-title: "What's New"
+layout: page
+title: "Change Log"
+section: "extensions"
+position: 3
 ---
 
 ## 0.5.0

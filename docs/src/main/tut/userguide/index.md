@@ -1,9 +1,9 @@
 ---
 layout: docs
-title: "First Steps"
+title: "Getting Started"
+section: "userguide"
+position: 1
 ---
-
-## First Steps
 
 To start using **cron4s** in your project just include the library as part of your dependencies:
 
@@ -17,7 +17,7 @@ Or in ScalaJS:
 libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s-core" % "x.y.z"
 ```
 
-### Parsing
+## Parsing
 
 **cron4s** uses cron expressions that go from seconds to day of week in the following order:
 
@@ -78,7 +78,7 @@ unless you are aware of the consequences (well, it also comes handy during a REP
 Cron.unsafeParse("10-65 * * * * *")
 ```
 
-#### Compile time expressions
+### Compile time expressions
 
 Starting at `cron4s` 0.5.0, there is support for compile-time verified cron expressions, which gives an additional
 guarantee that our expressions are well formed without the need for a runtime check. Compile-time cron expressions
@@ -100,7 +100,7 @@ the compile time error is more helpful but it has its limitations, being the mos
 expression text needs to be resolvable at compile time. If for some reason you are reading your expression as an
 input into your program, you should still fallback to the previous methods.
 
-#### Validation errors
+### Validation errors
 
 The CRON expression will be validated right after parsing. Any error found during this stage will be returned
 as well in the left side of the `Either` returned by the `Cron` constructor. For instance, the following expression
@@ -122,7 +122,7 @@ val invalidCron: InvalidCron = invalid.left.get.asInstanceOf[InvalidCron]
 println(invalidCron.reason.toList.mkString("\n"))
 ```
 
-### The Cron4s AST
+## The Cron4s AST
 
 After successfully parsing a CRON expression, the `CronExpr` resulting type represents the previously
 parsed expression as an AST, in which we can access all the expression fields individually:
@@ -174,7 +174,7 @@ To convert an AST back into the original string expression we simply use the `to
 cron.toString
 ```
 
-### Sub-expressions
+## Sub-expressions
 
 All the operations possible on a `CronExpr` are also possible in any of its subexpressions (either time or date) so
 you can use them in exactly the same way. For example:
@@ -205,7 +205,7 @@ cron.timePart.field[CronField.DayOfMonth]
 This is just a teaser, we will see much more interesting operations on cron expressions later but it's good to know
 that all operations possible on a `CronExpr`, are also possible on it's subexpressions.
 
-#### Field nodes
+### Field nodes
 
 All field nodes have their own type, which is parameterized in the actual field type they operate on. We can
 access that field type definition via the `unit` of field expression:
