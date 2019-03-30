@@ -149,6 +149,7 @@ def mimaSettings(module: String, versions: Set[String]): Seq[Setting[_]] = mimaD
       ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.package.Cron4sStringContext"),
       ProblemFilters.exclude[MissingClassProblem]("cron4s.package$Cron4sStringContext"),
       ProblemFilters.exclude[MissingClassProblem]("cron4s.CronInterpolator"),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("cron4s.syntax.AllSyntax.toCronStringInterpolator"),
     )
   )
 )
