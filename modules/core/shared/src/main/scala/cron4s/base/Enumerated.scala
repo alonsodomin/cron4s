@@ -63,7 +63,8 @@ trait Enumerated[A] extends Steppable[A, Int] {
     val newValue  = aRange(index)
     val carryOver = offset / aRange.size
 
-    (newValue, carryOver).asRight
+    if (newValue != from || carryOver != 0) (newValue, carryOver).asRight
+    else Left(DidNotStep)
   }
 
 }

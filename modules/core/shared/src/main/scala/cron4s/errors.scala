@@ -60,6 +60,8 @@ sealed abstract class StepError(msg: String) extends Error(msg)
 case class StepSizeOutOfRange(stepSize: Int)
     extends StepError(s"Step size $stepSize is out of range")
 
+case object DidNotStep extends StepError("Step did not have any effect")
+
 sealed abstract class DateTimeStepError(msg: String) extends StepError(msg)
 final case class UnsupportedField(field: CronField)
     extends DateTimeStepError(s"Field $field is not supported")
