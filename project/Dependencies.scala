@@ -9,33 +9,36 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSVersion
 object Dependencies {
 
   object version {
-    val cats        = "1.6.0"
-    val shapeless   = "2.3.3"
-    val scalacheck  = "1.14.0"
-    val scalatest   = "3.0.5"
-    val discipline  = "0.10.0"
-    val catalysts   = "0.8"
-    val decline     = "0.6.2"
-    val circe       = "0.11.1"
-    val parser      = "1.1.1"
-    val doobie      = "0.6.0"
+    val cats       = "1.6.0"
+    val shapeless  = "2.3.3"
+    val scalacheck = "1.14.0"
+    val scalatest  = "3.0.5"
+    val discipline = "0.10.0"
+    val catalysts  = "0.8"
+    val decline    = "0.6.2"
+    val circe      = "0.11.1"
+    val parser     = "1.1.1"
+    val doobie     = "0.6.0"
 
-    val jodaTime      = "2.10.1"
-    val jodaConvert   = "2.2.0"
+    val jodaTime    = "2.10.1"
+    val jodaConvert = "2.2.0"
 
     val momentjs      = "0.8.1"
     val scalaJavaTime = "2.0.0-RC1"
   }
 
-  val macroParadise = compilerPlugin("org.scalamacros" % "paradise"       % "2.1.1" cross CrossVersion.full)
-  val kindProjector = compilerPlugin("org.spire-math"  % "kind-projector" % "0.9.9" cross CrossVersion.binary)
+  val macroParadise = compilerPlugin(
+    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
+  )
+  val kindProjector = compilerPlugin(
+    "org.spire-math" % "kind-projector" % "0.9.9" cross CrossVersion.binary
+  )
   lazy val compilerPlugins = Seq(macroParadise, kindProjector)
 
   lazy val core = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
-      "com.chuusai"    %%% "shapeless"  % version.shapeless,
-      "org.typelevel"  %%% "cats-core"  % version.cats,
-
+      "com.chuusai"            %%% "shapeless"                % version.shapeless,
+      "org.typelevel"          %%% "cats-core"                % version.cats,
       "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parser,
     )
   }
@@ -61,7 +64,7 @@ object Dependencies {
 
   lazy val tests = Def.settings {
     libraryDependencies ++= compilerPlugins ++ Seq(
-      "org.scalatest"     %%% "scalatest"       % version.scalatest % Test
+      "org.scalatest" %%% "scalatest" % version.scalatest % Test
     )
   }
 
