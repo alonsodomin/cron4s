@@ -1,3 +1,12 @@
+# Cron4s Change Long
+
+## Unreleased changes
+
+New Features:
+
+ * [#149](https://github.com/alonsodomin/cron4s/pull/149): Add extension module for [doobie](https://tpolecat.github.io/doobie/).
+   Find documentation about it in the [doobie extension](https://alonsodomin.github.io/cron4s/extensions/doobie.html) docs.
+
 ## 0.5.0
 
 This version adds some features and upgrades some of the core dependencies. This version **is not binary compatible**
@@ -11,9 +20,9 @@ Bug Fixes:
 New features:
 
  * [#125](https://github.com/alonsodomin/cron4s/pull/125): Add extension module for [decline](http://ben.kirw.in/decline/).
-   Find documentation about it in the [extensions](https://alonsodomin.github.io/cron4s/extensions.html) docs.
+   Find documentation about it in the [extensions](https://alonsodomin.github.io/cron4s/extensions/decline.html) docs.
  * [#127](https://github.com/alonsodomin/cron4s/pull/127): Add extension module for [circe](http://circe.io).
-   Find documentation about it in the [extensions](https://alonsodomin.github.io/cron4s/extensions.html) docs.
+   Find documentation about it in the [extensions](https://alonsodomin.github.io/cron4s/extensions/circe.html) docs.
  * [#126](https://github.com/alonsodomin/cron4s/pull/126): Add a compile-time string interpolator.
 
 Version upgrades:
