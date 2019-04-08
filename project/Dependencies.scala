@@ -12,7 +12,7 @@ object Dependencies {
     val cats       = "1.6.0"
     val shapeless  = "2.3.3"
     val scalacheck = "1.14.0"
-    val scalatest  = "3.0.5"
+    val scalatest  = "3.0.7"
     val discipline = "0.11.1"
     val catalysts  = "0.8"
     val decline    = "0.6.2"
