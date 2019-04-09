@@ -231,8 +231,8 @@ lazy val cron4s = (project in file("."))
 
 lazy val cron4sJS = (project in file(".js"))
   .settings(
-    name := "cron4s",
-    moduleName := "cron4s"
+    name := "js",
+    moduleName := "cron4s-js"
   )
   .settings(commonSettings: _*)
   .settings(commonJsSettings: _*)
@@ -243,8 +243,8 @@ lazy val cron4sJS = (project in file(".js"))
 
 lazy val cron4sJVM = (project in file(".jvm"))
   .settings(
-    name := "cron4s",
-    moduleName := "cron4s"
+    name := "jvm",
+    moduleName := "cron4s-jvm"
   )
   .settings(commonSettings)
   .settings(commonJvmSettings)
