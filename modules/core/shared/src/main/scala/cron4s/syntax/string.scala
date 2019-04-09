@@ -17,26 +17,60 @@
 package cron4s
 package syntax
 
-private[syntax] trait CronStringSyntax {
+import cats.syntax.either._
 
-  implicit def toCronStringInterpolator(sc: StringContext): CronStringInterpolator =
-    new CronStringInterpolator(sc)
+import contextual._
+
+private[syntax] trait CronStringSyntax {
+  import CronStringInterpolator._
+
+  implicit def toCronStringInterpolator(sc: StringContext): CronStringContext =
+    new CronStringContext(sc)
+
+  implicit val embedCronStrings = CronStringInterpolator.embed[String](
+    Case(DummyCtx, DummyCtx)(identity)
+  )
 
 }
 
-final class CronStringInterpolator(val sc: StringContext) extends AnyVal {
-  def cron(args: Any*): CronExpr = {
-    val literals = sc.parts.iterator
-    val holes    = args.iterator
-    val buf      = new StringBuffer(literals.next)
+object CronStringInterpolator extends Interpolator {
+  case object DummyCtx extends Context
 
-    while (literals.hasNext) {
-      buf.append(holes.next)
-      buf.append(literals.next)
+  type Input       = String
+  type Output      = CronExpr
+  type ContextType = DummyCtx.type
+
+  def check(input: String) = Cron.parse(input).leftMap {
+    case parseErr: ParseFailed => parseErr.position -> parseErr.getMessage
+    case other: Error          => 0                 -> other.getMessage
+  }
+
+  def contextualize(interpolation: StaticInterpolation): Seq[ContextType] = {
+    val literals = interpolation.parts.collect {
+      case lit: Literal => lit
+      case hole: Hole =>
+        interpolation.abort(hole, "cron: substitutions are not supported")
     }
 
-    Cron.unsafeParse(buf.toString)
+    if (literals.isEmpty) {
+      interpolation.abort(Literal(0, ""), 0, "cron: empty expressions are not allowed")
+    } else {
+      val lit @ Literal(_, str) = literals.head
+      check(str) match {
+        case Left((pos, error)) =>
+          interpolation.abort(lit, pos, error)
+        case Right(_) => Nil
+      }
+    }
   }
+
+  def evaluate(contextual: RuntimeInterpolation): CronExpr =
+    check(contextual.parts.mkString).right.get
+
+}
+
+private[syntax] final class CronStringContext(val sc: StringContext) extends AnyVal {
+  def cron = Prefix(CronStringInterpolator, sc)
 }
 
 object string extends CronStringSyntax

@@ -155,6 +155,11 @@ def mimaSettings(module: String, versions: Set[String]): Seq[Setting[_]] =
         ProblemFilters.exclude[InheritedNewAbstractMethodProblem](
           "cron4s.syntax.AllSyntax.toCronStringInterpolator"
         ),
+        ProblemFilters
+          .exclude[InheritedNewAbstractMethodProblem]("cron4s.syntax.AllSyntax.embedCronStrings"),
+        ProblemFilters.exclude[InheritedNewAbstractMethodProblem](
+          "cron4s.syntax.AllSyntax.cron4s$syntax$CronStringSyntax$_setter_$embedCronStrings_="
+        ),
       )
     )
   )
@@ -179,8 +184,8 @@ lazy val docSettings = Seq(
       "changelog.md",
       "page",
       Map(
-        "title" -> "Change Log",
-        "section" -> "changelog",
+        "title"    -> "Change Log",
+        "section"  -> "changelog",
         "position" -> "3"
       )
     )
