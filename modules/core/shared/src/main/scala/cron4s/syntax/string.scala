@@ -22,18 +22,50 @@ import cats.syntax.either._
 import contextual._
 
 private[syntax] trait CronStringSyntax {
-  
+  import CronStringInterpolator._
+
   implicit def toCronStringInterpolator(sc: StringContext): CronStringContext =
     new CronStringContext(sc)
 
+  implicit val embedCronStrings = CronStringInterpolator.embed[String](
+    Case(DummyCtx, DummyCtx)(identity)
+  )
+
 }
 
-object CronStringInterpolator extends Verifier[CronExpr] {
+object CronStringInterpolator extends Interpolator {
+  case object DummyCtx extends Context
+
+  type Input       = String
+  type Output      = CronExpr
+  type ContextType = DummyCtx.type
 
   def check(input: String) = Cron.parse(input).leftMap {
     case parseErr: ParseFailed => parseErr.position -> parseErr.getMessage
     case other: Error          => 0                 -> other.getMessage
   }
+
+  def contextualize(interpolation: StaticInterpolation): Seq[ContextType] = {
+    val literals = interpolation.parts.collect {
+      case lit: Literal => lit
+      case hole: Hole =>
+        interpolation.abort(hole, "cron: substitutions are not supported")
+    }
+
+    if (literals.isEmpty) {
+      interpolation.abort(Literal(0, ""), 0, "cron: empty expressions are not allowed")
+    } else {
+      val lit @ Literal(_, str) = literals.head
+      check(str) match {
+        case Left((pos, error)) =>
+          interpolation.abort(lit, pos, error)
+        case Right(_) => Nil
+      }
+    }
+  }
+
+  def evaluate(contextual: RuntimeInterpolation): CronExpr =
+    check(contextual.parts.mkString).right.get
 
 }
 

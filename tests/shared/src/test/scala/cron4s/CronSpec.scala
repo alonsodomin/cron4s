@@ -90,8 +90,7 @@ class CronSpec extends FlatSpec with Matchers {
   }
 
   it should "compile a valid expression" in {
-    val secs = "17-30,5"
-    val expr = cron"$secs * 12 * * ?"
+    val expr = cron"17-30,5 * 12 * * ?"
 
     expr shouldBe ValidExpr
   }
