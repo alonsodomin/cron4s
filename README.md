@@ -64,7 +64,7 @@ There is some sort of automation configured in this repository to ease the manag
 This is a non-exhaustive list of other open source projects and libraries that use or are somewhat related to Cron4s. If you have a library that depends on Cron4s you could add it [here](https://github.com/alonsodomin/cron4s/edit/master/README.md):
 
  * [fs2-cron](https://github.com/fthomas/fs2-cron): Create pure functional streams that emit elements based on a given cron schedule.
- * [pureconfig](https://github.com/pureconfig/pureconfig): Cron expression parsing support in configuration files.
+ * [pureconfig-cron4s](https://github.com/pureconfig/pureconfig/tree/master/modules/cron4s): Cron expression parsing support in configuration files.
 
 ## License
 
