@@ -59,6 +59,13 @@ There is some sort of automation configured in this repository to ease the manag
 * **Auto-merge**: [Mergify](https://mergify.io) is installed in this repo to do auto-merge of pull requests that meet a given criteria. This said criteria can be modified in the [.mergify](https://github.com/alonsodomin/cron4s/blob/master/.mergify.yml) at the project's root folder.
 * **Travis Release**: [Travis CI](https://travis-ci.org/alonsodomin/cron4s) has been configured, not just to build the project, but also to be able to release to Maven Central with minimal user interaction. Pushing a tag in the repo with the version number will sign and publish such a release in Maven Central, non-tagged commits to `master` will be published as `SNAPSHOT`.  
 
+## Related Projects
+
+This is a non-exhaustive list of other open source projects and libraries that use or are somewhat related to Cron4s. If you have a library that depends on Cron4s you could add it [here](https://github.com/alonsodomin/cron4s/edit/master/README.md):
+
+ * [fs2-cron](https://github.com/fthomas/fs2-cron): Create pure functional streams that emit elements based on a given cron schedule.
+ * [pureconfig](https://github.com/pureconfig/pureconfig): Cron expression parsing support in configuration files.
+
 ## License
 
 Copyright 2017 Antonio Alonso Dominguez
