@@ -28,9 +28,6 @@ import scala.language.implicitConversions
 package object datetime {
   import CronField._
 
-  @deprecated("Use `cron4s.DateTimeStepError` instead", "0.6.0")
-  type DateTimeError = DateTimeStepError
-
   private[datetime] type AnyCron =
     CronExpr :+: TimeCronExpr :+: DateCronExpr :+: CNil
 

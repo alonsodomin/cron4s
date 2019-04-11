@@ -60,7 +60,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
     }
   }
 
-  override def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeStepError, Int] = {
+  override def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeError, Int] = {
     val value = field match {
       case Second     => dateTime.getUTCSeconds()
       case Minute     => dateTime.getUTCMinutes()
@@ -83,7 +83,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       dateTime: Date,
       field: F,
       value: Int
-  ): Either[DateTimeStepError, Date] = {
+  ): Either[DateTimeError, Date] = {
     def setter(setter: Date => Unit): Date = {
       val newDateTime = new Date(dateTime.getTime())
       setter(newDateTime)

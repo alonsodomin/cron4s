@@ -17,6 +17,8 @@
 package cron4s
 package datetime
 
+import cats.implicits._
+
 import cron4s.expr.FieldExpr
 import cron4s.base._
 
@@ -30,7 +32,6 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
     */
   def matchesIn[DateTime](expr: E[F], DT: IsDateTime[DateTime]): Predicate[DateTime] =
     Predicate { dt =>
-      import cats.syntax.either._
       val current = DT.get(dt, expr.unit.field)
       current.map(expr.matches).getOrElse(false)
     }
@@ -76,9 +77,9 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
   )(dateTime: DateTime, step: Int): Either[StepError, DateTime] = {
     import cats.syntax.either._
     for {
-      current  <- DT.get(dateTime, expr.unit.field).leftMap(_.asInstanceOf[StepError])
+      current  <- DT.get(dateTime, expr.unit.field).leftWiden[StepError]
       newValue <- expr.step(current, step).map(_._1)
-      adjusted <- DT.set(dateTime, expr.unit.field, newValue).leftMap(_.asInstanceOf[StepError])
+      adjusted <- DT.set(dateTime, expr.unit.field, newValue).leftWiden[StepError]
     } yield adjusted
   }
 

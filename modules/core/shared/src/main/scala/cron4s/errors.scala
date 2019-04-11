@@ -62,8 +62,8 @@ case class StepSizeOutOfRange(stepSize: Int)
 
 case object DidNotStep extends StepError("Step did not have any effect")
 
-sealed abstract class DateTimeStepError(msg: String) extends StepError(msg)
+sealed abstract class DateTimeError(msg: String) extends StepError(msg)
 final case class UnsupportedField(field: CronField)
-    extends DateTimeStepError(s"Field $field is not supported")
+    extends DateTimeError(s"Field $field is not supported")
 final case class InvalidFieldValue(field: CronField, value: Int)
-    extends DateTimeStepError(s"Value $value is not valid for field $field")
+    extends DateTimeError(s"Value $value is not valid for field $field")

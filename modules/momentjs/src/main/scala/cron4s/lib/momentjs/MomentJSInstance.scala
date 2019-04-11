@@ -60,7 +60,7 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
     * @tparam F the CronField type
     * @return value of the field
     */
-  override def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeStepError, Int] =
+  override def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeError, Int] =
     Right(field match {
       case Second     => dateTime.second()
       case Minute     => dateTime.minute()
@@ -89,7 +89,7 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
       dateTime: Date,
       field: F,
       value: Int
-  ): Either[DateTimeStepError, Date] = {
+  ): Either[DateTimeError, Date] = {
     def setter(f: Date => Unit): Date = {
       val newDateTime = Moment(dateTime)
       f(newDateTime)

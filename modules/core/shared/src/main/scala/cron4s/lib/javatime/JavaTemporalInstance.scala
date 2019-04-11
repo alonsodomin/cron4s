@@ -58,7 +58,7 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
   def supportedFields(dateTime: DT): List[CronField] =
     CronField.All.filter(f => dateTime.isSupported(asTemporalField(f)))
 
-  override def get[F <: CronField](dateTime: DT, field: F): Either[DateTimeStepError, Int] = {
+  override def get[F <: CronField](dateTime: DT, field: F): Either[DateTimeError, Int] = {
     val temporalField = asTemporalField(field)
 
     val offset = if (field == DayOfWeek) -DayOfWeekOffset else 0
@@ -70,7 +70,7 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
       dateTime: DT,
       field: F,
       value: Int
-  ): Either[DateTimeStepError, DT] = {
+  ): Either[DateTimeError, DT] = {
     val temporalField = asTemporalField(field)
 
     def adjust(realVal: Int)(dt: DT): Try[DT] =
