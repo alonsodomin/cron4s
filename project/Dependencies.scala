@@ -17,7 +17,7 @@ object Dependencies {
     val catalysts  = "0.8"
     val decline    = "0.6.2"
     val circe      = "0.11.1"
-    val parser     = "1.1.1"
+    val parser     = "1.1.2"
     val doobie     = "0.6.0"
     val contextual = "1.1.0"
 
