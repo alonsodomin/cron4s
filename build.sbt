@@ -68,7 +68,7 @@ val commonSettings = Def.settings(
 ) ++ unusedWarning
 
 lazy val commonJvmSettings = Seq(
-  fork in Test := false
+  fork in Test := true
 )
 
 lazy val commonJsSettings = Seq(
