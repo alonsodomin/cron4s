@@ -137,3 +137,72 @@ Version Upgrades:
    
 Please, check migration document for instructions on how to migrate your code to the last version:
  [Migration to 0.4.0](https://alonsodomin.github.io/cron4s/docs/migration/0_4_0.html) 
+
+## 0.3.1
+
+[cron4s](https://alonsodomin.github.io/cron4s) 0.3.1 is an incremental update with the following changes:
+
+* [#39](https://github.com/alonsodomin/cron4s/issues/39): Fixed type signature in summon method for type class `DateTimeCron`
+* [#41](https://github.com/alonsodomin/cron4s/issues/41): Support for Joda's partial date times: LocalDate, LocalTime, LocalDateTime
+* [#45](https://github.com/alonsodomin/cron4s/pull/45): Do no reference tests modules in parent POM as a compile dependency
+* [#52](https://github.com/alonsodomin/cron4s/pull/52): Preserve _step inertia_ when calculating a next or previous date, initially reported as in [#50](https://github.com/alonsodomin/cron4s/issues/50)
+* [#51](https://github.com/alonsodomin/cron4s/issues/51): Reset milliseconds in DateTime return values
+
+## 0.3.0
+
+[cron4s](https://alonsodomin.github.io/cron4s) 0.3.0 has an overhaul of its internals from 0.2.1. This release is not
+source compatible with previous ones as it has several API breaking changes which will make users have to update
+their codebases to be able to compile with it. The list of changes in this release are:
+
+* Updated ScalaJS to 0.6.14
+* Support for Scala 2.12 [(#22)](https://github.com/alonsodomin/cron4s/pull/22)
+* Re-organized the built-in datetime library support under the `cron4s.lib` package.
+* `cron4s.expr.AnyExpr` has been renamed to `cron4s.expr.EachNode` to properly reflect the semantics of the `*` symbol in CRON expressions. [(#22)](https://github.com/alonsodomin/cron4s/pull/22)
+* Parser implementation has been rewritten using [FastParse](http://www.lihaoyi.com/fastparse/) [(#22)](https://github.com/alonsodomin/cron4s/pull/22)
+* Full type signatures in the AST are now preserved after parsing the expression [(#24)](https://github.com/alonsodomin/cron4s/pull/24)
+* The parsed expression AST is not fully validated and any error will result returning those errors instead of the actual expression object.
+* Fixed inconsistencies when stepping over enumerated values of the different expression ranges [(#28)](https://github.com/alonsodomin/cron4s/pull/28)
+* All expression and nodes now implement the `scalaz.Show` typeclass to consistently return the actual CRON string representation.
+* Common datetime operations (matching and stepping) are now supported in subexpressions (date or time only)
+* Providing support for custom date time libraries has been greatly simplified and [full documented](https://alonsodomin.github.io/cron4s/docs/custom_datetime.html) [(#37)](https://github.com/alonsodomin/cron4s/pull/37)
+
+A [migration guide](https://alonsodomin.github.io/cron4s/docs/migration/0_3_0.html) has been published for anyone that would like to update.
+
+## 0.2.1
+
+cron4s 0.2.1 is a maintenance release over 0.2.0. The
+list of changes in this release are:
+
+* Documentation has been improved published as a [microsite](https://alonsodomin.github.io/cron4s)
+* `timePart` and `datePart` fields in `CronExpr` expose field based accessors.
+* `repr` accessor in `CronExpr` is now private
+
+## 0.2.0
+
+cron4s 0.2.0 is an API improvement release over the previous 0.1.0. The
+list of changes in this release are:
+
+* Deeper Typeclass based design which has helped to make a more concise and uniform implementation.
+* Added a `Seconds` field to the cron expression and parser.
+* Added a human-friendly `toString` implementation to all the expressions and cron units.
+* Dropped support for `java.util.Calendar` as it is impossible to treat it as an immutable type and yields weird results.
+* Improved parser error messages, including the position at which the parser stopped.
+* Made `CronExpr` a proper case class with its own attributes to ease using it with serializers. Access to the `HList` is still granted with the same attribute names.
+* Deprecated the `cron4s.matcher.Matcher` and replaced it by `cron4s.types.Predicate`
+* Added a testkit module, used to test the library and useful to test user extensions.
+
+## 0.1.0
+
+`cron4s` 0.1.0 is a preview release of a fully Scala idiomatic CRON expression parser that can be used in the JVM or in ScalaJS. cron4s has been designed with extensibility in mind, meaning that it's not tied to an specific date-time library/implementation, but provides support for many instead.
+
+Example:
+
+```scala
+import cron4s._
+import java.time._
+import cron4s.japi.time._
+
+val Right(cron) = Cron("10-35 2,4,6 * * *")
+val now = LocalDateTime.now
+val nextDate = cron.next(now)
+```
