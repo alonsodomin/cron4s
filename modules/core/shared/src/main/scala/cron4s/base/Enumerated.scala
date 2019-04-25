@@ -26,7 +26,7 @@ trait Enumerated[A] extends Steppable[A, Int] {
 
   def range(a: A): IndexedSeq[Int]
 
-  final def step(a: A, from: Int, step: Step): Either[StepError, (Int, Int)] = {
+  final def step(a: A, from: Int, step: Step): Either[ExprError, (Int, Int)] = {
     val aRange = range(a)
 
     def nearestNeighbourIndex = step.direction match {

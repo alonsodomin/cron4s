@@ -16,7 +16,11 @@
 
 package cron4s.testkit
 
+import cats.kernel.Eq
+
+import cron4s.Error
 import cron4s.base.Direction
+
 import org.scalacheck.{Arbitrary, Gen}
 
 /**
@@ -28,5 +32,7 @@ package object discipline {
     Gen.oneOf(Direction.Forward, Direction.Backwards)
   private[cron4s] implicit lazy val arbitraryDirection: Arbitrary[Direction] =
     Arbitrary(directionGen)
+
+  private[cron4s] implicit def errorEq[E <: Error]: Eq[E] = Eq.fromUniversalEquals
 
 }

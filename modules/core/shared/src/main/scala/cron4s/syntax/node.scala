@@ -28,15 +28,19 @@ private[syntax] class DateTimeNodeOps[E[_ <: CronField], F <: CronField](
   def matchesIn[DateTime](dt: DateTime)(implicit DT: IsDateTime[DateTime]): Boolean =
     tc.matchesIn(self, DT)(dt)
 
-  def nextIn[DateTime](dateTime: DateTime)(implicit DT: IsDateTime[DateTime]): Option[DateTime] =
+  def nextIn[DateTime](
+      dateTime: DateTime
+  )(implicit DT: IsDateTime[DateTime]): Either[ExprError, DateTime] =
     tc.nextIn(self, DT)(dateTime)
 
-  def prevIn[DateTime](dateTime: DateTime)(implicit DT: IsDateTime[DateTime]): Option[DateTime] =
+  def prevIn[DateTime](
+      dateTime: DateTime
+  )(implicit DT: IsDateTime[DateTime]): Either[ExprError, DateTime] =
     tc.prevIn(self, DT)(dateTime)
 
   def stepIn[DateTime](dateTime: DateTime, step: Int)(
       implicit DT: IsDateTime[DateTime]
-  ): Either[StepError, DateTime] =
+  ): Either[ExprError, DateTime] =
     tc.stepIn(self, DT)(dateTime, step)
 
 }

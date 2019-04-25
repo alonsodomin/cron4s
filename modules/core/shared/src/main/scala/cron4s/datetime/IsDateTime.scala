@@ -31,7 +31,7 @@ import scala.annotation.implicitNotFound
 )
 trait IsDateTime[DateTime] {
 
-  def plus(dateTime: DateTime, amount: Int, unit: DateTimeUnit): Option[DateTime]
+  def plus(dateTime: DateTime, amount: Int, unit: DateTimeUnit): Either[DateTimeError, DateTime]
 
   /**
     * List of the fields supported by this date time representation

@@ -40,7 +40,8 @@ final case class CronExpr(
   /**
     * Time part of the CRON expression
     */
-  lazy val timePart: TimeCronExpr = TimeCronExpr(seconds, minutes, hours)
+  lazy val timePart: TimeCronExpr =
+    TimeCronExpr(seconds, minutes, hours)
 
   /**
     * Date part of the CRON expression

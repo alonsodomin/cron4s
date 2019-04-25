@@ -30,7 +30,7 @@ object RangeNode {
       S: Steppable[CronRange[F], Int],
       DT: IsDateTime[DT]
   ) = new Steppable[RangeNode[F], DT] {
-    def step(node: RangeNode[F], from: DT, step: Step): Either[StepError, (DT, Int)] =
+    def step(node: RangeNode[F], from: DT, step: Step): Either[ExprError, (DT, Int)] =
       for {
         currValue             <- DT.get(from, node.range.unit.field)
         (newValue, carryOver) <- S.step(node.range, currValue, step)

@@ -56,13 +56,15 @@ object InvalidFieldCombination {
     Show.show(_.msg)
 }
 
-sealed abstract class StepError(msg: String) extends Error(msg)
+sealed abstract class ExprError(msg: String) extends Error(msg)
 case class StepSizeOutOfRange(stepSize: Int)
-    extends StepError(s"Step size $stepSize is out of range")
+    extends ExprError(s"Step size $stepSize is out of range")
 
-case object DidNotStep extends StepError("Step did not have any effect")
+case object DidNotStep extends ExprError("Step did not have any effect")
 
-sealed abstract class DateTimeError(msg: String) extends StepError(msg)
+sealed abstract class DateTimeError(msg: String) extends ExprError(msg)
+final case class UnsupportedDateTimeUnit(unit: datetime.DateTimeUnit)
+    extends DateTimeError(s"Can not alter given date time using unit: $unit")
 final case class UnsupportedField(field: CronField)
     extends DateTimeError(s"Field $field is not supported")
 final case class InvalidFieldValue(field: CronField, value: Int)

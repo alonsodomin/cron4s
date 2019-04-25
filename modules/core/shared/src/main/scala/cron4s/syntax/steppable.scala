@@ -20,14 +20,14 @@ package syntax
 import cron4s.base.{Step, Steppable}
 
 private[syntax] final class SteppableOps[T, E](self: T, tc: Steppable[T, E]) {
-  protected[cron4s] def step(from: E, step: Step): Either[StepError, (E, Int)] =
+  protected[cron4s] def step(from: E, step: Step): Either[ExprError, (E, Int)] =
     tc.step(self, from, step)
 
-  def step(from: E, stepSize: Int): Either[StepError, (E, Int)] =
+  def step(from: E, stepSize: Int): Either[ExprError, (E, Int)] =
     tc.step(self)(from, stepSize)
 
-  def next(from: E): Option[E] = tc.next(self)(from)
-  def prev(from: E): Option[E] = tc.prev(self)(from)
+  def next(from: E): Either[ExprError, E] = tc.next(self)(from)
+  def prev(from: E): Either[ExprError, E] = tc.prev(self)(from)
 }
 
 private[syntax] trait SteppableSyntax {

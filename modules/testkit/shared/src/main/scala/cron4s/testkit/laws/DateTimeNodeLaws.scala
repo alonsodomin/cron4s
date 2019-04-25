@@ -19,7 +19,7 @@ package cron4s.testkit.laws
 import cats.laws._
 import cats.syntax.either._
 
-import cron4s.CronField
+import cron4s.{CronField, ExprError}
 import cron4s.datetime.{IsDateTime, DateTimeNode}
 import cron4s.expr.FieldExpr
 import cron4s.syntax.node._
@@ -37,11 +37,11 @@ trait DateTimeNodeLaws[E[_ <: CronField], F <: CronField, DateTime] {
     e.matchesIn(dt) <-> fieldVal.exists(expr.matches(e)(_))
   }
 
-  def forward(e: E[F], from: DateTime): IsEq[Option[DateTime]] =
-    e.nextIn(from) <-> e.stepIn(from, 1).toOption
+  def forward(e: E[F], from: DateTime): IsEq[Either[ExprError, DateTime]] =
+    e.nextIn(from) <-> e.stepIn(from, 1)
 
-  def backwards(e: E[F], from: DateTime): IsEq[Option[DateTime]] =
-    e.prevIn(from) <-> e.stepIn(from, -1).toOption
+  def backwards(e: E[F], from: DateTime): IsEq[Either[ExprError, DateTime]] =
+    e.prevIn(from) <-> e.stepIn(from, -1)
 
 }
 

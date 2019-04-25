@@ -19,7 +19,7 @@ package cron4s.testkit.laws
 import cats.laws._
 import cats.syntax.either._
 
-import cron4s.CronField
+import cron4s.{CronField, ExprError}
 import cron4s.datetime.{DateTimeCron, IsDateTime}
 import cron4s.syntax.cron._
 
@@ -60,10 +60,10 @@ trait DateTimeCronLaws[E, DateTime] {
     e.allOf(dt) <-> containsAll
   }
 
-  def forwards(e: E, from: DateTime): IsEq[Option[DateTime]] =
+  def forwards(e: E, from: DateTime): IsEq[Either[ExprError, DateTime]] =
     e.next(from) <-> e.step(from, 1)
 
-  def backwards(e: E, from: DateTime): IsEq[Option[DateTime]] =
+  def backwards(e: E, from: DateTime): IsEq[Either[ExprError, DateTime]] =
     e.prev(from) <-> e.step(from, -1)
 
   def supportedFieldsEquality(e: E): IsEq[List[CronField]] =

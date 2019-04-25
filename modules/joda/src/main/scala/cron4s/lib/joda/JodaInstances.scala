@@ -33,8 +33,11 @@ import scala.util.Try
 private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
   import CronField._
 
-  override def plus(dateTime: DT, amount: Int, unit: DateTimeUnit): Option[DT] =
-    plusPeriod(dateTime, asPeriod(amount, unit))
+  def plus(dateTime: DT, amount: Int, unit: DateTimeUnit): Either[DateTimeError, DT] =
+    plusPeriod(dateTime, asPeriod(amount, unit)) match {
+      case Some(x) => Right(x)
+      case None    => Left(UnsupportedDateTimeUnit(unit))
+    }
 
   /**
     * List of the fields supported by this date time representation
@@ -42,7 +45,7 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
     * @param dateTime the date time representation
     * @return list of the supported fields
     */
-  override def supportedFields(dateTime: DT): List[CronField] =
+  def supportedFields(dateTime: DT): List[CronField] =
     CronField.All.filter(field => isSupported(dateTime, asDateTimeFieldType(field)))
 
   /**
@@ -53,7 +56,7 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
     * @tparam F the CronField type
     * @return value of the field
     */
-  override def get[F <: CronField](dateTime: DT, field: F): Either[DateTimeError, Int] = {
+  def get[F <: CronField](dateTime: DT, field: F): Either[DateTimeError, Int] = {
     val jodaField = asDateTimeFieldType(field)
     if (isSupported(dateTime, jodaField)) {
       val offset = if (field == DayOfWeek) -1 else 0
@@ -75,7 +78,7 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
     * @tparam F the CronField type
     * @return a new date-time with the given field set to the new value
     */
-  override def set[F <: CronField](
+  def set[F <: CronField](
       dateTime: DT,
       field: F,
       value: Int

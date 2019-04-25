@@ -16,7 +16,7 @@
 
 package cron4s.syntax
 
-import cron4s.CronField
+import cron4s.{CronField, ExprError}
 import cron4s.datetime.{DateTimeCron, IsDateTime}
 import cron4s.expr.FieldSelector
 
@@ -31,15 +31,19 @@ private[syntax] class DateTimeCronOps[E](self: E, tc: DateTimeCron[E]) {
   def anyOf[DateTime](dt: DateTime)(implicit DT: IsDateTime[DateTime]): Boolean =
     tc.anyOf(self, DT)(dt)
 
-  def next[DateTime](from: DateTime)(implicit DT: IsDateTime[DateTime]): Option[DateTime] =
+  def next[DateTime](
+      from: DateTime
+  )(implicit DT: IsDateTime[DateTime]): Either[ExprError, DateTime] =
     step(from, 1)
 
-  def prev[DateTime](from: DateTime)(implicit DT: IsDateTime[DateTime]): Option[DateTime] =
+  def prev[DateTime](
+      from: DateTime
+  )(implicit DT: IsDateTime[DateTime]): Either[ExprError, DateTime] =
     step(from, -1)
 
   def step[DateTime](from: DateTime, stepSize: Int)(
       implicit DT: IsDateTime[DateTime]
-  ): Option[DateTime] =
+  ): Either[ExprError, DateTime] =
     tc.step(self, DT)(from, stepSize)
 
   def ranges: Map[CronField, IndexedSeq[Int]] =

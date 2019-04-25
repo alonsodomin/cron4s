@@ -34,13 +34,13 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
   val DaysInWeek = 7
 
   @inline
-  override def supportedFields(dateTime: Date): List[CronField] = CronField.All
+  def supportedFields(dateTime: Date): List[CronField] = CronField.All
 
-  override def plus(
+  def plus(
       dateTime: Date,
       amount: Int,
       unit: DateTimeUnit
-  ): Option[Date] = {
+  ): Either[DateTimeError, Date] = {
     def setter(set: Date => Unit): Date = {
       val newDateTime = new Date(dateTime.getTime())
       set(newDateTime)
@@ -49,18 +49,18 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
 
     unit match {
       case Seconds =>
-        Some(setter(d => d.setUTCSeconds(d.getUTCSeconds() + amount)))
+        Right(setter(d => d.setUTCSeconds(d.getUTCSeconds() + amount)))
       case Minutes =>
-        Some(setter(d => d.setUTCMinutes(d.getUTCMinutes() + amount)))
-      case Hours  => Some(setter(d => d.setUTCHours(d.getUTCHours() + amount)))
-      case Days   => Some(setter(d => d.setUTCDate(d.getUTCDate() + amount)))
-      case Months => Some(setter(d => d.setUTCMonth(d.getUTCMonth() + amount)))
+        Right(setter(d => d.setUTCMinutes(d.getUTCMinutes() + amount)))
+      case Hours  => Right(setter(d => d.setUTCHours(d.getUTCHours() + amount)))
+      case Days   => Right(setter(d => d.setUTCDate(d.getUTCDate() + amount)))
+      case Months => Right(setter(d => d.setUTCMonth(d.getUTCMonth() + amount)))
       case Weeks =>
-        Some(setter(d => d.setUTCDate(d.getUTCDate() + (amount * DaysInWeek))))
+        Right(setter(d => d.setUTCDate(d.getUTCDate() + (amount * DaysInWeek))))
     }
   }
 
-  override def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeError, Int] = {
+  def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeError, Int] = {
     val value = field match {
       case Second     => dateTime.getUTCSeconds()
       case Minute     => dateTime.getUTCMinutes()
@@ -79,7 +79,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
     Right(value)
   }
 
-  override def set[F <: CronField](
+  def set[F <: CronField](
       dateTime: Date,
       field: F,
       value: Int

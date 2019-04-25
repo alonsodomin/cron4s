@@ -46,8 +46,8 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
   @inline
   final def nextIn[DateTime](expr: E[F], DT: IsDateTime[DateTime])(
       dateTime: DateTime
-  ): Option[DateTime] =
-    stepIn(expr, DT)(dateTime, 1).toOption
+  ): Either[ExprError, DateTime] =
+    stepIn(expr, DT)(dateTime, 1)
 
   /**
     * Calculates the previous date-time to a given one considering only the field
@@ -59,8 +59,8 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
   @inline
   final def prevIn[DateTime](expr: E[F], DT: IsDateTime[DateTime])(
       dateTime: DateTime
-  ): Option[DateTime] =
-    stepIn(expr, DT)(dateTime, -1).toOption
+  ): Either[ExprError, DateTime] =
+    stepIn(expr, DT)(dateTime, -1)
 
   /**
     * Calculates a date-time that is in either the past or the future relative
@@ -74,12 +74,12 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
   def stepIn[DateTime](
       expr: E[F],
       DT: IsDateTime[DateTime]
-  )(dateTime: DateTime, step: Int): Either[StepError, DateTime] = {
+  )(dateTime: DateTime, step: Int): Either[ExprError, DateTime] = {
     import cats.syntax.either._
     for {
-      current  <- DT.get(dateTime, expr.unit.field).leftWiden[StepError]
+      current  <- DT.get(dateTime, expr.unit.field).leftWiden[ExprError]
       newValue <- expr.step(current, step).map(_._1)
-      adjusted <- DT.set(dateTime, expr.unit.field, newValue).leftWiden[StepError]
+      adjusted <- DT.set(dateTime, expr.unit.field, newValue).leftWiden[ExprError]
     } yield adjusted
   }
 

@@ -18,7 +18,7 @@ package cron4s.datetime
 
 import cats.MonoidK
 
-import cron4s.CronField
+import cron4s.{CronField, ExprError}
 import cron4s.base.{Predicate, Step}
 import cron4s.expr._
 
@@ -38,17 +38,21 @@ trait DateTimeCron[T] {
     matches(expr, dt)(Predicate.disjunction.monoidK)
 
   @inline
-  def next[DateTime](expr: T, dt: IsDateTime[DateTime])(from: DateTime): Option[DateTime] =
+  def next[DateTime](expr: T, dt: IsDateTime[DateTime])(
+      from: DateTime
+  ): Either[ExprError, DateTime] =
     step(expr, dt)(from, 1)
 
   @inline
-  def prev[DateTime](expr: T, dt: IsDateTime[DateTime])(from: DateTime): Option[DateTime] =
+  def prev[DateTime](expr: T, dt: IsDateTime[DateTime])(
+      from: DateTime
+  ): Either[ExprError, DateTime] =
     step(expr, dt)(from, -1)
 
   def step[DateTime](expr: T, dt: IsDateTime[DateTime])(
       from: DateTime,
       stepSize: Int
-  ): Option[DateTime]
+  ): Either[ExprError, DateTime]
 
   def ranges(expr: T): Map[CronField, IndexedSeq[Int]]
 
@@ -79,7 +83,7 @@ private[datetime] final class FullCron extends DateTimeCron[CronExpr] {
   def step[DateTime](
       expr: CronExpr,
       dt: IsDateTime[DateTime]
-  )(from: DateTime, amount: Int): Option[DateTime] = {
+  )(from: DateTime, amount: Int): Either[ExprError, DateTime] = {
     val stepper = new Stepper[DateTime](dt)
     stepper.run(expr, from, Step(amount))
   }
@@ -104,7 +108,7 @@ private[datetime] final class TimeCron extends DateTimeCron[TimeCronExpr] {
   def step[DateTime](
       expr: TimeCronExpr,
       dt: IsDateTime[DateTime]
-  )(from: DateTime, stepSize: Int): Option[DateTime] = {
+  )(from: DateTime, stepSize: Int): Either[ExprError, DateTime] = {
     val stepper = new Stepper[DateTime](dt)
     stepper.run(expr, from, Step(stepSize))
   }
@@ -130,7 +134,7 @@ private[datetime] final class DateCron extends DateTimeCron[DateCronExpr] {
   def step[DateTime](
       expr: DateCronExpr,
       dt: IsDateTime[DateTime]
-  )(from: DateTime, stepSize: Int): Option[DateTime] = {
+  )(from: DateTime, stepSize: Int): Either[ExprError, DateTime] = {
     val stepper = new Stepper[DateTime](dt)
     stepper.run(expr, from, Step(stepSize))
   }

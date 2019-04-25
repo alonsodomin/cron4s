@@ -22,7 +22,7 @@ import cats.instances.all._
 import cats.syntax.eq._
 import cats.syntax.show._
 
-import cron4s.{CronField, CronUnit, StepError}
+import cron4s.{CronField, CronUnit, ExprError}
 import cron4s.base._
 import cron4s.syntax.enumerated._
 import cron4s.syntax.field._
@@ -335,7 +335,7 @@ final class EveryNode[F <: CronField] private (
 
   lazy val range: IndexedSeq[Int] = {
     val elements = LazyList
-      .iterate[Either[StepError, (Int, Int)]](Right(base.min -> 0)) {
+      .iterate[Either[ExprError, (Int, Int)]](Right(base.min -> 0)) {
         _.flatMap { case (v, _) => base.step(v, freq) }
       }
       .map(_.toOption)

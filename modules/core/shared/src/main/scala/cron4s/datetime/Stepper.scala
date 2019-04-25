@@ -28,8 +28,8 @@ import scala.annotation.tailrec
 
 private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
 
-  private type ResetPrevFn = DateTime => Either[StepError, DateTime]
-  private type StepST      = Option[(ResetPrevFn, DateTime, Step)]
+  private type ResetPrevFn = DateTime => Either[ExprError, DateTime]
+  private type StepST      = Either[ExprError, (ResetPrevFn, DateTime, Step)]
 
   private val identityReset: ResetPrevFn = Right(_)
 
@@ -42,7 +42,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
         step: Step,
         newValue: Int,
         carryOver: Int
-    ): Either[StepError, (DateTime, Int)] =
+    ): Either[ExprError, (DateTime, Int)] =
       DT.set(dt, node.unit.field, newValue)
         .map(_ -> carryOver)
         .recover {
@@ -57,7 +57,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
 
     stepState.flatMap {
       case (resetPrevious, from, step) =>
-        def resetThis: DateTime => Either[StepError, DateTime] = {
+        def resetThis: DateTime => Either[ExprError, DateTime] = {
           val resetValue = step.direction match {
             case Direction.Forward   => node.min
             case Direction.Backwards => node.max
@@ -66,7 +66,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
           resetPrevious.andThen(_.flatMap(DT.set(_, node.unit.field, resetValue)))
         }
 
-        DT.get(from, node.unit.field).toOption.flatMap { currentValue =>
+        DT.get(from, node.unit.field).flatMap { currentValue =>
           node.step(currentValue, step) match {
             case Right((newValue, carryOver)) =>
               // Attempt to set a new value in the field and reset previous fields
@@ -76,10 +76,9 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
                   case (dt, co) =>
                     (resetThis, dt, step.copy(amount = Math.abs(co)))
                 }
-                .toOption
 
             case Left(_) =>
-              Some((resetThis, from, step.copy(amount = 0)))
+              Right((resetThis, from, step.copy(amount = 0)))
           }
         }
     }
@@ -118,8 +117,8 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       for {
         st @ (resetTime, _, _) <- expr.timePart.raw
           .foldLeft(stepSt)(stepPerNode)
-        (_, dt, step) <- dateWithoutDOW.foldLeft(Some(st): StepST)(stepPerNode)
-        result        <- stepOverDayOfWeek(Some((resetTime, dt, step)), daysOfWeekNode)
+        (_, dt, step) <- dateWithoutDOW.foldLeft(Right(st): StepST)(stepPerNode)
+        result        <- stepOverDayOfWeek(Right((resetTime, dt, step)), daysOfWeekNode)
       } yield result
     }
     implicit def caseDateExpr =
@@ -128,19 +127,19 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       at[StepST, TimeCronExpr]((stepSt, expr) => expr.raw.foldLeft(stepSt)(stepPerNode))
   }
 
-  def run(cron: AnyCron, from: DateTime, step: Step): Option[DateTime] = {
+  def run(cron: AnyCron, from: DateTime, step: Step): Either[ExprError, DateTime] = {
     def initial(dt: DateTime): StepST =
-      Some((identityReset, dt, step.copy(amount = 1)))
+      Right((identityReset, dt, step.copy(amount = 1)))
 
     @tailrec
     def go(stepSt: StepST, iteration: Int): StepST =
       if (iteration == step.amount) stepSt
       else {
         cron.foldLeft(stepSt)(foldInternalExpr) match {
-          case Some((_, dt, _)) =>
+          case Right((_, dt, _)) =>
             go(initial(dt), iteration + 1)
 
-          case None => None
+          case other => other
         }
       }
 

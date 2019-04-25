@@ -47,14 +47,14 @@ object Direction {
 }
 
 trait Steppable[T, E] {
-  protected[cron4s] def step(t: T, from: E, step: Step): Either[StepError, (E, Int)]
+  protected[cron4s] def step(t: T, from: E, step: Step): Either[ExprError, (E, Int)]
 
-  final def step(t: T)(from: E, stepSize: Int): Either[StepError, (E, Int)] =
+  final def step(t: T)(from: E, stepSize: Int): Either[ExprError, (E, Int)] =
     if (stepSize == Int.MinValue || stepSize == Int.MaxValue) Left(StepSizeOutOfRange(stepSize))
     else step(t, from, Step(stepSize))
 
-  final def next(t: T)(from: E): Option[E] = step(t)(from, 1).toOption.map(_._1)
-  final def prev(t: T)(from: E): Option[E] = step(t)(from, -1).toOption.map(_._1)
+  final def next(t: T)(from: E): Either[ExprError, E] = step(t)(from, 1).map(_._1)
+  final def prev(t: T)(from: E): Either[ExprError, E] = step(t)(from, -1).map(_._1)
 }
 object Steppable {
   @inline def apply[T, E](implicit ev: Steppable[T, E]): Steppable[T, E] = ev

@@ -18,7 +18,7 @@ package cron4s.testkit.laws
 
 import cats.laws._
 
-import cron4s.StepError
+import cron4s.{ExprError, DidNotStep}
 import cron4s.base.Enumerated
 import cron4s.syntax.steppable._
 import cron4s.syntax.enumerated._
@@ -35,32 +35,32 @@ trait EnumeratedLaws[A] {
   def max(a: A): IsEq[Int] =
     a.max <-> a.range.max
 
-  def forward(a: A, from: Int): IsEq[Option[Int]] =
-    a.next(from) <-> a.step(from, 1).map(_._1).toOption
+  def forward(a: A, from: Int): IsEq[Either[ExprError, Int]] =
+    a.next(from) <-> a.step(from, 1).map(_._1)
 
-  def backwards(a: A, from: Int): IsEq[Option[Int]] =
-    a.prev(from) <-> a.step(from, -1).map(_._1).toOption
+  def backwards(a: A, from: Int): IsEq[Either[ExprError, Int]] =
+    a.prev(from) <-> a.step(from, -1).map(_._1)
 
-  def fromMinToMinForwards(a: A): IsEq[Option[(Int, Int)]] =
-    a.step(a.min, a.range.size).toOption <-> Some(a.min -> 1)
+  def fromMinToMinForwards(a: A): IsEq[Either[ExprError, (Int, Int)]] =
+    a.step(a.min, a.range.size) <-> Right(a.min -> 1)
 
-  def fromMaxToMaxForwards(a: A): IsEq[Option[(Int, Int)]] =
-    a.step(a.max, a.range.size).toOption <-> Some(a.max -> 1)
+  def fromMaxToMaxForwards(a: A): IsEq[Either[ExprError, (Int, Int)]] =
+    a.step(a.max, a.range.size) <-> Right(a.max -> 1)
 
-  def fromMinToMaxForwards(a: A): IsEq[Option[(Int, Int)]] = {
-    val expected = if (a.range.size == 1) None else Some(a.max -> 0)
-    a.step(a.min, a.range.size - 1).toOption <-> expected
+  def fromMinToMaxForwards(a: A): IsEq[Either[ExprError, (Int, Int)]] = {
+    val expected = if (a.range.size == 1) Left(DidNotStep) else Right(a.max -> 0)
+    a.step(a.min, a.range.size - 1) <-> expected
   }
 
-  def fromMinToMaxBackwards(a: A): IsEq[Option[(Int, Int)]] =
-    a.step(a.min, -1).toOption <-> Some(a.max -> -1)
+  def fromMinToMaxBackwards(a: A): IsEq[Either[ExprError, (Int, Int)]] =
+    a.step(a.min, -1) <-> Right(a.max -> -1)
 
-  def fromMaxToMinForwards(a: A): IsEq[Option[(Int, Int)]] =
-    a.step(a.max, 1).toOption <-> Some(a.min -> 1)
+  def fromMaxToMinForwards(a: A): IsEq[Either[ExprError, (Int, Int)]] =
+    a.step(a.max, 1) <-> Right(a.min -> 1)
 
-  def fromMaxToMinBackwards(a: A): IsEq[Option[(Int, Int)]] = {
-    val expected = if (a.range.size == 1) None else Some(a.min -> 0)
-    a.step(a.max, -(a.range.size - 1)).toOption <-> expected
+  def fromMaxToMinBackwards(a: A): IsEq[Either[ExprError, (Int, Int)]] = {
+    val expected = if (a.range.size == 1) Left(DidNotStep) else Right(a.min -> 0)
+    a.step(a.max, -(a.range.size - 1)) <-> expected
   }
 
 }

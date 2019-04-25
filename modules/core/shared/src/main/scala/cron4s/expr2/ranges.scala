@@ -105,7 +105,7 @@ object SteppingRange {
   ): Enumerated[SteppingRange[F]] = new Enumerated[SteppingRange[F]] {
     def range(c: SteppingRange[F]) = {
       val elements = Stream
-        .iterate[Either[StepError, (Int, Int)]](Right(R.min(c.base) -> 0)) {
+        .iterate[Either[ExprError, (Int, Int)]](Right(R.min(c.base) -> 0)) {
           _.flatMap { case (v, _) => R.step(c.base)(v, c.step) }
         }
         .map(_.toOption)
