@@ -22,7 +22,7 @@ object Dependencies {
     val contextual = "1.1.0"
 
     val jodaTime    = "2.10.1"
-    val jodaConvert = "2.2.0"
+    val jodaConvert = "2.2.1"
 
     val momentjs      = "0.8.1"
     val scalaJavaTime = "2.0.0-RC1"
