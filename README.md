@@ -66,6 +66,10 @@ This is a non-exhaustive list of other open source projects and libraries that u
  * [fs2-cron](https://github.com/fthomas/fs2-cron): Create pure functional streams that emit elements based on a given cron schedule.
  * [pureconfig-cron4s](https://github.com/pureconfig/pureconfig/tree/master/modules/cron4s): Cron expression parsing support in configuration files.
 
+## Code Of Conduct
+
+See the [Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## License
 
 Copyright 2017 Antonio Alonso Dominguez
