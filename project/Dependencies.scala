@@ -32,7 +32,7 @@ object Dependencies {
     "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
   )
   val kindProjector = compilerPlugin(
-    "org.typelevel" % "kind-projector" % "0.10.0" cross CrossVersion.binary
+    "org.typelevel" % "kind-projector" % "0.10.1" cross CrossVersion.binary
   )
   lazy val compilerPlugins = Seq(macroParadise, kindProjector)
 
