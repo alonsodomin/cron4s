@@ -9,6 +9,7 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSVersion
 object Dependencies {
 
   object version {
+    val atto       = "0.6.5"
     val cats       = "1.6.0"
     val shapeless  = "2.3.3"
     val scalacheck = "1.14.0"
@@ -41,6 +42,7 @@ object Dependencies {
       "com.chuusai"            %%% "shapeless"                % version.shapeless,
       "org.typelevel"          %%% "cats-core"                % version.cats,
       "com.propensive"         %%% "contextual"               % version.contextual,
+      "org.tpolecat"           %%% "atto-core"                % version.atto,
       "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parser,
     )
   }
