@@ -21,15 +21,28 @@ import cron4s.base._
 import cron4s.datetime.IsDateTime
 
 sealed trait CronNode[F <: CronField]
+object CronNode {
+  implicit def cronNodeSteppable[F <: CronField, DT](
+      implicit
+      R: Steppable[CronRange[F], Int],
+      DT: IsDateTime[DT]
+  ): Steppable[CronNode[F], DT] = new Steppable[CronNode[F], DT] {
+    def step(node: CronNode[F], from: DT, step: Step): Either[ExprError, (DT, Int)] =
+      node match {
+        case range: RangeNode[F]   => Steppable[RangeNode[F], DT].step(range, from, step)
+        case picker: PickerNode[F] => Steppable[PickerNode[F], DT].step(picker, from, step)
+      }
+  }
+}
 
 final case class RangeNode[F <: CronField](range: CronRange[F]) extends CronNode[F]
 object RangeNode {
 
-  implicit def nodeSteppable[F <: CronField, DT](
+  implicit def rangeNodeSteppable[F <: CronField, DT](
       implicit
       S: Steppable[CronRange[F], Int],
       DT: IsDateTime[DT]
-  ) = new Steppable[RangeNode[F], DT] {
+  ): Steppable[RangeNode[F], DT] = new Steppable[RangeNode[F], DT] {
     def step(node: RangeNode[F], from: DT, step: Step): Either[ExprError, (DT, Int)] =
       for {
         currValue             <- DT.get(from, node.range.unit.field)
@@ -40,7 +53,12 @@ object RangeNode {
 
 }
 
-case object LastDayOfMonth                     extends CronNode[CronField.DayOfMonth]
-case class NthDayOfWeek(nth: Int)              extends CronNode[CronField.DayOfWeek]
-case class NthDayOfMonth(nth: Int)             extends CronNode[CronField.DayOfMonth]
-case class NthDayOnMthWeek(nth: Int, mth: Int) extends CronNode[CronField.DayOfMonth]
+final case class PickerNode[F <: CronField](picker: CronPicker[F]) extends CronNode[F]
+object PickerNode {
+  implicit def pickerNodeSteppable[F <: CronField, DT](
+      implicit DT: IsDateTime[DT]
+  ): Steppable[PickerNode[F], DT] = new Steppable[PickerNode[F], DT] {
+    def step(node: PickerNode[F], from: DT, step: Step): Either[ExprError, (DT, Int)] =
+      node.picker.pickFrom(from).map(_ -> 0)
+  }
+}
