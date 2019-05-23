@@ -16,10 +16,6 @@
 
 package cron4s
 
-import cats.syntax.either._
-
-import cron4s.parsing._
-
 import scala.scalajs.js.annotation.JSExportTopLevel
 import scala.util.{Failure, Success, Try}
 
@@ -60,7 +56,7 @@ object Cron {
     * @return a Try representing the failure or the actual parsed cron AST
     * @example val cron = Cron.tryParse("10-35 2,4,6 * ? * *")
     */
-  def tryParse(e: String): Try[CronExpr] = parsing.parse(e) match {
+  def tryParse(e: String): Try[CronExpr] = parse(e) match {
     case Left(err)   => Failure(err)
     case Right(expr) => Success(expr)
   }
