@@ -51,7 +51,7 @@ object Cron {
     */
   @inline
   def parse(e: String): Either[Error, CronExpr] =
-    parse0(e).right.flatMap(validation.validateCron)
+    parsing.parse(e).right.flatMap(validation.validateCron)
 
   /**
     * Parses the given cron expression into a cron AST using Try as return type
@@ -60,7 +60,7 @@ object Cron {
     * @return a Try representing the failure or the actual parsed cron AST
     * @example val cron = Cron.tryParse("10-35 2,4,6 * ? * *")
     */
-  def tryParse(e: String): Try[CronExpr] = parse(e) match {
+  def tryParse(e: String): Try[CronExpr] = parsing.parse(e) match {
     case Left(err)   => Failure(err)
     case Right(expr) => Success(expr)
   }
@@ -80,9 +80,4 @@ object Cron {
     case Right(expr) => expr
   }
 
-  private[this] def parse0(e: String): Either[Error, CronExpr] =
-    for {
-      tokens <- CronLexer.tokenize(e)
-      expr   <- CronParser.read(tokens)
-    } yield expr
 }

@@ -83,28 +83,30 @@ package object atto {
   def any[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyNode[F]] =
     questionMark.as(AnyNode[F])
 
-  def between[F <: CronField](base: => Parser[ConstNode[F]])(
+  def between[F <: CronField](base: Parser[ConstNode[F]])(
       implicit unit: CronUnit[F]
   ): Parser[BetweenNode[F]] =
     for {
-      min <- delay(base) <~ hyphen
-      max <- delay(base)
+      min <- base <~ hyphen
+      max <- base
     } yield BetweenNode[F](min, max)
 
-  def several[F <: CronField](base: => Parser[ConstNode[F]])(
+  def several[F <: CronField](base: Parser[ConstNode[F]])(
       implicit unit: CronUnit[F]
   ): Parser[SeveralNode[F]] = {
     def compose(b: => Parser[EnumerableNode[F]]) =
-      sepBy1(delay(b), comma).map(values => SeveralNode.fromSeq[F](values.toList).get)
+      sepBy1(b, comma)
+        .filter(_.size > 1)
+        .map(values => SeveralNode.fromSeq[F](values.toList).get)
 
     compose(between(base).map(between2Enumerable) | base.map(const2Enumerable))
   }
 
-  def every[F <: CronField](base: => Parser[ConstNode[F]])(
+  def every[F <: CronField](base: Parser[ConstNode[F]])(
       implicit unit: CronUnit[F]
   ): Parser[EveryNode[F]] = {
     def compose(b: => Parser[DivisibleNode[F]]) =
-      ((delay(b) <~ slash) ~ decimal.filter(_ > 0)).map {
+      ((b <~ slash) ~ decimal.filter(_ > 0)).map {
         case (exp, freq) => EveryNode[F](exp, freq)
       }
 
@@ -146,5 +148,13 @@ package object atto {
     month   <- field(months) <~ blank
     weekDay <- fieldWithAny(daysOfWeek)
   } yield CronExpr(sec, min, hour, day, month, weekDay)
+
+  def parse(e: String): Either[Error, CronExpr] =
+    (cron.parseOnly(e): @unchecked) match {
+      case ParseResult.Done(_, result) => Right(result)
+      case ParseResult.Fail(rest, _, msg) =>
+        val position = (e.length() - rest.length() + 1)
+        Left(ParseFailed(msg, rest, position))
+    }
 
 }

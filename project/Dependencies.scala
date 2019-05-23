@@ -41,8 +41,7 @@ object Dependencies {
     libraryDependencies ++= compilerPlugins ++ Seq(
       "com.chuusai"            %%% "shapeless"                % version.shapeless,
       "org.typelevel"          %%% "cats-core"                % version.cats,
-      "com.propensive"         %%% "contextual"               % version.contextual,
-      "org.tpolecat"           %%% "atto-core"                % version.atto,
+      "com.propensive"         %%% "contextual"               % version.contextual,      
       "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parser,
     )
   }
@@ -80,6 +79,12 @@ object Dependencies {
     libraryDependencies ++= Seq(
       "joda-time" % "joda-time"    % version.jodaTime,
       "org.joda"  % "joda-convert" % version.jodaConvert
+    )
+  }
+
+  lazy val bench = Def.settings {
+    libraryDependencies ++= Seq(
+      "org.tpolecat" %% "atto-core" % version.atto,
     )
   }
 
