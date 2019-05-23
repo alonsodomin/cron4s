@@ -9,6 +9,7 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSVersion
 object Dependencies {
 
   object version {
+    val atto       = "0.6.5"
     val cats       = "1.6.0"
     val shapeless  = "2.3.3"
     val scalacheck = "1.14.0"
@@ -40,7 +41,7 @@ object Dependencies {
     libraryDependencies ++= compilerPlugins ++ Seq(
       "com.chuusai"            %%% "shapeless"                % version.shapeless,
       "org.typelevel"          %%% "cats-core"                % version.cats,
-      "com.propensive"         %%% "contextual"               % version.contextual,
+      "com.propensive"         %%% "contextual"               % version.contextual,      
       "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parser,
     )
   }
@@ -78,6 +79,12 @@ object Dependencies {
     libraryDependencies ++= Seq(
       "joda-time" % "joda-time"    % version.jodaTime,
       "org.joda"  % "joda-convert" % version.jodaConvert
+    )
+  }
+
+  lazy val bench = Def.settings {
+    libraryDependencies ++= Seq(
+      "org.tpolecat" %% "atto-core" % version.atto,
     )
   }
 
