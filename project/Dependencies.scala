@@ -10,7 +10,7 @@ object Dependencies {
 
   object version {
     val atto       = "0.6.5"
-    val cats       = "1.6.0"
+    val cats       = "1.6.1"
     val shapeless  = "2.3.3"
     val scalacheck = "1.14.0"
     val scalatest  = "3.0.5"
