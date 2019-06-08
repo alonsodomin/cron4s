@@ -19,7 +19,7 @@ object Dependencies {
     val decline    = "0.6.2"
     val circe      = "0.11.1"
     val parser     = "1.1.1"
-    val doobie     = "0.6.0"
+    val doobie     = "0.7.0"
     val contextual = "1.1.0"
 
     val jodaTime    = "2.10.2"
@@ -33,7 +33,7 @@ object Dependencies {
     "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
   )
   val kindProjector = compilerPlugin(
-    "org.typelevel" % "kind-projector" % "0.10.1" cross CrossVersion.binary
+    "org.typelevel" % "kind-projector" % "0.10.3" cross CrossVersion.binary
   )
   lazy val compilerPlugins = Seq(macroParadise, kindProjector)
 
