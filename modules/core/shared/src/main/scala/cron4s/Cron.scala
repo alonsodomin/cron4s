@@ -16,10 +16,6 @@
 
 package cron4s
 
-import cats.syntax.either._
-
-import cron4s.parsing._
-
 import scala.scalajs.js.annotation.JSExportTopLevel
 import scala.util.{Failure, Success, Try}
 
@@ -51,7 +47,7 @@ object Cron {
     */
   @inline
   def parse(e: String): Either[Error, CronExpr] =
-    parse0(e).right.flatMap(validation.validateCron)
+    parsing.parse(e).right.flatMap(validation.validateCron)
 
   /**
     * Parses the given cron expression into a cron AST using Try as return type
@@ -80,9 +76,4 @@ object Cron {
     case Right(expr) => expr
   }
 
-  private[this] def parse0(e: String): Either[Error, CronExpr] =
-    for {
-      tokens <- CronLexer.tokenize(e)
-      expr   <- CronParser.read(tokens)
-    } yield expr
 }

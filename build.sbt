@@ -327,6 +327,7 @@ lazy val bench = (project in file("bench"))
   .settings(commonSettings)
   .settings(noPublishSettings)
   .settings(commonJvmSettings)
+  .settings(Dependencies.bench)
   .enablePlugins(JmhPlugin)
   .dependsOn(coreJVM)
 

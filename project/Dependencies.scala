@@ -9,7 +9,8 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSVersion
 object Dependencies {
 
   object version {
-    val cats       = "1.6.0"
+    val atto       = "0.6.5"
+    val cats       = "1.6.1"
     val shapeless  = "2.3.3"
     val scalacheck = "1.14.0"
     val scalatest  = "3.0.5"
@@ -18,21 +19,21 @@ object Dependencies {
     val decline    = "0.6.2"
     val circe      = "0.11.1"
     val parser     = "1.1.2"
-    val doobie     = "0.6.0"
+    val doobie     = "0.7.0"
     val contextual = "1.1.0"
 
-    val jodaTime    = "2.10.1"
-    val jodaConvert = "2.2.0"
+    val jodaTime    = "2.10.2"
+    val jodaConvert = "2.2.1"
 
     val momentjs      = "0.8.1"
-    val scalaJavaTime = "2.0.0-RC1"
+    val scalaJavaTime = "2.0.0-RC3"
   }
 
   val macroParadise = compilerPlugin(
     "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
   )
   val kindProjector = compilerPlugin(
-    "org.typelevel" % "kind-projector" % "0.10.0" cross CrossVersion.binary
+    "org.typelevel" % "kind-projector" % "0.10.3" cross CrossVersion.binary
   )
   lazy val compilerPlugins = Seq(macroParadise, kindProjector)
 
@@ -40,7 +41,7 @@ object Dependencies {
     libraryDependencies ++= compilerPlugins ++ Seq(
       "com.chuusai"            %%% "shapeless"                % version.shapeless,
       "org.typelevel"          %%% "cats-core"                % version.cats,
-      "com.propensive"         %%% "contextual"               % version.contextual,
+      "com.propensive"         %%% "contextual"               % version.contextual,      
       "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parser,
     )
   }
@@ -78,6 +79,12 @@ object Dependencies {
     libraryDependencies ++= Seq(
       "joda-time" % "joda-time"    % version.jodaTime,
       "org.joda"  % "joda-convert" % version.jodaConvert
+    )
+  }
+
+  lazy val bench = Def.settings {
+    libraryDependencies ++= Seq(
+      "org.tpolecat" %% "atto-core" % version.atto,
     )
   }
 
