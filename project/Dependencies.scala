@@ -18,7 +18,7 @@ object Dependencies {
     val catalysts  = "0.8"
     val decline    = "0.6.2"
     val circe      = "0.11.1"
-    val parser     = "1.1.2"
+    val parserc    = "1.1.2"
     val doobie     = "0.7.0"
     val contextual = "1.1.0"
 
@@ -37,14 +37,20 @@ object Dependencies {
   )
   lazy val compilerPlugins = Seq(macroParadise, kindProjector)
 
-  lazy val core = Def.settings {
+  lazy val core = Def.settings(
     libraryDependencies ++= compilerPlugins ++ Seq(
       "com.chuusai"            %%% "shapeless"                % version.shapeless,
       "org.typelevel"          %%% "cats-core"                % version.cats,
       "com.propensive"         %%% "contextual"               % version.contextual,      
-      "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parser,
-    )
-  }
+    ),
+    libraryDependencies += {
+      val parsecVersion = CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, major)) if major < 12 => "1.1.1"
+        case _ => version.parserc
+      }
+      "org.scala-lang.modules" %%% "scala-parser-combinators" % parsecVersion
+    }
+  )
 
   lazy val coreJS = Def.settings {
     libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % version.scalaJavaTime
