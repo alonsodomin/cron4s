@@ -1,4 +1,4 @@
-# Cron4s Change Long
+# Cron4s Change Log
 
 ## Unreleased changes
 
