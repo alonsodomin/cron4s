@@ -36,7 +36,7 @@ object Dependencies {
     "org.typelevel" % "kind-projector" % "0.10.3" cross CrossVersion.binary
   )
 
-  lazy val core = Def.settings {
+  lazy val core = Def.settings(
     libraryDependencies ++= Seq(
       "com.chuusai"            %%% "shapeless"                % version.shapeless,
       "org.typelevel"          %%% "cats-core"                % version.cats,
