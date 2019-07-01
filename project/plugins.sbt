@@ -1,11 +1,11 @@
 resolvers += "Typesafe Repository" at "https://repo.typesafe.com/typesafe/releases/"
 
 addSbtPlugin("org.scala-js"       % "sbt-scalajs"              % "0.6.28")
-addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.6.0")
+addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.6.1")
 addSbtPlugin("org.scoverage"      % "sbt-scoverage"            % "1.6.0")
 addSbtPlugin("com.codacy"         % "sbt-codacy-coverage"      % "2.112")
 addSbtPlugin("pl.project13.scala" % "sbt-jmh"                  % "0.3.7")
-addSbtPlugin("com.47deg"          % "sbt-microsites"           % "0.9.1")
+addSbtPlugin("com.47deg"          % "sbt-microsites"           % "0.9.2")
 addSbtPlugin("com.eed3si9n"       % "sbt-unidoc"               % "0.4.2")
 addSbtPlugin("com.typesafe"       % "sbt-mima-plugin"          % "0.3.0")
 addSbtPlugin("de.heikoseeberger"  % "sbt-header"               % "5.2.0")
