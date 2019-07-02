@@ -33,6 +33,12 @@ trait IsDateTime[DateTime] {
 
   def plus(dateTime: DateTime, amount: Int, unit: DateTimeUnit): Either[DateTimeError, DateTime]
 
+  def first(dt: DateTime, field: CronField): Either[DateTimeError, Int] = ???
+  def last(dt: DateTime, field: CronField): Either[DateTimeError, Int]  = ???
+
+  def prev(dt: DateTime, field: CronField): Either[DateTimeError, DateTime] = ???
+  def next(dt: DateTime, field: CronField): Either[DateTimeError, DateTime] = ???
+
   /**
     * List of the fields supported by this date time representation
     *

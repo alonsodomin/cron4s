@@ -20,11 +20,11 @@ package expr2
 import cron4s.base._
 import cron4s.datetime.IsDateTime
 
-sealed trait CronNode[F <: CronField]
+sealed trait CronNode[F <: CronField] extends HasCronUnit[F]
 object CronNode {
   implicit def cronNodeSteppable[F <: CronField, DT](
       implicit
-      R: Steppable[CronRange[F], Int],
+      R: Enumerated[CronRange[F]],
       DT: IsDateTime[DT]
   ): Steppable[CronNode[F], DT] = new Steppable[CronNode[F], DT] {
     def step(node: CronNode[F], from: DT, step: Step): Either[ExprError, (DT, Int)] =
@@ -35,25 +35,38 @@ object CronNode {
   }
 }
 
-final case class RangeNode[F <: CronField](range: CronRange[F]) extends CronNode[F]
+final case class RangeNode[F <: CronField](range: CronRange[F]) extends CronNode[F] {
+  def unit: CronUnit[F] = range.unit
+}
 object RangeNode {
 
   implicit def rangeNodeSteppable[F <: CronField, DT](
       implicit
-      S: Steppable[CronRange[F], Int],
+      E0: Enumerated[CronRange[F]],
       DT: IsDateTime[DT]
   ): Steppable[RangeNode[F], DT] = new Steppable[RangeNode[F], DT] {
+    def narrowNode(node: RangeNode[F], from: DT): Either[DateTimeError, Enumerated[CronRange[F]]] =
+      for {
+        next <- DT.next(from, node.unit.field)
+        prev <- DT.prev(from, node.unit.field)
+        min  <- DT.first(next, node.unit.field)
+        max  <- DT.last(prev, node.unit.field)
+      } yield E0.withMin(min).withMax(max)
+
     def step(node: RangeNode[F], from: DT, step: Step): Either[ExprError, (DT, Int)] =
       for {
+        enum                  <- narrowNode(node, from)
         currValue             <- DT.get(from, node.range.unit.field)
-        (newValue, carryOver) <- S.step(node.range, currValue, step)
+        (newValue, carryOver) <- enum.step(node.range, currValue, step)
         newResult             <- DT.set(from, node.range.unit.field, newValue)
       } yield (newResult, carryOver)
   }
 
 }
 
-final case class PickerNode[F <: CronField](picker: CronPicker[F]) extends CronNode[F]
+final case class PickerNode[F <: CronField](picker: CronPicker[F]) extends CronNode[F] {
+  def unit: CronUnit[F] = picker.unit
+}
 object PickerNode {
   implicit def pickerNodeSteppable[F <: CronField, DT](
       implicit DT: IsDateTime[DT]

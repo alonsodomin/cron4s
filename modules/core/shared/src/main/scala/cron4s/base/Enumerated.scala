@@ -19,7 +19,7 @@ package base
 
 import cats.implicits._
 
-trait Enumerated[A] extends Steppable[A, Int] {
+trait Enumerated[A] extends Steppable[A, Int] { self =>
 
   def min(a: A): Int = range(a).min
   def max(a: A): Int = range(a).max
@@ -65,6 +65,16 @@ trait Enumerated[A] extends Steppable[A, Int] {
 
     if (newValue != from || carryOver != 0) (newValue, carryOver).asRight
     else Left(DidNotStep)
+  }
+
+  def withMin(theMin: Int): Enumerated[A] = new Enumerated[A] {
+    def range(a: A): IndexedSeq[Int] =
+      self.range(a).dropWhile(_ < theMin)
+  }
+
+  def withMax(theMax: Int): Enumerated[A] = new Enumerated[A] {
+    def range(a: A): IndexedSeq[Int] =
+      self.range(a).takeWhile(_ < theMax)
   }
 
 }

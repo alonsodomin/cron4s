@@ -21,9 +21,7 @@ import cats.data.NonEmptyList
 
 import cron4s.base._
 
-sealed trait CronRange[F <: CronField] {
-  def unit: CronUnit[F]
-}
+sealed trait CronRange[F <: CronField]       extends HasCronUnit[F]
 sealed trait ComposableRange[F <: CronField] extends CronRange[F]
 sealed trait DivisibleRange[F <: CronField]  extends CronRange[F]
 

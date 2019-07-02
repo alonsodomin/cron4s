@@ -19,18 +19,30 @@ package expr2
 
 import cron4s.datetime._
 
-sealed trait CronPicker[F <: CronField] {
+sealed trait CronPicker[F <: CronField] extends HasCronUnit[F] {
   def pickFrom[DT](dateTime: DT)(implicit DT: IsDateTime[DT]): Either[ExprError, DT]
 }
 case object LastDayOfMonth extends CronPicker[CronField.DayOfMonth] {
-  def pickFrom[DT](dateTime: DT)(implicit DT: IsDateTime[DT]): Either[ExprError, DT] = ???
+  def unit: CronUnit[CronField.DayOfMonth] = CronUnit.DaysOfMonth
+
+  def pickFrom[DT](dateTime: DT)(implicit DT: IsDateTime[DT]): Either[ExprError, DT] =
+    for {
+      value  <- DT.last(dateTime, unit.field)
+      result <- DT.set(dateTime, unit.field, value)
+    } yield result
 }
 case class NthDayOfWeek(nth: Int) extends CronPicker[CronField.DayOfWeek] {
+  def unit: CronUnit[CronField.DayOfWeek] = CronUnit.DaysOfWeek
+
   def pickFrom[DT](dateTime: DT)(implicit DT: IsDateTime[DT]): Either[ExprError, DT] = ???
 }
 case class NthDayOfMonth(nth: Int) extends CronPicker[CronField.DayOfMonth] {
+  def unit: CronUnit[CronField.DayOfMonth] = CronUnit.DaysOfMonth
+
   def pickFrom[DT](dateTime: DT)(implicit DT: IsDateTime[DT]): Either[ExprError, DT] = ???
 }
 case class NthDayOnMthWeek(nth: Int, mth: Int) extends CronPicker[CronField.DayOfMonth] {
+  def unit: CronUnit[CronField.DayOfMonth] = CronUnit.DaysOfMonth
+
   def pickFrom[DT](dateTime: DT)(implicit DT: IsDateTime[DT]): Either[ExprError, DT] = ???
 }
