@@ -22,7 +22,7 @@ object Dependencies {
     val doobie     = "0.7.0"
     val contextual = "1.1.0"
 
-    val jodaTime    = "2.10.2"
+    val jodaTime    = "2.10.3"
     val jodaConvert = "2.2.1"
 
     val momentjs      = "0.8.1"
