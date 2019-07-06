@@ -21,8 +21,13 @@ import cats.implicits._
 
 trait Enumerated[A] extends Steppable[A, Int] { self =>
 
-  def min(a: A): Int = range(a).min
-  def max(a: A): Int = range(a).max
+  @deprecated("Use minValue instead", "0.6.0")
+  def min(a: A): Int      = minValue(a)
+  def minValue(a: A): Int = range(a).min
+
+  @deprecated("Use maxValue instead", "0.6.0")
+  def max(a: A): Int      = maxValue(a)
+  def maxValue(a: A): Int = range(a).max
 
   def range(a: A): IndexedSeq[Int]
 

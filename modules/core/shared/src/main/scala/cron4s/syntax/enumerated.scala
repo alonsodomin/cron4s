@@ -19,8 +19,14 @@ package cron4s.syntax
 import cron4s.base.{Step, Enumerated}
 
 private[syntax] class EnumeratedOps[T](self: T, tc: Enumerated[T]) {
-  def max: Int = tc.max(self)
-  def min: Int = tc.min(self)
+
+  @deprecated("Use maxValue instead", "0.6.0")
+  def max: Int      = maxValue
+  def maxValue: Int = tc.maxValue(self)
+
+  @deprecated("Use minValue instead", "0.6.0")
+  def min: Int      = minValue
+  def minValue: Int = tc.minValue(self)
 
   def range: IndexedSeq[Int] = tc.range(self)
 }

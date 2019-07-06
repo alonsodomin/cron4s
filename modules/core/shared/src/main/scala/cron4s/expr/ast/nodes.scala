@@ -15,7 +15,8 @@
  */
 
 package cron4s
-package expr2
+package expr
+package ast
 
 import cron4s.base._
 import cron4s.datetime.IsDateTime

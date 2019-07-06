@@ -16,7 +16,8 @@
 
 package cron4s
 
-import cats.{Eq, Show}
+import cats.{Eq, Show, Order, Hash}
+import cats.instances.int._
 
 /**
   * Each of the different fields supported in CRON expressions
@@ -54,5 +55,9 @@ private[cron4s] trait CronFieldInstances {
   implicit val cronFieldEq: Eq[CronField] = Eq.fromUniversalEquals[CronField]
 
   implicit val cronFieldShow: Show[CronField] = Show.fromToString
+
+  implicit val cronFieldHash: Hash[CronField] = Hash.fromUniversalHashCode
+
+  implicit val cronFieldOrder: Order[CronField] = Order.by(f => CronField.All.indexOf(f))
 
 }

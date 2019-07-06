@@ -20,7 +20,8 @@ import cron4s.base.Enumerated
 
 import scala.annotation.implicitNotFound
 
-import cats.{Eq, Show}
+import cats.{Eq, Show, Order, Hash}
+import cats.instances.int._
 
 /**
   * A Cron Unit is the representation of valid values that are accepted
@@ -64,6 +65,12 @@ private[cron4s] trait CronUnits {
 
   implicit def cronUnitShow[F <: CronField]: Show[CronUnit[F]] =
     Show.fromToString[CronUnit[F]]
+
+  implicit def cronUnitHash[F <: CronField]: Hash[CronUnit[F]] =
+    Hash.fromUniversalHashCode
+
+  implicit def cronUnitOrder[F <: CronField]: Order[CronUnit[F]] =
+    Order.by(u => CronUnit.All.indexOf(u))
   // $COVERAGE-ON$
 
   private[cron4s] abstract class AbstractCronUnit[F <: CronField](

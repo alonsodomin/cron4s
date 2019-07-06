@@ -80,7 +80,7 @@ object EachNode {
       ): Boolean = true
 
       def matches(node: EachNode[F]): Predicate[Int] = Predicate { x =>
-        x >= min(node) && x <= max(node)
+        x >= minValue(node) && x <= maxValue(node)
       }
 
       def range(node: EachNode[F]): IndexedSeq[Int] = node.range
@@ -122,7 +122,7 @@ object AnyNode {
       ): Boolean = true
 
       def matches(node: AnyNode[F]): Predicate[Int] = Predicate { x =>
-        x >= min(node) && x <= max(node)
+        x >= minValue(node) && x <= maxValue(node)
       }
 
       def range(node: AnyNode[F]): IndexedSeq[Int] = node.range
@@ -237,7 +237,7 @@ object BetweenNode {
       def implies[EE[_ <: CronField]](
           node: BetweenNode[F]
       )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
-        (node.min <= ee.min) && (node.max >= ee.max)
+        (node.minValue <= ee.minValue) && (node.maxValue >= ee.maxValue)
 
       def range(node: BetweenNode[F]): IndexedSeq[Int] = node.range
 
@@ -335,7 +335,7 @@ final class EveryNode[F <: CronField] private (
 
   lazy val range: IndexedSeq[Int] = {
     val elements = LazyList
-      .iterate[Either[ExprError, (Int, Int)]](Right(base.min -> 0)) {
+      .iterate[Either[ExprError, (Int, Int)]](Right(base.minValue -> 0)) {
         _.flatMap { case (v, _) => base.step(v, freq) }
       }
       .map(_.toOption)

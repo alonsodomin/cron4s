@@ -59,8 +59,8 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       case (resetPrevious, from, step) =>
         def resetThis: DateTime => Either[ExprError, DateTime] = {
           val resetValue = step.direction match {
-            case Direction.Forward   => node.min
-            case Direction.Backwards => node.max
+            case Direction.Forward   => node.minValue
+            case Direction.Backwards => node.maxValue
           }
 
           resetPrevious.andThen(_.flatMap(DT.set(_, node.unit.field, resetValue)))

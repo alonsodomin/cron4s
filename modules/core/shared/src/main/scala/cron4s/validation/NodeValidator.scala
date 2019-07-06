@@ -58,7 +58,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
   ): NodeValidator[ConstNode[F]] = new NodeValidator[ConstNode[F]] {
 
     def validate(node: ConstNode[F]): List[InvalidField] =
-      if (node.value < node.unit.min || node.value > node.unit.max) {
+      if (node.value < node.unit.minValue || node.value > node.unit.maxValue) {
         List(
           InvalidField(
             node.unit.field,
