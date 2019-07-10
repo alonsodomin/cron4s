@@ -18,61 +18,65 @@ package cron4s
 package expr
 package ast
 
+import cats.Eq
+
 import cron4s.base._
 import cron4s.datetime.IsDateTime
 
 sealed trait CronNode[F <: CronField] extends HasCronUnit[F]
-object CronNode {
-  implicit def cronNodeSteppable[F <: CronField, DT](
-      implicit
-      R: Enumerated[CronRange[F]],
-      DT: IsDateTime[DT]
-  ): Steppable[CronNode[F], DT] = new Steppable[CronNode[F], DT] {
-    def step(node: CronNode[F], from: DT, step: Step): Either[ExprError, (DT, Int)] =
-      node match {
-        case range: RangeNode[F]   => Steppable[RangeNode[F], DT].step(range, from, step)
-        case picker: PickerNode[F] => Steppable[PickerNode[F], DT].step(picker, from, step)
-      }
-  }
-}
+// object CronNode {
+//   implicit def cronNodeEq[F <: CronField]: Eq[CronNode[F]] = Eq.fromUniversalEquals
 
-final case class RangeNode[F <: CronField](range: CronRange[F]) extends CronNode[F] {
-  def unit: CronUnit[F] = range.unit
-}
-object RangeNode {
+//   implicit def cronNodeSteppable[F <: CronField, DT](
+//       implicit
+//       R: Enumerated[CronRange[F]],
+//       DT: IsDateTime[DT]
+//   ): Steppable[CronNode[F], DT] = new Steppable[CronNode[F], DT] {
+//     def step(node: CronNode[F], from: DT, step: Step): Either[ExprError, (DT, Int)] =
+//       node match {
+//         case range: RangeNode[F]   => Steppable[RangeNode[F], DT].step(range, from, step)
+//         case picker: PickerNode[F] => Steppable[PickerNode[F], DT].step(picker, from, step)
+//       }
+//   }
+// }
 
-  implicit def rangeNodeSteppable[F <: CronField, DT](
-      implicit
-      E0: Enumerated[CronRange[F]],
-      DT: IsDateTime[DT]
-  ): Steppable[RangeNode[F], DT] = new Steppable[RangeNode[F], DT] {
-    def narrowNode(node: RangeNode[F], from: DT): Either[DateTimeError, Enumerated[CronRange[F]]] =
-      for {
-        next <- DT.next(from, node.unit.field)
-        prev <- DT.prev(from, node.unit.field)
-        min  <- DT.first(next, node.unit.field)
-        max  <- DT.last(prev, node.unit.field)
-      } yield E0.withMin(min).withMax(max)
+// final case class RangeNode[F <: CronField](range: CronRange[F]) extends CronNode[F] {
+//   def unit: CronUnit[F] = range.unit
+// }
+// object RangeNode {
 
-    def step(node: RangeNode[F], from: DT, step: Step): Either[ExprError, (DT, Int)] =
-      for {
-        enum                  <- narrowNode(node, from)
-        currValue             <- DT.get(from, node.range.unit.field)
-        (newValue, carryOver) <- enum.step(node.range, currValue, step)
-        newResult             <- DT.set(from, node.range.unit.field, newValue)
-      } yield (newResult, carryOver)
-  }
+//   implicit def rangeNodeSteppable[F <: CronField, DT](
+//       implicit
+//       E0: Enumerated[CronRange[F]],
+//       DT: IsDateTime[DT]
+//   ): Steppable[RangeNode[F], DT] = new Steppable[RangeNode[F], DT] {
+//     def narrowNode(node: RangeNode[F], from: DT): Either[DateTimeError, Enumerated[CronRange[F]]] =
+//       for {
+//         next <- DT.next(from, node.unit.field)
+//         prev <- DT.prev(from, node.unit.field)
+//         min  <- DT.first(next, node.unit.field)
+//         max  <- DT.last(prev, node.unit.field)
+//       } yield E0.withMin(min).withMax(max)
 
-}
+//     def step(node: RangeNode[F], from: DT, step: Step): Either[ExprError, (DT, Int)] =
+//       for {
+//         enum                  <- narrowNode(node, from)
+//         currValue             <- DT.get(from, node.range.unit.field)
+//         (newValue, carryOver) <- enum.step(node.range, currValue, step)
+//         newResult             <- DT.set(from, node.range.unit.field, newValue)
+//       } yield (newResult, carryOver)
+//   }
 
-final case class PickerNode[F <: CronField](picker: CronPicker[F]) extends CronNode[F] {
-  def unit: CronUnit[F] = picker.unit
-}
-object PickerNode {
-  implicit def pickerNodeSteppable[F <: CronField, DT](
-      implicit DT: IsDateTime[DT]
-  ): Steppable[PickerNode[F], DT] = new Steppable[PickerNode[F], DT] {
-    def step(node: PickerNode[F], from: DT, step: Step): Either[ExprError, (DT, Int)] =
-      node.picker.pickFrom(from).map(_ -> 0)
-  }
-}
+// }
+
+// final case class PickerNode[F <: CronField](picker: CronPicker[F]) extends CronNode[F] {
+//   def unit: CronUnit[F] = picker.unit
+// }
+// object PickerNode {
+//   implicit def pickerNodeSteppable[F <: CronField, DT](
+//       implicit DT: IsDateTime[DT]
+//   ): Steppable[PickerNode[F], DT] = new Steppable[PickerNode[F], DT] {
+//     def step(node: PickerNode[F], from: DT, step: Step): Either[ExprError, (DT, Int)] =
+//       node.picker.pickFrom(from).map(_ -> 0)
+//   }
+// }

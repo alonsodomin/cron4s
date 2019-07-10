@@ -17,7 +17,8 @@
 package cron4s
 package parsing
 
-import cron4s.expr._
+import cron4s.expr.CronExpr
+import cron4s.expr.ast._
 
 import scala.util.parsing.input._
 import scala.util.parsing.combinator._
@@ -54,123 +55,144 @@ object CronParser extends Parsers with BaseParser {
 
   // Seconds
 
-  val seconds: Parser[ConstNode[Second]] =
-    sexagesimal.map(ConstNode[Second](_))
+  val seconds: Parser[ConstValue[Second]] =
+    sexagesimal.map(ConstValue[Second](_, None, CronUnit[Second]))
 
   // Minutes
 
-  val minutes: Parser[ConstNode[Minute]] =
-    sexagesimal.map(ConstNode[Minute](_))
+  val minutes: Parser[ConstValue[Minute]] =
+    sexagesimal.map(ConstValue[Minute](_, None, CronUnit[Minute]))
 
   // Hours
 
-  val hours: Parser[ConstNode[Hour]] =
-    decimal.filter(x => (x >= 0) && (x < 24)).map(ConstNode[Hour](_))
+  val hours: Parser[ConstValue[Hour]] =
+    decimal
+      .filter(x => (x >= 0) && (x < 24))
+      .map(ConstValue[Hour](_, None, CronUnit[Hour]))
 
   // Days Of Month
 
-  val daysOfMonth: Parser[ConstNode[DayOfMonth]] =
-    decimal.filter(x => (x >= 1) && (x <= 31)).map(ConstNode[DayOfMonth](_))
+  val daysOfMonth: Parser[ConstValue[DayOfMonth]] =
+    decimal
+      .filter(x => (x >= 1) && (x <= 31))
+      .map(ConstValue[DayOfMonth](_, None, CronUnit[DayOfMonth]))
 
   // Months
 
   private[this] val numericMonths =
-    decimal.filter(_ <= 12).map(ConstNode[Month](_))
+    decimal.filter(_ <= 12).map(ConstValue[Month](_, None, CronUnit[Month]))
 
   private[this] val textualMonths =
     literal.filter(Months.textValues.contains).map { value =>
       val index = Months.textValues.indexOf(value)
-      ConstNode[Month](index + 1, Some(value))
+      ConstValue[Month](index + 1, Some(value), CronUnit[Month])
     }
 
-  val months: Parser[ConstNode[Month]] =
+  val months: Parser[ConstValue[Month]] =
     textualMonths | numericMonths
 
   // Days Of Week
 
   private[this] val numericDaysOfWeek =
-    decimal.filter(_ < 7).map(ConstNode[DayOfWeek](_))
+    decimal.filter(_ < 7).map(ConstValue[DayOfWeek](_, None, CronUnit[DayOfWeek]))
 
   private[this] val textualDaysOfWeek =
     literal.filter(DaysOfWeek.textValues.contains).map { value =>
       val index = DaysOfWeek.textValues.indexOf(value)
-      ConstNode[DayOfWeek](index, Some(value))
+      ConstValue[DayOfWeek](index, Some(value), CronUnit[DayOfWeek])
     }
 
-  val daysOfWeek: Parser[ConstNode[DayOfWeek]] =
+  val daysOfWeek: Parser[ConstValue[DayOfWeek]] =
     textualDaysOfWeek | numericDaysOfWeek
 
   //----------------------------------------
-  // Field-Based Expression Atoms
+  // Range-Based Expression Atoms
   //----------------------------------------
 
-  def each[F <: CronField](implicit unit: CronUnit[F]): Parser[EachNode[F]] =
-    accept("*", { case Asterisk => EachNode[F] })
+  def each[F <: CronField](implicit unit: CronUnit[F]): Parser[EachInRange[F]] =
+    accept("*", { case Asterisk => EachInRange[F](unit) })
 
-  def any[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyNode[F]] =
-    accept("?", { case QuestionMark => AnyNode[F] })
+  def any[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyInRange[F]] =
+    accept("?", { case QuestionMark => AnyInRange[F](unit) })
 
-  def between[F <: CronField](base: Parser[ConstNode[F]])(
+  def between[F <: CronField](base: Parser[ConstValue[F]])(
       implicit unit: CronUnit[F]
-  ): Parser[BetweenNode[F]] =
-    ((base <~ Hyphen) ~ base) ^^ { case min ~ max => BetweenNode[F](min, max) }
+  ): Parser[BoundedRange[F]] =
+    ((base <~ Hyphen) ~ base) ^^ { case min ~ max => BoundedRange[F](min, max, unit) }
 
-  def several[F <: CronField](base: Parser[ConstNode[F]])(
+  def several[F <: CronField](base: Parser[ConstValue[F]])(
       implicit unit: CronUnit[F]
-  ): Parser[SeveralNode[F]] = {
-    def compose(b: Parser[EnumerableNode[F]]) =
+  ): Parser[EnumeratedRange[F]] = {
+    def compose(b: Parser[ComposableRange[F]]) =
       repsep(b, Comma)
         .filter(_.length > 1)
-        .map(values => SeveralNode.fromSeq[F](values).get)
+        .map(values => EnumeratedRange.fromList[F](values).get)
 
-    compose(between(base).map(between2Enumerable) | base.map(const2Enumerable))
+    compose(between(base) | base)
   }
 
-  def every[F <: CronField](base: Parser[ConstNode[F]])(
+  def every[F <: CronField](base: Parser[ConstValue[F]])(
       implicit unit: CronUnit[F]
-  ): Parser[EveryNode[F]] = {
-    def compose(b: Parser[DivisibleNode[F]]) =
+  ): Parser[SteppingRange[F]] = {
+    def compose(b: Parser[DivisibleRange[F]]) =
       ((b <~ Slash) ~ decimal.filter(_ > 0)) ^^ {
-        case exp ~ freq => EveryNode[F](exp, freq)
+        case exp ~ freq => SteppingRange[F](exp, freq, unit)
       }
 
     compose(
-      several(base).map(several2Divisible) |
-        between(base).map(between2Divisible) |
-        each[F].map(each2Divisible)
+      several(base) |
+        between(base) |
+        each[F]
     )
   }
+
+  def range[F <: CronField](base: Parser[ConstValue[F]])(
+      implicit unit: CronUnit[F]
+  ): Parser[CronRange[F]] =
+    (every(base) | several(base) | between(base) | base | each[F])
 
   //----------------------------------------
   // AST Parsing & Building
   //----------------------------------------
 
-  def field[F <: CronField](base: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]
-  ): Parser[FieldNode[F]] =
-    every(base).map(every2Field) |
-      several(base).map(several2Field) |
-      between(base).map(between2Field) |
-      base.map(const2Field) |
-      each[F].map(each2Field)
+  def node[F <: CronField](implicit unit: CronUnit[F]): Parser[CronNode[F]] = {
+    val rangeParser: Parser[CronRange[F]] = unit.field match {
+      case Second     => range(seconds).asInstanceOf[Parser[CronRange[F]]]
+      case Minute     => range(minutes).asInstanceOf[Parser[CronRange[F]]]
+      case Hour       => range(hours).asInstanceOf[Parser[CronRange[F]]]
+      case DayOfMonth => range(daysOfMonth).asInstanceOf[Parser[CronRange[F]]]
+      case Month      => range(months).asInstanceOf[Parser[CronRange[F]]]
+      case DayOfWeek  => range(daysOfWeek).asInstanceOf[Parser[CronRange[F]]]
+    }
+    rangeParser.map(RangeNode[F])
+  }
 
-  def fieldWithAny[F <: CronField](base: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]
-  ): Parser[FieldNodeWithAny[F]] =
-    every(base).map(every2FieldWithAny) |
-      several(base).map(several2FieldWithAny) |
-      between(base).map(between2FieldWithAny) |
-      base.map(const2FieldWithAny) |
-      each[F].map(each2FieldWithAny) |
-      any[F].map(any2FieldWithAny)
+  // def field[F <: CronField](base: Parser[ConstNode[F]])(
+  //     implicit unit: CronUnit[F]
+  // ): Parser[FieldNode[F]] =
+  //   every(base).map(every2Field) |
+  //     several(base).map(several2Field) |
+  //     between(base).map(between2Field) |
+  //     base.map(const2Field) |
+  //     each[F].map(each2Field)
+
+  // def fieldWithAny[F <: CronField](base: Parser[ConstNode[F]])(
+  //     implicit unit: CronUnit[F]
+  // ): Parser[FieldNodeWithAny[F]] =
+  //   every(base).map(every2FieldWithAny) |
+  //     several(base).map(several2FieldWithAny) |
+  //     between(base).map(between2FieldWithAny) |
+  //     base.map(const2FieldWithAny) |
+  //     each[F].map(each2FieldWithAny) |
+  //     any[F].map(any2FieldWithAny)
 
   val cron: Parser[CronExpr] = {
-    (field(seconds) <~ blank) ~
-      (field(minutes) <~ blank) ~
-      (field(hours) <~ blank) ~
-      (fieldWithAny(daysOfMonth) <~ blank) ~
-      (field(months) <~ blank) ~
-      fieldWithAny(daysOfWeek) ^^ {
+    (node[Second] <~ blank) ~
+      (node[Minute] <~ blank) ~
+      (node[Hour] <~ blank) ~
+      (node[DayOfMonth] <~ blank) ~
+      (node[Month] <~ blank) ~
+      node[DayOfWeek] ^^ {
       case sec ~ min ~ hour ~ day ~ month ~ weekDay =>
         CronExpr(sec, min, hour, day, month, weekDay)
     }

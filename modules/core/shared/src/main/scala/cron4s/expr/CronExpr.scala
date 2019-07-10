@@ -35,7 +35,7 @@ final case class CronExpr(
     daysOfWeek: DaysOfWeekNode
 ) {
 
-  private[cron4s] lazy val raw: RawCronExpr = Generic[CronExpr].to(this)
+  // private[cron4s] lazy val raw: RawCronExpr = Generic[CronExpr].to(this)
 
   /**
     * Time part of the CRON expression
@@ -49,8 +49,8 @@ final case class CronExpr(
   lazy val datePart: DateCronExpr =
     DateCronExpr(daysOfMonth, months, daysOfWeek)
 
-  override lazy val toString: String =
-    raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
+//  override lazy val toString: String =
+//    raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
 
 }
 

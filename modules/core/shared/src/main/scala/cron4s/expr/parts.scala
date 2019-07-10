@@ -27,10 +27,10 @@ final case class DateCronExpr(
     daysOfWeek: DaysOfWeekNode
 ) {
 
-  private[cron4s] lazy val raw: RawDateCronExpr = Generic[DateCronExpr].to(this)
+  // private[cron4s] lazy val raw: RawDateCronExpr = Generic[DateCronExpr].to(this)
 
-  override lazy val toString: String =
-    raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
+  //override lazy val toString: String =
+  //  raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
 
 }
 
@@ -55,8 +55,8 @@ final case class TimeCronExpr(
 
   private[cron4s] lazy val raw: RawTimeCronExpr = Generic[TimeCronExpr].to(this)
 
-  override lazy val toString: String =
-    raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
+  //override lazy val toString: String =
+  //  raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
 
 }
 

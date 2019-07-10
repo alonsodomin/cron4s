@@ -23,15 +23,16 @@ import cats.data.NonEmptyList
 import cron4s.base._
 
 sealed trait CronRange[F <: CronField]       extends HasCronUnit[F]
+object CronRange {
+  implicit def cronRangeEnumerated[F <: CronField]: Enumerated[CronRange[F]] = ???
+}
+
 sealed trait ComposableRange[F <: CronField] extends CronRange[F]
 sealed trait DivisibleRange[F <: CronField]  extends CronRange[F]
 
-final class EachInRange[F <: CronField](val unit: CronUnit[F])
+final case class EachInRange[F <: CronField](unit: CronUnit[F])
     extends CronRange[F] with DivisibleRange[F]
 object EachInRange {
-
-  def apply[F <: CronField](implicit unit: CronUnit[F]) =
-    new EachInRange(unit)
 
   implicit def eachInRangeRange[F <: CronField](
       implicit R: Enumerated[CronUnit[F]]
@@ -50,8 +51,11 @@ object AnyInRange {
   }
 }
 
-final case class ConstValue[F <: CronField](value: Int, unit: CronUnit[F])
-    extends CronRange[F] with ComposableRange[F]
+final case class ConstValue[F <: CronField](
+    value: Int,
+    textValue: Option[String],
+    unit: CronUnit[F]
+) extends CronRange[F] with ComposableRange[F]
 object ConstValue {
   implicit def constValueRange[F <: CronField](
       implicit R: Enumerated[CronUnit[F]]
@@ -85,6 +89,21 @@ final case class EnumeratedRange[F <: CronField](
   lazy val values: NonEmptyList[ComposableRange[F]] = head :: tail
 }
 object EnumeratedRange {
+
+  def fromList[F <: CronField](xs: List[ComposableRange[F]])(
+      implicit unit: CronUnit[F]
+  ): Option[EnumeratedRange[F]] = {
+    def splitList: Option[(ComposableRange[F], ComposableRange[F], List[ComposableRange[F]])] =
+      xs match {
+        case x1 :: x2 :: tail => Some((x1, x2, tail))
+        case _                => None
+      }
+
+    splitList.map {
+      case (first, second, tail) => EnumeratedRange(first, NonEmptyList.of(second, tail: _*), unit)
+    }
+  }
+
   implicit def EnumeratedRangeRange[F <: CronField](
       implicit R: Enumerated[ComposableRange[F]]
   ): Enumerated[EnumeratedRange[F]] = new Enumerated[EnumeratedRange[F]] {

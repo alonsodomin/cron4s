@@ -29,7 +29,9 @@ trait Enumerated[A] extends Steppable[A, Int] { self =>
   def max(a: A): Int      = maxValue(a)
   def maxValue(a: A): Int = range(a).max
 
-  def range(a: A): IndexedSeq[Int]
+  @deprecated("Use elements instead", "0.6.0")
+  def range(a: A): IndexedSeq[Int] = elements(a)
+  def elements(a: A): IndexedSeq[Int]
 
   final def step(a: A, from: Int, step: Step): Either[ExprError, (Int, Int)] = {
     val aRange = range(a)
@@ -72,14 +74,10 @@ trait Enumerated[A] extends Steppable[A, Int] { self =>
     else Left(DidNotStep)
   }
 
-  def withMin(theMin: Int): Enumerated[A] = new Enumerated[A] {
-    def range(a: A): IndexedSeq[Int] =
-      self.range(a).dropWhile(_ < theMin)
-  }
-
-  def withMax(theMax: Int): Enumerated[A] = new Enumerated[A] {
-    def range(a: A): IndexedSeq[Int] =
-      self.range(a).takeWhile(_ < theMax)
+  def narrow(theMin: Int, theMax: Int): Enumerated[A] = new Enumerated[A] {
+    def elements(a: A): IndexedSeq[Int] = {
+      self.elements(a).dropWhile(_ < theMin).takeWhile(_ <= theMax)
+    }
   }
 
 }

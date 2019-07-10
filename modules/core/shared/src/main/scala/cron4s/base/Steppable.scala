@@ -17,6 +17,8 @@
 package cron4s
 package base
 
+import cats.Traverse
+
 final case class Step private[cron4s] (amount: Int, direction: Direction) {
   require(amount >= 0, "Step amount must be a positive integer")
 
