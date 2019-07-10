@@ -1,15 +1,16 @@
 package cron4s
+package internal
 package base
 
 import cats.data.NonEmptyVector
 
 import shapeless._
 
-trait Productive[T, E] {
+private[cron4s] trait Productive[T, E] {
   def unfold(t: T): NonEmptyVector[E]
 }
 
-object Productive extends ProductiveDerivation {
+private[cron4s] object Productive extends ProductiveDerivation {
   def apply[T, E](implicit ev: Productive[T, E]): Productive[T, E] = ev
 
   def instance[T, E](f: T => NonEmptyVector[E]): Productive[T, E] = new Productive[T, E] {

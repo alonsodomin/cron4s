@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package cron4s.base
+package cron4s
+package internal
+package base
 
-import cats.{Monoid, MonoidK}
-import cats.Contravariant
-
-import cron4s.syntax.predicate._
+import cats.{Eq, Monoid, MonoidK, Foldable, Contravariant}
+import cats.syntax.foldable._
 
 /**
   * Created by alonsodomin on 02/01/2016.
   */
-trait Predicate[A] extends (A => Boolean) { self =>
+private[cron4s] trait Predicate[A] extends (A => Boolean) { self =>
 
   def apply(a: A): Boolean
 
@@ -38,11 +38,11 @@ trait Predicate[A] extends (A => Boolean) { self =>
   def &&(m: => Predicate[A]): Predicate[A] = and(m)
   def ||(m: => Predicate[A]): Predicate[A] = or(m)
 
-  def unary_! : Predicate[A] = not(self)
+  def unary_! : Predicate[A] = Predicate.not(self)
 
 }
 
-object Predicate {
+private[cron4s] object Predicate extends Predicates {
 
   def apply[A](f: A => Boolean): Predicate[A] = new Predicate[A] {
     def apply(a: A): Boolean = f(a)
@@ -76,5 +76,37 @@ object Predicate {
 
     implicit def monoid[A]: Monoid[Predicate[A]] = monoidK.algebra[A]
   }
+
+}
+
+private[cron4s] trait Predicates {
+
+  def always[A](value: => Boolean): Predicate[A] = Predicate { _ =>
+    value
+  }
+
+  def not[A](m: Predicate[A]): Predicate[A] = Predicate { a =>
+    !m(a)
+  }
+
+  def equalTo[A: Eq](a: A): Predicate[A] = Predicate { b =>
+    Eq[A].eqv(a, b)
+  }
+
+  def noneOf[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
+    not(allOf(c))
+
+  def anyOf[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
+    Predicate { a =>
+      ev.exists(c)(_(a))
+    }
+
+  def allOf[C[_], A](c: C[Predicate[A]])(implicit ev: Foldable[C]): Predicate[A] =
+    Predicate { a =>
+      ev.forall(c)(_(a))
+    }
+
+  def asOf[C[_]: Foldable, A](c: C[Predicate[A]])(implicit M: MonoidK[Predicate]): Predicate[A] =
+    c.foldLeft(M.empty[A])((a, b) => M.combineK(a, b))
 
 }

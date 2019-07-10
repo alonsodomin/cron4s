@@ -1,13 +1,14 @@
 package cron4s
+package internal
 package base
 
 import shapeless._
 
-trait HasCronUnit[T, F <: CronField] {
+private[cron4s] trait HasCronUnit[T, F <: CronField] {
   def unit(t: T): CronUnit[F]
 }
 
-object HasCronUnit extends HasCronUnitDerivation {
+private[cron4s] object HasCronUnit extends HasCronUnitDerivation {
   def apply[T, F <: CronField](implicit ev: HasCronUnit[T, F]): HasCronUnit[T, F] = ev
 
   def instance[T, F <: CronField](f: T => CronUnit[F]): HasCronUnit[T, F] =

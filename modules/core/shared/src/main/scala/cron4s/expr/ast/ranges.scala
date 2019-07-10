@@ -21,10 +21,8 @@ package ast
 import cats.data.{NonEmptyList, NonEmptyVector}
 import cats.implicits._
 
-import cron4s.base._
-import cron4s.syntax.circularTraverse._
-import cron4s.syntax.productive._
-import cron4s.syntax.predicate
+import cron4s.internal.base._
+import cron4s.internal.syntax.all._
 
 sealed trait ComposableRange[F <: CronField]
 sealed trait DivisibleRange[F <: CronField]
@@ -90,7 +88,7 @@ object ConstValue {
   implicit def constValueFieldExpr[F <: CronField]: FieldExpr[ConstValue, F] = 
     new FieldExpr[ConstValue, F] {
       def matches(range: ConstValue[F]): Predicate[Int] =
-        predicate.equalTo(range.value)
+        Predicate.equalTo(range.value)
 
       def implies[R[_ <: CronField]](range: ConstValue[F])(other: R[F])(
         implicit R: FieldExpr[R, F]

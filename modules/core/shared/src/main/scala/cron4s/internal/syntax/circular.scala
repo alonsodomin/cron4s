@@ -1,9 +1,10 @@
 package cron4s
+package internal
 package syntax
 
 import cats.Order
 
-import cron4s.base.CircularTraverse
+import cron4s.internal.base.CircularTraverse
 
 private[syntax] class CircularTraverseOps[F[_], A](self: F[A], tc: CircularTraverse[F]) {
 
@@ -24,4 +25,4 @@ private[syntax] trait CircularTraverseSyntax {
     new CircularTraverseOps[F, A](target, instance)
 }
 
-object circularTraverse extends CircularTraverseSyntax
+private[cron4s] object circularTraverse extends CircularTraverseSyntax

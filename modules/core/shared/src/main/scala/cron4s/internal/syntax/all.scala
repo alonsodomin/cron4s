@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package cron4s.syntax
+package cron4s.internal.syntax
 
 /**
   * Created by alonsodomin on 25/08/2016.
   */
-private[cron4s] trait AllSyntax
-    extends DateTimeCronSyntax with DateTimeNodeSyntax with SteppableSyntax with EnumeratedSyntax
-    with FieldExprSyntax
+private[internal] trait AllSyntax
+    extends ProductiveSyntax with CircularTraverseSyntax with HasMatcherSyntax 
 
-object all extends AllSyntax
+private[cron4s] object all extends AllSyntax

@@ -1,7 +1,8 @@
 package cron4s
+package internal
 package syntax
 
-import cron4s.base.{HasMatcher, Predicate}
+import cron4s.internal.base.{HasMatcher, Predicate}
 
 private[syntax] class HasMatcherOps[A, T](self: A, tc: HasMatcher[A, T]) {
   def matches: Predicate[T] = tc.matches(self)
@@ -12,4 +13,4 @@ private[syntax] trait HasMatcherSyntax {
     new HasMatcherOps[A, T](target, A)
 }
 
-object matcher extends HasMatcherSyntax
+private[cron4s] object matcher extends HasMatcherSyntax

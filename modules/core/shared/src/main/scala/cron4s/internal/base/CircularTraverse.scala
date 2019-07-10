@@ -1,26 +1,26 @@
-package cron4s
+package cron4s.internal
 package base
 
 import cats.Order
 import cats.data.NonEmptyVector
 import cats.implicits._
 
-final case class Step private[cron4s] (amount: Int, direction: Direction) {
+private[cron4s] final case class Step(amount: Int, direction: Direction) {
   require(amount >= 0, "Step amount must be a positive integer")
 
   def reverse: Step = copy(direction = direction.reverse)
 
 }
 
-object Step {
+private[cron4s] object Step {
   def apply(stepSize: Int): Step =
     new Step(Math.abs(stepSize), Direction.ofSign(stepSize))
 }
 
-sealed abstract class Direction(private[cron4s] val sign: Int) {
+private[cron4s] sealed abstract class Direction(private[cron4s] val sign: Int) {
   def reverse: Direction
 }
-object Direction {
+private[cron4s] object Direction {
 
   def ofSign(step: Int): Direction =
     if (step >= 0) Forward
@@ -34,7 +34,7 @@ object Direction {
   }
 }
 
-trait CircularTraverse[F[_]] {
+private[cron4s] trait CircularTraverse[F[_]] {
   protected[cron4s] def step[A: Order](fa: F[A], from: A, step: Step): (A, Int)
 
   final def step[A: Order](fa: F[A])(from: A, stepSize: Int): (A, Int) =
@@ -48,7 +48,7 @@ trait CircularTraverse[F[_]] {
   def narrowBounds[A: Order](fa: F[A])(lower: A, upper: A): F[A]
 }
 
-object CircularTraverse {
+private[cron4s] object CircularTraverse {
 
   def apply[F[_]](implicit ev: CircularTraverse[F]): CircularTraverse[F] = ev
 

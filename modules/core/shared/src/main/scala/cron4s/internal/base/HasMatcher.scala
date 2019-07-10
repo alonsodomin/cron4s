@@ -1,16 +1,15 @@
 package cron4s
+package internal
 package base
 
 import cats.instances.list._
 
-import cron4s.syntax.predicate
-
 import shapeless._
 
-trait HasMatcher[A, T] {
+private[cron4s] trait HasMatcher[A, T] {
   def matches(a: A): Predicate[T]
 }
-object HasMatcher extends HasMatcherDerivation {
+private[cron4s] object HasMatcher extends HasMatcherDerivation {
   def apply[A, T](implicit ev: HasMatcher[A, T]): HasMatcher[A, T] = ev
 
   def instance[A, T](f: A => Predicate[T]): HasMatcher[A, T] =
@@ -40,7 +39,7 @@ private[base] trait HasMatcherDerivation1 extends HasMatcherDerivation0 {
   ): HasMatcher[H :+: T, X] = new HasMatcher[H :+: T, X] {
     def matches(a: H :+: T): Predicate[X] = Predicate[X] { x =>
       val items = a.head.map(headHasMatcher.matches).toList ++ a.tail.map(tailHasMatcher.matches).toList
-      val pred = predicate.anyOf(items)
+      val pred = Predicate.anyOf(items)
       pred(x)
     }
   }
