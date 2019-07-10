@@ -17,7 +17,7 @@
 package cron4s.expr
 
 import cron4s.{CronField, CronUnit}
-import cron4s.base.{HasMatcher, Productive}
+import cron4s.base.{HasCronUnit, HasMatcher, Productive}
 
 /**
   * Created by alonsodomin on 25/08/2016.
@@ -30,6 +30,9 @@ trait FieldExpr[E[_ <: CronField], F <: CronField] extends HasMatcher[E[F], Int]
       implicit EE: FieldExpr[EE, F]
   ): Boolean =
     EE.implies(ee)(e)(this)
+
+  @deprecated("Use unfold instead", "0.6.0")
+  def range(e: E[F]): IndexedSeq[Int] = unfold(e).toVector
 
 }
 

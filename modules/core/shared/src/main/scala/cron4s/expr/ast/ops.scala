@@ -30,12 +30,12 @@ import shapeless._
 private[cron4s] object ops {
 
   object matches extends Poly1 {
-    // implicit def caseEach[F <: CronField]    = at[EachInRange[F]](_.matches)
-    // implicit def caseAny[F <: CronField]     = at[AnyInRange[F]](_.matches)
-    // implicit def caseConst[F <: CronField]   = at[ConstValue[F]](_.matches)
-    // implicit def caseBetween[F <: CronField] = at[BoundedRange[F]](_.matches)
-    // implicit def caseSeveral[F <: CronField] = at[EnumeratedRange[F]](_.matches)
-    // implicit def caseEvery[F <: CronField]   = at[SteppingRange[F]](_.matches)
+    implicit def caseEach[F <: CronField]      = at[EachInRange[F]](_.matches)
+    implicit def caseAny[F <: CronField]       = at[AnyInRange[F]](_.matches)
+    implicit def caseConst[F <: CronField]     = at[ConstValue[F]](_.matches)
+    implicit def caseBounded[F <: CronField]   = at[BoundedRange[F]](_.matches)
+    implicit def caseEnmerated[F <: CronField] = at[EnumeratedRange[F]](_.matches)
+    implicit def caseStepping[F <: CronField]  = at[SteppingRange[F]](_.matches)
 
     // implicit def caseField[F <: CronField] =
     //   at[RangeNode[F]](_.raw.fold(matches))

@@ -27,23 +27,7 @@ import cron4s.syntax.productive._
 import cron4s.syntax.predicate
 
 sealed trait ComposableRange[F <: CronField]
-object ComposableRange {
-  implicit def composableRangeProductive[F <: CronField]: Productive[ComposableRange[F], Int] =
-    Productive.instance {
-      case const: ConstValue[F]     => const.unfold
-      case bounded: BoundedRange[F] => bounded.unfold
-    }
-}
-
 sealed trait DivisibleRange[F <: CronField]
-object DivisibleRange {
-  implicit def divisibleRangeProductive[F <: CronField]: Productive[DivisibleRange[F], Int] =
-    Productive.instance {
-      case each: EachInRange[F] => each.unfold
-      case bounded: BoundedRange[F] => bounded.unfold
-      case enumerated: EnumeratedRange[F] => enumerated.unfold
-    }
-}
 
 final case class EachInRange[F <: CronField](unit: CronUnit[F]) extends DivisibleRange[F]
 object EachInRange {
@@ -239,22 +223,21 @@ object SteppingRange {
   implicit def steppingRangeHasCronUnit[F <: CronField]: HasCronUnit[SteppingRange[F], F] =
     HasCronUnit.instance(_.unit)
 
-  implicit def steppingRangeProductive[F <: CronField](
-      implicit
-      P: Productive[DivisibleRange[F], Int]
-  ): Productive[SteppingRange[F], Int] =
-    Productive.instance { range =>
-      val baseRange  = P.unfold(range.base)
-      val startValue = baseRange.minimumOption.map(_ -> 0)
-      val elements = Stream
-        .iterate[Option[(Int, Int)]](startValue) {
-          _.flatMap { case (v, _) => Some(baseRange.step(v, range.step)) }
-        }
-        .flatten
-        .takeWhile(_._2 < 1)
-        .map(_._1)
+  implicit def steppingRangeFieldExpr[F <: CronField]: FieldExpr[SteppingRange, F] = 
+    new FieldExpr[SteppingRange, F] {
+      def matches(range: SteppingRange[F]): Predicate[Int] = {
+        val preds: NonEmptyVector[Predicate[Int]] =
+          unfold(range).map((x: Int) => predicate.equalTo(x))
+        predicate.anyOf(preds)
+      }
 
-      elements.toVector
+      def implies[R[_ <: CronField]](range: SteppingRange[F])(other: R[F])(
+        implicit R: FieldExpr[R, F]
+      ): Boolean =
+        unfold(range).toVector.containsSlice(R.unfold(other).toVector)
+
+      def unfold(range: SteppingRange[F]): NonEmptyVector[Int] =
+        range.values
     }
 
 }

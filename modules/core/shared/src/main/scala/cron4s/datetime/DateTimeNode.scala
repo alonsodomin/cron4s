@@ -91,7 +91,7 @@ object DateTimeNode {
       implicit ev: DateTimeNode[E, F]
   ): DateTimeNode[E, F] = ev
 
-  implicit def derive[E[_ <: CronField], F <: CronField](
+  implicit def deriveDateTimeNode[E[_ <: CronField], F <: CronField](
       implicit E0: FieldExpr[E, F]
   ): DateTimeNode[E, F] =
     new DateTimeNode[E, F] {
