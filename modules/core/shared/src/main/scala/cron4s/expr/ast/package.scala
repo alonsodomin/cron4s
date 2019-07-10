@@ -12,25 +12,7 @@ package object ast {
   type RangeNode[F <: CronField] =
     EachInRange[F] :+: ConstValue[F] :+: BoundedRange[F] :+: EnumeratedRange[F] :+: SteppingRange[F] :+: CNil
 
-  implicit def rangeNodeHasCronUnit[F <: CronField]: HasCronUnit[RangeNode[F], F] =
-    HasCronUnit.instance(_.fold(ops.unit))
-
-  implicit def rangeNodeProductive[F <: CronField]: Productive[RangeNode[F], Int] =
-    Productive.instance(_.fold(ops.unfold))
-
-  implicit def rangeNodeHasMatcher[F <: CronField]: HasMatcher[RangeNode[F], Int] =
-    HasMatcher.instance(_.fold(ops.matches))
-
   type WildcardRangeNode[F <: CronField] = AnyInRange[F] :+: RangeNode[F]
-
-  implicit def wildcardRangeNodeHasCronUnit[F <: CronField]: HasCronUnit[WildcardRangeNode[F], F] =
-    HasCronUnit.instance(_.fold(ops.unit))
-
-  implicit def wildcardRangeNodeProductive[F <: CronField]: Productive[WildcardRangeNode[F], Int] =
-    Productive.instance(_.fold(ops.unfold))
-
-  implicit def wildcardRangeNodeHasMatcher[F <: CronField]: HasMatcher[WildcardRangeNode[F], Int] =
-    HasMatcher.instance(_.fold(ops.matches))
 
   type SecondsNode     = RangeNode[Second]
   type MinutesNode     = RangeNode[Minute]

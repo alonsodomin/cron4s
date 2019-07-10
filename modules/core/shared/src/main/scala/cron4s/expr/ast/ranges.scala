@@ -24,14 +24,12 @@ import cats.implicits._
 import cron4s.internal.base._
 import cron4s.internal.syntax.all._
 
-sealed trait ComposableRange[F <: CronField]
-sealed trait DivisibleRange[F <: CronField]
+sealed trait CronRange[F <: CronField]
+sealed trait ComposableRange[F <: CronField] extends CronRange[F]
+sealed trait DivisibleRange[F <: CronField] extends CronRange[F]
 
 final case class EachInRange[F <: CronField](unit: CronUnit[F]) extends DivisibleRange[F]
 object EachInRange {
-
-  implicit def eachInRangeHasCronUnit[F <: CronField]: HasCronUnit[EachInRange[F], F] =
-    HasCronUnit.instance(_.unit)
 
   implicit def eachInRangeFieldExpr[F <: CronField]: FieldExpr[EachInRange, F] = 
     new FieldExpr[EachInRange, F] {
@@ -45,17 +43,16 @@ object EachInRange {
         implicit R: FieldExpr[R, F]
       ): Boolean = true
 
+      def unit(range: EachInRange[F]): CronUnit[F] = range.unit
+
       def unfold(range: EachInRange[F]): NonEmptyVector[Int] =
         range.unit.values
     }
 
 }
 
-final case class AnyInRange[F <: CronField](unit: CronUnit[F])
+final case class AnyInRange[F <: CronField](unit: CronUnit[F]) extends CronRange[F]
 object AnyInRange {
-
-  implicit def anyInRangeHasCronUnit[F <: CronField]: HasCronUnit[AnyInRange[F], F] =
-    HasCronUnit.instance(_.unit)
 
   implicit def anyInRangeFieldExpr[F <: CronField]: FieldExpr[AnyInRange, F] = 
     new FieldExpr[AnyInRange, F] {
@@ -68,6 +65,8 @@ object AnyInRange {
       def implies[R[_ <: CronField]](range: AnyInRange[F])(other: R[F])(
         implicit R: FieldExpr[R, F]
       ): Boolean = true
+
+      def unit(range: AnyInRange[F]): CronUnit[F] = range.unit
 
       def unfold(range: AnyInRange[F]): NonEmptyVector[Int] =
         range.unit.values
@@ -82,9 +81,6 @@ final case class ConstValue[F <: CronField](
 ) extends ComposableRange[F]
 object ConstValue {
 
-  implicit def constValueHasCronUnit[F <: CronField]: HasCronUnit[ConstValue[F], F] =
-    HasCronUnit.instance(_.unit)
-
   implicit def constValueFieldExpr[F <: CronField]: FieldExpr[ConstValue, F] = 
     new FieldExpr[ConstValue, F] {
       def matches(range: ConstValue[F]): Predicate[Int] =
@@ -96,6 +92,8 @@ object ConstValue {
         val otherValues = R.unfold(other)
         (otherValues.size == 1) && (otherValues.toVector.contains(range.value))
       }
+
+      def unit(range: ConstValue[F]): CronUnit[F] = range.unit
 
       def unfold(range: ConstValue[F]): NonEmptyVector[Int] =
         NonEmptyVector.of(range.value)
@@ -118,9 +116,6 @@ final case class BoundedRange[F <: CronField](
 }
 object BoundedRange {
 
-  implicit def boundedRangeHasCronUnit[F <: CronField]: HasCronUnit[BoundedRange[F], F] =
-    HasCronUnit.instance(_.begin.unit)
-
   implicit def boundedRangeFieldExpr[F <: CronField]: FieldExpr[BoundedRange, F] = 
     new FieldExpr[BoundedRange, F] {
       def matches(range: BoundedRange[F]): Predicate[Int] = Predicate { x =>
@@ -133,6 +128,8 @@ object BoundedRange {
         val otherValues = R.unfold(other)
         range.begin.value <= otherValues.minimum && range.end.value >= otherValues.maximum
       }
+
+      def unit(range: BoundedRange[F]): CronUnit[F] = range.begin.unit
 
       def unfold(range: BoundedRange[F]): NonEmptyVector[Int] =
         range.values
@@ -169,25 +166,17 @@ object EnumeratedRange {
     }
   }
 
-  implicit def enumeratedRangeHasCronUnit[F <: CronField]: HasCronUnit[EnumeratedRange[F], F] =
-    HasCronUnit.instance(_.unit)
-
-  implicit def enumeratedRangeProductive[F <: CronField](
-      implicit P: Productive[ComposableRange[F], Int]
-  ): Productive[EnumeratedRange[F], Int] =
-    Productive.instance { range =>
-      NonEmptyVector.fromVectorUnsafe(range.elements.flatMap(P.unfold(_).toNonEmptyList).toList.toVector.distinct.sorted)
-    }
-
   implicit def enumeratedRangeFieldExpr[F <: CronField]: FieldExpr[EnumeratedRange, F] = 
     new FieldExpr[EnumeratedRange, F] {
       def matches(range: EnumeratedRange[F]): Predicate[Int] =
-        predicate.anyOf(range.elements.map(_.matches))
+        Predicate.anyOf(range.elements.map(_.matches))
 
       def implies[R[_ <: CronField]](range: EnumeratedRange[F])(other: R[F])(
         implicit R: FieldExpr[R, F]
       ): Boolean =
         range.unfold.toVector.containsSlice(R.unfold(other).toVector)
+
+      def unit(range: EnumeratedRange[F]): CronUnit[F] = range.unit
 
       def unfold(range: EnumeratedRange[F]): NonEmptyVector[Int] =
         range.values
@@ -199,7 +188,7 @@ final case class SteppingRange[F <: CronField](
     base: DivisibleRange[F],
     step: Int,
     unit: CronUnit[F]
-) {
+) extends CronRange[F] {
 
   lazy val values: NonEmptyVector[Int] = {
     val baseRange  = base.unfold
@@ -208,7 +197,6 @@ final case class SteppingRange[F <: CronField](
       .iterate[(Int, Int)](startValue -> 0) {
         case (v, _) => baseRange.step(v, step)
       }
-      .flatten
       .takeWhile(_._2 < 1)
       .map(_._1)
 
@@ -218,21 +206,20 @@ final case class SteppingRange[F <: CronField](
 }
 object SteppingRange {
 
-  implicit def steppingRangeHasCronUnit[F <: CronField]: HasCronUnit[SteppingRange[F], F] =
-    HasCronUnit.instance(_.unit)
-
   implicit def steppingRangeFieldExpr[F <: CronField]: FieldExpr[SteppingRange, F] = 
     new FieldExpr[SteppingRange, F] {
       def matches(range: SteppingRange[F]): Predicate[Int] = {
         val preds: NonEmptyVector[Predicate[Int]] =
-          unfold(range).map((x: Int) => predicate.equalTo(x))
-        predicate.anyOf(preds)
+          unfold(range).map((x: Int) => Predicate.equalTo(x))
+        Predicate.anyOf(preds)
       }
 
       def implies[R[_ <: CronField]](range: SteppingRange[F])(other: R[F])(
         implicit R: FieldExpr[R, F]
       ): Boolean =
         unfold(range).toVector.containsSlice(R.unfold(other).toVector)
+
+      def unit(range: SteppingRange[F]): CronUnit[F] = range.unit
 
       def unfold(range: SteppingRange[F]): NonEmptyVector[Int] =
         range.values

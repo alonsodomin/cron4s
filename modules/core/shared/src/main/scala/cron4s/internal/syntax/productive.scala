@@ -6,14 +6,14 @@ import cats.data.NonEmptyVector
 
 import cron4s.internal.base.Productive
 
-private[syntax] class ProductiveOps[T, E](self: T, tc: Productive[T, E]) {
+private[syntax] class ProductiveOps[T, E](self: T, tc: Productive.Aux[T, E]) {
   def unfold: NonEmptyVector[E] = tc.unfold(self)
 }
 
 private[syntax] trait ProductiveSyntax {
   implicit def toProductiveOps[T, E](
       target: T
-  )(implicit instance: Productive[T, E]): ProductiveOps[T, E] =
+  )(implicit instance: Productive.Aux[T, E]): ProductiveOps[T, E] =
     new ProductiveOps[T, E](target, instance)
 }
 

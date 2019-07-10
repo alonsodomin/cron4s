@@ -15,6 +15,7 @@
  */
 
 package cron4s
+package internal
 package base
 
 import cats.implicits._

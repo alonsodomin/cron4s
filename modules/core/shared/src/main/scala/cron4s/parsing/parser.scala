@@ -118,7 +118,7 @@ object CronParser extends Parsers with BaseParser {
   def between[F <: CronField](base: Parser[ConstValue[F]])(
       implicit unit: CronUnit[F]
   ): Parser[BoundedRange[F]] =
-    ((base <~ Hyphen) ~ base) ^^ { case min ~ max => BoundedRange[F](min, max, unit) }
+    ((base <~ Hyphen) ~ base) ^^ { case min ~ max => BoundedRange[F](min, max) }
 
   def several[F <: CronField](base: Parser[ConstValue[F]])(
       implicit unit: CronUnit[F]

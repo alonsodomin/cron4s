@@ -16,13 +16,11 @@
 
 package cron4s
 
-import cron4s.base.Enumerated
-
 import cats.{Eq, Show, Order, Hash}
 import cats.data.NonEmptyVector
 import cats.implicits._
 
-import cron4s.base.{Enum, Productive}
+import cron4s.internal.base.{Enum, Productive}
 
 import scala.annotation.implicitNotFound
 import scala.collection.SortedSet
@@ -84,7 +82,7 @@ private[cron4s] trait CronUnits {
 
   implicit val cronUnitEnum: Enum[CronUnit[CronField]] = Enum.fromSet(CronUnit.All)
 
-  implicit def cronUnitProductive[F <: CronField]: Productive[CronUnit[F], Int] =
+  implicit def cronUnitProductive[F <: CronField]: Productive.Aux[CronUnit[F], Int] =
     Productive.instance(_.values)
   // $COVERAGE-ON$
 

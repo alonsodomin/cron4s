@@ -19,7 +19,7 @@ package cron4s
 import cats.{Eq, Show, Order, Hash}
 import cats.implicits._
 
-import cron4s.base.Enum
+import cron4s.internal.base.Enum
 
 import scala.collection.SortedSet
 

@@ -17,12 +17,14 @@
 package cron4s.expr
 
 import cron4s.{CronField, CronUnit}
-import cron4s.base.{HasCronUnit, HasMatcher, Productive}
+import cron4s.internal.base._
 
 /**
   * Created by alonsodomin on 25/08/2016.
   */
-trait FieldExpr[E[_ <: CronField], F <: CronField] extends HasMatcher[E[F], Int] with Productive[E[F], Int] {
+trait FieldExpr[E[_ <: CronField], F0 <: CronField] extends HasCronUnit[E[F0]] with HasMatcher[E[F0]] with Productive[E[F0]] {
+  type F = F0
+  type X = Int
 
   def implies[EE[_ <: CronField]](e: E[F])(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean
 
