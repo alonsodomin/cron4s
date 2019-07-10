@@ -75,9 +75,8 @@ trait Enumerated[A] extends Steppable[A, Int] { self =>
   }
 
   def narrow(theMin: Int, theMax: Int): Enumerated[A] = new Enumerated[A] {
-    def elements(a: A): IndexedSeq[Int] = {
+    def elements(a: A): IndexedSeq[Int] =
       self.elements(a).dropWhile(_ < theMin).takeWhile(_ <= theMax)
-    }
   }
 
 }

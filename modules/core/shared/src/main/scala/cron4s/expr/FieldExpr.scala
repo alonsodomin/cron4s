@@ -17,14 +17,12 @@
 package cron4s.expr
 
 import cron4s.{CronField, CronUnit}
-import cron4s.base.{Enumerated, Predicate}
+import cron4s.base.{HasMatcher, Productive}
 
 /**
   * Created by alonsodomin on 25/08/2016.
   */
-trait FieldExpr[E[_ <: CronField], F <: CronField] extends Enumerated[E[F]] {
-
-  def matches(e: E[F]): Predicate[Int]
+trait FieldExpr[E[_ <: CronField], F <: CronField] extends HasMatcher[E[F], Int] with Productive[E[F], Int] {
 
   def implies[EE[_ <: CronField]](e: E[F])(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean
 
@@ -32,8 +30,6 @@ trait FieldExpr[E[_ <: CronField], F <: CronField] extends Enumerated[E[F]] {
       implicit EE: FieldExpr[EE, F]
   ): Boolean =
     EE.implies(ee)(e)(this)
-
-  def unit(e: E[F]): CronUnit[F]
 
 }
 

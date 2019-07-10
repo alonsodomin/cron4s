@@ -20,7 +20,7 @@ package ast
 
 import cron4s.datetime._
 
-sealed trait CronPicker[F <: CronField] extends HasCronUnit[F] {
+sealed trait CronPicker[F <: CronField] {
   def pickFrom[DT](dateTime: DT)(implicit DT: IsDateTime[DT]): Either[ExprError, DT]
 }
 case object LastDayOfMonth extends CronPicker[CronField.DayOfMonth] {

@@ -38,8 +38,6 @@ private[syntax] class FieldExprOps[E[_ <: CronField], F <: CronField](
   def impliedBy[EE[_ <: CronField]](ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
     tc.impliedBy(self)(ee)
 
-  def unit: CronUnit[F] = tc.unit(self)
-
 }
 
 private[syntax] trait FieldExprSyntax {

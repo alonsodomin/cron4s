@@ -19,35 +19,6 @@ package base
 
 import cats.Traverse
 
-final case class Step private[cron4s] (amount: Int, direction: Direction) {
-  require(amount >= 0, "Step amount must be a positive integer")
-
-  def reverse: Step = copy(direction = direction.reverse)
-
-}
-
-object Step {
-  def apply(stepSize: Int): Step =
-    new Step(Math.abs(stepSize), Direction.ofSign(stepSize))
-}
-
-sealed abstract class Direction(private[cron4s] val sign: Int) {
-  def reverse: Direction
-}
-object Direction {
-
-  def ofSign(step: Int): Direction =
-    if (step >= 0) Forward
-    else Backwards
-
-  case object Forward extends Direction(1) {
-    def reverse: Direction = Backwards
-  }
-  case object Backwards extends Direction(-1) {
-    def reverse: Direction = Forward
-  }
-}
-
 trait Steppable[T, E] {
   protected[cron4s] def step(t: T, from: E, step: Step): Either[ExprError, (E, Int)]
 

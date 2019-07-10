@@ -17,7 +17,11 @@
 package cron4s
 
 import cats.{Eq, Show, Order, Hash}
-import cats.instances.int._
+import cats.implicits._
+
+import cron4s.base.Enum
+
+import scala.collection.SortedSet
 
 /**
   * Each of the different fields supported in CRON expressions
@@ -45,8 +49,8 @@ object CronField extends CronFieldInstances {
   sealed trait DayOfWeek extends CronField
   case object DayOfWeek  extends DayOfWeek
 
-  final val All: List[CronField] =
-    List(Second, Minute, Hour, DayOfMonth, Month, DayOfWeek)
+  final val All: SortedSet[CronField] =
+    SortedSet(Second, Minute, Hour, DayOfMonth, Month, DayOfWeek)
 
 }
 
@@ -58,6 +62,8 @@ private[cron4s] trait CronFieldInstances {
 
   implicit val cronFieldHash: Hash[CronField] = Hash.fromUniversalHashCode
 
-  implicit val cronFieldOrder: Order[CronField] = Order.by(f => CronField.All.indexOf(f))
+  implicit val cronFieldOrder: Order[CronField] = Order.by(CronField.All.toVector.indexOf)
+
+  implicit val cronFieldEnum: Enum[CronField] = Enum.fromSet(CronField.All)
 
 }
