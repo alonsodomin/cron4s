@@ -14,39 +14,39 @@
  * limitations under the License.
  */
 
-package cron4s.syntax
+package cron4s.internal.syntax
 
 import cron4s.{CronField, CronUnit}
-import cron4s.expr.FieldExpr
-import cron4s.base.Predicate
+import cron4s.internal.base.Predicate
+import cron4s.internal.expr.RangeExpr
 
 import scala.language.higherKinds
 
 /**
   * Created by alonsodomin on 25/08/2016.
   */
-private[syntax] class FieldExprOps[E[_ <: CronField], F <: CronField](
+private[syntax] class RangeExprOps[E[_ <: CronField], F <: CronField](
     self: E[F],
-    tc: FieldExpr[E, F]
+    tc: RangeExpr[E, F]
 ) {
 
   def matches: Predicate[Int] = tc.matches(self)
 
-  def implies[EE[_ <: CronField]](ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
+  def implies[EE[_ <: CronField]](ee: EE[F])(implicit EE: RangeExpr[EE, F]): Boolean =
     tc.implies(self)(ee)
 
-  def impliedBy[EE[_ <: CronField]](ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
+  def impliedBy[EE[_ <: CronField]](ee: EE[F])(implicit EE: RangeExpr[EE, F]): Boolean =
     tc.impliedBy(self)(ee)
 
 }
 
-private[syntax] trait FieldExprSyntax {
+private[syntax] trait RangeExprSyntax {
 
   implicit def toExprOps[E[_ <: CronField], F <: CronField](
       target: E[F]
-  )(implicit tc: FieldExpr[E, F]): FieldExprOps[E, F] =
-    new FieldExprOps[E, F](target, tc)
+  )(implicit tc: RangeExpr[E, F]): RangeExprOps[E, F] =
+    new RangeExprOps[E, F](target, tc)
 
 }
 
-object field extends FieldExprSyntax
+object range extends RangeExprSyntax

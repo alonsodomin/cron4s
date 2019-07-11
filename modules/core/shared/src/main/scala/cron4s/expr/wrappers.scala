@@ -19,7 +19,8 @@ package cron4s.expr
 import cats.{Eq, Show}
 
 import cron4s.{CronField, CronUnit}
-import cron4s.base.Predicate
+import cron4s.internal.base.Predicate
+import cron4s.internal.expr.RangeExpr
 
 import shapeless._
 
@@ -40,8 +41,8 @@ object FieldNode {
   implicit def fieldNodeShow[F <: CronField]: Show[FieldNode[F]] =
     Show.fromToString[FieldNode[F]]
 
-  implicit def fieldNodeInstance[F <: CronField]: FieldExpr[FieldNode, F] =
-    new FieldExpr[FieldNode, F] {
+  implicit def fieldNodeInstance[F <: CronField]: RangeExpr[FieldNode, F] =
+    new RangeExpr[FieldNode, F] {
       def matches(node: FieldNode[F]): Predicate[Int] =
         node.raw.fold(_root_.cron4s.expr.ops.matches)
 
@@ -50,7 +51,7 @@ object FieldNode {
 
       def implies[EE[_ <: CronField]](
           node: FieldNode[F]
-      )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean = node.raw match {
+      )(ee: EE[F])(implicit EE: RangeExpr[EE, F]): Boolean = node.raw match {
         case Inl(each)                      => each.implies(ee)
         case Inr(Inl(const))                => const.implies(ee)
         case Inr(Inr(Inl(between)))         => between.implies(ee)

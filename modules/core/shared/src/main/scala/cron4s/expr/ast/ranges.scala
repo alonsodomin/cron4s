@@ -22,6 +22,7 @@ import cats.data.{NonEmptyList, NonEmptyVector}
 import cats.implicits._
 
 import cron4s.internal.base._
+import cron4s.internal.expr._
 import cron4s.internal.syntax.all._
 
 sealed trait CronRange[F <: CronField]
@@ -31,8 +32,8 @@ sealed trait DivisibleRange[F <: CronField] extends CronRange[F]
 final case class EachInRange[F <: CronField](unit: CronUnit[F]) extends DivisibleRange[F]
 object EachInRange {
 
-  implicit def eachInRangeFieldExpr[F <: CronField]: FieldExpr[EachInRange, F] = 
-    new FieldExpr[EachInRange, F] {
+  implicit def eachInRangeRangeExpr[F <: CronField]: RangeExpr[EachInRange, F] = 
+    new RangeExpr[EachInRange, F] {
       def matches(range: EachInRange[F]): Predicate[Int] = {
         Predicate { x =>
           x >= range.unit.min && x <= range.unit.max
@@ -40,7 +41,7 @@ object EachInRange {
       }
 
       def implies[R[_ <: CronField]](range: EachInRange[F])(other: R[F])(
-        implicit R: FieldExpr[R, F]
+        implicit R: RangeExpr[R, F]
       ): Boolean = true
 
       def unit(range: EachInRange[F]): CronUnit[F] = range.unit
@@ -54,8 +55,8 @@ object EachInRange {
 final case class AnyInRange[F <: CronField](unit: CronUnit[F]) extends CronRange[F]
 object AnyInRange {
 
-  implicit def anyInRangeFieldExpr[F <: CronField]: FieldExpr[AnyInRange, F] = 
-    new FieldExpr[AnyInRange, F] {
+  implicit def anyInRangeRangeExpr[F <: CronField]: RangeExpr[AnyInRange, F] = 
+    new RangeExpr[AnyInRange, F] {
       def matches(range: AnyInRange[F]): Predicate[Int] = {
         Predicate { x =>
           x >= range.unit.min && x <= range.unit.max
@@ -63,7 +64,7 @@ object AnyInRange {
       }
 
       def implies[R[_ <: CronField]](range: AnyInRange[F])(other: R[F])(
-        implicit R: FieldExpr[R, F]
+        implicit R: RangeExpr[R, F]
       ): Boolean = true
 
       def unit(range: AnyInRange[F]): CronUnit[F] = range.unit
@@ -81,13 +82,13 @@ final case class ConstValue[F <: CronField](
 ) extends ComposableRange[F]
 object ConstValue {
 
-  implicit def constValueFieldExpr[F <: CronField]: FieldExpr[ConstValue, F] = 
-    new FieldExpr[ConstValue, F] {
+  implicit def constValueRangeExpr[F <: CronField]: RangeExpr[ConstValue, F] = 
+    new RangeExpr[ConstValue, F] {
       def matches(range: ConstValue[F]): Predicate[Int] =
         Predicate.equalTo(range.value)
 
       def implies[R[_ <: CronField]](range: ConstValue[F])(other: R[F])(
-        implicit R: FieldExpr[R, F]
+        implicit R: RangeExpr[R, F]
       ): Boolean = {
         val otherValues = R.unfold(other)
         (otherValues.size == 1) && (otherValues.toVector.contains(range.value))
@@ -116,14 +117,14 @@ final case class BoundedRange[F <: CronField](
 }
 object BoundedRange {
 
-  implicit def boundedRangeFieldExpr[F <: CronField]: FieldExpr[BoundedRange, F] = 
-    new FieldExpr[BoundedRange, F] {
+  implicit def boundedRangeRangeExpr[F <: CronField]: RangeExpr[BoundedRange, F] = 
+    new RangeExpr[BoundedRange, F] {
       def matches(range: BoundedRange[F]): Predicate[Int] = Predicate { x =>
         x >= range.begin.value && x <= range.end.value
       }
 
       def implies[R[_ <: CronField]](range: BoundedRange[F])(other: R[F])(
-        implicit R: FieldExpr[R, F]
+        implicit R: RangeExpr[R, F]
       ): Boolean = {
         val otherValues = R.unfold(other)
         range.begin.value <= otherValues.minimum && range.end.value >= otherValues.maximum
@@ -166,13 +167,13 @@ object EnumeratedRange {
     }
   }
 
-  implicit def enumeratedRangeFieldExpr[F <: CronField]: FieldExpr[EnumeratedRange, F] = 
-    new FieldExpr[EnumeratedRange, F] {
+  implicit def enumeratedRangeRangeExpr[F <: CronField]: RangeExpr[EnumeratedRange, F] = 
+    new RangeExpr[EnumeratedRange, F] {
       def matches(range: EnumeratedRange[F]): Predicate[Int] =
         Predicate.anyOf(range.elements.map(_.matches))
 
       def implies[R[_ <: CronField]](range: EnumeratedRange[F])(other: R[F])(
-        implicit R: FieldExpr[R, F]
+        implicit R: RangeExpr[R, F]
       ): Boolean =
         range.unfold.toVector.containsSlice(R.unfold(other).toVector)
 
@@ -206,8 +207,8 @@ final case class SteppingRange[F <: CronField](
 }
 object SteppingRange {
 
-  implicit def steppingRangeFieldExpr[F <: CronField]: FieldExpr[SteppingRange, F] = 
-    new FieldExpr[SteppingRange, F] {
+  implicit def steppingRangeRangeExpr[F <: CronField]: RangeExpr[SteppingRange, F] = 
+    new RangeExpr[SteppingRange, F] {
       def matches(range: SteppingRange[F]): Predicate[Int] = {
         val preds: NonEmptyVector[Predicate[Int]] =
           unfold(range).map((x: Int) => Predicate.equalTo(x))
@@ -215,7 +216,7 @@ object SteppingRange {
       }
 
       def implies[R[_ <: CronField]](range: SteppingRange[F])(other: R[F])(
-        implicit R: FieldExpr[R, F]
+        implicit R: RangeExpr[R, F]
       ): Boolean =
         unfold(range).toVector.containsSlice(R.unfold(other).toVector)
 

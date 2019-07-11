@@ -1,8 +1,7 @@
 package cron4s
 package expr
 
-import cron4s.base._
-import cron4s.datetime.IsDateTime
+import cron4s.internal.base._
 
 import shapeless._
 

@@ -19,7 +19,7 @@ package cron4s.internal.syntax
 /**
   * Created by alonsodomin on 25/08/2016.
   */
-private[internal] trait AllSyntax
-    extends ProductiveSyntax with CircularTraverseSyntax with HasMatcherSyntax 
+private[cron4s] trait AllSyntax
+    extends ProductiveSyntax with CircularTraverseSyntax with HasMatcherSyntax with RangeExprSyntax
 
 private[cron4s] object all extends AllSyntax

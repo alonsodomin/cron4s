@@ -21,8 +21,8 @@ import cats.instances.list._
 
 import cron4s.CronField
 import cron4s.expr._
-import cron4s.base._
-import cron4s.syntax.predicate._
+import cron4s.internal.expr.RangeExpr
+import cron4s.internal.base._
 
 import shapeless._
 
@@ -38,7 +38,7 @@ private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime
     import cats.syntax.either._
 
     private[this] def predicateFor[N[_ <: CronField], F <: CronField](field: F, node: N[F])(
-        implicit expr: FieldExpr[N, F]
+        implicit expr: RangeExpr[N, F]
     ): Predicate[DateTime] =
       Predicate { dt =>
         DT.get(dt, field)

@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
-package cron4s.expr
+package cron4s
+package internal
+package expr
 
 import cron4s.{CronField, CronUnit}
 import cron4s.internal.base._
 
+import shapeless._
+
 /**
   * Created by alonsodomin on 25/08/2016.
   */
-trait FieldExpr[E[_ <: CronField], F0 <: CronField] extends HasCronUnit[E[F0]] with HasMatcher[E[F0]] with Productive[E[F0]] {
+trait RangeExpr[E[_ <: CronField], F0 <: CronField] extends HasCronUnit[E[F0]] with HasMatcher[E[F0]] with Productive[E[F0]] {
   type F = F0
   type X = Int
 
-  def implies[EE[_ <: CronField]](e: E[F])(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean
+  def implies[EE[_ <: CronField]](e: E[F])(ee: EE[F])(implicit EE: RangeExpr[EE, F]): Boolean
 
   final def impliedBy[EE[_ <: CronField]](e: E[F])(ee: EE[F])(
-      implicit EE: FieldExpr[EE, F]
+      implicit EE: RangeExpr[EE, F]
   ): Boolean =
     EE.implies(ee)(e)(this)
 
@@ -38,8 +42,14 @@ trait FieldExpr[E[_ <: CronField], F0 <: CronField] extends HasCronUnit[E[F0]] w
 
 }
 
-object FieldExpr {
+object RangeExpr {
   @inline def apply[E[_ <: CronField], F <: CronField](
-      implicit ev: FieldExpr[E, F]
-  ): FieldExpr[E, F] = ev
+      implicit ev: RangeExpr[E, F]
+  ): RangeExpr[E, F] = ev
+}
+
+trait RangeExprDerivation0 {
+
+  //implicit def deriveRangeExprCNil[E[_ <: CronField], F0 <: CronField]: RangeExpr[E, F]
+
 }
