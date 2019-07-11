@@ -41,6 +41,6 @@ private[base] trait FieldIndexedInstances1 extends FieldIndexedInstances0 {
 private[base] trait FieldIndexedInstances0 {
   implicit def cnilIsIndexed[F <: CronField]: FieldIndexed[CNil, F] = new FieldIndexed[CNil, F] {
     type Out[x] = Nothing
-    def cast(a: CNil): Nothing = ???
+    def cast(a: CNil): Nothing = a.impossible
   }
 }

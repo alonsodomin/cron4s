@@ -49,6 +49,6 @@ private[base] trait ProductiveDerivation1 extends ProductiveDerivation0 {
 private[base] trait ProductiveDerivation0 {
 
   implicit def deriveProductiveCNil[X]: Productive[CNil, X] =
-    Productive.instance(_ => ???)
+    Productive.instance(_.impossible)
 
 }

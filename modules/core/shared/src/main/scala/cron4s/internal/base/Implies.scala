@@ -70,7 +70,7 @@ private[base] trait ImpliesDerivation0 {
         implicit
         indexedA: FieldIndexed[CNil, F],
         indexedB: FieldIndexed[B, F]
-      ): Boolean = ???
+      ): Boolean = a.impossible
     }
 
 }

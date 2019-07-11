@@ -47,6 +47,6 @@ private[base] trait HasCronUnitDerivation1 extends HasCronUnitDerivation0 {
 private[base] trait HasCronUnitDerivation0 {
 
   implicit def deriveHasCronUnit[F <: CronField]: HasCronUnit[CNil, F] =
-    HasCronUnit.instance(_ => ???)
+    HasCronUnit.instance(_.impossible)
 
 }

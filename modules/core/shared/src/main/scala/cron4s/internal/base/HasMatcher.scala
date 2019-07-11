@@ -45,6 +45,6 @@ private[base] trait HasMatcherDerivation1 extends HasMatcherDerivation0 {
 private[base] trait HasMatcherDerivation0 {
   
   implicit def deriveHasMatcherCNil[X]: HasMatcher[CNil, X] =
-    HasMatcher.instance(_ => ???)
+    HasMatcher.instance(_.impossible)
   
 }
