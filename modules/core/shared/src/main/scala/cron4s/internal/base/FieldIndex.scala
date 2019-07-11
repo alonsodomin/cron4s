@@ -18,7 +18,7 @@ private[cron4s] object FieldIndexed extends FieldIndexedInstances1 {
   implicit def mk[I[_], F <: CronField] = new FieldIndexed[I[F], F] {
     type Out[x] = I[x]
 
-    def cast(a: I[F]): Out[F] = a
+    @inline def cast(a: I[F]): Out[F] = a
   }
 }
 

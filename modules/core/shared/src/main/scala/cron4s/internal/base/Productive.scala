@@ -6,19 +6,16 @@ import cats.data.NonEmptyVector
 
 import shapeless._
 
-private[cron4s] trait Productive[T] {
-  type X
-  def unfold(t: T): NonEmptyVector[X]
+private[cron4s] trait Productive[A, X] {
+  def unfold(a: A): NonEmptyVector[X]
 }
 
 private[cron4s] object Productive extends ProductiveDerivation {
-  type Aux[A, X0] = Productive[A] { type X = X0 }
+  
+  def apply[A, X](implicit ev: Productive[A, X]): Productive[A, X] = ev
 
-  def apply[T, E](implicit ev: Productive.Aux[T, E]): Productive.Aux[T, E] = ev
-
-  def instance[T, X0](f: T => NonEmptyVector[X0]): Productive.Aux[T, X0] = new Productive[T] {
-    type X = X0
-    def unfold(t: T): NonEmptyVector[X] = f(t)
+  def instance[A, X](f: A => NonEmptyVector[X]): Productive[A, X] = new Productive[A, X] {
+    def unfold(a: A): NonEmptyVector[X] = f(a)
   }
 }
 
@@ -27,8 +24,8 @@ private[base] trait ProductiveDerivation extends ProductiveDerivation1 {
   implicit def deriveProductive[A, X, C <: Coproduct](
     implicit
     G: Generic.Aux[A, C],
-    P: Productive.Aux[C, X]
-  ): Productive.Aux[A, X] =
+    P: Productive[C, X]
+  ): Productive[A, X] =
     Productive.instance(a => P.unfold(G.to(a)))
 
 }
@@ -37,9 +34,9 @@ private[base] trait ProductiveDerivation1 extends ProductiveDerivation0 {
 
   implicit def deriveProductiveCoproduct[H, T <: Coproduct, X](
     implicit
-    productiveH: Productive.Aux[H, X],
-    productiveT: Productive.Aux[T, X]
-  ): Productive.Aux[H :+: T, X] =
+    productiveH: Productive[H, X],
+    productiveT: Productive[T, X]
+  ): Productive[H :+: T, X] =
     Productive.instance { ht =>
       ht.head match {
         case Some(h) => productiveH.unfold(h)
@@ -51,7 +48,7 @@ private[base] trait ProductiveDerivation1 extends ProductiveDerivation0 {
 
 private[base] trait ProductiveDerivation0 {
 
-  implicit def deriveProductiveCNil[X]: Productive.Aux[CNil, X] =
+  implicit def deriveProductiveCNil[X]: Productive[CNil, X] =
     Productive.instance(_ => ???)
 
 }
