@@ -34,7 +34,7 @@ private[cron4s] object Direction {
   }
 }
 
-private[cron4s] trait CircularTraverse[F[_]] {
+private[cron4s] trait SequentialK[F[_]] {
   protected[cron4s] def step[A: Order](fa: F[A], from: A, step: Step): (A, Int)
 
   final def step[A: Order](fa: F[A])(from: A, stepSize: Int): (A, Int) =
@@ -43,16 +43,14 @@ private[cron4s] trait CircularTraverse[F[_]] {
   def next[A: Order](fa: F[A])(a: A): A = step(fa)(a, 1)._1
   def prev[A: Order](fa: F[A])(a: A): A = step(fa)(a, -1)._1
 
-  def lowerBound[A: Order](fa: F[A]): A
-  def upperBound[A: Order](fa: F[A]): A
   def narrowBounds[A: Order](fa: F[A])(lower: A, upper: A): F[A]
 }
 
-private[cron4s] object CircularTraverse {
+private[cron4s] object SequentialK {
 
-  def apply[F[_]](implicit ev: CircularTraverse[F]): CircularTraverse[F] = ev
+  def apply[F[_]](implicit ev: SequentialK[F]): SequentialK[F] = ev
 
-  implicit val vectorCircularTraverse = new CircularTraverse[NonEmptyVector] {
+  implicit val vectorSequentialK = new SequentialK[NonEmptyVector] {
 
     def step[A: Order](vector: NonEmptyVector[A], from: A, step: Step): (A, Int) = {
       def nearestNeighbourIndex = step.direction match {
@@ -92,11 +90,11 @@ private[cron4s] object CircularTraverse {
     }
   }
 
-  def narrowBounds[A: Order](fa: NonEmptyVector[A])(lower: A, upper: A): NonEmptyVector[A] = {
+  def narrowBounds[A: Order](fa: NonEmptyVector[A])(lower: A, upper: A): NonEmptyVector[A] =
     if (lower === upper) NonEmptyVector.of(lower)
-    else NonEmptyVector.fromVectorUnsafe {
-      fa.toVector.sorted.dropWhile(_ < lower).takeWhile(_ <= upper)
-    }
-  }
+    else
+      NonEmptyVector.fromVectorUnsafe {
+        fa.toVector.sorted.dropWhile(_ < lower).takeWhile(_ <= upper)
+      }
 
 }

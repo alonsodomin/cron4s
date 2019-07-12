@@ -10,8 +10,9 @@ import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.npmDependencies
 object Dependencies {
 
   object version {
-    val atto       = "0.7.0-RC2"
-    val cats       = "2.0.0-RC2"
+    val atto       = "0.7.0-RC1"
+    val cats       = "2.0.0-RC1"
+    val kittens    = "1.2.1"
     val shapeless  = "2.3.3"
     val discipline = "1.0.0-M1"
     val decline    = "0.7.0-M0"
@@ -31,6 +32,7 @@ object Dependencies {
     libraryDependencies ++= Seq(
       "com.chuusai"            %%% "shapeless"                % version.shapeless,
       "org.typelevel"          %%% "cats-core"                % version.cats,
+      "org.typelevel"  %%% "kittens"    % version.kittens,
       "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parserc
     )
   )

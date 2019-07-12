@@ -17,7 +17,8 @@
 package cron4s.expr
 
 import cats.{Eq, Show}
-import cats.implicits._
+import cats.derived
+import cats.syntax.eq._
 
 import shapeless._
 
@@ -56,7 +57,7 @@ final case class CronExpr(
 
 object CronExpr {
 
-  implicit val CronExprEq: Eq[CronExpr] =
+  implicit val cronExprEq: Eq[CronExpr] =
     Eq.instance { (lhs, rhs) =>
       lhs.seconds === rhs.seconds &&
       lhs.minutes === rhs.minutes &&
@@ -66,7 +67,7 @@ object CronExpr {
       lhs.daysOfWeek === rhs.daysOfWeek
     }
 
-  implicit val CronExprShow: Show[CronExpr] =
-    Show.fromToString[CronExpr]
+  implicit val cronExprShow: Show[CronExpr] =
+    derived.semi.show[CronExpr]
 
 }

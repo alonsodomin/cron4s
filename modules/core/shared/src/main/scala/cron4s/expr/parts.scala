@@ -17,9 +17,8 @@
 package cron4s.expr
 
 import cats._
-import cats.implicits._
-
-import shapeless._
+import cats.derived
+import cats.syntax.eq._
 
 final case class DateCronExpr(
     daysOfMonth: DaysOfMonthNode,
@@ -43,7 +42,7 @@ object DateCronExpr {
   }
 
   implicit val dateCronShow: Show[DateCronExpr] =
-    Show.fromToString[DateCronExpr]
+    derived.semi.show[DateCronExpr]
 
 }
 
@@ -53,7 +52,7 @@ final case class TimeCronExpr(
     hours: HoursNode
 ) {
 
-  private[cron4s] lazy val raw: RawTimeCronExpr = Generic[TimeCronExpr].to(this)
+  //private[cron4s] lazy val raw: RawTimeCronExpr = Generic[TimeCronExpr].to(this)
 
   //override lazy val toString: String =
   //  raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
@@ -69,6 +68,6 @@ object TimeCronExpr {
   }
 
   implicit val timeCronShow: Show[TimeCronExpr] =
-    Show.fromToString[TimeCronExpr]
+    derived.semi.show[TimeCronExpr]
 
 }

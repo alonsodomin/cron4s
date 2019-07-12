@@ -11,7 +11,7 @@ private[cron4s] trait Productive[A, X] {
 }
 
 private[cron4s] object Productive extends ProductiveDerivation {
-  
+
   def apply[A, X](implicit ev: Productive[A, X]): Productive[A, X] = ev
 
   def instance[A, X](f: A => NonEmptyVector[X]): Productive[A, X] = new Productive[A, X] {
@@ -22,9 +22,9 @@ private[cron4s] object Productive extends ProductiveDerivation {
 private[base] trait ProductiveDerivation extends ProductiveDerivation1 {
 
   implicit def deriveProductive[A, X, C <: Coproduct](
-    implicit
-    G: Generic.Aux[A, C],
-    P: Productive[C, X]
+      implicit
+      G: Generic.Aux[A, C],
+      P: Productive[C, X]
   ): Productive[A, X] =
     Productive.instance(a => P.unfold(G.to(a)))
 
@@ -33,9 +33,9 @@ private[base] trait ProductiveDerivation extends ProductiveDerivation1 {
 private[base] trait ProductiveDerivation1 extends ProductiveDerivation0 {
 
   implicit def deriveProductiveCoproduct[H, T <: Coproduct, X](
-    implicit
-    productiveH: Productive[H, X],
-    productiveT: Productive[T, X]
+      implicit
+      productiveH: Productive[H, X],
+      productiveT: Productive[T, X]
   ): Productive[H :+: T, X] =
     Productive.instance { ht =>
       ht.head match {

@@ -24,17 +24,16 @@ private[cron4s] object FieldIndexed extends FieldIndexedInstances1 {
 
 private[base] trait FieldIndexedInstances1 extends FieldIndexedInstances0 {
   implicit def coproductIsIndexed[H, T <: Coproduct, F <: CronField, O[_]](
-    implicit
-    indexedH: FieldIndexed.Aux[H, F, O],
-    indexedT: FieldIndexed.Aux[T, F, O]
+      implicit
+      indexedH: FieldIndexed.Aux[H, F, O],
+      indexedT: FieldIndexed.Aux[T, F, O]
   ): FieldIndexed[H :+: T, F] = new FieldIndexed[H :+: T, F] {
     type Out[x] = O[x]
-    def cast(ht: H :+: T): O[F] = {
+    def cast(ht: H :+: T): O[F] =
       ht.head match {
         case Some(h) => indexedH.cast(h)
         case None    => ht.tail.map(indexedT.cast).get
       }
-    }
   }
 }
 

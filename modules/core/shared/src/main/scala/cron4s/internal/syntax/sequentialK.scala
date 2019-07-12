@@ -4,9 +4,9 @@ package syntax
 
 import cats.Order
 
-import cron4s.internal.base.CircularTraverse
+import cron4s.internal.base.SequentialK
 
-private[syntax] class CircularTraverseOps[F[_], A](self: F[A], tc: CircularTraverse[F]) {
+private[syntax] class SequentialKOps[F[_], A](self: F[A], tc: SequentialK[F]) {
 
   def step(from: A, stepSize: Int)(implicit A: Order[A]): (A, Int) = tc.step(self)(from, stepSize)
 
@@ -18,11 +18,11 @@ private[syntax] class CircularTraverseOps[F[_], A](self: F[A], tc: CircularTrave
 
 }
 
-private[syntax] trait CircularTraverseSyntax {
-  implicit def toCircularTraverseOps[F[_], A](
+private[syntax] trait SequentialKSyntax {
+  implicit def toSequentialKOps[F[_], A](
       target: F[A]
-  )(implicit instance: CircularTraverse[F]): CircularTraverseOps[F, A] =
-    new CircularTraverseOps[F, A](target, instance)
+  )(implicit instance: SequentialK[F]): SequentialKOps[F, A] =
+    new SequentialKOps[F, A](target, instance)
 }
 
-private[cron4s] object circularTraverse extends CircularTraverseSyntax
+private[cron4s] object sequentialK extends SequentialKSyntax

@@ -60,7 +60,7 @@ private[cron4s] trait CronFieldInstances {
 
   implicit val cronFieldShow: Show[CronField] = Show.fromToString
 
-  implicit val cronFieldHash: Hash[CronField] = Hash.fromUniversalHashCode
+  //implicit val cronFieldHash: Hash[CronField] = Hash.fromUniversalHashCode
 
   implicit val cronFieldOrder: Order[CronField] = Order.by(CronField.All.toVector.indexOf)
 

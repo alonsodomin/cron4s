@@ -20,9 +20,9 @@ private[cron4s] object HasCronUnit extends HasCronUnitDerivation {
 private[base] trait HasCronUnitDerivation extends HasCronUnitDerivation1 {
 
   implicit def deriveHasCronUnit[T, F <: CronField, C <: Coproduct](
-    implicit
-    G: Generic.Aux[T, C],
-    unitC: HasCronUnit[C, F]
+      implicit
+      G: Generic.Aux[T, C],
+      unitC: HasCronUnit[C, F]
   ): HasCronUnit[T, F] =
     HasCronUnit.instance(a => unitC.unit(G.to(a)))
 
@@ -31,9 +31,9 @@ private[base] trait HasCronUnitDerivation extends HasCronUnitDerivation1 {
 private[base] trait HasCronUnitDerivation1 extends HasCronUnitDerivation0 {
 
   implicit def deriveHasCronUnitCoproduct[H, T <: Coproduct, F <: CronField](
-    implicit
-    unitH: HasCronUnit[H, F],
-    unitT: HasCronUnit[T, F]
+      implicit
+      unitH: HasCronUnit[H, F],
+      unitT: HasCronUnit[T, F]
   ): HasCronUnit[H :+: T, F] =
     HasCronUnit.instance { x =>
       x.head match {
@@ -41,7 +41,7 @@ private[base] trait HasCronUnitDerivation1 extends HasCronUnitDerivation0 {
         case None    => x.tail.map(unitT.unit).get
       }
     }
-  
+
 }
 
 private[base] trait HasCronUnitDerivation0 {

@@ -74,15 +74,15 @@ private[cron4s] trait CronUnits {
   implicit def cronUnitShow[F <: CronField]: Show[CronUnit[F]] =
     Show.fromToString[CronUnit[F]]
 
-  implicit def cronUnitHash[F <: CronField]: Hash[CronUnit[F]] =
-    Hash.fromUniversalHashCode
+  // implicit def cronUnitHash[F <: CronField]: Hash[CronUnit[F]] =
+  //   Hash.fromUniversalHashCode
 
   implicit def cronUnitOrder[F <: CronField]: Order[CronUnit[F]] =
     Order.by(CronUnit.All.toVector.indexOf)
 
   implicit val cronUnitEnum: Enum[CronUnit[CronField]] = Enum.fromSet(CronUnit.All)
 
-  implicit def cronUnitProductive[F <: CronField]: Productive.Aux[CronUnit[F], Int] =
+  implicit def cronUnitProductive[F <: CronField]: Productive[CronUnit[F], Int] =
     Productive.instance(_.values)
   // $COVERAGE-ON$
 

@@ -17,8 +17,7 @@
 package cron4s
 package parsing
 
-import cron4s.expr.CronExpr
-import cron4s.expr.ast._
+import cron4s.expr._
 
 import scala.util.parsing.input._
 import scala.util.parsing.combinator._
@@ -150,28 +149,26 @@ object CronParser extends Parsers with BaseParser {
 
   def range[F <: CronField](base: Parser[ConstValue[F]])(
       implicit unit: CronUnit[F]
-  ): Parser[RangeNode[F]] = {
+  ): Parser[RangeNode[F]] =
     (
-      every(base).map(_.inject[RangeNode[F]]) | 
-      several(base).map(_.inject[RangeNode[F]]) |
-      between(base).map(_.inject[RangeNode[F]]) |
-      base.map(_.inject[RangeNode[F]]) |
-      each[F].map(_.inject[RangeNode[F]])
+      every(base).map(_.inject[RangeNode[F]]) |
+        several(base).map(_.inject[RangeNode[F]]) |
+        between(base).map(_.inject[RangeNode[F]]) |
+        base.map(_.inject[RangeNode[F]]) |
+        each[F].map(_.inject[RangeNode[F]])
     )
-  }
 
   def wildcardRange[F <: CronField](base: Parser[ConstValue[F]])(
       implicit unit: CronUnit[F]
-  ): Parser[WildcardRangeNode[F]] = {
+  ): Parser[WildcardRangeNode[F]] =
     (
-      every(base).map(_.inject[WildcardRangeNode[F]]) | 
-      several(base).map(_.inject[WildcardRangeNode[F]]) |
-      between(base).map(_.inject[WildcardRangeNode[F]]) |
-      base.map(_.inject[WildcardRangeNode[F]]) |
-      each[F].map(_.inject[WildcardRangeNode[F]]) |
-      any[F].map(_.inject[WildcardRangeNode[F]])
+      every(base).map(_.inject[WildcardRangeNode[F]]) |
+        several(base).map(_.inject[WildcardRangeNode[F]]) |
+        between(base).map(_.inject[WildcardRangeNode[F]]) |
+        base.map(_.inject[WildcardRangeNode[F]]) |
+        each[F].map(_.inject[WildcardRangeNode[F]]) |
+        any[F].map(_.inject[WildcardRangeNode[F]])
     )
-  }
 
   //----------------------------------------
   // AST Parsing & Building

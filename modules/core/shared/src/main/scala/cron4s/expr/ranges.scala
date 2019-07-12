@@ -16,18 +16,17 @@
 
 package cron4s
 package expr
-package ast
 
+import cats.{Eq, Show}
 import cats.data.{NonEmptyList, NonEmptyVector}
 import cats.implicits._
 
 import cron4s.internal.base._
-import cron4s.internal.expr._
 import cron4s.internal.syntax.all._
 
 sealed trait CronRange[F <: CronField]
 sealed trait ComposableRange[F <: CronField] extends CronRange[F]
-sealed trait DivisibleRange[F <: CronField] extends CronRange[F]
+sealed trait DivisibleRange[F <: CronField]  extends CronRange[F]
 
 final case class EachInRange[F <: CronField](unit: CronUnit[F]) extends DivisibleRange[F]
 object EachInRange {
@@ -40,15 +39,22 @@ object EachInRange {
 
   implicit def eachInRangeImplies[F <: CronField]: Implies[EachInRange[F], F] =
     new Implies[EachInRange[F], F] {
+      @inline
       def implies[B](range: EachInRange[F])(b: B)(
-        implicit
-        ev: FieldIndexed[EachInRange[F], F],
-        indexedB: FieldIndexed[B, F]
+          implicit
+          ev: FieldIndexed[EachInRange[F], F],
+          indexedB: FieldIndexed[B, F]
       ): Boolean = true
     }
 
   implicit def eachInRangeProductive[F <: CronField]: Productive[EachInRange[F], Int] =
     Productive.instance(_.unit.values)
+
+  implicit def eachInRangeEq[F <: CronField]: Eq[EachInRange[F]] =
+    Eq.fromUniversalEquals
+
+  implicit def eachInRangeShow[F <: CronField]: Show[EachInRange[F]] =
+    Show.show(_ => "*")
 
 }
 
@@ -63,15 +69,22 @@ object AnyInRange {
 
   implicit def anyInRangeImplies[F <: CronField]: Implies[AnyInRange[F], F] =
     new Implies[AnyInRange[F], F] {
+      @inline
       def implies[B](range: AnyInRange[F])(b: B)(
-        implicit
-        ev: FieldIndexed[AnyInRange[F], F],
-        indexedB: FieldIndexed[B, F]
+          implicit
+          ev: FieldIndexed[AnyInRange[F], F],
+          indexedB: FieldIndexed[B, F]
       ): Boolean = true
     }
 
   implicit def anyInRangeProductive[F <: CronField]: Productive[AnyInRange[F], Int] =
     Productive.instance(_.unit.values)
+
+  implicit def anyInRangeEq[F <: CronField]: Eq[AnyInRange[F]] =
+    Eq.fromUniversalEquals
+
+  implicit def anyInRangeShow[F <: CronField]: Show[AnyInRange[F]] =
+    Show.show(_ => "?")
 
 }
 
@@ -89,13 +102,13 @@ object ConstValue {
     HasMatcher.instance(range => Predicate.equalTo(range.value))
 
   implicit def constValueImplies[F <: CronField, O[_ <: CronField]](
-    implicit productiveO: Productive[O[F], Int]
+      implicit productiveO: Productive[O[F], Int]
   ): Implies[ConstValue[F], F] =
     new Implies[ConstValue[F], F] {
       def implies[B](range: ConstValue[F])(b: B)(
-        implicit
-        ev: FieldIndexed[ConstValue[F], F],
-        indexedB: FieldIndexed.Aux[B, F, O]
+          implicit
+          ev: FieldIndexed[ConstValue[F], F],
+          indexedB: FieldIndexed.Aux[B, F, O]
       ): Boolean = {
         val otherValues = productiveO.unfold(indexedB.cast(b))
         (otherValues.size == 1) && (otherValues.toVector.contains(range.value))
@@ -104,6 +117,12 @@ object ConstValue {
 
   implicit def constValueProductive[F <: CronField]: Productive[ConstValue[F], Int] =
     Productive.instance(range => NonEmptyVector.of(range.value))
+
+  implicit def constValueEq[F <: CronField]: Eq[ConstValue[F]] =
+    Eq.fromUniversalEquals
+
+  implicit def constValueShow[F <: CronField]: Show[ConstValue[F]] =
+    Show.show(x => x.textValue.getOrElse(x.value.toString))
 
 }
 
@@ -125,18 +144,21 @@ object BoundedRange {
     HasCronUnit.instance(_.begin.unit)
 
   implicit def boundedRangeHasMatcher[F <: CronField]: HasMatcher[BoundedRange[F], Int] =
-    HasMatcher.instance(range => Predicate { x =>
-      x >= range.begin.value && x <= range.end.value
-    })
+    HasMatcher.instance(
+      range =>
+        Predicate { x =>
+          x >= range.begin.value && x <= range.end.value
+      }
+    )
 
   implicit def boundedRangeImplies[F <: CronField, O[_ <: CronField]](
-    implicit productiveO: Productive[O[F], Int]
+      implicit productiveO: Productive[O[F], Int]
   ): Implies[BoundedRange[F], F] =
     new Implies[BoundedRange[F], F] {
       def implies[B](range: BoundedRange[F])(b: B)(
-        implicit
-        ev: FieldIndexed[BoundedRange[F], F],
-        indexedB: FieldIndexed.Aux[B, F, O]
+          implicit
+          ev: FieldIndexed[BoundedRange[F], F],
+          indexedB: FieldIndexed.Aux[B, F, O]
       ): Boolean = {
         val otherValues = productiveO.unfold(indexedB.cast(b))
         range.begin.value <= otherValues.minimum && range.end.value >= otherValues.maximum
@@ -145,6 +167,12 @@ object BoundedRange {
 
   implicit def boundedRangeProductive[F <: CronField]: Productive[BoundedRange[F], Int] =
     Productive.instance(_.values)
+
+  implicit def boundedRangeEq[F <: CronField]: Eq[BoundedRange[F]] =
+    Eq.fromUniversalEquals
+
+  implicit def boundedRangeShow[F <: CronField]: Show[BoundedRange[F]] =
+    Show.show(x => show"${x.begin}-${x.end}")
 
 }
 
@@ -187,18 +215,26 @@ object EnumeratedRange {
     Productive.instance(_.values)
 
   implicit def enumeratedRangeImplies[F <: CronField, O[_ <: CronField]](
-    implicit 
-    productiveRange: Productive[EnumeratedRange[F], Int],
-    productiveO: Productive[O[F], Int]
+      implicit
+      productiveRange: Productive[EnumeratedRange[F], Int],
+      productiveO: Productive[O[F], Int]
   ): Implies[EnumeratedRange[F], F] = new Implies[EnumeratedRange[F], F] {
     def implies[B](range: EnumeratedRange[F])(b: B)(
-      implicit
-      ev: FieldIndexed[EnumeratedRange[F], F],
-      indexedB: FieldIndexed.Aux[B, F, O]
+        implicit
+        ev: FieldIndexed[EnumeratedRange[F], F],
+        indexedB: FieldIndexed.Aux[B, F, O]
     ): Boolean = {
       val otherValues = productiveO.unfold(indexedB.cast(b))
       productiveRange.unfold(range).toVector.containsSlice(otherValues.toVector)
     }
+  }
+
+  implicit def enumeratedRangeEq[F <: CronField]: Eq[EnumeratedRange[F]] =
+    Eq.fromUniversalEquals
+
+  implicit def enumeratedRangeShow[F <: CronField]: Show[EnumeratedRange[F]] = {
+    import cats.derived.auto.show._
+    Show.show(x => x.elements.map(_.show).toList.mkString(","))
   }
 
 }
@@ -219,7 +255,7 @@ final case class SteppingRange[F <: CronField](
       .takeWhile(_._2 < 1)
       .map(_._1)
 
-      NonEmptyVector.fromVectorUnsafe(elements.toVector)
+    NonEmptyVector.fromVectorUnsafe(elements.toVector)
   }
 
 }
@@ -239,18 +275,26 @@ object SteppingRange {
     Productive.instance(_.values)
 
   implicit def steppingRangeImplies[F <: CronField, O[_ <: CronField]](
-    implicit
-    productiveRange: Productive[SteppingRange[F], Int],
-    productiveO: Productive[O[F], Int]
+      implicit
+      productiveRange: Productive[SteppingRange[F], Int],
+      productiveO: Productive[O[F], Int]
   ): Implies[SteppingRange[F], F] = new Implies[SteppingRange[F], F] {
     def implies[B](range: SteppingRange[F])(b: B)(
-      implicit
-      ev: FieldIndexed[SteppingRange[F], F],
-      indexedB: FieldIndexed.Aux[B, F, O]
+        implicit
+        ev: FieldIndexed[SteppingRange[F], F],
+        indexedB: FieldIndexed.Aux[B, F, O]
     ): Boolean = {
       val otherValues = productiveO.unfold(indexedB.cast(b))
       productiveRange.unfold(range).toVector.containsSlice(otherValues.toVector)
     }
+  }
+
+  implicit def steppingRangeEq[F <: CronField]: Eq[SteppingRange[F]] =
+    Eq.fromUniversalEquals
+
+  implicit def steppingRangeShow[F <: CronField]: Show[SteppingRange[F]] = {
+    import cats.derived.auto.show._
+    Show.show(x => show"${x.base}/${x.step}")
   }
 
 }
