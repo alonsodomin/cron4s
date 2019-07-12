@@ -34,25 +34,32 @@ private[cron4s] object Direction {
   }
 }
 
-private[cron4s] trait SequentialK[F[_]] {
-  protected[cron4s] def step[A: Order](fa: F[A], from: A, step: Step): (A, Int)
+private[cron4s] trait Sequential[A, X] {
+  protected[cron4s] def step(a: A, from: X, step: Step): (X, Int)
 
-  final def step[A: Order](fa: F[A])(from: A, stepSize: Int): (A, Int) =
-    step(fa, from, Step(stepSize))
+  final def step(a: A)(from: X, stepSize: Int): (X, Int) =
+    step(a, from, Step(stepSize))
 
-  def next[A: Order](fa: F[A])(a: A): A = step(fa)(a, 1)._1
-  def prev[A: Order](fa: F[A])(a: A): A = step(fa)(a, -1)._1
+  def next(a: A)(from: X): X = step(a)(from, 1)._1
+  def prev(a: A)(from: X): X = step(a)(from, -1)._1
 
-  def narrowBounds[A: Order](fa: F[A])(lower: A, upper: A): F[A]
+  def narrowBounds(a: A)(lower: X, upper: X): A
 }
 
-private[cron4s] object SequentialK {
+private[cron4s] object Sequential {
 
-  def apply[F[_]](implicit ev: SequentialK[F]): SequentialK[F] = ev
+  def apply[A, X](implicit ev: Sequential[A, X]): Sequential[A, X] = ev
 
-  implicit val vectorSequentialK = new SequentialK[NonEmptyVector] {
+  def by[A, B, X: Order](f: A => B)(implicit B: Sequential[B, X]): Sequential[A, X] =
+    new Sequential[A, X] {
+      def step(a: A, from: X, step: Step): (X, Int) = {
+        B.step(f(a), from, step)
+      }
+    }
 
-    def step[A: Order](vector: NonEmptyVector[A], from: A, step: Step): (A, Int) = {
+  implicit def vectorSequential[A: Order] = new Sequential[NonEmptyVector[A], A] {
+
+    def step(vector: NonEmptyVector[A], from: A, step: Step): (A, Int) = {
       def nearestNeighbourIndex = step.direction match {
         case Direction.Forward =>
           val idx = vector.toVector.indexWhere(from < _)
@@ -88,13 +95,17 @@ private[cron4s] object SequentialK {
       val carryOver = offset / vector.size
       (newValue, carryOver.toInt)
     }
+
+    def narrowBounds(fa: NonEmptyVector[A])(lower: A, upper: A): NonEmptyVector[A] =
+      if (lower === upper) NonEmptyVector.of(lower)
+      else
+        NonEmptyVector.fromVectorUnsafe {
+          fa.toVector.sorted.dropWhile(_ < lower).takeWhile(_ <= upper)
+        }
   }
 
-  def narrowBounds[A: Order](fa: NonEmptyVector[A])(lower: A, upper: A): NonEmptyVector[A] =
-    if (lower === upper) NonEmptyVector.of(lower)
-    else
-      NonEmptyVector.fromVectorUnsafe {
-        fa.toVector.sorted.dropWhile(_ < lower).takeWhile(_ <= upper)
-      }
+  implicit def deriveSequentialFromProductive[A, X: Order](
+    implicit productive: Productive[A, X]
+  ): Sequential[A, X] = by(productive.unfold)
 
 }

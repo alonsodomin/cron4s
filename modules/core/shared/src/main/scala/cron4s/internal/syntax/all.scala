@@ -20,6 +20,6 @@ package cron4s.internal.syntax
   * Created by alonsodomin on 25/08/2016.
   */
 private[cron4s] trait AllSyntax
-    extends ProductiveSyntax with SequentialKSyntax with HasMatcherSyntax
+    extends ProductiveSyntax with SequentialSyntax with HasMatcherSyntax
 
 private[cron4s] object all extends AllSyntax
