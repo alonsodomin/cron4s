@@ -3,10 +3,10 @@ package internal.base
 
 import shapeless._
 
-private[cron4s] trait SupportsCronField[A, F <: CronField] {
+sealed trait SupportsCronField[A, F <: CronField] {
   def field(a: A): F
 }
-private[cron4s] object SupportsCronField {
+object SupportsCronField {
   def apply[A, F <: CronField](implicit ev: SupportsCronField[A, F]): SupportsCronField[A, F] = ev
 
   def instance[A, F <: CronField](f: A => F): SupportsCronField[A, F] =
@@ -15,13 +15,14 @@ private[cron4s] object SupportsCronField {
     }
 
   def refl[A, F <: CronField](implicit unit: CronUnit[F]): SupportsCronField[A, F] =
-    instance(_ => unit.field)
+    instance(_ => unit.field)  
 
   implicit def supportsCronFieldFromHasCronUnit[A, F <: CronField](
     implicit HCU: HasCronUnit[A, F]
   ): SupportsCronField[A, F] = new SupportsCronField[A, F] {
     def field(a: A): F = HCU.unit(a).field
   }
+
 }
 
 trait SupportsCronFieldDerivation extends SupportsCronFieldDerivation1 {
@@ -35,6 +36,12 @@ trait SupportsCronFieldDerivation extends SupportsCronFieldDerivation1 {
 trait SupportsCronFieldDerivation1 extends SupportsCronFieldDerivation0 {
   implicit def supportsCronFieldCNil[F <: CronField]: SupportsCronField[CNil, F] =
     SupportsCronField.instance(_.impossible)
+
+  implicit def supportsCronFieldFromHeadHList[H, F <: CronField](
+    implicit
+    supportsHead: SupportsCronField[H, F]
+  ): SupportsCronField[H :: HNil, F] =
+    SupportsCronField.instance(ht => supportsHead.field(ht.head))
 }
 
 trait SupportsCronFieldDerivation0 {
@@ -50,4 +57,10 @@ trait SupportsCronFieldDerivation0 {
       }
     }
   }
+
+  implicit def supportsCronFieldFromTailHList[H, T <: HList, F <: CronField](
+    implicit
+    supportsTail: SupportsCronField[T, F]
+  ): SupportsCronField[H :: T, F] =
+    SupportsCronField.instance(ht => supportsTail.field(ht.tail))
 }

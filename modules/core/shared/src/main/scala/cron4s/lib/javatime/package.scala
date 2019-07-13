@@ -23,7 +23,9 @@ import cats.{Eq, Show}
 
 import cron4s.CronField
 import cron4s.datetime.IsDateTime
-import cron4s.internal.base.SupportsCronField
+import cron4s.internal.base.CronFieldExtractor
+
+import shapeless._
 
 /**
   * Created by alonsodomin on 11/12/2016.
@@ -31,8 +33,11 @@ import cron4s.internal.base.SupportsCronField
 package object javatime {
   private[javatime] final val DayOfWeekOffset = 1
 
-  implicit lazy val javaLocalDateSupportsDayOfMonth: SupportsCronField[LocalDate, CronField.DayOfMonth] =
-    SupportsCronField.refl
+  type LocalDateFields = CronField.DayOfMonth :: CronField.Month :: CronField.DayOfWeek :: HNil
+  val LocalDateFields = CronField.DayOfMonth :: CronField.Month :: CronField.DayOfWeek :: HNil
+
+  implicit lazy val javaLocalDateFieldExtractor: CronFieldExtractor.Aux[LocalDate, LocalDateFields] =
+    CronFieldExtractor.const(LocalDateFields)
 
   implicit lazy val javaLocalDateEq: Eq[LocalDate] =
     Eq.fromUniversalEquals[LocalDate]
