@@ -21,7 +21,6 @@ import cats.instances.list._
 
 import cron4s.CronField
 import cron4s.expr._
-import cron4s.internal.expr.RangeExpr
 import cron4s.internal.base._
 
 import shapeless._
@@ -38,11 +37,11 @@ private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime
     import cats.syntax.either._
 
     private[this] def predicateFor[N[_ <: CronField], F <: CronField](field: F, node: N[F])(
-        implicit expr: RangeExpr[N, F]
+        implicit matcher: HasMatcher[N[F], Int]
     ): Predicate[DateTime] =
       Predicate { dt =>
         DT.get(dt, field)
-          .map(expr.matches(node))
+          .map(matcher.matches(node))
           .getOrElse(M.empty[DateTime](dt))
       }
 
@@ -58,13 +57,13 @@ private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime
       at[DaysOfWeekNode](node => predicateFor(DayOfWeek, node))
   }
 
-  object fromRaw extends Poly1 {
-    implicit def caseFullExpr = at[CronExpr](_.raw.map(asPredicate).toList)
-    implicit def caseDateExpr = at[DateCronExpr](_.raw.map(asPredicate).toList)
-    implicit def caseTimeExpr = at[TimeCronExpr](_.raw.map(asPredicate).toList)
+  object fromGen extends Poly1 {
+    implicit def caseFullExpr = at[CronExpr](_.gen.map(asPredicate).toList)
+    implicit def caseDateExpr = at[DateCronExpr](_.gen.map(asPredicate).toList)
+    implicit def caseTimeExpr = at[TimeCronExpr](_.gen.map(asPredicate).toList)
   }
 
   def run(cron: AnyCron): Predicate[DateTime] =
-    asOf(cron.fold(fromRaw))
+    Predicate.asOf(cron.fold(fromGen))
 
 }

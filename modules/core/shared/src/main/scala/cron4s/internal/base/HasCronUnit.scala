@@ -22,9 +22,9 @@ private[base] trait HasCronUnitDerivation extends HasCronUnitDerivation1 {
   implicit def deriveHasCronUnit[T, F <: CronField, C <: Coproduct](
       implicit
       G: Generic.Aux[T, C],
-      unitC: HasCronUnit[C, F]
+      unitC: Lazy[HasCronUnit[C, F]]
   ): HasCronUnit[T, F] =
-    HasCronUnit.instance(a => unitC.unit(G.to(a)))
+    HasCronUnit.instance(a => unitC.value.unit(G.to(a)))
 
 }
 

@@ -20,13 +20,15 @@ import cats._
 import cats.derived
 import cats.syntax.eq._
 
+import shapeless._
+
 final case class DateCronExpr(
     daysOfMonth: DaysOfMonthNode,
     months: MonthsNode,
     daysOfWeek: DaysOfWeekNode
 ) {
 
-  // private[cron4s] lazy val raw: RawDateCronExpr = Generic[DateCronExpr].to(this)
+  private[cron4s] lazy val gen = Generic[DateCronExpr].to(this)
 
   //override lazy val toString: String =
   //  raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
@@ -52,7 +54,7 @@ final case class TimeCronExpr(
     hours: HoursNode
 ) {
 
-  //private[cron4s] lazy val raw: RawTimeCronExpr = Generic[TimeCronExpr].to(this)
+  private[cron4s] lazy val gen = Generic[TimeCronExpr].to(this)
 
   //override lazy val toString: String =
   //  raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")

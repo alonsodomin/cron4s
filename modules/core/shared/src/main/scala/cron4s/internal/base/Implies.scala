@@ -27,7 +27,7 @@ private[base] trait ImpliesDerivation extends ImpliesDerivation1 {
   def derivesImplies[A, F <: CronField, C <: Coproduct](
       implicit
       G: Generic.Aux[A, C],
-      I: Implies[C, F],
+      I: Lazy[Implies[C, F]],
       X: FieldIndexed[C, F]
   ): Implies[A, F] = new Implies[A, F] {
     def implies[B](a: A)(b: B)(
@@ -35,7 +35,7 @@ private[base] trait ImpliesDerivation extends ImpliesDerivation1 {
         indexedA: FieldIndexed[A, F],
         indexedB: FieldIndexed[B, F]
     ): Boolean =
-      I.implies(G.to(a))(b)
+      I.value.implies(G.to(a))(b)
   }
 }
 

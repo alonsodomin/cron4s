@@ -20,7 +20,7 @@ package datetime
 import cats.implicits._
 
 import cron4s.expr.FieldExpr
-import cron4s.base._
+import cron4s.internal.base._
 
 trait DateTimeNode[E[_ <: CronField], F <: CronField] {
   implicit def E: FieldExpr[E, F]

@@ -12,22 +12,20 @@ package object expr {
 
   type RangeNode[F <: CronField] =
     EachInRange[F] :+: ConstValue[F] :+: BoundedRange[F] :+: EnumeratedRange[F] :+: SteppingRange[F] :+: CNil
-  object RangeNode {
-    implicit def rangeNodeEq[F <: CronField]: Eq[RangeNode[F]] =
-      derived.semi.eq[RangeNode[F]]
 
-    implicit def rangeNodeShow[F <: CronField]: Show[RangeNode[F]] =
-      Show.show(_.fold(ops.show))
-  }
+  implicit def rangeNodeEq[F <: CronField]: Eq[RangeNode[F]] =
+    derived.semi.eq[RangeNode[F]]
+
+  implicit def rangeNodeShow[F <: CronField]: Show[RangeNode[F]] =
+    Show.show(_.fold(ops.show))
 
   type WildcardRangeNode[F <: CronField] = AnyInRange[F] :+: RangeNode[F]
-  object WildcardRangeNode {
-    implicit def wildcardRangeNodeEq[F <: CronField]: Eq[WildcardRangeNode[F]] =
-      derived.semi.eq[WildcardRangeNode[F]]
 
-    implicit def wildcardRangeNodeShow[F <: CronField]: Show[WildcardRangeNode[F]] =
-      Show.show(_.fold(ops.show))
-  }
+  implicit def wildcardRangeNodeEq[F <: CronField]: Eq[WildcardRangeNode[F]] =
+    derived.semi.eq[WildcardRangeNode[F]]
+
+  implicit def wildcardRangeNodeShow[F <: CronField]: Show[WildcardRangeNode[F]] =
+    Show.show(_.fold(ops.show))
 
   type SecondsNode     = RangeNode[Second]
   type MinutesNode     = RangeNode[Minute]

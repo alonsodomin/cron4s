@@ -6,23 +6,23 @@ import cats.Order
 
 import cron4s.internal.base.Sequential
 
-private[syntax] class SequentialOps[A: Order, X](self: A, tc: Sequential[A, X]) {
+private[syntax] class SequentialOps[F[_], A: Order](self: F[A], tc: Sequential[F]) {
 
-  def step(from: X, stepSize: Int): (X, Int) = tc.step(self)(from, stepSize)
+  def step(from: A, stepSize: Int): (A, Int) = tc.step(self)(from, stepSize)
 
-  def next(from: X): X = tc.next(self)(from)
-  def prev(from: X): X = tc.prev(self)(from)
+  def next(from: A): A = tc.next(self)(from)
+  def prev(from: A): A = tc.prev(self)(from)
 
-  def narrowBounds(lower: X, upper: X): A =
+  def narrowBounds(lower: A, upper: A): F[A] =
     tc.narrowBounds(self)(lower, upper)
 
 }
 
 private[syntax] trait SequentialSyntax {
-  implicit def toSequentialKOps[A: Order, X](
-      target: A
-  )(implicit instance: Sequential[A, X]): SequentialOps[A, X] =
-    new SequentialOps[A, X](target, instance)
+  implicit def toSequentialKOps[F[_], A: Order](
+      target: F[A]
+  )(implicit instance: Sequential[F]): SequentialOps[F, A] =
+    new SequentialOps[F, A](target, instance)
 }
 
 private[cron4s] object sequential extends SequentialSyntax

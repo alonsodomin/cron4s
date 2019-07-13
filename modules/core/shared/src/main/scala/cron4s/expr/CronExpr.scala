@@ -36,7 +36,7 @@ final case class CronExpr(
     daysOfWeek: DaysOfWeekNode
 ) {
 
-  // private[cron4s] lazy val raw: RawCronExpr = Generic[CronExpr].to(this)
+  private[cron4s] lazy val gen = Generic[CronExpr].to(this)
 
   /**
     * Time part of the CRON expression
