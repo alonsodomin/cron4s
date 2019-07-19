@@ -5,6 +5,7 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType, _}
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSVersion
+import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.npmDependencies
 
 object Dependencies {
 
@@ -23,6 +24,7 @@ object Dependencies {
     val jodaConvert = "2.2.1"
 
     val momentjs      = "0.10.0"
+    val momenttz      = "0.5.25"
     val scalaJavaTime = "2.0.0-RC3"
   }
 
@@ -94,8 +96,13 @@ object Dependencies {
     )
   }
 
+  private val momentjsNpmDeps = Seq(
+    "moment-timezone" -> version.momenttz
+  )
   lazy val momentjs = Def.settings(
     libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % version.momentjs,
+    npmDependencies in Compile ++= momentjsNpmDeps,
+    npmDependencies in Test    ++= momentjsNpmDeps
   )
 
   lazy val circe = Def.settings(

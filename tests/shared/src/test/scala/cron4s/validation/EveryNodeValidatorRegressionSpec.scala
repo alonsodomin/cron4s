@@ -21,12 +21,13 @@ import cats.syntax.show._
 import cron4s._
 import cron4s.expr.{EachNode, EveryNode}
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.Matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
 /**
   * Created by alonsodomin on 31/12/2016.
   */
-class EveryNodeValidatorRegressionSpec extends FlatSpec with Matchers {
+class EveryNodeValidatorRegressionSpec extends AnyFlatSpec with Matchers {
   import CronField._
 
   "An Every node" should "pass validation if it's evenly divided" in {

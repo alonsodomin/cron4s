@@ -20,12 +20,13 @@ import cats.syntax.show._
 
 import cron4s._
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.Matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
 /**
   * Created by alonsodomin on 07/08/2016.
   */
-class CronExprSpec extends FlatSpec with Matchers {
+class CronExprSpec extends AnyFlatSpec with Matchers {
   import CronField._
 
   val secondExpr: SecondsNode         = ConstNode[Second](15)

@@ -60,7 +60,6 @@ val commonSettings = Def.settings(
     "-feature",
     "-unchecked",
     "-deprecation",
-    "-Xfuture",
     "-Xfatal-warnings",
     "-language:postfixOps",
     "-language:implicitConversions",
@@ -102,7 +101,8 @@ lazy val commonJsSettings = Seq(
     s"-P:scalajs:mapSourceURI:$a->$g/"
   },
   parallelExecution := false,
-  jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv()
+  scalaJSLinkerConfig := scalaJSLinkerConfig.value.withModuleKind(ModuleKind.CommonJSModule),
+  jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv()
 )
 
 lazy val consoleSettings = Seq(
@@ -368,13 +368,13 @@ lazy val joda = (project in file("modules/joda"))
   .dependsOn(coreJVM, testkitJVM % Test)
 
 lazy val momentjs = (project in file("modules/momentjs"))
-  .enablePlugins(AutomateHeaderPlugin, ScalaJSPlugin, ScalafmtPlugin)
+  .enablePlugins(AutomateHeaderPlugin, ScalaJSPlugin, ScalafmtPlugin, ScalaJSBundlerPlugin)
   .settings(commonSettings)
   .settings(commonJsSettings)
   .settings(publishSettings)
   .settings(
     name := "momentjs",
-    moduleName := "cron4s-momentjs"
+    moduleName := "cron4s-momentjs",
   )
   .settings(Dependencies.momentjs)
   .dependsOn(coreJS, testkitJS % Test)
@@ -442,8 +442,8 @@ addCommandAlias(
     "coverageReport",
     "coverageAggregate",
     "cron4sJVM/mimaReportBinaryIssues"
-  ).mkString(";", ";", "")
+  ).mkString(";")
 )
 addCommandAlias("validateJS", "testJS")
-addCommandAlias("rebuild", ";clean;validateJS;validateJVM")
-addCommandAlias("compileAll", ";clean;test:compile")
+addCommandAlias("rebuild", "clean;validateJS;validateJVM")
+addCommandAlias("compileAll", "clean;test:compile")
