@@ -177,6 +177,17 @@ def mimaSettings(module: String, versions: Set[String]): Seq[Setting[_]] =
         ProblemFilters.exclude[InheritedNewAbstractMethodProblem](
           "cron4s.syntax.AllSyntax.cron4s$syntax$CronStringSyntax$_setter_$embedCronStrings_="
         ),
+        // Exclussions due to changes in scalatest and cats-testkit
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.getParams"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.maxSize"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.MaxDiscarded"),
+        ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.DateTimeNodeTestKit.check"),
+        ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.IsDateTimeTestKit.forAll"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.getParams"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.check"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.maxSize"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.MaxDiscarded"),
+        ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.DateTimeCronTestKit.forAll")
       )
     )
   )
