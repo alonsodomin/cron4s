@@ -65,7 +65,10 @@ object CronStringInterpolator extends Interpolator {
   }
 
   def evaluate(contextual: RuntimeInterpolation): CronExpr =
-    check(contextual.parts.mkString).right.get
+    check(contextual.parts.mkString) match {
+      case Right(value)   => value
+      case Left((pos, _)) => throw new Exception(s"Error parsing cron expression at position: $pos")
+    }
 
 }
 

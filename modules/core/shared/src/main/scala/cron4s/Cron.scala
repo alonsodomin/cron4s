@@ -47,7 +47,7 @@ object Cron {
     */
   @inline
   def parse(e: String): Either[Error, CronExpr] =
-    parsing.parse(e).right.flatMap(validation.validateCron)
+    parsing.parse(e).flatMap(validation.validateCron)
 
   /**
     * Parses the given cron expression into a cron AST using Try as return type

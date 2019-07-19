@@ -49,7 +49,7 @@ final case class CronExpr(
     DateCronExpr(daysOfMonth, months, daysOfWeek)
 
   override lazy val toString: String =
-    raw.map(ops.show).toList.mkString(" ")
+    raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
 
 }
 
