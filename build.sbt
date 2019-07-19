@@ -301,7 +301,7 @@ lazy val coreJS  = core.js
 lazy val coreJVM = core.jvm
 
 lazy val testkit =
-  (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("modules/testkit"))
+  (crossProject(JSPlatform, JVMPlatform) in file("modules/testkit"))
     .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
     .settings(
       name := "testkit",

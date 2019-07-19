@@ -17,15 +17,12 @@
 package cron4s.testkit
 
 import cats.tests._
-import catalysts.Platform
+import cron4s.platform.Platform
 
 import org.scalactic.anyvals.{PosInt, PosZInt}
-import org.scalatest.PropSpec
+import org.scalatest.propspec.AnyPropSpec
 import org.scalatest.prop.Configuration
 
-/**
-  * Created by alonsodomin on 31/01/2017.
-  */
 trait TestSettings extends Configuration {
 
   lazy val defaultPropertyCheckConfig: PropertyCheckConfiguration =
@@ -46,14 +43,14 @@ trait Cron4sLawSuite extends CatsSuite
 
 trait SlowCron4sLawSuite extends SlowCatsSuite
 
-abstract class Cron4sPropSpec extends PropSpec with TestSettings {
+abstract class Cron4sPropSpec extends AnyPropSpec with TestSettings {
 
   override implicit val generatorDrivenConfig: PropertyCheckConfiguration =
     defaultPropertyCheckConfig
 
 }
 
-abstract class SlowCron4sPropSpec extends PropSpec with TestSettings {
+abstract class SlowCron4sPropSpec extends AnyPropSpec with TestSettings {
 
   override implicit val generatorDrivenConfig: PropertyCheckConfiguration =
     slowPropertyCheckConfig

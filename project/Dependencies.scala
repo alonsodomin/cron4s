@@ -12,10 +12,7 @@ object Dependencies {
     val atto       = "0.6.5"
     val cats       = "2.0.0-M4"
     val shapeless  = "2.3.3"
-    val scalacheck = "1.14.0"
-    val scalatest  = "3.0.8"
     val discipline = "0.12.0-M3"
-    val catalysts  = "0.8"
     val decline    = "0.7.0-M0"
     val circe      = "0.12.0-M4"
     val parserc    = "1.1.2"
@@ -63,17 +60,12 @@ object Dependencies {
     libraryDependencies ++= Seq(
       "org.typelevel"  %%% "cats-laws"            % version.cats,
       "org.typelevel"  %%% "cats-testkit"         % version.cats,
-      "org.typelevel"  %%% "discipline-scalatest" % version.discipline,
-      //"org.typelevel"  %%% "catalysts-platform"   % version.catalysts,
-      "org.scalacheck" %%% "scalacheck"           % version.scalacheck,
-      "org.scalatest"  %%% "scalatest"            % version.scalatest
+      "org.typelevel"  %%% "discipline-scalatest" % version.discipline
     )
   }
 
   lazy val tests = Def.settings {
-    libraryDependencies ++= Seq(
-      "org.scalatest" %%% "scalatest" % version.scalatest % Test
-    )
+    libraryDependencies ++= Seq()
   }
 
   lazy val testsJS = Def.settings {

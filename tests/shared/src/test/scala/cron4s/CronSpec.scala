@@ -20,7 +20,8 @@ import cats.data.NonEmptyList
 
 import cron4s.expr._
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.Matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.util.{Failure, Success}
 
@@ -46,7 +47,7 @@ object CronSpec {
 
 }
 
-class CronSpec extends FlatSpec with Matchers {
+class CronSpec extends AnyFlatSpec with Matchers {
   import CronSpec._
 
   "Cron" should "not parse an expression with all *" in {
