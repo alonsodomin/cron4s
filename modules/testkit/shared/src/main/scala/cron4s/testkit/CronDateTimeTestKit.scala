@@ -102,8 +102,8 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show] extends AnyFl
     val test = Eq[DateTime]
 
     for ((expr, initial, stepSize, expected) <- samples) {
-      val Some(returnedDateTime) = expr.step(initial, stepSize)
-      val matchesExpected        = test.eqv(returnedDateTime, expected)
+      val returnedDateTime = expr.step(initial, stepSize).get
+      val matchesExpected  = test.eqv(returnedDateTime, expected)
 
       assert(
         matchesExpected,
