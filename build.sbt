@@ -274,7 +274,7 @@ lazy val docs = project
   .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, GhpagesPlugin)
   .settings(
     moduleName := "cron4s-docs",
-    crossScalaVersions := Seq("2.12.8", "2.11.12")
+    crossScalaVersions := Seq("2.12.8")
   )
   .settings(commonSettings)
   .settings(noPublishSettings)
@@ -342,7 +342,7 @@ lazy val bench = (project in file("bench"))
   .settings(
     name := "bench",
     moduleName := "cron4s-bench",
-    crossScalaVersions := Seq("2.12.8", "2.11.12")
+    crossScalaVersions := Seq("2.12.8")
   )
   .settings(commonSettings)
   .settings(noPublishSettings)
