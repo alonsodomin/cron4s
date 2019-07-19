@@ -37,9 +37,9 @@ object Dependencies {
 
   lazy val core = Def.settings(
     libraryDependencies ++= Seq(
-      "com.chuusai"            %%% "shapeless"                % version.shapeless,
-      "org.typelevel"          %%% "cats-core"                % version.cats,
-      "com.propensive"         %%% "contextual"               % version.contextual,      
+      "com.chuusai"    %%% "shapeless"  % version.shapeless,
+      "org.typelevel"  %%% "cats-core"  % version.cats,
+      "com.propensive" %%% "contextual" % version.contextual,
     ),
     libraryDependencies += {
       val parsecVersion = CrossVersion.partialVersion(scalaVersion.value) match {
@@ -106,16 +106,10 @@ object Dependencies {
   )
 
   lazy val circe = Def.settings(
-    libraryDependencies ++= {
-      val circeVersion = CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, n)) if n < 12 => "0.11.1"
-        case _                      => version.circe
-      }
-      Seq(
-        "io.circe" %%% "circe-core"    % circeVersion,
-        "io.circe" %%% "circe-testing" % circeVersion % Test
-      )
-    }
+    libraryDependencies ++= Seq(
+      "io.circe" %%% "circe-core"    % version.circe,
+      "io.circe" %%% "circe-testing" % version.circe % Test
+    )
   )
 
   lazy val decline = Def.settings(
