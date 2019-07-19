@@ -10,22 +10,22 @@ object Dependencies {
 
   object version {
     val atto       = "0.6.5"
-    val cats       = "1.6.1"
+    val cats       = "2.0.0-M4"
     val shapeless  = "2.3.3"
     val scalacheck = "1.14.0"
-    val scalatest  = "3.0.5"
-    val discipline = "0.11.1"
+    val scalatest  = "3.0.8"
+    val discipline = "0.12.0-M3"
     val catalysts  = "0.8"
-    val decline    = "0.6.2"
-    val circe      = "0.11.1"
+    val decline    = "0.7.0-M0"
+    val circe      = "0.12.0-M4"
     val parserc    = "1.1.2"
-    val doobie     = "0.7.0"
-    val contextual = "1.1.0"
+    val doobie     = "0.8.0-M1"
+    val contextual = "1.2.1"
 
     val jodaTime    = "2.10.2"
     val jodaConvert = "2.2.1"
 
-    val momentjs      = "0.8.1"
+    val momentjs      = "0.10.0"
     val scalaJavaTime = "2.0.0-RC3"
   }
 
@@ -61,12 +61,12 @@ object Dependencies {
 
   lazy val testkit = Def.settings {
     libraryDependencies ++= Seq(
-      "org.typelevel"  %%% "cats-laws"          % version.cats,
-      "org.typelevel"  %%% "cats-testkit"       % version.cats,
-      "org.typelevel"  %%% "discipline"         % version.discipline,
-      "org.typelevel"  %%% "catalysts-platform" % version.catalysts,
-      "org.scalacheck" %%% "scalacheck"         % version.scalacheck,
-      "org.scalatest"  %%% "scalatest"          % version.scalatest
+      "org.typelevel"  %%% "cats-laws"            % version.cats,
+      "org.typelevel"  %%% "cats-testkit"         % version.cats,
+      "org.typelevel"  %%% "discipline-scalatest" % version.discipline,
+      //"org.typelevel"  %%% "catalysts-platform"   % version.catalysts,
+      "org.scalacheck" %%% "scalacheck"           % version.scalacheck,
+      "org.scalatest"  %%% "scalatest"            % version.scalatest
     )
   }
 
@@ -107,10 +107,16 @@ object Dependencies {
   )
 
   lazy val circe = Def.settings(
-    libraryDependencies ++= Seq(
-      "io.circe" %%% "circe-core"    % version.circe,
-      "io.circe" %%% "circe-testing" % version.circe % Test
-    )
+    libraryDependencies ++= {
+      val circeVersion = CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n < 12 => "0.11.1"
+        case _                      => version.circe
+      }
+      Seq(
+        "io.circe" %%% "circe-core"    % circeVersion,
+        "io.circe" %%% "circe-testing" % circeVersion % Test
+      )
+    }
   )
 
   lazy val decline = Def.settings(

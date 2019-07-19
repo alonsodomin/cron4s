@@ -272,7 +272,10 @@ lazy val cron4sJVM = (project in file(".jvm"))
 
 lazy val docs = project
   .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, GhpagesPlugin)
-  .settings(moduleName := "cron4s-docs")
+  .settings(
+    moduleName := "cron4s-docs",
+    crossScalaVersions := Seq("2.12.8", "2.11.12")
+  )
   .settings(commonSettings)
   .settings(noPublishSettings)
   .settings(docSettings)
@@ -338,7 +341,8 @@ lazy val bench = (project in file("bench"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
     name := "bench",
-    moduleName := "cron4s-bench"
+    moduleName := "cron4s-bench",
+    crossScalaVersions := Seq("2.12.8", "2.11.12")
   )
   .settings(commonSettings)
   .settings(noPublishSettings)
