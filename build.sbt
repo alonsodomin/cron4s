@@ -7,22 +7,6 @@ import microsites._
 lazy val consoleImports =
   settingKey[Seq[String]]("Base imports in the console")
 
-lazy val unusedWarning = Seq(
-  scalacOptions ++= {
-    CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, 11)) =>
-        Seq("-Ywarn-unused-import")
-      case Some((2, n)) if n >= 12 =>
-        Seq("-Xlint:-unused,_")
-    }
-  },
-  scalacOptions in (Compile, console) := scalacOptions.value.filterNot(
-    Set("-Ywarn-unused-import", "-Xlint:-unused,_", "-Xfatal-warnings")
-  ),
-  scalacOptions in (Test, console) := (scalacOptions in (Compile, console)).value,
-  scalacOptions in Tut := (scalacOptions in (Compile, console)).value
-)
-
 lazy val compilerPlugins = Seq(
   libraryDependencies ++= {
     import Dependencies._
@@ -60,6 +44,7 @@ val commonSettings = Def.settings(
     "-feature",
     "-unchecked",
     "-deprecation",
+    "-Xlint:-unused,_",
     "-Xfatal-warnings",
     "-language:postfixOps",
     "-language:implicitConversions",
@@ -68,10 +53,15 @@ val commonSettings = Def.settings(
   ),
   scalacOptions ++= {
     CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, n)) if n <= 12 => Seq("-Ypartial-unification")
+      case Some((2, n)) if n == 12 => Seq("-Ypartial-unification")
       case _                       => Nil
     }
   },
+  scalacOptions in (Compile, console) := scalacOptions.value.filterNot(
+    Set("-Xlint:-unused,_", "-Xfatal-warnings")
+  ),
+  scalacOptions in (Test, console) := (scalacOptions in (Compile, console)).value,
+  scalacOptions in Tut := (scalacOptions in (Compile, console)).value,
   apiURL := Some(url("https://alonsodomin.github.io/cron4s/api/")),
   autoAPIMappings := true,
   parallelExecution in Test := false,
@@ -80,7 +70,7 @@ val commonSettings = Def.settings(
     .map(s => s"import $s")
     .mkString("\n"),
   scalafmtOnCompile := true,
-) ++ unusedWarning ++ compilerPlugins
+) ++ compilerPlugins
 
 lazy val commonJvmSettings = Seq(
   fork in Test := true
@@ -142,76 +132,76 @@ lazy val coverageSettings = Seq(
   coverageExcludedPackages := "cron4s\\.bench\\..*"
 )
 
-def mimaSettings(module: String, versions: Set[String]): Seq[Setting[_]] =
+def mimaSettings(module: String): Seq[Setting[_]] =
   mimaDefaultSettings ++ Seq(
-    mimaPreviousArtifacts := versions.map(organization.value %% s"cron4s-$module" % _),
-    mimaBackwardIssueFilters ++= Map(
-      "0.4.5" -> Seq(
-        ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.Error.this"),
-        ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package$"),
-        ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.apply"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.this"),
-        ProblemFilters
-          .exclude[DirectMissingMethodProblem]("cron4s.expr.FieldNodeWithAny.fieldNodeInstance"),
-        ProblemFilters
-          .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.field2FieldWithAny"),
-        ProblemFilters
-          .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.enumerable2Field"),
-        ProblemFilters
-          .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.divisible2Field"),
-      ),
-      "0.5.0" -> Seq(
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.expected"),
-        ProblemFilters.exclude[MissingClassProblem]("cron4s.parser$"),
-        ProblemFilters.exclude[MissingClassProblem]("cron4s.parser"),
-        ProblemFilters.exclude[MissingClassProblem]("cron4s.CronInterpolator$"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.package.Cron4sStringContext"),
-        ProblemFilters.exclude[MissingClassProblem]("cron4s.package$Cron4sStringContext"),
-        ProblemFilters.exclude[MissingClassProblem]("cron4s.CronInterpolator"),
-        ProblemFilters.exclude[InheritedNewAbstractMethodProblem](
-          "cron4s.syntax.AllSyntax.toCronStringInterpolator"
-        ),
-        ProblemFilters
-          .exclude[InheritedNewAbstractMethodProblem]("cron4s.syntax.AllSyntax.embedCronStrings"),
-        ProblemFilters.exclude[InheritedNewAbstractMethodProblem](
-          "cron4s.syntax.AllSyntax.cron4s$syntax$CronStringSyntax$_setter_$embedCronStrings_="
-        ),
-        // Exclussions due to changes in scalatest and cats-testkit
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.maxDiscarded"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.PropertyCheckConfig"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.MaxSize"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.PropertyCheckConfig2PropertyCheckConfiguration"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.getParams"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.maxSize"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.MaxDiscarded"),
-        ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.Cron4sPropSpec"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.maxDiscarded"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.PropertyCheckConfig"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.PropertyCheckConfig2PropertyCheckConfiguration"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.getParams"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.maxSize"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.MaxDiscarded"),
-        ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.CronDateTimeTestKit"),
-        ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.DateTimeNodeTestKit"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.maxDiscarded"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.PropertyCheckConfig"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.PropertyCheckConfig2PropertyCheckConfiguration"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.MaxSize"),
-        ProblemFilters.exclude[IncompatibleResultTypeProblem]("cron4s.testkit.DateTimeNodeTestKit.forAll"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.check"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.getParams"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.maxSize"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.MaxDiscarded"),
-        ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.DateTimeNodeTestKit.check"),
-        ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.IsDateTimeTestKit.forAll"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.getParams"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.check"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.maxSize"),
-        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.MaxDiscarded"),
-        ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.DateTimeCronTestKit.forAll")
-      )
-    )
+    mimaPreviousArtifacts := previousStableVersion.value.map(organization.value %% s"cron4s-$module" % _).toSet,
+    // mimaBackwardIssueFilters ++= Map(
+    //   "0.4.5" -> Seq(
+    //     ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.Error.this"),
+    //     ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package$"),
+    //     ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.apply"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.this"),
+    //     ProblemFilters
+    //       .exclude[DirectMissingMethodProblem]("cron4s.expr.FieldNodeWithAny.fieldNodeInstance"),
+    //     ProblemFilters
+    //       .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.field2FieldWithAny"),
+    //     ProblemFilters
+    //       .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.enumerable2Field"),
+    //     ProblemFilters
+    //       .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.divisible2Field"),
+    //   ),
+    //   "0.5.0" -> Seq(
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.expected"),
+    //     ProblemFilters.exclude[MissingClassProblem]("cron4s.parser$"),
+    //     ProblemFilters.exclude[MissingClassProblem]("cron4s.parser"),
+    //     ProblemFilters.exclude[MissingClassProblem]("cron4s.CronInterpolator$"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.package.Cron4sStringContext"),
+    //     ProblemFilters.exclude[MissingClassProblem]("cron4s.package$Cron4sStringContext"),
+    //     ProblemFilters.exclude[MissingClassProblem]("cron4s.CronInterpolator"),
+    //     ProblemFilters.exclude[InheritedNewAbstractMethodProblem](
+    //       "cron4s.syntax.AllSyntax.toCronStringInterpolator"
+    //     ),
+    //     ProblemFilters
+    //       .exclude[InheritedNewAbstractMethodProblem]("cron4s.syntax.AllSyntax.embedCronStrings"),
+    //     ProblemFilters.exclude[InheritedNewAbstractMethodProblem](
+    //       "cron4s.syntax.AllSyntax.cron4s$syntax$CronStringSyntax$_setter_$embedCronStrings_="
+    //     ),
+    //     // Exclussions due to changes in scalatest and cats-testkit
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.maxDiscarded"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.PropertyCheckConfig"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.MaxSize"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.PropertyCheckConfig2PropertyCheckConfiguration"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.getParams"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.maxSize"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.MaxDiscarded"),
+    //     ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.Cron4sPropSpec"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.maxDiscarded"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.PropertyCheckConfig"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.PropertyCheckConfig2PropertyCheckConfiguration"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.getParams"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.maxSize"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.MaxDiscarded"),
+    //     ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.CronDateTimeTestKit"),
+    //     ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.DateTimeNodeTestKit"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.maxDiscarded"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.PropertyCheckConfig"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.PropertyCheckConfig2PropertyCheckConfiguration"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.MaxSize"),
+    //     ProblemFilters.exclude[IncompatibleResultTypeProblem]("cron4s.testkit.DateTimeNodeTestKit.forAll"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.check"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.getParams"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.maxSize"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.MaxDiscarded"),
+    //     ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.DateTimeNodeTestKit.check"),
+    //     ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.IsDateTimeTestKit.forAll"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.getParams"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.check"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.maxSize"),
+    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.MaxDiscarded"),
+    //     ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.DateTimeCronTestKit.forAll")
+    //   )
+    // )
   )
 
 lazy val docsMappingsAPIDir =
@@ -277,7 +267,7 @@ lazy val docPublishSettings = Seq(
 lazy val cron4s = (project in file("."))
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .aggregate(cron4sJS, cron4sJVM, docs, bench)
+  .aggregate(cron4sJS, cron4sJVM)
 
 lazy val cron4sJS = (project in file(".js"))
   .settings(
@@ -288,7 +278,7 @@ lazy val cron4sJS = (project in file(".js"))
   .settings(commonJsSettings: _*)
   .settings(publishSettings)
   .enablePlugins(ScalaJSPlugin)
-  .aggregate(coreJS, momentjs, circeJS, declineJS, testkitJS, testsJS)
+  .aggregate(coreJS, momentjs, circeJS, declineJS, testkitJS, testsJS, docs, bench)
   .dependsOn(coreJS, momentjs, circeJS, declineJS, testkitJS, testsJS % Test)
 
 lazy val cron4sJVM = (project in file(".jvm"))
@@ -328,7 +318,7 @@ lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))
   .jvmSettings(commonJvmSettings)
   .jvmSettings(consoleSettings)
   .jvmSettings(Dependencies.coreJVM)
-  .jvmSettings(mimaSettings("core", Set("0.4.5", "0.5.0")))
+  .jvmSettings(mimaSettings("core"))
 
 lazy val coreJS  = core.js
 lazy val coreJVM = core.jvm
@@ -346,7 +336,7 @@ lazy val testkit =
     .jsSettings(commonJsSettings)
     .jvmSettings(commonJvmSettings)
     .jvmSettings(consoleSettings)
-    .jvmSettings(mimaSettings("testkit", Set("0.4.5", "0.5.0")))
+    .jvmSettings(mimaSettings("testkit"))
     .dependsOn(core)
 
 lazy val testkitJS  = testkit.js
@@ -397,7 +387,7 @@ lazy val joda = (project in file("modules/joda"))
   .settings(commonJvmSettings)
   .settings(publishSettings)
   .settings(Dependencies.joda)
-  .settings(mimaSettings("joda", Set("0.4.5", "0.5.0")))
+  .settings(mimaSettings("joda"))
   .dependsOn(coreJVM, testkitJVM % Test)
 
 lazy val momentjs = (project in file("modules/momentjs"))
@@ -424,7 +414,7 @@ lazy val circe =
     .settings(commonSettings)
     .settings(publishSettings)
     .settings(Dependencies.circe)
-    .settings(mimaSettings("circe", Set("0.5.0")))
+    .settings(mimaSettings("circe"))
     .jvmSettings(commonJvmSettings)
     .jsSettings(commonJsSettings)
     .dependsOn(core, testkit % Test)
@@ -442,7 +432,7 @@ lazy val decline =
     .settings(commonSettings)
     .settings(publishSettings)
     .settings(Dependencies.decline)
-    .settings(mimaSettings("decline", Set("0.5.0")))
+    .settings(mimaSettings("decline"))
     .jvmSettings(commonJvmSettings)
     .jsSettings(commonJsSettings)
     .dependsOn(core, testkit % Test)
@@ -459,7 +449,7 @@ lazy val doobie = (project in file("modules/doobie"))
   .settings(commonSettings)
   .settings(publishSettings)
   .settings(commonJvmSettings)
-  .settings(mimaSettings("doobie", Set()))
+  .settings(mimaSettings("doobie"))
   .settings(Dependencies.doobie)
   .dependsOn(coreJVM, testkitJVM % Test)
 

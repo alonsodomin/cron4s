@@ -29,7 +29,7 @@ object Dependencies {
   }
 
   val macroParadise = compilerPlugin(
-    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
+    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
   )
   val kindProjector = compilerPlugin(
     "org.typelevel" % "kind-projector" % "0.10.3" cross CrossVersion.binary
