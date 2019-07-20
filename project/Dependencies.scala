@@ -82,9 +82,12 @@ object Dependencies {
   }
 
   lazy val bench = Def.settings {
-    libraryDependencies ++= Seq(
-      "org.tpolecat" %% "atto-core" % version.atto,
-    )
+    libraryDependencies ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n <= 12 => Seq("org.tpolecat" %% "atto-core" % version.atto)
+        case _                       => Nil
+      }
+    }
   }
 
   // Dependencies of extension libraries

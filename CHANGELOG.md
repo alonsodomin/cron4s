@@ -16,6 +16,8 @@ Version upgrades:
 * Cats 2.0.0-M4
 * Decline 0.7.0-M0
 * Circe 0.12.0-M4
+* Contextual 1.2.1
+* ScalaJS MomentJS 0.10.0 / MomentJS 0.5.25
 * Scala Java Time 2.0.0-RC3
 
 ## 0.5.0

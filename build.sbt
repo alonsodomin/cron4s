@@ -7,6 +7,10 @@ import microsites._
 lazy val consoleImports =
   settingKey[Seq[String]]("Base imports in the console")
 
+// =================================================================================
+// Settings
+// =================================================================================
+
 lazy val compilerPlugins = Seq(
   libraryDependencies ++= {
     import Dependencies._
@@ -251,6 +255,10 @@ lazy val docSettings = Seq(
       )
     )
   ),
+  micrositePushSiteWith := {
+    if (isTravisBuild.value) GitHub4s else GHPagesPlugin
+  },
+  micrositeGithubToken := sys.env.get("GITHUB_MICROSITES_TOKEN"),
   fork in tut := true,
   fork in (ScalaUnidoc, unidoc) := true,
   docsMappingsAPIDir := "api",
@@ -261,12 +269,13 @@ lazy val docSettings = Seq(
   ghpagesNoJekyll := false,
   git.remoteRepo := "https://github.com/alonsodomin/cron4s.git",
   unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(
-    coreJVM,
-    circeJVM,
-    declineJVM,
+    core.jvm,
+    circe.jvm,
+    decline.jvm,
+    doobie,
     joda,
     momentjs,
-    testkitJVM
+    testkit.jvm
   ),
   scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
     "-Xfatal-warnings",
@@ -275,15 +284,12 @@ lazy val docSettings = Seq(
     "-sourcepath",
     baseDirectory.in(LocalRootProject).value.getAbsolutePath,
     "-diagrams"
-  )
-) ++ docPublishSettings
-
-lazy val docPublishSettings = Seq(
-  micrositePushSiteWith := {
-    if (isTravisBuild.value) GitHub4s else GHPagesPlugin
-  },
-  micrositeGithubToken := sys.env.get("GITHUB_MICROSITES_TOKEN"),
+  ),
 )
+
+// =================================================================================
+// Top level modules
+// =================================================================================
 
 lazy val cron4s = (project in file("."))
   .settings(commonSettings)
@@ -297,10 +303,10 @@ lazy val cron4sJS = (project in file(".js"))
   )
   .settings(commonSettings: _*)
   .settings(commonJsSettings: _*)
-  .settings(publishSettings)
+  .settings(noPublishSettings)
   .enablePlugins(ScalaJSPlugin)
-  .aggregate(coreJS, momentjs, circeJS, declineJS, testkitJS, testsJS, docs, bench)
-  .dependsOn(coreJS, momentjs, circeJS, declineJS, testkitJS, testsJS % Test)
+  .aggregate(core.js, momentjs, circe.js, decline.js, testkit.js, tests.js, docs, bench)
+  .dependsOn(core.js, momentjs, circe.js, decline.js, testkit.js, tests.js % Test)
 
 lazy val cron4sJVM = (project in file(".jvm"))
   .settings(
@@ -310,20 +316,23 @@ lazy val cron4sJVM = (project in file(".jvm"))
   .settings(commonSettings)
   .settings(commonJvmSettings)
   .settings(consoleSettings)
-  .settings(publishSettings)
-  .aggregate(coreJVM, joda, doobie, circeJVM, declineJVM, testkitJVM, testsJVM)
-  .dependsOn(coreJVM, joda, doobie, circeJVM, declineJVM, testkitJVM, testsJVM % Test)
+  .settings(noPublishSettings)
+  .aggregate(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm)
+  .dependsOn(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm % Test)
 
 lazy val docs = project
   .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, GhpagesPlugin)
   .settings(
     moduleName := "cron4s-docs",
-    crossScalaVersions := Seq("2.12.8")
   )
   .settings(commonSettings)
   .settings(noPublishSettings)
   .settings(docSettings)
   .dependsOn(cron4sJVM)
+
+// =================================================================================
+// Main modules
+// =================================================================================
 
 lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
@@ -341,9 +350,6 @@ lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))
   .jvmSettings(Dependencies.coreJVM)
   .jvmSettings(mimaSettings("core"))
 
-lazy val coreJS  = core.js
-lazy val coreJVM = core.jvm
-
 lazy val testkit =
   (crossProject(JSPlatform, JVMPlatform) in file("modules/testkit"))
     .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
@@ -360,9 +366,6 @@ lazy val testkit =
     .jvmSettings(mimaSettings("testkit"))
     .dependsOn(core)
 
-lazy val testkitJS  = testkit.js
-lazy val testkitJVM = testkit.jvm
-
 lazy val tests = (crossProject(JSPlatform, JVMPlatform) in file("tests"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
@@ -378,24 +381,22 @@ lazy val tests = (crossProject(JSPlatform, JVMPlatform) in file("tests"))
   .jvmSettings(Dependencies.testsJVM)
   .dependsOn(testkit % Test)
 
-lazy val testsJS  = tests.js
-lazy val testsJVM = tests.jvm
-
 lazy val bench = (project in file("bench"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
     name := "bench",
     moduleName := "cron4s-bench",
-    crossScalaVersions := Seq("2.12.8")
   )
   .settings(commonSettings)
   .settings(noPublishSettings)
   .settings(commonJvmSettings)
   .settings(Dependencies.bench)
   .enablePlugins(JmhPlugin)
-  .dependsOn(coreJVM)
+  .dependsOn(core.jvm)
 
+// =================================================================================
 // DateTime library extensions
+// =================================================================================
 
 lazy val joda = (project in file("modules/joda"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
@@ -409,7 +410,7 @@ lazy val joda = (project in file("modules/joda"))
   .settings(publishSettings)
   .settings(Dependencies.joda)
   .settings(mimaSettings("joda"))
-  .dependsOn(coreJVM, testkitJVM % Test)
+  .dependsOn(core.jvm, testkit.jvm % Test)
 
 lazy val momentjs = (project in file("modules/momentjs"))
   .enablePlugins(AutomateHeaderPlugin, ScalaJSPlugin, ScalafmtPlugin, ScalaJSBundlerPlugin)
@@ -421,9 +422,11 @@ lazy val momentjs = (project in file("modules/momentjs"))
     moduleName := "cron4s-momentjs",
   )
   .settings(Dependencies.momentjs)
-  .dependsOn(coreJS, testkitJS % Test)
+  .dependsOn(core.js, testkit.js % Test)
 
+// =================================================================================
 // Extension modules
+// =================================================================================
 
 lazy val circe =
   (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("modules/circe"))
@@ -440,9 +443,6 @@ lazy val circe =
     .jsSettings(commonJsSettings)
     .dependsOn(core, testkit % Test)
 
-lazy val circeJVM = circe.jvm
-lazy val circeJS  = circe.js
-
 lazy val decline =
   (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("modules/decline"))
     .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
@@ -458,9 +458,6 @@ lazy val decline =
     .jsSettings(commonJsSettings)
     .dependsOn(core, testkit % Test)
 
-lazy val declineJVM = decline.jvm
-lazy val declineJS  = decline.js
-
 lazy val doobie = (project in file("modules/doobie"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
@@ -472,9 +469,11 @@ lazy val doobie = (project in file("modules/doobie"))
   .settings(commonJvmSettings)
   //.settings(mimaSettings("doobie"))
   .settings(Dependencies.doobie)
-  .dependsOn(coreJVM, testkitJVM % Test)
+  .dependsOn(core.jvm, testkit.jvm % Test)
 
+// =================================================================================
 // Utility command aliases
+// =================================================================================
 
 addCommandAlias("testJVM", "cron4sJVM/test")
 addCommandAlias("testJS", "cron4sJS/test")
