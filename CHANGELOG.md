@@ -4,17 +4,18 @@
 
 New Features:
 
+* [#142](https://github.com/alonsodomin/cron4s/pull/142): Add support for Scala 2.13 (and drop support for Scala 2.11)
 * [#149](https://github.com/alonsodomin/cron4s/pull/149): Add extension module for [doobie](https://tpolecat.github.io/doobie/).
   Find documentation about it in the [doobie extension](https://alonsodomin.github.io/cron4s/extensions/doobie.html) docs.
 * [#138](https://github.com/alonsodomin/cron4s/pull/138): Rewrite parser using Scala Parser Combinators instead of FastParse.
 
 Version upgrades:
 
-* Scala 2.11.12 / Scala 2.12.8
+* Scala 2.12.8 / Scala 2.13.0
 * ScalaJS 0.6.28
-* Cats 1.6.1
-* Decline 0.6.2
-* Circe 0.11.1
+* Cats 2.0.0-M4
+* Decline 0.7.0-M0
+* Circe 0.12.0-M4
 * Scala Java Time 2.0.0-RC3
 
 ## 0.5.0
