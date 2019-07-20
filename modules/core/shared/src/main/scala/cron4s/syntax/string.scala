@@ -28,9 +28,12 @@ private[syntax] trait CronStringSyntax {
 
 }
 
+private[syntax] final class CronStringInterpolatorContext extends Context
+
 object CronStringInterpolator extends Interpolator {
-  type Input  = String
-  type Output = CronExpr
+  type Input       = String
+  type Output      = CronExpr
+  type ContextType = CronStringInterpolatorContext
 
   def check(input: String) = Cron.parse(input).leftMap {
     case parseErr: ParseFailed => parseErr.position -> parseErr.getMessage
@@ -61,8 +64,8 @@ object CronStringInterpolator extends Interpolator {
 
 }
 
-private[syntax] final class CronStringContext(val sc: StringContext) extends AnyVal {
-  def cron = Prefix(CronStringInterpolator, sc)
+private[syntax] final class CronStringContext(sc: StringContext) {
+  val cron = Prefix(CronStringInterpolator, sc)
 }
 
 object string extends CronStringSyntax
