@@ -135,73 +135,94 @@ lazy val coverageSettings = Seq(
 def mimaSettings(module: String): Seq[Setting[_]] =
   mimaDefaultSettings ++ Seq(
     mimaPreviousArtifacts := previousStableVersion.value.map(organization.value %% s"cron4s-$module" % _).toSet,
-    // mimaBackwardIssueFilters ++= Map(
-    //   "0.4.5" -> Seq(
-    //     ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.Error.this"),
-    //     ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package$"),
-    //     ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.apply"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.this"),
-    //     ProblemFilters
-    //       .exclude[DirectMissingMethodProblem]("cron4s.expr.FieldNodeWithAny.fieldNodeInstance"),
-    //     ProblemFilters
-    //       .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.field2FieldWithAny"),
-    //     ProblemFilters
-    //       .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.enumerable2Field"),
-    //     ProblemFilters
-    //       .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.divisible2Field"),
-    //   ),
-    //   "0.5.0" -> Seq(
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.expected"),
-    //     ProblemFilters.exclude[MissingClassProblem]("cron4s.parser$"),
-    //     ProblemFilters.exclude[MissingClassProblem]("cron4s.parser"),
-    //     ProblemFilters.exclude[MissingClassProblem]("cron4s.CronInterpolator$"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.package.Cron4sStringContext"),
-    //     ProblemFilters.exclude[MissingClassProblem]("cron4s.package$Cron4sStringContext"),
-    //     ProblemFilters.exclude[MissingClassProblem]("cron4s.CronInterpolator"),
-    //     ProblemFilters.exclude[InheritedNewAbstractMethodProblem](
-    //       "cron4s.syntax.AllSyntax.toCronStringInterpolator"
-    //     ),
-    //     ProblemFilters
-    //       .exclude[InheritedNewAbstractMethodProblem]("cron4s.syntax.AllSyntax.embedCronStrings"),
-    //     ProblemFilters.exclude[InheritedNewAbstractMethodProblem](
-    //       "cron4s.syntax.AllSyntax.cron4s$syntax$CronStringSyntax$_setter_$embedCronStrings_="
-    //     ),
-    //     // Exclussions due to changes in scalatest and cats-testkit
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.maxDiscarded"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.PropertyCheckConfig"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.MaxSize"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.PropertyCheckConfig2PropertyCheckConfiguration"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.getParams"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.maxSize"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.MaxDiscarded"),
-    //     ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.Cron4sPropSpec"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.maxDiscarded"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.PropertyCheckConfig"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.PropertyCheckConfig2PropertyCheckConfiguration"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.getParams"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.maxSize"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.MaxDiscarded"),
-    //     ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.CronDateTimeTestKit"),
-    //     ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.DateTimeNodeTestKit"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.maxDiscarded"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.PropertyCheckConfig"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.PropertyCheckConfig2PropertyCheckConfiguration"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.MaxSize"),
-    //     ProblemFilters.exclude[IncompatibleResultTypeProblem]("cron4s.testkit.DateTimeNodeTestKit.forAll"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.check"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.getParams"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.maxSize"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.MaxDiscarded"),
-    //     ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.DateTimeNodeTestKit.check"),
-    //     ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.IsDateTimeTestKit.forAll"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.getParams"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.check"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.maxSize"),
-    //     ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.MaxDiscarded"),
-    //     ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.DateTimeCronTestKit.forAll")
-    //   )
-    // )
+    mimaBackwardIssueFilters ++= Map(
+      "0.4.5" -> Seq(
+        ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.Error.this"),
+        ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package$"),
+        ProblemFilters.exclude[MissingClassProblem]("cron4s.parser.package"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.apply"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.expr.SeveralNode.this"),
+        ProblemFilters
+          .exclude[DirectMissingMethodProblem]("cron4s.expr.FieldNodeWithAny.fieldNodeInstance"),
+        ProblemFilters
+          .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.field2FieldWithAny"),
+        ProblemFilters
+          .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.enumerable2Field"),
+        ProblemFilters
+          .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.divisible2Field"),
+      ),
+      "0.5.0" -> Seq(
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.expected"),
+        ProblemFilters.exclude[MissingClassProblem]("cron4s.parser$"),
+        ProblemFilters.exclude[MissingClassProblem]("cron4s.parser"),
+        ProblemFilters.exclude[MissingClassProblem]("cron4s.CronInterpolator$"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.package.Cron4sStringContext"),
+        ProblemFilters.exclude[MissingClassProblem]("cron4s.package$Cron4sStringContext"),
+        ProblemFilters.exclude[MissingClassProblem]("cron4s.CronInterpolator"),
+        ProblemFilters.exclude[InheritedNewAbstractMethodProblem](
+          "cron4s.syntax.AllSyntax.toCronStringInterpolator"
+        ),
+        ProblemFilters
+          .exclude[InheritedNewAbstractMethodProblem]("cron4s.syntax.AllSyntax.embedCronStrings"),
+        ProblemFilters.exclude[InheritedNewAbstractMethodProblem](
+          "cron4s.syntax.AllSyntax.cron4s$syntax$CronStringSyntax$_setter_$embedCronStrings_="
+        ),
+        // Exclussions due to changes in scalatest and cats-testkit
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.maxDiscarded"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.PropertyCheckConfig"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.MaxSize"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.PropertyCheckConfig2PropertyCheckConfiguration"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.getParams"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.maxSize"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.SlowCron4sPropSpec.MaxDiscarded"),
+        ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.SlowCron4sPropSpec"),
+        ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.Cron4sPropSpec"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.maxDiscarded"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.PropertyCheckConfig"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.PropertyCheckConfig2PropertyCheckConfiguration"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.getParams"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.maxSize"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.MaxDiscarded"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.Cron4sPropSpec.MaxSize"),
+        ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.CronDateTimeTestKit"),
+        ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.DateTimeNodeTestKit"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.maxDiscarded"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.PropertyCheckConfig"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.PropertyCheckConfig2PropertyCheckConfiguration"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.MaxSize"),
+        ProblemFilters.exclude[IncompatibleResultTypeProblem]("cron4s.testkit.DateTimeNodeTestKit.forAll"),
+        ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.DateTimeNodeTestKit.forAll"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.check"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.getParams"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.maxSize"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeNodeTestKit.MaxDiscarded"),
+        ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.DateTimeNodeTestKit.check"),
+        ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.IsDateTimeTestKit"),
+        ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.IsDateTimeTestKit.forAll"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.getParams"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.check"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.maxSize"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.maxDiscarded"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.MaxDiscarded"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.PropertyCheckConfig"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.PropertyCheckConfig2PropertyCheckConfiguration"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.IsDateTimeTestKit.MaxSize"),
+        ProblemFilters.exclude[IncompatibleResultTypeProblem]("cron4s.testkit.IsDateTimeTestKit.forAll"),
+        ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.IsDateTimeTestKit.check"),
+        ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.DateTimeCronTestKit.forAll"),
+        ProblemFilters.exclude[MissingTypesProblem]("cron4s.testkit.DateTimeCronTestKit"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeCronTestKit.maxDiscarded"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeCronTestKit.PropertyCheckConfig"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeCronTestKit.PropertyCheckConfig2PropertyCheckConfiguration"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeCronTestKit.MaxSize"),
+        ProblemFilters.exclude[IncompatibleResultTypeProblem]("cron4s.testkit.DateTimeCronTestKit.forAll"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeCronTestKit.getParams"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeCronTestKit.maxSize"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeCronTestKit.MaxDiscarded"),
+        ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeCronTestKit.check"),
+        ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.testkit.DateTimeCronTestKit.check"),
+      )
+    )
   )
 
 lazy val docsMappingsAPIDir =
@@ -449,7 +470,7 @@ lazy val doobie = (project in file("modules/doobie"))
   .settings(commonSettings)
   .settings(publishSettings)
   .settings(commonJvmSettings)
-  .settings(mimaSettings("doobie"))
+  //.settings(mimaSettings("doobie"))
   .settings(Dependencies.doobie)
   .dependsOn(coreJVM, testkitJVM % Test)
 
@@ -457,6 +478,7 @@ lazy val doobie = (project in file("modules/doobie"))
 
 addCommandAlias("testJVM", "cron4sJVM/test")
 addCommandAlias("testJS", "cron4sJS/test")
+addCommandAlias("binCompatCheck", "cron4sJVM/mimaReportBinaryIssues")
 addCommandAlias(
   "validateJVM",
   Seq(
@@ -464,7 +486,7 @@ addCommandAlias(
     "testJVM",
     "coverageReport",
     "coverageAggregate",
-    "cron4sJVM/mimaReportBinaryIssues"
+    "binCompatCheck"
   ).mkString(";")
 )
 addCommandAlias("validateJS", "testJS")
