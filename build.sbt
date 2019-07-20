@@ -305,7 +305,7 @@ lazy val cron4sJS = (project in file(".js"))
   .settings(commonJsSettings: _*)
   .settings(noPublishSettings)
   .enablePlugins(ScalaJSPlugin)
-  .aggregate(core.js, momentjs, circe.js, decline.js, testkit.js, tests.js, docs, bench)
+  .aggregate(core.js, momentjs, circe.js, decline.js, testkit.js, tests.js, bench)
   .dependsOn(core.js, momentjs, circe.js, decline.js, testkit.js, tests.js % Test)
 
 lazy val cron4sJVM = (project in file(".jvm"))
@@ -324,6 +324,7 @@ lazy val docs = project
   .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, GhpagesPlugin)
   .settings(
     moduleName := "cron4s-docs",
+    crossScalaVersions := Seq("2.12.8")
   )
   .settings(commonSettings)
   .settings(noPublishSettings)
