@@ -22,23 +22,15 @@ import cats.syntax.either._
 import contextual._
 
 private[syntax] trait CronStringSyntax {
-  import CronStringInterpolator._
 
   implicit def toCronStringInterpolator(sc: StringContext): CronStringContext =
     new CronStringContext(sc)
 
-  implicit val embedCronStrings = CronStringInterpolator.embed[String](
-    Case(DummyCtx, DummyCtx)(identity)
-  )
-
 }
 
 object CronStringInterpolator extends Interpolator {
-  case object DummyCtx extends Context
-
-  type Input       = String
-  type Output      = CronExpr
-  type ContextType = DummyCtx.type
+  type Input  = String
+  type Output = CronExpr
 
   def check(input: String) = Cron.parse(input).leftMap {
     case parseErr: ParseFailed => parseErr.position -> parseErr.getMessage
@@ -65,10 +57,7 @@ object CronStringInterpolator extends Interpolator {
   }
 
   def evaluate(contextual: RuntimeInterpolation): CronExpr =
-    check(contextual.parts.mkString) match {
-      case Right(value)   => value
-      case Left((pos, _)) => throw new Exception(s"Error parsing cron expression at position: $pos")
-    }
+    Cron.unsafeParse(contextual.parts.mkString)
 
 }
 

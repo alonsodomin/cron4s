@@ -69,7 +69,7 @@ class DoobieSpec extends AnyFlatSpec with Matchers {
     val standUpMeeting = Meeting(
       "Daily stand-up",
       "Daily team morning stand-up meeting",
-      cron"0 0 10 ? * mon-fri"
+      Cron.unsafeParse("0 0 10 ? * mon-fri")
     )
 
     val tx = for {

@@ -19,6 +19,7 @@ package cron4s
 import cats.data.NonEmptyList
 
 import cron4s.expr._
+import cron4s.syntax.all._
 
 import org.scalatest.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
