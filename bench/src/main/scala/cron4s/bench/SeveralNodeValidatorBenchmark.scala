@@ -16,6 +16,8 @@
 
 package cron4s.bench
 
+import java.util.concurrent.TimeUnit
+
 import cron4s._
 import cron4s.expr._
 import cron4s.validation.NodeValidator
@@ -28,6 +30,8 @@ import org.openjdk.jmh.annotations._
   * Created by alonsodomin on 02/02/2017.
   */
 @State(Scope.Benchmark)
+@BenchmarkMode(Array(Mode.AverageTime))
+@OutputTimeUnit(TimeUnit.MICROSECONDS)
 class SeveralNodeValidatorBenchmark {
   import CronField._
 
@@ -60,11 +64,12 @@ class SeveralNodeValidatorBenchmark {
 
   val _constImpliedByRange = SeveralNode(
     ConstNode[Second](23),
-    BetweenNode[Second](ConstNode(17), ConstNode(30))
+    BetweenNode[Second](ConstNode(10), ConstNode(15)),
+    BetweenNode[Second](ConstNode(20), ConstNode(30)),
   )
-  val _constImpliedByRangeReverse = SeveralNode(
+  val _overlappingRanges = SeveralNode(
     BetweenNode[Second](ConstNode(17), ConstNode(30)),
-    ConstNode[Second](23)
+    BetweenNode[Second](ConstNode(25), ConstNode(50)),
   )
 
   @Benchmark
@@ -100,7 +105,7 @@ class SeveralNodeValidatorBenchmark {
     NodeValidator[SeveralNode[Second]].validate(_constImpliedByRange)
 
   @Benchmark
-  def constImpliedByRangeReverse(): List[InvalidField] =
-    NodeValidator[SeveralNode[Second]].validate(_constImpliedByRangeReverse)
+  def overlappingRanges(): List[InvalidField] =
+    NodeValidator[SeveralNode[Second]].validate(_overlappingRanges)
 
 }
