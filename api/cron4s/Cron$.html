@@ -135,6 +135,22 @@
       
       <p class="shortcomment cmt">Created by alonsodomin on 04/01/2016.</p><div class="fullcomment"><div class="comment cmt"><p>Created by alonsodomin on 04/01/2016.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="cron4s">cron4s</a></dd></dl></div>
+    </li><li name="cron4s.parsing" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="parsing"></a><a id="parsing:parsing"></a>
+      <span class="permalink">
+      <a href="../cron4s/index.html#parsing" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="parsing/index.html"><span class="name">parsing</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="cron4s">cron4s</a></dd></dl></div>
     </li><li name="cron4s.syntax" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="syntax"></a><a id="syntax:syntax"></a>
       <span class="permalink">
@@ -148,6 +164,22 @@
       </span>
       <span class="symbol">
         <a title="" href="syntax/index.html"><span class="name">syntax</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="cron4s">cron4s</a></dd></dl></div>
+    </li><li name="cron4s.testkit" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="testkit"></a><a id="testkit:testkit"></a>
+      <span class="permalink">
+      <a href="../cron4s/index.html#testkit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="testkit/index.html"><span class="name">testkit</span></a>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="cron4s">cron4s</a></dd></dl></div>
@@ -173,17 +205,9 @@
                         <a class="object" href="" title="The entry point for parsing cron expressions"></a>
                         <a href="" title="The entry point for parsing cron expressions">Cron</a>
                       </li><li class="current-entities indented1">
-                        <span class="separator"></span>
-                        <a class="class" href="package$$Cron4sStringContext.html" title=""></a>
-                        <a href="package$$Cron4sStringContext.html" title="">Cron4sStringContext</a>
-                      </li><li class="current-entities indented1">
                         <a class="object" href="CronField$.html" title=""></a>
                         <a class="trait" href="CronField.html" title="Each of the different fields supported in CRON expressions"></a>
                         <a href="CronField.html" title="Each of the different fields supported in CRON expressions">CronField</a>
-                      </li><li class="current-entities indented1">
-                        <span class="separator"></span>
-                        <a class="object" href="CronInterpolator$.html" title=""></a>
-                        <a href="CronInterpolator$.html" title="">CronInterpolator</a>
                       </li><li class="current-entities indented1">
                         <a class="object" href="CronUnit$.html" title=""></a>
                         <a class="trait" href="CronUnit.html" title="A Cron Unit is the representation of valid values that are accepted at a given Cron Field."></a>
@@ -247,7 +271,7 @@
       <span class="symbol">&quot;Cron&quot;</span>
     </span>)</span>
               
-        </dd><dt>Source</dt><dd><a href="https://github.com/alonsodomin/cron4s/tree/master/core/shared/src/main/scala/cron4s/Cron.scala" target="_blank">Cron.scala</a></dd></dl><div class="toggleContainer block">
+        </dd><dt>Source</dt><dd><a href="https://github.com/alonsodomin/cron4s/tree/master/modules/core/shared/src/main/scala/cron4s/Cron.scala" target="_blank">Cron.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -369,7 +393,10 @@
       
       <p class="shortcomment cmt">Parses the given cron expression into a cron AST using Either as return type.</p><div class="fullcomment"><div class="comment cmt"><p>Parses the given cron expression into a cron AST using Either as return type. This is a short-hand for
 <code>Cron.parse(...)</code>
-</p></div><dl class="paramcmts block"><dt class="param">e</dt><dd class="cmt"><p>a cron expression</p></dd><dt>returns</dt><dd class="cmt"><p>an Either representing the failure or the actual parsed cron AST</p></dd></dl><dl class="attributes block"> <div class="block">Example:
+</p></div><dl class="paramcmts block"><dt class="param">e</dt><dd class="cmt"><p>a cron expression</p></dd><dt>returns</dt><dd class="cmt"><p>an Either representing the failure or the actual parsed cron AST</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd><div class="block">Example:
                <ol><li class="cmt"><p>val cron = Cron(&quot;10-35 2,4,6 * ? * *&quot;)</p></li></ol>
             </div></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -591,7 +618,10 @@
       
       <p class="shortcomment cmt">Parses the given cron expression into a cron AST using Either as return type
 </p><div class="fullcomment"><div class="comment cmt"><p>Parses the given cron expression into a cron AST using Either as return type
-</p></div><dl class="paramcmts block"><dt class="param">e</dt><dd class="cmt"><p>a cron expression</p></dd><dt>returns</dt><dd class="cmt"><p>an Either representing the failure or the actual parsed cron AST</p></dd></dl><dl class="attributes block"> <div class="block">Example:
+</p></div><dl class="paramcmts block"><dt class="param">e</dt><dd class="cmt"><p>a cron expression</p></dd><dt>returns</dt><dd class="cmt"><p>an Either representing the failure or the actual parsed cron AST</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd><div class="block">Example:
                <ol><li class="cmt"><p>val cron = Cron.parse(&quot;10-35 2,4,6 * ? * *&quot;)</p></li></ol>
             </div></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
