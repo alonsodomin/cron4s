@@ -2,7 +2,6 @@ import sbt._
 import Keys._
 
 object CompilerPlugins {
-
   val macroParadise = compilerPlugin(
     "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
   )
@@ -13,7 +12,7 @@ object CompilerPlugins {
     "com.olegpy" %% "better-monadic-for" % "0.3.1"
   )
 
-  lazy val All = Seq(
+  lazy val All = Def.settings(
     libraryDependencies ++= Seq(kindProjector, betterMonadicFor),
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
