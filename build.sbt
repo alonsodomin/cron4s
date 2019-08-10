@@ -11,17 +11,6 @@ lazy val consoleImports =
 // Settings
 // =================================================================================
 
-lazy val compilerPlugins = Seq(
-  libraryDependencies ++= {
-    import Dependencies._
-
-    CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, n)) if n <= 12 => Seq(macroParadise, kindProjector)
-      case _                       => Seq(kindProjector)
-    }
-  }
-)
-
 val commonSettings = Def.settings(
   name := "cron4s",
   organization := "com.github.alonsodomin.cron4s",
@@ -75,7 +64,7 @@ val commonSettings = Def.settings(
     .map(s => s"import $s")
     .mkString("\n"),
   scalafmtOnCompile := true,
-) ++ compilerPlugins
+) ++ CompilerPlugins.All
 
 lazy val commonJvmSettings = Seq(
   fork in Test := true

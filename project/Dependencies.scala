@@ -28,16 +28,6 @@ object Dependencies {
     val scalaJavaTime = "2.0.0-RC3"
   }
 
-  val macroParadise = compilerPlugin(
-    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.patch
-  )
-  val kindProjector = compilerPlugin(
-    "org.typelevel" % "kind-projector" % "0.10.3" cross CrossVersion.binary
-  )
-  val betterMonadicFor = compilerPlugin(
-    "com.olegpy" %% "better-monadic-for" % "0.3.1"
-  )
-
   lazy val core = Def.settings(
     libraryDependencies ++= Seq(
       "com.chuusai"    %%% "shapeless"  % version.shapeless,
