@@ -34,6 +34,9 @@ object Dependencies {
   val kindProjector = compilerPlugin(
     "org.typelevel" % "kind-projector" % "0.10.3" cross CrossVersion.binary
   )
+  val betterMonadicFor = compilerPlugin(
+    "com.olegpy" %% "better-monadic-for" % "0.3.1"
+  )
 
   lazy val core = Def.settings(
     libraryDependencies ++= Seq(
