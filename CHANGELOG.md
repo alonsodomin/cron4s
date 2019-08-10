@@ -10,7 +10,7 @@ New Features:
 
 Version upgrades:
 
-* Scala 2.11.12 / Scala 2.12.8
+* Scala 2.11.12 / Scala 2.12.9
 * ScalaJS 0.6.28
 * Cats 1.6.1
 * Decline 0.6.2
