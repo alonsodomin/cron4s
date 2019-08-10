@@ -10,14 +10,14 @@ import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.npmDependencies
 object Dependencies {
 
   object version {
-    val atto       = "0.6.5"
-    val cats       = "2.0.0-M4"
+    val atto       = "0.7.0-RC1"
+    val cats       = "2.0.0-RC1"
     val shapeless  = "2.3.3"
-    val discipline = "0.12.0-M3"
+    val discipline = "1.0.0-M1"
     val decline    = "0.7.0-M0"
-    val circe      = "0.12.0-M4"
+    val circe      = "0.12.0-RC1"
     val parserc    = "1.1.2"
-    val doobie     = "0.8.0-M1"
+    val doobie     = "0.8.0-RC1"
     val contextual = "1.2.1"
 
     val jodaTime    = "2.10.3"
@@ -82,12 +82,9 @@ object Dependencies {
   }
 
   lazy val bench = Def.settings {
-    libraryDependencies ++= {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, n)) if n <= 12 => Seq("org.tpolecat" %% "atto-core" % version.atto)
-        case _                       => Nil
-      }
-    }
+    libraryDependencies ++= Seq(
+      "org.tpolecat" %% "atto-core" % version.atto
+    )
   }
 
   // Dependencies of extension libraries
