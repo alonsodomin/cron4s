@@ -340,7 +340,7 @@ lazy val docSettings = Seq(
 lazy val cron4s = (project in file("."))
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .aggregate(cron4sJS, cron4sJVM)
+  .aggregate(cron4sJS, cron4sJVM, docs)
 
 lazy val cron4sJS = (project in file(".js"))
   .settings(
@@ -351,7 +351,7 @@ lazy val cron4sJS = (project in file(".js"))
   .settings(commonJsSettings: _*)
   .settings(noPublishSettings)
   .enablePlugins(ScalaJSPlugin)
-  .aggregate(core.js, momentjs, circe.js, decline.js, testkit.js, tests.js, bench)
+  .aggregate(core.js, momentjs, circe.js, decline.js, testkit.js, tests.js)
   .dependsOn(core.js, momentjs, circe.js, decline.js, testkit.js, tests.js % Test)
 
 lazy val cron4sJVM = (project in file(".jvm"))
@@ -363,7 +363,7 @@ lazy val cron4sJVM = (project in file(".jvm"))
   .settings(commonJvmSettings)
   .settings(consoleSettings)
   .settings(noPublishSettings)
-  .aggregate(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm)
+  .aggregate(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm, bench)
   .dependsOn(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm % Test)
 
 lazy val docs = project
