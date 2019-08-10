@@ -22,6 +22,7 @@ cache:
     - $HOME/.ivy2
     - $HOME/.cache/coursier/v1
     - $HOME/.nvm
+    - .hoarder-cache
 
 env:
   global:
