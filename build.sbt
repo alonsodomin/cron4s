@@ -65,7 +65,7 @@ val commonSettings = Def.settings(
     .map(s => s"import $s")
     .mkString("\n"),
   scalafmtOnCompile := true
-) ++ unusedWarning
+) ++ unusedWarning ++ CompilerPlugins.All
 
 lazy val commonJvmSettings = Seq(
   fork in Test := true

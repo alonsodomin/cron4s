@@ -29,19 +29,8 @@ object Dependencies {
     val scalaJavaTime = "2.0.0-RC3"
   }
 
-  val macroParadise = compilerPlugin(
-    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
-  )
-  val kindProjector = compilerPlugin(
-    "org.typelevel" % "kind-projector" % "0.10.3" cross CrossVersion.binary
-  )
-  val betterMonadicFor = compilerPlugin(
-    "com.olegpy" %% "better-monadic-for" % "0.3.1"
-  )
-  lazy val compilerPlugins = Seq(macroParadise, kindProjector, betterMonadicFor)
-
   lazy val core = Def.settings(
-    libraryDependencies ++= compilerPlugins ++ Seq(
+    libraryDependencies ++= Seq(
       "com.chuusai"            %%% "shapeless"                % version.shapeless,
       "org.typelevel"          %%% "cats-core"                % version.cats,
       "com.propensive"         %%% "contextual"               % version.contextual,      
@@ -64,7 +53,7 @@ object Dependencies {
   }
 
   lazy val testkit = Def.settings {
-    libraryDependencies ++= compilerPlugins ++ Seq(
+    libraryDependencies ++= Seq(
       "org.typelevel"  %%% "cats-laws"          % version.cats,
       "org.typelevel"  %%% "cats-testkit"       % version.cats,
       "org.typelevel"  %%% "discipline"         % version.discipline,
@@ -75,7 +64,7 @@ object Dependencies {
   }
 
   lazy val tests = Def.settings {
-    libraryDependencies ++= compilerPlugins ++ Seq(
+    libraryDependencies ++= Seq(
       "org.scalatest" %%% "scalatest" % version.scalatest % Test
     )
   }
