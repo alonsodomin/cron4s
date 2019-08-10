@@ -30,17 +30,11 @@ object Dependencies {
 
   lazy val core = Def.settings(
     libraryDependencies ++= Seq(
-      "com.chuusai"    %%% "shapeless"  % version.shapeless,
-      "org.typelevel"  %%% "cats-core"  % version.cats,
-      "com.propensive" %%% "contextual" % version.contextual,
-    ),
-    libraryDependencies += {
-      val parsecVersion = CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, major)) if major < 12 => "1.1.1"
-        case _ => version.parserc
-      }
-      "org.scala-lang.modules" %%% "scala-parser-combinators" % parsecVersion
-    }
+      "com.chuusai"            %%% "shapeless"                % version.shapeless,
+      "org.typelevel"          %%% "cats-core"                % version.cats,
+      "com.propensive"         %%% "contextual"               % version.contextual,
+      "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parserc,
+    )
   )
 
   lazy val coreJS = Def.settings {
@@ -53,9 +47,9 @@ object Dependencies {
 
   lazy val testkit = Def.settings {
     libraryDependencies ++= Seq(
-      "org.typelevel"  %%% "cats-laws"            % version.cats,
-      "org.typelevel"  %%% "cats-testkit"         % version.cats,
-      "org.typelevel"  %%% "discipline-scalatest" % version.discipline
+      "org.typelevel" %%% "cats-laws"            % version.cats,
+      "org.typelevel" %%% "cats-testkit"         % version.cats,
+      "org.typelevel" %%% "discipline-scalatest" % version.discipline
     )
   }
 
@@ -95,7 +89,7 @@ object Dependencies {
   lazy val momentjs = Def.settings(
     libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % version.momentjs,
     npmDependencies in Compile ++= momentjsNpmDeps,
-    npmDependencies in Test    ++= momentjsNpmDeps
+    npmDependencies in Test ++= momentjsNpmDeps
   )
 
   lazy val circe = Def.settings(
