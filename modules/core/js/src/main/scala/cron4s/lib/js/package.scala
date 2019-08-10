@@ -38,7 +38,7 @@ package object js {
   }
 
   implicit val jsDateShow: Show[Date] =
-    Show.show(_.toISOString())
+    Show.show(_.toUTCString())
 
   implicit val jsDateInstance: IsDateTime[Date] = new JsDateInstance
 
