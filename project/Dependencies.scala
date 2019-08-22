@@ -18,7 +18,6 @@ object Dependencies {
     val circe      = "0.12.0-RC1"
     val parserc    = "1.1.2"
     val doobie     = "0.8.0-RC1"
-    val contextual = "1.2.1"
 
     val jodaTime    = "2.10.3"
     val jodaConvert = "2.2.1"
@@ -32,7 +31,6 @@ object Dependencies {
     libraryDependencies ++= Seq(
       "com.chuusai"            %%% "shapeless"                % version.shapeless,
       "org.typelevel"          %%% "cats-core"                % version.cats,
-      "com.propensive"         %%% "contextual"               % version.contextual,
       "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parserc,
     )
   )
