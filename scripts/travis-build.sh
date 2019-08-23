@@ -2,7 +2,7 @@
 
 set -e
 
-sbt_cmd="sbt ++$TRAVIS_SCALA_VERSION"
+sbt_cmd="sbt ++$TRAVIS_SCALA_VERSION!"
 
 # Build & Test
 
