@@ -16,11 +16,15 @@
 
 package cron4s.bench
 
+import java.util.concurrent.TimeUnit
+
 import cron4s._
 
 import org.openjdk.jmh.annotations._
 
 @State(Scope.Thread)
+@BenchmarkMode(Array(Mode.AverageTime))
+@OutputTimeUnit(TimeUnit.MICROSECONDS)
 class ParserBenchmark {
 
   @Param(
@@ -28,7 +32,8 @@ class ParserBenchmark {
       "10-35 2,4,6 * ? * *",
       "* 5,10,15,20,25,30,35,40,45,50,55/2 * ? * mon-fri",
       "10-65 * * * * *",
-      "* */10 5-10 ? * mon-fri"
+      "* */10 5-10 ? * mon-fri",
+      "*/30 10,20,40 5-15,25-35/4 ? 1,3,7,oct-dec sun"
     )
   )
   var cronString: String = _

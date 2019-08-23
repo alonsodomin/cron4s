@@ -16,7 +16,8 @@
 
 package cron4s.lib.js
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.Matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
 import cron4s._
 
@@ -25,13 +26,13 @@ import scala.scalajs.js.Date
 /**
   * Created by alonsodomin on 25/02/2017.
   */
-class JSDateCronRegressionSpec extends FlatSpec with Matchers {
+class JSDateCronRegressionSpec extends AnyFlatSpec with Matchers {
 
   "Cron" should "not advance to the next day" in {
     val from = new Date("2017-02-18T16:39:42.541")
 
-    val Right(cron) = Cron("* */10 * * * ?")
-    val Some(next)  = cron.next(from)
+    val cron = Cron.unsafeParse("* */10 * * * ?")
+    val next = cron.next(from).get
 
     (next.getTime() - from.getTime()) <= 600000 shouldBe true
   }
@@ -39,8 +40,8 @@ class JSDateCronRegressionSpec extends FlatSpec with Matchers {
   it should "reset the milli seconds field" in {
     val from = new Date("2017-02-18T16:39:42.541")
 
-    val Right(cron) = Cron("* */10 * ? * *")
-    val Some(next)  = cron.next(from)
+    val cron = Cron.unsafeParse("* */10 * ? * *")
+    val next = cron.next(from).get
 
     next.getMilliseconds() shouldBe 0
   }

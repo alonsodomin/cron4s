@@ -13,6 +13,13 @@ object CompilerPlugins {
   )
 
   lazy val All = Def.settings(
-    libraryDependencies ++= Seq(macroParadise, kindProjector, betterMonadicFor)
+    libraryDependencies ++= Seq(kindProjector, betterMonadicFor),
+    libraryDependencies ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n <= 12 => Seq(macroParadise)
+        case _                       => Nil
+      }
+    }
   )
+
 }

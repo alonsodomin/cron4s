@@ -23,11 +23,12 @@ import _root_.doobie._
 import _root_.doobie.implicits._
 import _root_.doobie.util.invariant._
 
-import org.scalatest._
+import org.scalatest.Matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.concurrent.ExecutionContext
 
-class DoobieSpec extends FlatSpec with Matchers {
+class DoobieSpec extends AnyFlatSpec with Matchers {
   implicit val contextShift: ContextShift[IO] =
     IO.contextShift(ExecutionContext.global)
 
@@ -68,7 +69,7 @@ class DoobieSpec extends FlatSpec with Matchers {
     val standUpMeeting = Meeting(
       "Daily stand-up",
       "Daily team morning stand-up meeting",
-      cron"0 0 10 ? * mon-fri"
+      Cron.unsafeParse("0 0 10 ? * mon-fri")
     )
 
     val tx = for {

@@ -23,7 +23,7 @@ import io.circe.syntax._
 This should be enough to be able to encode and decode cron expressions as JSON with Circe:
 
 ```tut:book
-val cron = cron"10-35 2,4,6 * ? * *"
+val cron = Cron.unsafeParse("10-35 2,4,6 * ? * *")
 
 val jsonCron = cron.asJson
 jsonCron.as[CronExpr]

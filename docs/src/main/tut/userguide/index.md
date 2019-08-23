@@ -78,28 +78,6 @@ unless you are aware of the consequences (well, it also comes handy during a REP
 Cron.unsafeParse("10-65 * * * * *")
 ```
 
-### Compile time expressions
-
-Starting at `cron4s` 0.5.0, there is support for compile-time verified cron expressions, which gives an additional
-guarantee that our expressions are well formed without the need for a runtime check. Compile-time cron expressions
-are basically a string interpolated and prefixed with the `cron` word:
-
-```tut
-val compileTimeChecked = cron"10-35 2,4,6 * ? * *"
-```
-
-As you can see, the return time is not wrapped in an `Either`, the expressions has been verified at compile time and
-therefore there is no need to handle an error case. If we input an invalid cron expression, our code won't compile:
-
-```tut:fail
-val compileFails = cron"10-65 * * * * *"
-```
-
-Now compare that error to the previous one returned by `Cron.unsafeParse`, which was a runtime check. As you can see,
-the compile time error is more helpful but it has its limitations, being the most important one the fact that the
-expression text needs to be resolvable at compile time. If for some reason you are reading your expression as an
-input into your program, you should still fallback to the previous methods.
-
 ### Validation errors
 
 The CRON expression will be validated right after parsing. Any error found during this stage will be returned
