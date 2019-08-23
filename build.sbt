@@ -340,7 +340,7 @@ lazy val docSettings = Seq(
 lazy val cron4s = (project in file("."))
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .aggregate(cron4sJS, cron4sJVM, docs)
+  .aggregate(cron4sJS, cron4sJVM)
 
 lazy val cron4sJS = (project in file(".js"))
   .settings(
@@ -532,7 +532,7 @@ addCommandAlias(
     "testJVM",
     "coverageReport",
     "coverageAggregate",
-    "binCompatCheck"
+    //"binCompatCheck"
   ).mkString(";")
 )
 addCommandAlias("validateJS", "testJS")
