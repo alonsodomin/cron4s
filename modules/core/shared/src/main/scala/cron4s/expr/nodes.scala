@@ -27,6 +27,8 @@ import cron4s.base._
 import cron4s.syntax.field._
 import cron4s.syntax.predicate._
 
+import scala.collection.immutable.LazyList
+
 /**
   * Generic representation of the expression node for a given field
   *
@@ -259,7 +261,7 @@ final class SeveralNode[F <: CronField] private (
     values.map(_.hashCode() * 31).reduce
 
   lazy val range: IndexedSeq[Int] =
-    values.toList.view.flatMap(_.range).distinct.sorted.toIndexedSeq
+    values.toList.flatMap(_.range).distinct.sorted.toIndexedSeq
 
   override lazy val toString: String =
     values.map(_.show).toList.mkString(",")
@@ -331,7 +333,7 @@ final class EveryNode[F <: CronField] private (
     base.hashCode() * 31 + freq
 
   lazy val range: IndexedSeq[Int] = {
-    val elements = Stream
+    val elements = LazyList
       .iterate[Option[(Int, Int)]](Some(base.min -> 0)) {
         _.flatMap { case (v, _) => base.step(v, freq) }
       }

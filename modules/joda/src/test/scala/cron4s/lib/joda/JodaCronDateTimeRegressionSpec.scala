@@ -18,18 +18,19 @@ package cron4s.lib.joda
 
 import cron4s._
 import org.joda.time.{LocalDateTime, Seconds}
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.Matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
 /**
   * Created by alonsodomin on 24/02/2017.
   */
-class JodaCronDateTimeRegressionSpec extends FlatSpec with Matchers {
+class JodaCronDateTimeRegressionSpec extends AnyFlatSpec with Matchers {
 
   "Cron" should "not advance to the next day" in {
     val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
 
-    val Right(cron) = Cron("* */10 * * * ?")
-    val Some(next)  = cron.next(from)
+    val cron = Cron.unsafeParse("* */10 * * * ?")
+    val next = cron.next(from).get
 
     Seconds.secondsBetween(from, next).getSeconds should be <= 600
   }
@@ -37,8 +38,8 @@ class JodaCronDateTimeRegressionSpec extends FlatSpec with Matchers {
   it should "reset the milli seconds field" in {
     val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
 
-    val Right(cron) = Cron("* */10 * * * ?")
-    val Some(next)  = cron.next(from)
+    val cron = Cron.unsafeParse("* */10 * * * ?")
+    val next = cron.next(from).get
 
     next.getMillisOfSecond shouldBe 0
   }

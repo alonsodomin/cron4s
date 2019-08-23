@@ -19,7 +19,7 @@ import cron4s.lib.javatime._
 And an already parsed CRON expression:
 
 ```tut
-val cron = cron"10-35 2,4,6 * ? * *"
+val cron = Cron.unsafeParse("10-35 2,4,6 * ? * *")
 ```
 
 Now the `next` operation is able to return to us the next moment in time according

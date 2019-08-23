@@ -14,7 +14,7 @@ After successfully parsing a CRON expression, the `CronExpr` resulting type repr
 parsed expression as an AST, in which we can access all the expression fields individually. Let's start by declaring a cron expression:
 
 ```tut
-val cron = cron"10-35 2,4,6 * ? * *"
+val cron = Cron.unsafeParse("10-35 2,4,6 * ? * *")
 ```
 
 And now with that out of the way, we can access the different components of the AST using the field accessors:

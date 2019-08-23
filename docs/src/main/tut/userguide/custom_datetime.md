@@ -58,7 +58,7 @@ implicit object MyDateInstance extends IsDateTime[MyTime] {
 That should be enough. To be sure that all works we are going to use it with a CRON expression:
 
 ```tut
-val cron = cron"* 5,15,30 6-12 * * ?"
+val cron = Cron.unsafeParse("* 5,15,30 6-12 * * ?")
 val myTime = MyTime(59, 15, 10)
 cron.next(myTime)
 cron.timePart.next(myTime)

@@ -20,18 +20,20 @@ import java.time.LocalDateTime
 import java.time.temporal.{ChronoField, ChronoUnit}
 
 import cron4s._
-import org.scalatest.{FlatSpec, Matchers}
+
+import org.scalatest.Matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
 /**
   * Created by alonsodomin on 24/02/2017.
   */
-class JavaTimeCronDateTimeRegressionSpec extends FlatSpec with Matchers {
+class JavaTimeCronDateTimeRegressionSpec extends AnyFlatSpec with Matchers {
 
   "Cron" should "not advance to the next day" in {
     val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
 
-    val Right(cron) = Cron("* */10 * * * ?")
-    val Some(next)  = cron.next(from)
+    val cron = Cron.unsafeParse("* */10 * * * ?")
+    val next = cron.next(from).get
 
     from.until(next, ChronoUnit.SECONDS) <= 600 shouldBe true
   }
@@ -39,8 +41,8 @@ class JavaTimeCronDateTimeRegressionSpec extends FlatSpec with Matchers {
   "Cron" should "reset the milli seconds field" in {
     val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
 
-    val Right(cron) = Cron("* */10 * * * ?")
-    val Some(next)  = cron.next(from)
+    val cron = Cron.unsafeParse("* */10 * * * ?")
+    val next = cron.next(from).get
 
     next.getLong(ChronoField.MILLI_OF_SECOND) shouldBe 0
   }
@@ -48,16 +50,15 @@ class JavaTimeCronDateTimeRegressionSpec extends FlatSpec with Matchers {
   it should "reset previous time * fields" in {
     val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
 
-    val Right(cron) = Cron("* */10 * * * ?")
-    val Some(next)  = cron.next(from)
+    val cron = Cron.unsafeParse("* */10 * * * ?")
+    val next = cron.next(from).get
 
-    println(next)
     from.until(next, ChronoUnit.SECONDS) shouldBe 17L
   }
 
   // https://github.com/alonsodomin/cron4s/issues/59
   "Cron with day of week" should "yield a date in the future" in {
-    val Right(cron) = Cron("0 0 0 ? * 1-3")
+    val cron = Cron.unsafeParse("0 0 0 ? * 1-3")
 
     for (dayOfMonth <- 1 to 30) {
       val from = LocalDateTime.of(2017, 3, dayOfMonth, 2, 0, 0)

@@ -17,12 +17,13 @@
 package cron4s.validation
 
 import cron4s.testkit.gen.NodeGenerators
-import org.scalatest.{Matchers, PropSpecLike}
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatest.Matchers
+import org.scalatest.propspec.AnyPropSpecLike
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 /**
   * Created by alonsodomin on 04/02/2017.
   */
-trait ValidatorPropSpec extends GeneratorDrivenPropertyChecks with Matchers with NodeGenerators {
-  this: PropSpecLike =>
+trait ValidatorPropSpec extends ScalaCheckDrivenPropertyChecks with Matchers with NodeGenerators {
+  this: AnyPropSpecLike =>
 }

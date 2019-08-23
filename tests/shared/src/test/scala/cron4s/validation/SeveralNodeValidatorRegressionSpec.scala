@@ -21,12 +21,13 @@ import cats.syntax.show._
 import cron4s._
 import cron4s.expr._
 
-import org.scalatest._
+import org.scalatest.Matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
 /**
   * Created by alonsodomin on 05/08/2016.
   */
-class SeveralNodeValidatorRegressionSpec extends FlatSpec with Matchers {
+class SeveralNodeValidatorRegressionSpec extends AnyFlatSpec with Matchers {
   import CronField._
 
   "A series of nodes" should "not be valid if any of them implies the other" in {

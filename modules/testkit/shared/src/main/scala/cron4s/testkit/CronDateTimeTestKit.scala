@@ -22,7 +22,7 @@ import cats.implicits._
 import cron4s.Cron
 import cron4s.datetime.IsDateTime
 
-import org.scalatest.FlatSpec
+import org.scalatest.flatspec.AnyFlatSpec
 
 /**
   * Created by alonsodomin on 29/08/2016.
@@ -47,7 +47,7 @@ object CronDateTimeTestKit {
 
 }
 
-abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show] extends FlatSpec {
+abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show] extends AnyFlatSpec {
   this: DateTimeTestKitBase[DateTime] =>
   import CronDateTimeTestKit._
 
@@ -102,8 +102,8 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show] extends FlatS
     val test = Eq[DateTime]
 
     for ((expr, initial, stepSize, expected) <- samples) {
-      val Some(returnedDateTime) = expr.step(initial, stepSize)
-      val matchesExpected        = test.eqv(returnedDateTime, expected)
+      val returnedDateTime = expr.step(initial, stepSize).get
+      val matchesExpected  = test.eqv(returnedDateTime, expected)
 
       assert(
         matchesExpected,

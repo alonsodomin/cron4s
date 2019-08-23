@@ -1,6 +1,0 @@
-{
-	"private": true,
-	"devDependencies": {
-		"jsdom": "^15.1.1"
-	}
-}
