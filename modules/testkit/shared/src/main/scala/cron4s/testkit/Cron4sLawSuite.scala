@@ -16,16 +16,20 @@
 
 package cron4s.testkit
 
-import cats.tests._
-import catalysts.Platform
+import cats.instances.AllInstances
+import cats.syntax.AllSyntax
+
+import cron4s.platform.Platform
+
+import org.typelevel.discipline.scalatest.Discipline
 
 import org.scalactic.anyvals.{PosInt, PosZInt}
-import org.scalatest.PropSpec
+import org.scalatest.Matchers
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.propspec.AnyPropSpec
 import org.scalatest.prop.Configuration
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-/**
-  * Created by alonsodomin on 31/01/2017.
-  */
 trait TestSettings extends Configuration {
 
   lazy val defaultPropertyCheckConfig: PropertyCheckConfiguration =
@@ -42,18 +46,27 @@ trait TestSettings extends Configuration {
 
 }
 
-trait Cron4sLawSuite extends CatsSuite
+trait Cron4sLawSuite
+    extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyChecks with Discipline
+    with TestSettings with AllInstances with AllSyntax {
 
-trait SlowCron4sLawSuite extends SlowCatsSuite
+  implicit override val generatorDrivenConfig: PropertyCheckConfiguration =
+    defaultPropertyCheckConfig
+}
 
-abstract class Cron4sPropSpec extends PropSpec with TestSettings {
+trait SlowCron4sLawSuite extends Cron4sLawSuite {
+  implicit override val generatorDrivenConfig: PropertyCheckConfiguration =
+    slowPropertyCheckConfig
+}
+
+abstract class Cron4sPropSpec extends AnyPropSpec with TestSettings {
 
   override implicit val generatorDrivenConfig: PropertyCheckConfiguration =
     defaultPropertyCheckConfig
 
 }
 
-abstract class SlowCron4sPropSpec extends PropSpec with TestSettings {
+abstract class SlowCron4sPropSpec extends AnyPropSpec with TestSettings {
 
   override implicit val generatorDrivenConfig: PropertyCheckConfiguration =
     slowPropertyCheckConfig

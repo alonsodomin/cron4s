@@ -28,7 +28,7 @@ import shapeless._
   */
 final class FieldNode[F <: CronField](private[cron4s] val raw: RawFieldNode[F]) extends AnyVal {
 
-  override def toString: String = raw.fold(ops.show)
+  override def toString: String = raw.fold(_root_.cron4s.expr.ops.show)
 
 }
 
@@ -43,10 +43,10 @@ object FieldNode {
   implicit def fieldNodeInstance[F <: CronField]: FieldExpr[FieldNode, F] =
     new FieldExpr[FieldNode, F] {
       def matches(node: FieldNode[F]): Predicate[Int] =
-        node.raw.fold(ops.matches)
+        node.raw.fold(_root_.cron4s.expr.ops.matches)
 
       def range(node: FieldNode[F]): IndexedSeq[Int] =
-        node.raw.fold(ops.range)
+        node.raw.fold(_root_.cron4s.expr.ops.range)
 
       def implies[EE[_ <: CronField]](
           node: FieldNode[F]
@@ -60,7 +60,7 @@ object FieldNode {
       }
 
       def unit(node: FieldNode[F]): CronUnit[F] =
-        node.raw.fold(ops.unit)
+        node.raw.fold(_root_.cron4s.expr.ops.unit)
     }
 
 }
@@ -68,7 +68,7 @@ object FieldNode {
 final class FieldNodeWithAny[F <: CronField](private[cron4s] val raw: RawFieldNodeWithAny[F])
     extends AnyVal {
 
-  override def toString: String = raw.fold(ops.show)
+  override def toString: String = raw.fold(_root_.cron4s.expr.ops.show)
 
 }
 
@@ -83,10 +83,10 @@ object FieldNodeWithAny {
   implicit def fieldNodeWithAnyInstance[F <: CronField]: FieldExpr[FieldNodeWithAny, F] =
     new FieldExpr[FieldNodeWithAny, F] {
       def matches(node: FieldNodeWithAny[F]): Predicate[Int] =
-        node.raw.fold(ops.matches)
+        node.raw.fold(_root_.cron4s.expr.ops.matches)
 
       def range(node: FieldNodeWithAny[F]): IndexedSeq[Int] =
-        node.raw.fold(ops.range)
+        node.raw.fold(_root_.cron4s.expr.ops.range)
 
       def implies[EE[_ <: CronField]](
           node: FieldNodeWithAny[F]
@@ -96,7 +96,7 @@ object FieldNodeWithAny {
       }
 
       def unit(node: FieldNodeWithAny[F]): CronUnit[F] =
-        node.raw.fold(ops.unit)
+        node.raw.fold(_root_.cron4s.expr.ops.unit)
     }
 
 }
@@ -104,7 +104,7 @@ object FieldNodeWithAny {
 final class EnumerableNode[F <: CronField](private[cron4s] val raw: RawEnumerableNode[F])
     extends AnyVal {
 
-  override def toString: String = raw.fold(ops.show)
+  override def toString: String = raw.fold(_root_.cron4s.expr.ops.show)
 
 }
 
@@ -119,7 +119,7 @@ object EnumerableNode {
   implicit def enumerableNodeInstance[F <: CronField]: FieldExpr[EnumerableNode, F] =
     new FieldExpr[EnumerableNode, F] {
       def matches(node: EnumerableNode[F]): Predicate[Int] =
-        node.raw.fold(ops.matches)
+        node.raw.fold(_root_.cron4s.expr.ops.matches)
 
       def implies[EE[_ <: CronField]](
           node: EnumerableNode[F]
@@ -131,10 +131,10 @@ object EnumerableNode {
         }
 
       def range(node: EnumerableNode[F]): IndexedSeq[Int] =
-        node.raw.fold(ops.range)
+        node.raw.fold(_root_.cron4s.expr.ops.range)
 
       def unit(node: EnumerableNode[F]): CronUnit[F] =
-        node.raw.fold(ops.unit)
+        node.raw.fold(_root_.cron4s.expr.ops.unit)
     }
 
 }
@@ -142,7 +142,7 @@ object EnumerableNode {
 final class DivisibleNode[F <: CronField](private[cron4s] val raw: RawDivisibleNode[F])
     extends AnyVal {
 
-  override def toString: String = raw.fold(ops.show)
+  override def toString: String = raw.fold(_root_.cron4s.expr.ops.show)
 
 }
 
@@ -157,7 +157,7 @@ object DivisibleNode {
   implicit def divisibleNodeInstance[F <: CronField]: FieldExpr[DivisibleNode, F] =
     new FieldExpr[DivisibleNode, F] {
       def matches(node: DivisibleNode[F]): Predicate[Int] =
-        node.raw.fold(ops.matches)
+        node.raw.fold(_root_.cron4s.expr.ops.matches)
 
       def implies[EE[_ <: CronField]](
           node: DivisibleNode[F]
@@ -169,10 +169,10 @@ object DivisibleNode {
       }
 
       def range(node: DivisibleNode[F]): IndexedSeq[Int] =
-        node.raw.fold(ops.range)
+        node.raw.fold(_root_.cron4s.expr.ops.range)
 
       def unit(node: DivisibleNode[F]): CronUnit[F] =
-        node.raw.fold(ops.unit)
+        node.raw.fold(_root_.cron4s.expr.ops.unit)
     }
 
 }

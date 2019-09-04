@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package cron4s.syntax
+package cron4s
 
-/**
-  * Created by alonsodomin on 25/08/2016.
-  */
-private[cron4s] trait AllSyntax
-    extends DateTimeCronSyntax with DateTimeNodeSyntax with FieldExprSyntax with PredicateSyntax
-
-object all extends AllSyntax
+private[cron4s] object platform {
+  object Platform {
+    val isJvm = false
+    val isJs  = true
+  }
+}

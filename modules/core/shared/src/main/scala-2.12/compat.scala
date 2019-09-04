@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-package cron4s.syntax
+package scala.collection
 
-/**
-  * Created by alonsodomin on 25/08/2016.
-  */
-private[cron4s] trait AllSyntax
-    extends DateTimeCronSyntax with DateTimeNodeSyntax with FieldExprSyntax with PredicateSyntax
-
-object all extends AllSyntax
+package object immutable {
+  type LazyList[A] = Stream[A]
+  val LazyList = Stream
+}

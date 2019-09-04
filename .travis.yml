@@ -6,10 +6,11 @@ dist: trusty
 
 jdk:
   - oraclejdk8
+  - openjdk11
 
 scala:
-  - 2.11.12
-  - 2.12.8
+  - 2.13.0
+  - 2.12.9
 
 cache:
   directories:
@@ -41,13 +42,10 @@ install:
 script:
   - scripts/travis-build.sh
 
-after_success:
-  - bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)
-
 stages:
   - name: test
   - name: release
-    if: (branch = master AND type = push) OR (tag IS present)
+    if: (branch = master AND type = push) OR (tag IS present) AND NOT fork
 
 jobs:
   include:
@@ -57,3 +55,4 @@ jobs:
 branches:
   only:
     - master
+    - /v.+/

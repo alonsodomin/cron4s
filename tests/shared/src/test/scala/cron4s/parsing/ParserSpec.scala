@@ -24,13 +24,13 @@ import cron4s.testkit.Cron4sPropSpec
 import cron4s.testkit.gen.{ArbitraryEachNode, NodeGenerators}
 
 import org.scalacheck.Gen
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 /**
   * Created by alonsodomin on 13/01/2016.
   */
 class ParserSpec
-    extends Cron4sPropSpec with GeneratorDrivenPropertyChecks with InputGenerators
+    extends Cron4sPropSpec with ScalaCheckDrivenPropertyChecks with InputGenerators
     with NodeGenerators with ArbitraryEachNode {
 
   import CronField._

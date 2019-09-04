@@ -94,7 +94,9 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       case Minute     => setter(_.setUTCMinutes(value))
       case Hour       => setter(_.setUTCHours(value))
       case DayOfMonth => setter(_.setUTCDate(value))
-      case Month      => setter(_.setUTCMonth(value - 1))
+      case Month =>
+        val monthToSet = value - 1
+        setter(_.setUTCMonth(monthToSet))
       case DayOfWeek =>
         val dayToSet = (value % DaysInWeek) + 1
         val offset   = dayToSet - dateTime.getUTCDay()

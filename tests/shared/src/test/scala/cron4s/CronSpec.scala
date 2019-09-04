@@ -19,8 +19,10 @@ package cron4s
 import cats.data.NonEmptyList
 
 import cron4s.expr._
+import cron4s.syntax.all._
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.Matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.util.{Failure, Success}
 
@@ -46,7 +48,7 @@ object CronSpec {
 
 }
 
-class CronSpec extends FlatSpec with Matchers {
+class CronSpec extends AnyFlatSpec with Matchers {
   import CronSpec._
 
   "Cron" should "not parse an expression with all *" in {
@@ -87,12 +89,6 @@ class CronSpec extends FlatSpec with Matchers {
     Cron.tryParse(exprStr) shouldBe Success(ValidExpr)
 
     Cron.unsafeParse(exprStr) shouldBe ValidExpr
-  }
-
-  it should "compile a valid expression" in {
-    val expr = cron"17-30,5 * 12 * * ?"
-
-    expr shouldBe ValidExpr
   }
 
 }

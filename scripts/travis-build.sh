@@ -2,15 +2,19 @@
 
 set -e
 
-sbt_cmd="sbt ++$TRAVIS_SCALA_VERSION"
+sbt_cmd="sbt ++$TRAVIS_SCALA_VERSION!"
 
 # Build & Test
 
 build_js="$sbt_cmd validateJS"
 build_jvm="$sbt_cmd validateJVM"
-build_docs="$sbt_cmd makeMicrosite"
+build_docs="$sbt_cmd docs/makeMicrosite"
 
-build_all="$build_js && $build_jvm && $build_docs"
+build_all="$build_js && $build_jvm"
+
+if [[ "$TRAVIS_SCALA_VERSION" != "2.13.0" ]]; then
+    build_all="$build_all && $build_docs"
+fi
 
 eval $build_all
 

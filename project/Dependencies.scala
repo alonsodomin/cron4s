@@ -5,51 +5,34 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType, _}
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSVersion
+import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.npmDependencies
 
 object Dependencies {
 
   object version {
-    val atto       = "0.6.5"
-    val cats       = "1.6.1"
+    val atto       = "0.7.0-RC1"
+    val cats       = "2.0.0-RC1"
     val shapeless  = "2.3.3"
-    val scalacheck = "1.14.0"
-    val scalatest  = "3.0.5"
-    val discipline = "0.11.1"
-    val catalysts  = "0.8"
-    val decline    = "0.6.2"
-    val circe      = "0.11.1"
+    val discipline = "1.0.0-M1"
+    val decline    = "0.7.0-M0"
+    val circe      = "0.12.0-RC1"
     val parserc    = "1.1.2"
-    val doobie     = "0.7.0"
-    val contextual = "1.1.0"
+    val doobie     = "0.8.0-RC1"
 
     val jodaTime    = "2.10.3"
     val jodaConvert = "2.2.1"
 
-    val momentjs      = "0.8.1"
+    val momentjs      = "0.10.0"
+    val momenttz      = "0.5.25"
     val scalaJavaTime = "2.0.0-RC3"
   }
 
-  val macroParadise = compilerPlugin(
-    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
-  )
-  val kindProjector = compilerPlugin(
-    "org.typelevel" % "kind-projector" % "0.10.3" cross CrossVersion.binary
-  )
-  lazy val compilerPlugins = Seq(macroParadise, kindProjector)
-
   lazy val core = Def.settings(
-    libraryDependencies ++= compilerPlugins ++ Seq(
+    libraryDependencies ++= Seq(
       "com.chuusai"            %%% "shapeless"                % version.shapeless,
       "org.typelevel"          %%% "cats-core"                % version.cats,
-      "com.propensive"         %%% "contextual"               % version.contextual,      
-    ),
-    libraryDependencies += {
-      val parsecVersion = CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, major)) if major < 12 => "1.1.1"
-        case _ => version.parserc
-      }
-      "org.scala-lang.modules" %%% "scala-parser-combinators" % parsecVersion
-    }
+      "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parserc
+    )
   )
 
   lazy val coreJS = Def.settings {
@@ -61,20 +44,15 @@ object Dependencies {
   }
 
   lazy val testkit = Def.settings {
-    libraryDependencies ++= compilerPlugins ++ Seq(
-      "org.typelevel"  %%% "cats-laws"          % version.cats,
-      "org.typelevel"  %%% "cats-testkit"       % version.cats,
-      "org.typelevel"  %%% "discipline"         % version.discipline,
-      "org.typelevel"  %%% "catalysts-platform" % version.catalysts,
-      "org.scalacheck" %%% "scalacheck"         % version.scalacheck,
-      "org.scalatest"  %%% "scalatest"          % version.scalatest
+    libraryDependencies ++= Seq(
+      "org.typelevel" %%% "cats-laws"            % version.cats,
+      "org.typelevel" %%% "cats-testkit"         % version.cats,
+      "org.typelevel" %%% "discipline-scalatest" % version.discipline
     )
   }
 
   lazy val tests = Def.settings {
-    libraryDependencies ++= compilerPlugins ++ Seq(
-      "org.scalatest" %%% "scalatest" % version.scalatest % Test
-    )
+    libraryDependencies ++= Seq()
   }
 
   lazy val testsJS = Def.settings {
@@ -90,7 +68,7 @@ object Dependencies {
 
   lazy val bench = Def.settings {
     libraryDependencies ++= Seq(
-      "org.tpolecat" %% "atto-core" % version.atto,
+      "org.tpolecat" %% "atto-core" % version.atto
     )
   }
 
@@ -103,8 +81,13 @@ object Dependencies {
     )
   }
 
+  private val momentjsNpmDeps = Seq(
+    "moment-timezone" -> version.momenttz
+  )
   lazy val momentjs = Def.settings(
     libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % version.momentjs,
+    npmDependencies in Compile ++= momentjsNpmDeps,
+    npmDependencies in Test ++= momentjsNpmDeps
   )
 
   lazy val circe = Def.settings(
