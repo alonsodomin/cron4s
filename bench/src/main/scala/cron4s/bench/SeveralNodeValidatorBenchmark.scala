@@ -65,11 +65,11 @@ class SeveralNodeValidatorBenchmark {
   val _constImpliedByRange = SeveralNode(
     ConstNode[Second](23),
     BetweenNode[Second](ConstNode(10), ConstNode(15)),
-    BetweenNode[Second](ConstNode(20), ConstNode(30)),
+    BetweenNode[Second](ConstNode(20), ConstNode(30))
   )
   val _overlappingRanges = SeveralNode(
     BetweenNode[Second](ConstNode(17), ConstNode(30)),
-    BetweenNode[Second](ConstNode(25), ConstNode(50)),
+    BetweenNode[Second](ConstNode(25), ConstNode(50))
   )
 
   @Benchmark

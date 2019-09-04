@@ -43,7 +43,7 @@ val commonSettings = Def.settings(
     "-language:postfixOps",
     "-language:implicitConversions",
     "-language:higherKinds",
-    "-language:existentials",
+    "-language:existentials"
   ),
   scalacOptions ++= {
     CrossVersion.partialVersion(scalaVersion.value) match {
@@ -63,7 +63,7 @@ val commonSettings = Def.settings(
   initialCommands in console := consoleImports.value
     .map(s => s"import $s")
     .mkString("\n"),
-  scalafmtOnCompile := true,
+  scalafmtOnCompile := true
 ) ++ CompilerPlugins.All
 
 lazy val commonJvmSettings = Seq(
@@ -145,7 +145,7 @@ def mimaSettings(module: String): Seq[Setting[_]] =
         ProblemFilters
           .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.enumerable2Field"),
         ProblemFilters
-          .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.divisible2Field"),
+          .exclude[ReversedMissingMethodProblem]("cron4s.expr.NodeConversions.divisible2Field")
       ),
       "0.5.0" -> Seq(
         ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.expected"),
@@ -270,7 +270,7 @@ def mimaSettings(module: String): Seq[Setting[_]] =
         ProblemFilters
           .exclude[DirectMissingMethodProblem]("cron4s.testkit.DateTimeCronTestKit.check"),
         ProblemFilters
-          .exclude[IncompatibleMethTypeProblem]("cron4s.testkit.DateTimeCronTestKit.check"),
+          .exclude[IncompatibleMethTypeProblem]("cron4s.testkit.DateTimeCronTestKit.check")
       )
     )
   )
@@ -330,7 +330,7 @@ lazy val docSettings = Seq(
     "-sourcepath",
     baseDirectory.in(LocalRootProject).value.getAbsolutePath,
     "-diagrams"
-  ),
+  )
 )
 
 // =================================================================================
@@ -432,7 +432,7 @@ lazy val bench = (project in file("bench"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
     name := "bench",
-    moduleName := "cron4s-bench",
+    moduleName := "cron4s-bench"
   )
   .settings(commonSettings)
   .settings(noPublishSettings)
@@ -466,7 +466,7 @@ lazy val momentjs = (project in file("modules/momentjs"))
   .settings(publishSettings)
   .settings(
     name := "momentjs",
-    moduleName := "cron4s-momentjs",
+    moduleName := "cron4s-momentjs"
   )
   .settings(Dependencies.momentjs)
   .dependsOn(core.js, testkit.js % Test)
@@ -531,7 +531,7 @@ addCommandAlias(
     "coverage",
     "testJVM",
     "coverageReport",
-    "coverageAggregate",
+    "coverageAggregate"
     //"binCompatCheck"
   ).mkString(";")
 )

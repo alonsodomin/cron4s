@@ -31,7 +31,7 @@ object Dependencies {
     libraryDependencies ++= Seq(
       "com.chuusai"            %%% "shapeless"                % version.shapeless,
       "org.typelevel"          %%% "cats-core"                % version.cats,
-      "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parserc,
+      "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parserc
     )
   )
 
