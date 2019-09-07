@@ -318,7 +318,7 @@ lazy val docSettings = Seq(
     )
   ),
   micrositeCompilingDocsTool := WithMdoc,
-  mdocIn                     := sourceDirectory.value / "main" / "tut",
+  mdocIn                     := sourceDirectory.value / "main" / "mdoc",
   fork in Test := true,
   fork in (ScalaUnidoc, unidoc) := true,
   docsMappingsAPIDir := "api",
