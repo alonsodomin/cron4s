@@ -41,8 +41,8 @@ Then make your browser point to <http://127.0.0.1:4000/cron4s> and that's all.
 
 ```yaml
 scala:
-  - 2.11.12
-  - 2.12.8
+  - 2.12.9
+  - 2.13.0
 ```
 
 Supporting additional Scala versions is a matter of adding a new version to that section and then make the codebase compile against it whilst preserving backwards compatibility. The easiest way to check that compatibility is triggering a cross build with SBT:
