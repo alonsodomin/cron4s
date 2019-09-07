@@ -307,18 +307,18 @@ lazy val docSettings = Seq(
   micrositeGithubToken := sys.env.get("GITHUB_MICROSITES_TOKEN"),
   micrositeConfigYaml := ConfigYml(
     yamlCustomProperties = Map(
-      "cron4sVersion" -> version.value,
-      "circeVersion" -> Dependencies.version.circe,
-      "doobieVersion" -> Dependencies.version.doobie,
-      "declineVersion" -> Dependencies.version.decline,
-      "jodaTimeVersion" -> Dependencies.version.jodaTime,
+      "cron4sVersion"      -> version.value,
+      "circeVersion"       -> Dependencies.version.circe,
+      "doobieVersion"      -> Dependencies.version.doobie,
+      "declineVersion"     -> Dependencies.version.decline,
+      "jodaTimeVersion"    -> Dependencies.version.jodaTime,
       "jodaConvertVersion" -> Dependencies.version.jodaConvert,
-      "momenttzVersion" -> Dependencies.version.momenttz,
-      "momentjsVersion" -> Dependencies.version.momentjs
+      "momenttzVersion"    -> Dependencies.version.momenttz,
+      "momentjsVersion"    -> Dependencies.version.momentjs
     )
   ),
   micrositeCompilingDocsTool := WithMdoc,
-  mdocIn                     := sourceDirectory.value / "main" / "mdoc",
+  mdocIn := sourceDirectory.value / "main" / "mdoc",
   fork in Test := true,
   fork in (ScalaUnidoc, unidoc) := true,
   docsMappingsAPIDir := "api",
