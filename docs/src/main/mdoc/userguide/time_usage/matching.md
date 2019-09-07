@@ -10,7 +10,7 @@ To be able to show examples of how to use **cron4s**, we are going to base them 
 new Java Time API added to Java 8 as is one of the bests (if not the best) date & time
 libraries available. To use the built-in support for it we will need the following imports:
 
-```tut:silent
+```scala mdoc:silent
 import java.time._
 import cron4s._
 import cron4s.lib.javatime._
@@ -18,13 +18,13 @@ import cron4s.lib.javatime._
 
 Now let's parse a new expression:
 
-```tut
+```scala mdoc
 val cron = Cron.unsafeParse("10-35 2,4,6 * * * ?")
 ```
 
 Now we can perform 2 types of matches against any object that extends `java.time.Temporal`:
 
-```tut
+```scala mdoc
 val now = LocalDateTime.of(2016, 12, 1, 0, 4, 9)
 
 cron.allOf(now)
@@ -33,7 +33,7 @@ cron.anyOf(now)
 
 As said before, these two operations are also available at the sub-expression level:
 
-```tut
+```scala mdoc
 cron.datePart.allOf(now)
 cron.datePart.anyOf(now)
 cron.timePart.allOf(now)
@@ -51,7 +51,7 @@ it corresponding field.
 We can also test if the fields that compound the expression match separately instead
 of using the whole expression:
 
-```tut
+```scala mdoc
 cron.seconds.matchesIn(now)
 cron.minutes.matchesIn(now)
 ```

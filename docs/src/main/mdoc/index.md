@@ -23,13 +23,13 @@ Idiomatic Cron expression parsing in Scala and ScalaJS.
 To start using **cron4s** in your project just include the library as part of your dependencies:
 
 ```scala
-libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s-core" % "x.y.z"
+libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s-core" % "{{site.cron4sVersion}}"
 ```
 
 Or in ScalaJS:
 
 ```scala
-libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s-core" % "x.y.z"
+libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s-core" % "{{site.cron4sVersion}}"
 ```
 
 **cron4s** is cross compiled for Scala 2.11 and Scala 2.12. Java 8 is required when using it in the JVM. 

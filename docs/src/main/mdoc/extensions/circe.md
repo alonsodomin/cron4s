@@ -8,12 +8,16 @@ The [`circe`](http://circe.io) extension adds the possibility of using `CronExpr
 just add the following to your dependencies:
 
 ```scala
-libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s-circe" % "x.y.z"
+libraryDependencies ++= Seq(
+  "com.github.alonsodomin.cron4s" %% "cron4s-circe" % "{{site.cron4sVersion}}",
+
+  "io.circe" %% "circe-core" % "{{site.circeVersion}}
+)
 ```
 
 And add the correct import:
 
-```tut:silent
+```scala mdoc:silent
 import cron4s._
 import cron4s.circe._
 import io.circe._
@@ -22,7 +26,7 @@ import io.circe.syntax._
 
 This should be enough to be able to encode and decode cron expressions as JSON with Circe:
 
-```tut:book
+```scala mdoc
 val cron = Cron.unsafeParse("10-35 2,4,6 * ? * *")
 
 val jsonCron = cron.asJson

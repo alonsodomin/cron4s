@@ -17,7 +17,12 @@ Support for other libraries is provided via extension modules as follows:
 Integration with Joda Time is possible by including the `cron4s-joda` module among your dependencies:
 
 ```scala
-libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s-joda" % "x.y.z"
+libraryDependencies ++= Seq(
+  "com.github.alonsodomin.cron4s" %% "cron4s-joda" % "{{site.cron4sVersion}}",
+
+  "joda-time" % "joda-time"    % "{{site.jodaTimeVersion}}",
+  "org.joda"  % "joda-convert" % "{{site.jodaConvertVersion}}"
+)
 ```
 
 After that, importing the package `cron4s.lib.joda` should be enough to use your Cron expressions against instances
@@ -30,7 +35,13 @@ After that, importing the package `cron4s.lib.joda` should be enough to use your
 To be able to use Cron4s with MomentJS you need to include the `cron4s-momentjs` module among your dependencies:
 
 ```scala
-libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s-momentjs" % "x.y.z"
+libraryDependencies ++= Seq(
+  "com.github.alonsodomin.cron4s" %%% "cron4s-momentjs" % "{{site.cron4sVersion}}",
+
+  "ru.pavkin" %%% "scala-js-momentjs" % "{{site.momentjsVersion}}"
+)
+
+npmDependencies in Compile += ("moment-timezone" -> "{{site.momenttzVersion}}")
 ```
 
 The relevant integration bridge is at package `cron4s.lib.momentjs`.
