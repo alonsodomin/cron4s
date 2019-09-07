@@ -305,7 +305,21 @@ lazy val docSettings = Seq(
     if (isTravisBuild.value) GitHub4s else GHPagesPlugin
   },
   micrositeGithubToken := sys.env.get("GITHUB_MICROSITES_TOKEN"),
-  fork in tut := true,
+  micrositeConfigYaml := ConfigYml(
+    yamlCustomProperties = Map(
+      "cron4sVersion" -> version.value,
+      "circeVersion" -> Dependencies.version.circe,
+      "doobieVersion" -> Dependencies.version.doobie,
+      "declineVersion" -> Dependencies.version.decline,
+      "jodaTimeVersion" -> Dependencies.version.jodaTime,
+      "jodaConvertVersion" -> Dependencies.version.jodaConvert,
+      "momenttzVersion" -> Dependencies.version.momenttz,
+      "momentjsVersion" -> Dependencies.version.momentjs
+    )
+  ),
+  micrositeCompilingDocsTool := WithMdoc,
+  mdocIn                     := sourceDirectory.value / "main" / "tut",
+  fork in Test := true,
   fork in (ScalaUnidoc, unidoc) := true,
   docsMappingsAPIDir := "api",
   addMappingsToSiteDir(
@@ -369,8 +383,7 @@ lazy val cron4sJVM = (project in file(".jvm"))
 lazy val docs = project
   .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, GhpagesPlugin)
   .settings(
-    moduleName := "cron4s-docs",
-    //crossScalaVersions := Seq("2.12.8")
+    moduleName := "cron4s-docs"
   )
   .settings(commonSettings)
   .settings(noPublishSettings)
@@ -538,3 +551,4 @@ addCommandAlias(
 addCommandAlias("validateJS", "testJS")
 addCommandAlias("rebuild", "clean;validateJS;validateJVM")
 addCommandAlias("compileAll", "clean;test:compile")
+addCommandAlias("fmt", "scalafmt;scalafmtSbt")

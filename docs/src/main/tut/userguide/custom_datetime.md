@@ -21,13 +21,13 @@ of this trait is enough to be able to use your favourite library.
 
 As an example, we are going to implement support for a very dummy version of a _time_ object:
 
-```tut:silent
+```scala mdoc:silent
 case class MyTime(seconds: Int, minutes: Int, hour: Int)
 ```
 
 Now that we have a way of representing time, we need to provide an instance for the `IsDateTime` typeclass:
 
-```tut:silent
+```scala mdoc:silent
 import cron4s._
 import cron4s.datetime._
 
@@ -57,7 +57,7 @@ implicit object MyDateInstance extends IsDateTime[MyTime] {
 
 That should be enough. To be sure that all works we are going to use it with a CRON expression:
 
-```tut
+```scala mdoc
 val cron = Cron.unsafeParse("* 5,15,30 6-12 * * ?")
 val myTime = MyTime(59, 15, 10)
 cron.next(myTime)
@@ -71,13 +71,13 @@ Running a series of expressions in a REPL is not enough to be 100% confident tha
 To start using it, just include it in your dependencies:
 
 ```scala
-libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s-testkit" % "x.y.z" % Test
+libraryDependencies += "com.github.alonsodomin.cron4s" %% "cron4s-testkit" % "{{site.cron4sVersion}}" % Test
 ```
 
 The first thing to to is to provide an implementation of the `cron4s.testkit.DateTimeTestKitBase` trait, this
 is meant to instruct **cron4s** on how to create arbitrary instances of your date time object:
  
-```tut:silent
+```scala mdoc:silent
 import cron4s.testkit.DateTimeTestKitBase
 
 trait MyTimeTestBase extends DateTimeTestKitBase[MyTime] {
@@ -90,7 +90,7 @@ trait MyTimeTestBase extends DateTimeTestKitBase[MyTime] {
 
 Also, to be able to perform assertions, **cron4s** needs an instance of the `cats.Eq` and `cats.Show` type classes:
 
-```tut:silent
+```scala mdoc:silent
 import cats.{Eq, Show}
 
 implicit val myTimeEq: Eq[MyTime] = Eq.fromUniversalEquals[MyTime]
@@ -99,7 +99,7 @@ implicit val myTimeShow: Show[MyTime] = Show.fromToString[MyTime]
 
 Now define a spec for your `IsDateTime` instance (along with your other test sources):
 
-```tut:silent
+```scala mdoc:silent
 import cron4s.testkit.IsDateTimeTestKit
 
 class MyTimeSpec extends IsDateTimeTestKit[MyTime]("MyTime") with MyTimeTestBase
@@ -109,7 +109,7 @@ This will test that your implementation of the `IsDateTime` typeclass abides by 
 recommended to verify that the different CRON expressions work correctly with your date time library. In this case
 we will be defining a class extending from `cron4s.testkit.DateTimeCronTestKit`:
 
-```tut:silent
+```scala mdoc:silent
 import cron4s.testkit.DateTimeCronTestKit
 
 class MyTimeCronSpec extends DateTimeCronTestKit[MyTime] with MyTimeTestBase

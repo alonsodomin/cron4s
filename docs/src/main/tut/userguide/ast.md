@@ -4,7 +4,7 @@ title: "AST"
 section: "userguide"
 ---
 
-```tut:invisible
+```scala mdoc:invisible
 import cron4s._
 ```
 
@@ -13,13 +13,13 @@ import cron4s._
 After successfully parsing a CRON expression, the `CronExpr` resulting type represents the previously
 parsed expression as an AST, in which we can access all the expression fields individually. Let's start by declaring a cron expression:
 
-```tut
+```scala mdoc
 val cron = Cron.unsafeParse("10-35 2,4,6 * ? * *")
 ```
 
 And now with that out of the way, we can access the different components of the AST using the field accessors:
 
-```tut
+```scala mdoc
 cron.seconds
 cron.minutes
 cron.months
@@ -27,7 +27,7 @@ cron.months
 
 We can also take the date or time parts only of the expression using either `timePart` or `datePart`:
 
-```tut
+```scala mdoc
 val time = cron.timePart
 val date = cron.datePart
 ```
@@ -35,7 +35,7 @@ val date = cron.datePart
 And similarly as with the main expression type, we can get individual fields out of the
 date and time sub expressions:
  
-```tut
+```scala mdoc
 time.seconds
 time.minutes
 
@@ -44,21 +44,21 @@ date.daysOfMonth
 
 Or by means of the `field` method in `CronExpr` and passing the cron field type.
    
-```tut
+```scala mdoc
 cron.field[CronField.Minute]
 ```
 
 Some other basic operations at the `CronExpr` level are asking for the list of supported fields of the
 actual value ranges for all the fields in the form of a map:
 
-```tut
+```scala mdoc
 cron.supportedFields
 cron.ranges
 ```
 
 To convert an AST back into the original string expression we simply use the `toString` method:
 
-```tut
+```scala mdoc
 cron.toString
 ```
 
@@ -67,7 +67,7 @@ cron.toString
 All the operations possible on a `CronExpr` are also possible in any of its subexpressions (either time or date) so
 you can use them in exactly the same way. For example:
 
-```tut
+```scala mdoc
 cron.supportedFields
 cron.timePart.supportedFields
 cron.datePart.supportedFields
@@ -77,7 +77,7 @@ cron.datePart.supportedFields
 is part of the sub-expressions gives us a more particular piece of information about the actual expression itself. The
 `field` method is also interesting, it can return the field node expression given a specific field type:
 
-```tut
+```scala mdoc
 cron.field[CronField.DayOfMonth]
 cron.timePart.field[CronField.Hour]
 cron.datePart.field[CronField.DayOfWeek]
@@ -86,7 +86,7 @@ cron.datePart.field[CronField.DayOfWeek]
 It's important to note that when we pass a field type that is not supported by the given expression, we get a compile
  error:
 
-```tut:fail
+```scala mdoc:fail
 cron.timePart.field[CronField.DayOfMonth]
 ```
 
@@ -98,20 +98,20 @@ that all operations possible on a `CronExpr`, are also possible on it's subexpre
 All field nodes have their own type, which is parameterized in the actual field type they operate on. We can
 access that field type definition via the `unit` of field expression:
 
-```tut
+```scala mdoc
 cron.seconds.unit.field
 ```
 
 The expression unit can be used to give us information about what values are valid for that
 specific field:
 
-```tut
+```scala mdoc
 cron.seconds.unit.range
 ```
 
 Which is different than the range of values accepted by the expression at that given field:
 
-```tut
+```scala mdoc
 cron.seconds.range
 ```
 
@@ -119,7 +119,7 @@ We can also obtain a field expression
 
 To obtain the string representation of individual fields we use the same `toString` method:
 
-```tut
+```scala mdoc
 cron.seconds.toString
 cron.field[CronField.Minute].toString
 ```
@@ -127,7 +127,7 @@ cron.field[CronField.Minute].toString
 Other interesting operations are the ones that can be used to test if a given value matches the
 field expression:
 
-```tut
+```scala mdoc
 cron.seconds.matches(5)
 cron.seconds.matches(15)
 cron.minutes.matches(4)
@@ -137,7 +137,7 @@ cron.minutes.matches(5)
 Or to test if a given field expression is implied by another one (that is also parameterized by
 the same field type). To show this, let's work with some simple field expressions:
 
-```tut
+```scala mdoc
 import cron4s.expr._
 
 val eachSecond = EachNode[CronField.Second]
@@ -156,14 +156,14 @@ fixedMinute.impliedBy(minutesRange)
 
 These two operations allways hold the following property (it looks obvious, but it's important):
 
-```tut
+```scala mdoc
 assert(minutesRange.implies(fixedMinute) == fixedMinute.impliedBy(minutesRange))
 ```
 
 It's important to notice that when using either the `implies` or `impliedBy` operation, if the two nodes are not
 parameterized by the same field type, the code won't compile:
  
-```tut:fail
+```scala mdoc:fail
 minutesRange.implies(eachSecond)
 ```
 
