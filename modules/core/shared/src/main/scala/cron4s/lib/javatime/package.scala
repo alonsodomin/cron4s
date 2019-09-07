@@ -36,7 +36,8 @@ package object javatime {
   type LocalDateFields = CronField.DayOfMonth :: CronField.Month :: CronField.DayOfWeek :: HNil
   val LocalDateFields = CronField.DayOfMonth :: CronField.Month :: CronField.DayOfWeek :: HNil
 
-  implicit lazy val javaLocalDateFieldExtractor: CronFieldExtractor.Aux[LocalDate, LocalDateFields] =
+  implicit lazy val javaLocalDateFieldExtractor
+      : CronFieldExtractor.Aux[LocalDate, LocalDateFields] =
     CronFieldExtractor.const(LocalDateFields)
 
   implicit lazy val javaLocalDateEq: Eq[LocalDate] =

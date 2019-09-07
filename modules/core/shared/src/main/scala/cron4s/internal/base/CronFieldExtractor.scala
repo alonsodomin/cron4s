@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017 Antonio Alonso Dominguez
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cron4s
 package internal.base
 
@@ -14,7 +30,7 @@ object CronFieldExtractor extends CronFieldExtractorDerivation {
 
   def apply[A](a: A)(implicit ev: CronFieldExtractor[A]): CronFieldExtractor[A] = ev
 
-  def by[A, B](f : A => B)(implicit extractorB: CronFieldExtractor[B]): CronFieldExtractor[A] =
+  def by[A, B](f: A => B)(implicit extractorB: CronFieldExtractor[B]): CronFieldExtractor[A] =
     new CronFieldExtractor[A] {
       type Out = extractorB.Out
 
@@ -31,7 +47,7 @@ object CronFieldExtractor extends CronFieldExtractorDerivation {
   }
 
   implicit def cronFieldExtractorFromSupportsCronField[A, F <: CronField](
-    implicit supportsA: SupportsCronField[A, F]
+      implicit supportsA: SupportsCronField[A, F]
   ): CronFieldExtractor.Aux[A, F] =
     new CronFieldExtractor[A] {
       type Out = F
@@ -43,9 +59,9 @@ object CronFieldExtractor extends CronFieldExtractorDerivation {
 
 trait CronFieldExtractorDerivation extends CronFieldExtractorDerivation1 {
   implicit def cronFieldExtractorFromProduct[A, L <: HList](
-    implicit
-    G: Generic.Aux[A, L],
-    extractL: CronFieldExtractor[L]
+      implicit
+      G: Generic.Aux[A, L],
+      extractL: CronFieldExtractor[L]
   ): CronFieldExtractor[A] = CronFieldExtractor.by(G.to)
 }
 
@@ -66,24 +82,25 @@ trait CronFieldExtractorDerivation1 extends CronFieldExtractorDerivation0 {
       @inline def extractField(a: F): F = a
     }
 
-  implicit def cronFieldExtractorFromHNil[L <: HNil]: CronFieldExtractor[L] = new CronFieldExtractor[L] {
-    type Out = HNil
+  implicit def cronFieldExtractorFromHNil[L <: HNil]: CronFieldExtractor[L] =
+    new CronFieldExtractor[L] {
+      type Out = HNil
 
-    def extractField(a: L): Out = HNil
-  }
+      def extractField(a: L): Out = HNil
+    }
 
 }
 
 trait CronFieldExtractorDerivation0 {
   implicit def cronFieldExtractorFromHList[H, T <: HList, TF <: HList](
-    implicit
-    extractH: CronFieldExtractor[H],
-    extractT: Lazy[CronFieldExtractor.Aux[T, TF]]
+      implicit
+      extractH: CronFieldExtractor[H],
+      extractT: Lazy[CronFieldExtractor.Aux[T, TF]]
   ): CronFieldExtractor[H :: T] = new CronFieldExtractor[H :: T] {
     type Out = extractH.Out :: TF
 
     def extractField(ht: H :: T): Out =
       extractH.extractField(ht.head) :: extractT.value.extractField(ht.tail)
-  }  
+  }
 
 }

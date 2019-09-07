@@ -148,7 +148,7 @@ object BoundedRange {
       range =>
         Predicate { x =>
           x >= range.begin.value && x <= range.end.value
-      }
+        }
     )
 
   implicit def boundedRangeImplies[F <: CronField, O[_ <: CronField]](

@@ -48,7 +48,7 @@ private[cron4s] object Predicate extends Predicates {
     def apply(a: A): Boolean = f(a)
   }
 
-  implicit val contravariant = new Contravariant[Predicate] {
+  implicit val contravariant: Contravariant[Predicate] = new Contravariant[Predicate] {
 
     def contramap[A, B](fa: Predicate[A])(f: B => A): Predicate[B] =
       Predicate { b =>
