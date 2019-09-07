@@ -340,7 +340,7 @@ lazy val docSettings = Seq(
 lazy val cron4s = (project in file("."))
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .aggregate(cron4sJS, cron4sJVM)
+  .aggregate(cron4sJS, cron4sJVM, docs)
 
 lazy val cron4sJS = (project in file(".js"))
   .settings(
@@ -370,7 +370,7 @@ lazy val docs = project
   .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, GhpagesPlugin)
   .settings(
     moduleName := "cron4s-docs",
-    crossScalaVersions := Seq("2.12.8")
+    //crossScalaVersions := Seq("2.12.8")
   )
   .settings(commonSettings)
   .settings(noPublishSettings)
