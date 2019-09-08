@@ -8,6 +8,7 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7580c36bb6ec4f0888d6ac8213340f4d)](https://www.codacy.com/app/alonso-domin/cron4s?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=alonsodomin/cron4s&amp;utm_campaign=Badge_Grade)
 [![codecov](https://codecov.io/gh/alonsodomin/cron4s/branch/master/graph/badge.svg)](https://codecov.io/gh/alonsodomin/cron4s)
+[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/alonsodomin/cron4s&style=flat)](https://mergify.io)
 
 Idiomatic Cron expression parsing in Scala and ScalaJS.
 
