@@ -11,7 +11,7 @@ object Dependencies {
 
   object version {
     val atto       = "0.7.0-RC2"
-    val cats       = "2.0.0-RC3"
+    val cats       = "2.0.0"
     val shapeless  = "2.3.3"
     val discipline = "1.0.0-M1"
     val decline    = "0.7.0-M0"
