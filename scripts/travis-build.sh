@@ -10,11 +10,7 @@ build_js="$sbt_cmd validateJS"
 build_jvm="$sbt_cmd validateJVM"
 build_docs="$sbt_cmd docs/makeMicrosite"
 
-build_all="$build_js && $build_jvm"
-
-if [[ "$TRAVIS_SCALA_VERSION" != "2.13.0" ]]; then
-    build_all="$build_all && $build_docs"
-fi
+build_all="$build_js && $build_jvm & $build_docs"
 
 eval $build_all
 
