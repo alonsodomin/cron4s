@@ -14,9 +14,9 @@ Version upgrades:
 
 * Scala 2.12.9 / Scala 2.13.0
 * ScalaJS 0.6.28
-* Cats 2.0.0-RC2
+* Cats 2.0.0
 * Decline 0.7.0-M0
-* Circe 0.12.0-RC4
+* Circe 0.12.0
 * ScalaJS MomentJS 0.10.0 / MomentJS 0.5.25
 * Scala Java Time 2.0.0-RC3
 
