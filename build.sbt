@@ -388,7 +388,7 @@ lazy val docs = project
   .settings(commonSettings)
   .settings(noPublishSettings)
   .settings(docSettings)
-  .dependsOn(cron4sJVM)
+  .dependsOn(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm)
 
 // =================================================================================
 // Main modules
@@ -549,6 +549,7 @@ addCommandAlias(
   ).mkString(";")
 )
 addCommandAlias("validateJS", "testJS")
-addCommandAlias("rebuild", "clean;validateJS;validateJVM")
+addCommandAlias("validate", "validateJS;validateJVM;makeMicrosite")
+addCommandAlias("rebuild", "clean;validate")
 addCommandAlias("compileAll", "clean;test:compile")
 addCommandAlias("fmt", "scalafmt;scalafmtSbt")
