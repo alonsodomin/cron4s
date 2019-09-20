@@ -19,7 +19,7 @@ object Dependencies {
     val parserc    = "1.1.2"
     val doobie     = "0.8.2"
 
-    val jodaTime    = "2.10.3"
+    val jodaTime    = "2.10.4"
     val jodaConvert = "2.2.1"
 
     val momentjs      = "0.10.0"
