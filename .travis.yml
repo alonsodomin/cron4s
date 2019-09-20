@@ -44,11 +44,15 @@ script:
 
 stages:
   - name: test
+  - name: docs
   - name: release
     if: (branch = master AND type = push) OR (tag IS present) AND NOT fork
 
 jobs:
   include:
+    - stage: docs
+      script: sbt clean makeMicrosite
+
     - stage: release
       script: scripts/travis-release.sh
 
