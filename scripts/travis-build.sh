@@ -6,12 +6,7 @@ sbt_cmd="sbt ++$TRAVIS_SCALA_VERSION!"
 
 # Build & Test
 
-build_js="$sbt_cmd validateJS"
-build_jvm="$sbt_cmd validateJVM"
-build_docs="$sbt_cmd docs/makeMicrosite"
-
-build_all="$build_js && $build_jvm & $build_docs"
-
+build_all="$sbt_cmd rebuild"
 eval $build_all
 
 # Run Coverage Report

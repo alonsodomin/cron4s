@@ -11,26 +11,32 @@ lazy val consoleImports =
 // Settings
 // =================================================================================
 
+inThisBuild(
+  Seq(
+    name := "cron4s",
+    organization := "com.github.alonsodomin.cron4s",
+    organizationName := "Antonio Alonso Dominguez",
+    description := "CRON expression parser for Scala",
+    startYear := Some(2017),
+    homepage := Some(url("https://github.com/alonsodomin/cron4s")),
+    licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt")),
+    scmInfo := Some(
+      ScmInfo(
+        url("https://github.com/alonsodomin/cron4s"),
+        "scm:git:git@github.com:alonsodomin/cron4s.git"
+      )
+    ),
+    developers += Developer(
+      "alonsodomin",
+      "A. Alonso Dominguez",
+      "",
+      url("https://github.com/alonsodomin")
+    ),
+    parallelExecution := false
+  )
+)
+
 val commonSettings = Def.settings(
-  name := "cron4s",
-  organization := "com.github.alonsodomin.cron4s",
-  organizationName := "Antonio Alonso Dominguez",
-  description := "CRON expression parser for Scala",
-  startYear := Some(2017),
-  homepage := Some(url("https://github.com/alonsodomin/cron4s")),
-  licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt")),
-  scmInfo := Some(
-    ScmInfo(
-      url("https://github.com/alonsodomin/cron4s"),
-      "scm:git:git@github.com:alonsodomin/cron4s.git"
-    )
-  ),
-  developers += Developer(
-    "alonsodomin",
-    "A. Alonso Dominguez",
-    "",
-    url("https://github.com/alonsodomin")
-  ),
   scalacOptions ++= Seq(
     "-encoding",
     "UTF-8",
@@ -388,7 +394,7 @@ lazy val docs = project
   .settings(commonSettings)
   .settings(noPublishSettings)
   .settings(docSettings)
-  .dependsOn(cron4sJVM)
+  .dependsOn(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm)
 
 // =================================================================================
 // Main modules
@@ -535,6 +541,8 @@ lazy val doobie = (project in file("modules/doobie"))
 // Utility command aliases
 // =================================================================================
 
+addCommandAlias("fmt", "scalafmtSbt;scalafmt;test:scalafmt")
+addCommandAlias("checkfmt", "scalafmtSbtCheck;scalafmtCheck;test:scalafmtCheck")
 addCommandAlias("testJVM", "cron4sJVM/test")
 addCommandAlias("testJS", "cron4sJS/test")
 addCommandAlias("binCompatCheck", "cron4sJVM/mimaReportBinaryIssues")
@@ -549,6 +557,5 @@ addCommandAlias(
   ).mkString(";")
 )
 addCommandAlias("validateJS", "testJS")
-addCommandAlias("rebuild", "clean;validateJS;validateJVM")
-addCommandAlias("compileAll", "clean;test:compile")
-addCommandAlias("fmt", "scalafmt;scalafmtSbt")
+addCommandAlias("validate", "checkfmt;validateJS;validateJVM")
+addCommandAlias("rebuild", "clean;validate")
