@@ -1,0 +1,19 @@
+cron4sVersion: 0.6.0-M3
+jodaConvertVersion: 2.2.1
+name: Cron4s
+declineVersion: 0.7.0-M0
+jodaTimeVersion: 2.10.4
+baseurl: /cron4s
+description: Scala CRON Parser
+highlighter: rouge
+docs: true
+collections:
+  tut:
+    output: true
+momentjsVersion: 0.10.0
+doobieVersion: 0.8.2
+momenttzVersion: 0.5.25
+version: 0.6.0-M3
+circeVersion: 0.12.1
+org: Antonio Alonso Dominguez
+markdown: kramdown
