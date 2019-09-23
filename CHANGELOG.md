@@ -13,7 +13,7 @@ New Features:
 Version upgrades:
 
 * Scala 2.12.9 / Scala 2.13.0
-* ScalaJS 0.6.28
+* ScalaJS 0.6.29
 * Cats 2.0.0
 * Decline 0.7.0-M0
 * Circe 0.12.0
