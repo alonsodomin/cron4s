@@ -1,6 +1,6 @@
 # Cron4s Change Log
 
-## Unreleased changes
+## 0.6.0
 
 New Features:
 
