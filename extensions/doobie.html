@@ -1,0 +1,47 @@
+<html><head><title>Cron4s: Doobie</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Antonio Alonso Dominguez" /><meta name="description" content="Scala CRON Parser" /><meta name="og:image" content="/cron4s/img/poster.png" /><meta name="image" property="og:image" content="/cron4s/img/poster.png" /><meta name="og:title" content="Cron4s: Doobie" /><meta name="title" property="og:title" content="Cron4s: Doobie" /><meta name="og:site_name" content="Cron4s" /><meta name="og:url" content="https://alonsodomin.github.io/cron4s" /><meta name="og:type" content="website" /><meta name="og:description" content="Scala CRON Parser" /><link rel="icon" type="image/png" href="/cron4s/img/favicon.png" /><meta name="twitter:title" content="Cron4s: Doobie" /><meta name="twitter:image" content="/cron4s/img/poster.png" /><meta name="twitter:description" content="Scala CRON Parser" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/cron4s/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/cron4s/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/cron4s/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/cron4s/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/cron4s/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/cron4s/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/cron4s/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/cron4s/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/cron4s/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/cron4s/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/cron4s/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/cron4s/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/cron4s/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/cron4s/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/cron4s/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/cron4s/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/cron4s/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/cron4s/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/cron4s/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/cron4s/img/favicon310x150.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/cron4s/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/cron4s/css/style.css" /><link rel="stylesheet" href="/cron4s/css/palette.css" /><link rel="stylesheet" href="/cron4s/css/codemirror.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/cron4s/" class="brand"><div class="brand-wrapper"><span>Cron4s</span></div></a></li>      <li><a href="/cron4s/extensions/index.html" class="">Extensions</a></li> <li><a href="/cron4s/extensions/circe.html" class="">Circe</a></li> <li><a href="/cron4s/extensions/decline.html" class="">Decline</a></li> <li><a href="/cron4s/extensions/doobie.html" class=" active ">Doobie</a></li>     </ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/alonsodomin/cron4s"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/alonsodomin/cron4s"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li><li><a href="#" onclick="shareSiteTwitter('Cron4s Scala CRON Parser');"><i class="fa fa-twitter"></i></a></li><li><a href="#" onclick="shareSiteFacebook('Cron4s Scala CRON Parser');"><i class="fa fa-facebook"></i></a></li><li><a href="#" onclick="shareSiteGoogle();"><i class="fa fa-google-plus"></i></a></li></ul></div></div></div></div><div id="content" data-github-owner="alonsodomin" data-github-repo="cron4s"><div class="content-wrapper"><section><p>The <a href="https://tpolecat.github.io/doobie/"><code class="highlighter-rouge">doobie</code></a> module adds support for reading and writing <code class="highlighter-rouge">CronExpr</code> to a database via JDBC. Since JDBC is a JVM-only concept this module can not be used with non-JVM targets. To use it, add the corresponding dependency to your project in SBT:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
+  <span class="s">"com.github.alonsodomin.cron4s"</span> <span class="o">%%</span> <span class="s">"cron4s-doobie"</span> <span class="o">%</span> <span class="s">"0.6.0"</span><span class="o">,</span>
+
+  <span class="s">"org.tpolecat"</span> <span class="o">%%</span> <span class="s">"doobie-core"</span> <span class="o">%</span> <span class="s">"0.8.2"</span>
+<span class="o">)</span>
+</code></pre>
+</div>
+
+<p>And now you will need some imports:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">import</span> <span class="nn">cron4s.CronExpr</span>
+<span class="k">import</span> <span class="nn">cron4s.doobie._</span>
+<span class="k">import</span> <span class="nn">doobie._</span>
+<span class="k">import</span> <span class="nn">doobie.implicits._</span>
+</code></pre>
+</div>
+
+<p>Now define a case class that represents your database data (and which should contain a cron expression):</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">MeetingId</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">AnyVal</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">RecurringMeeting</span><span class="o">(</span><span class="n">subject</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">description</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">frequency</span><span class="k">:</span> <span class="kt">CronExpr</span><span class="o">)</span>
+</code></pre>
+</div>
+
+<p>With this, you now are capable of writing read and write queries for that given data structure:</p>
+
+<div class="language-scala highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="n">loadAllMeetings</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="n">sql</span><span class="s">"select subject, description, frequency from meetings"</span>
+    <span class="o">.</span><span class="n">query</span><span class="o">[</span><span class="kt">RecurringMeeting</span><span class="o">]</span>
+    <span class="o">.</span><span class="n">to</span><span class="o">[</span><span class="kt">List</span><span class="o">]</span>
+<span class="o">}</span>
+
+<span class="k">def</span> <span class="n">updateMeetingFrequency</span><span class="o">(</span><span class="n">meetingId</span><span class="k">:</span> <span class="kt">MeetingId</span><span class="o">,</span> <span class="n">freq</span><span class="k">:</span> <span class="kt">CronExpr</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="n">sql</span><span class="s">"update meetings set frequency = $freq where meetingId = ${meetingId.value}"</span>
+    <span class="o">.</span><span class="n">update</span>
+    <span class="o">.</span><span class="n">run</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>For more information, go to <a href="https://tpolecat.github.io/doobie/docs/01-Introduction.html">Doobie’s User Guide</a>.</p>
+</section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/cron4s/highlight/highlight.pack.js"></script><script>hljs.configure({languages:['scala','java','bash']});
+hljs.initHighlighting();
+              </script><script>((window.gitter = {}).chat = {}).options = {
+room: 'alonsodomin/cron4s'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script><script src="/cron4s/js/main.js"></script></body></html>
