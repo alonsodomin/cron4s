@@ -23,7 +23,7 @@ import _root_.doobie._
 import _root_.doobie.implicits._
 import _root_.doobie.util.invariant._
 
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.concurrent.ExecutionContext

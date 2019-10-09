@@ -18,7 +18,7 @@ package cron4s.lib.joda
 
 import cron4s._
 import org.joda.time.{LocalDateTime, Seconds}
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
 
 /**
