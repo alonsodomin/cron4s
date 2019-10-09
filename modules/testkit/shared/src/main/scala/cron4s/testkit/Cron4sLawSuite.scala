@@ -24,7 +24,7 @@ import cron4s.platform.Platform
 import org.typelevel.discipline.scalatest.Discipline
 
 import org.scalactic.anyvals.{PosInt, PosZInt}
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.propspec.AnyPropSpec
 import org.scalatest.prop.Configuration

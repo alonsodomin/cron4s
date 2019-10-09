@@ -17,7 +17,7 @@
 package cron4s.validation
 
 import cron4s.testkit.gen.NodeGenerators
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.propspec.AnyPropSpecLike
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 

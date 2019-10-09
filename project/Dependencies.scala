@@ -13,7 +13,7 @@ object Dependencies {
     val atto       = "0.7.1"
     val cats       = "2.0.0"
     val shapeless  = "2.3.3"
-    val discipline = "1.0.0-M1"
+    val discipline = "1.0.0-RC1"
     val decline    = "1.0.0"
     val circe      = "0.12.2"
     val parserc    = "1.1.2"
