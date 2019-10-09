@@ -21,7 +21,7 @@ import cats.data.NonEmptyList
 import cron4s.expr._
 import cron4s.syntax.all._
 
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.util.{Failure, Success}

@@ -21,7 +21,7 @@ import java.time.temporal.{ChronoField, ChronoUnit}
 
 import cron4s._
 
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
 
 /**
