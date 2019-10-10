@@ -16,7 +16,7 @@
 
 package cron4s.lib.js
 
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
 
 import cron4s._

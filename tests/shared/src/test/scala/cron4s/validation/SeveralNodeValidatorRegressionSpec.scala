@@ -21,7 +21,7 @@ import cats.syntax.show._
 import cron4s._
 import cron4s.expr._
 
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
 
 /**
