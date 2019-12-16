@@ -28,24 +28,19 @@ import cron4s.syntax.field._
   * Created by alonsodomin on 18/12/2016.
   */
 sealed trait NodeValidator[A] {
-
   def validate(node: A): List[InvalidField]
-
 }
 
 object NodeValidator extends NodeValidatorInstances {
-
   @inline def apply[A](implicit validator: NodeValidator[A]): NodeValidator[A] =
     validator
 
   def alwaysValid[A]: NodeValidator[A] = new NodeValidator[A] {
     def validate(node: A): List[InvalidField] = List.empty
   }
-
 }
 
 private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidatorInstances {
-
   implicit def eachValidator[F <: CronField]: NodeValidator[EachNode[F]] =
     NodeValidator.alwaysValid[EachNode[F]]
 
@@ -56,7 +51,6 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       implicit
       ev: Enumerated[CronUnit[F]]
   ): NodeValidator[ConstNode[F]] = new NodeValidator[ConstNode[F]] {
-
     def validate(node: ConstNode[F]): List[InvalidField] =
       if (node.value < node.unit.min || node.value > node.unit.max) {
         List(
@@ -66,7 +60,6 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
           )
         )
       } else List.empty
-
   }
 
   implicit def betweenValidator[F <: CronField](
@@ -153,11 +146,9 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       } else baseErrors
     }
   }
-
 }
 
 private[validation] trait LowPriorityNodeValidatorInstances {
-
   implicit def enumerableNodeValidator[F <: CronField](
       implicit
       ev: Enumerated[CronUnit[F]]
@@ -190,5 +181,4 @@ private[validation] trait LowPriorityNodeValidatorInstances {
       def validate(node: FieldNodeWithAny[F]): List[InvalidField] =
         node.raw.fold(_root_.cron4s.validation.ops.validate)
     }
-
 }

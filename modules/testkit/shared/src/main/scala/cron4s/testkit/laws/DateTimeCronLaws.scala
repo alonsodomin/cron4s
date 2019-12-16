@@ -68,11 +68,9 @@ trait DateTimeCronLaws[E, DateTime] {
 
   def supportedFieldsEquality(e: E): IsEq[List[CronField]] =
     supportedFields[E] <-> e.supportedFields
-
 }
 
 object DateTimeCronLaws {
-
   def apply[E, DateTime](
       implicit
       dt0: IsDateTime[DateTime],
@@ -82,5 +80,4 @@ object DateTimeCronLaws {
       implicit val DT = dt0
       implicit val TC = TC0
     }
-
 }

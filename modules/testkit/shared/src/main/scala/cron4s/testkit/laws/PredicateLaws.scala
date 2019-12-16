@@ -27,7 +27,6 @@ import cron4s.syntax.predicate._
   * Created by alonsodomin on 10/04/2017.
   */
 object PredicateLaws {
-
   def negation[A](self: Predicate[A], a: A): IsEq[Boolean] =
     (!self).apply(a) <-> !self.apply(a)
 
@@ -45,5 +44,4 @@ object PredicateLaws {
 
   def allMatch[F[_], A](preds: F[Predicate[A]], value: A)(implicit F: Foldable[F]): IsEq[Boolean] =
     allOf(preds).apply(value) <-> preds.forall(_(value))
-
 }

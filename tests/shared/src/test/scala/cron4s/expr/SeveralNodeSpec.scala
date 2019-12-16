@@ -25,12 +25,10 @@ import cron4s.testkit.gen.ArbitrarySeveralNode
   * Created by alonsodomin on 01/08/2016.
   */
 class SeveralNodeSpec extends SlowCron4sLawSuite with ArbitrarySeveralNode {
-
   checkAll("Several[Second]", FieldExprTests[SeveralNode, Second].expr)
   checkAll("Several[Minute]", FieldExprTests[SeveralNode, Minute].expr)
   checkAll("Several[Hour]", FieldExprTests[SeveralNode, Hour].expr)
   checkAll("Several[DayOfMonth]", FieldExprTests[SeveralNode, DayOfMonth].expr)
   checkAll("Several[Month]", FieldExprTests[SeveralNode, Month].expr)
   checkAll("Several[DayOfWeek]", FieldExprTests[SeveralNode, DayOfWeek].expr)
-
 }

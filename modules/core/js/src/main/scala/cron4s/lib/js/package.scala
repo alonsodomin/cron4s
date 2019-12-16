@@ -26,7 +26,6 @@ import scala.scalajs.js.Date
   * Created by alonsodomin on 11/12/2016.
   */
 package object js {
-
   implicit val jsDateEq: Eq[Date] = Eq.instance { (lhs, rhs) =>
     lhs.getUTCFullYear() == rhs.getUTCFullYear() &&
     lhs.getUTCMonth() == rhs.getUTCMonth() &&
@@ -41,5 +40,4 @@ package object js {
     Show.show(_.toUTCString())
 
   implicit val jsDateInstance: IsDateTime[Date] = new JsDateInstance
-
 }

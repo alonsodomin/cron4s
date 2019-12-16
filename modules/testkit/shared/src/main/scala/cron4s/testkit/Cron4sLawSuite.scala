@@ -31,7 +31,6 @@ import org.scalatest.prop.Configuration
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 trait TestSettings extends Configuration {
-
   lazy val defaultPropertyCheckConfig: PropertyCheckConfiguration =
     PropertyCheckConfiguration(
       minSuccessful = if (Platform.isJvm) PosInt(50) else PosInt(5),
@@ -43,13 +42,11 @@ trait TestSettings extends Configuration {
   lazy val slowPropertyCheckConfig: PropertyCheckConfiguration =
     if (Platform.isJvm) defaultPropertyCheckConfig
     else PropertyCheckConfiguration(minSuccessful = 1, sizeRange = 1)
-
 }
 
 trait Cron4sLawSuite
     extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyChecks with Discipline
     with TestSettings with AllInstances with AllSyntax {
-
   implicit override val generatorDrivenConfig: PropertyCheckConfiguration =
     defaultPropertyCheckConfig
 }
@@ -60,15 +57,11 @@ trait SlowCron4sLawSuite extends Cron4sLawSuite {
 }
 
 abstract class Cron4sPropSpec extends AnyPropSpec with TestSettings {
-
   override implicit val generatorDrivenConfig: PropertyCheckConfiguration =
     defaultPropertyCheckConfig
-
 }
 
 abstract class SlowCron4sPropSpec extends AnyPropSpec with TestSettings {
-
   override implicit val generatorDrivenConfig: PropertyCheckConfiguration =
     slowPropertyCheckConfig
-
 }

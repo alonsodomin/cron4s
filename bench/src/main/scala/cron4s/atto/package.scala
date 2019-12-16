@@ -172,5 +172,4 @@ package object atto {
         val position = (e.length() - rest.length() + 1)
         Left(ParseFailed(msg, rest, position))
     }
-
 }

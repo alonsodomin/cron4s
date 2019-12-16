@@ -24,7 +24,6 @@ import cron4s.testkit.DateTimeTestKitBase
   * Created by alonsodomin on 29/08/2016.
   */
 trait JavaLocalDateTestBase extends DateTimeTestKitBase[LocalDate] {
-
   def createDateTime(
       seconds: Int,
       minutes: Int,
@@ -37,7 +36,6 @@ trait JavaLocalDateTestBase extends DateTimeTestKitBase[LocalDate] {
 }
 
 trait JavaLocalTimeTestBase extends DateTimeTestKitBase[LocalTime] {
-
   def createDateTime(
       seconds: Int,
       minutes: Int,
@@ -50,7 +48,6 @@ trait JavaLocalTimeTestBase extends DateTimeTestKitBase[LocalTime] {
 }
 
 trait JavaLocalDateTimeTestBase extends DateTimeTestKitBase[LocalDateTime] {
-
   def createDateTime(
       seconds: Int,
       minutes: Int,
@@ -60,11 +57,9 @@ trait JavaLocalDateTimeTestBase extends DateTimeTestKitBase[LocalDateTime] {
       year: Int
   ): LocalDateTime =
     LocalDateTime.of(year, month, dayOfMonth, hours, minutes, seconds)
-
 }
 
 trait JavaZonedDateTimeTestBase extends DateTimeTestKitBase[ZonedDateTime] {
-
   def createDateTime(
       seconds: Int,
       minutes: Int,
@@ -77,7 +72,6 @@ trait JavaZonedDateTimeTestBase extends DateTimeTestKitBase[ZonedDateTime] {
 }
 
 trait JavaOffsetDateTimeTestBase extends DateTimeTestKitBase[OffsetDateTime] {
-
   def createDateTime(
       seconds: Int,
       minutes: Int,
@@ -87,5 +81,4 @@ trait JavaOffsetDateTimeTestBase extends DateTimeTestKitBase[OffsetDateTime] {
       year: Int
   ): OffsetDateTime =
     OffsetDateTime.of(year, month, dayOfMonth, hours, minutes, seconds, 0, ZoneOffset.UTC)
-
 }

@@ -94,5 +94,4 @@ class SeveralNodeValidatorRegressionSpec extends AnyFlatSpec with Matchers {
       InvalidField(Second, s"Value ${node2.end.show} is out of bounds for field: Second")
     )
   }
-
 }

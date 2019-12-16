@@ -27,7 +27,6 @@ import org.scalacheck.Arbitrary
   * Created by alonsodomin on 10/02/2017.
   */
 class AnyNodeValidatorSpec extends Cron4sPropSpec with ValidatorPropSpec with ArbitratyAnyNode {
-
   import CronField._
 
   private[this] def check[F <: CronField](
@@ -47,5 +46,4 @@ class AnyNodeValidatorSpec extends Cron4sPropSpec with ValidatorPropSpec with Ar
   check[DayOfMonth]
   check[Month]
   check[DayOfWeek]
-
 }

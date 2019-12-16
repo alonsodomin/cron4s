@@ -27,7 +27,6 @@ import shapeless._
 import scala.annotation.tailrec
 
 private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
-
   private type ResetPrevFn = DateTime => Option[DateTime]
   private type StepST      = Option[(ResetPrevFn, DateTime, Step)]
 
@@ -36,7 +35,6 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   private[this] def stepNode[N[_ <: CronField], F <: CronField](stepState: StepST, node: N[F])(
       implicit expr: FieldExpr[N, F]
   ): StepST = {
-
     def attemptSet(
         dt: DateTime,
         step: Step,
@@ -146,5 +144,4 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
 
     go(initial(from), 0).map(_._2)
   }
-
 }

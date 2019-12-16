@@ -25,7 +25,6 @@ final case class Step private[cron4s] (amount: Int, direction: Direction) {
   require(amount >= 0, "Step amount must be a positive integer")
 
   def reverse: Step = copy(direction = direction.reverse)
-
 }
 
 object Step {
@@ -37,7 +36,6 @@ sealed abstract class Direction(private[cron4s] val sign: Int) {
   def reverse: Direction
 }
 object Direction {
-
   def ofSign(step: Int): Direction =
     if (step >= 0) Forward
     else Backwards
@@ -51,7 +49,6 @@ object Direction {
 }
 
 trait Enumerated[A] {
-
   def min(a: A): Int = range(a).min
   def max(a: A): Int = range(a).max
 
@@ -109,7 +106,5 @@ trait Enumerated[A] {
 }
 
 object Enumerated {
-
   @inline def apply[A](implicit ev: Enumerated[A]): Enumerated[A] = ev
-
 }

@@ -53,5 +53,4 @@ trait ArbitraryCronFieldValues {
     Arbitrary(cronFieldValueGen(Months))
   implicit lazy val arbitraryDayOfWeekValue: Arbitrary[CronFieldValue[DayOfWeek]] =
     Arbitrary(cronFieldValueGen(DaysOfWeek))
-
 }

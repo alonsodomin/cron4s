@@ -23,7 +23,6 @@ import cron4s.testkit._
 import cron4s.testkit.gen.CronGenerators
 
 class CronExprArgumentSpec extends SlowCron4sLawSuite with CronGenerators {
-
   val argument: Argument[CronExpr] = Argument[CronExpr]
 
   test("default metavar says is a cron expression") {
@@ -35,5 +34,4 @@ class CronExprArgumentSpec extends SlowCron4sLawSuite with CronGenerators {
       argument.read(expr.show) == expr.validNel[String]
     }
   }
-
 }

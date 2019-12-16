@@ -32,7 +32,6 @@ import org.openjdk.jmh.annotations._
   */
 @State(Scope.Benchmark)
 class NodeMatcherBenchmark {
-
   final val ValueToMatch = 30
 
   val eachNode  = EachNode[CronField.Minute]
@@ -74,5 +73,4 @@ class NodeMatcherBenchmark {
   @Benchmark
   def matchEveryEachNode(): Boolean =
     everyEachNode.matches(ValueToMatch)
-
 }
