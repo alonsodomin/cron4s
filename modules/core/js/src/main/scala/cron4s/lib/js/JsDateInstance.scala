@@ -110,5 +110,4 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
     if (assignmentSucceeded(modifiedDate)) Right(modifiedDate)
     else Left(InvalidFieldValue(field, value))
   }
-
 }

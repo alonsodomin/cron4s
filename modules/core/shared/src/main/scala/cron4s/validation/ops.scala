@@ -25,7 +25,6 @@ import shapeless._
   * Created by alonsodomin on 03/02/2017.
   */
 private[validation] object ops {
-
   object validate extends Poly1 {
     implicit def caseEach[F <: CronField](
         implicit
@@ -67,5 +66,4 @@ private[validation] object ops {
         validator: NodeValidator[FieldNodeWithAny[F]]
     ) = at[FieldNodeWithAny[F]](validator.validate)
   }
-
 }

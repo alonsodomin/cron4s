@@ -34,7 +34,6 @@ sealed trait FieldSelector[A, F <: CronField] {
   protected implicit def hlistSelect: Lazy[Selector[Raw, Out[F]]]
 
   def selectFrom(expr: A): Out[F]
-
 }
 
 object FieldSelector {
@@ -152,5 +151,4 @@ object FieldSelector {
     def selectFrom(expr: DateCronExpr): FieldNodeWithAny[F] =
       hlistSelect.value(expr.raw)
   }
-
 }

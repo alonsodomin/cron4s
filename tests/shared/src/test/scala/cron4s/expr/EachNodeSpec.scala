@@ -33,5 +33,4 @@ class EachNodeSpec extends Cron4sLawSuite with ArbitraryEachNode {
   checkAll("Each[DayOfMonth]", FieldExprTests[EachNode, DayOfMonth].expr)
   checkAll("Each[Month]", FieldExprTests[EachNode, Month].expr)
   checkAll("Each[DayOfWeek]", FieldExprTests[EachNode, DayOfWeek].expr)
-
 }

@@ -42,11 +42,9 @@ trait DateTimeNodeLaws[E[_ <: CronField], F <: CronField, DateTime] {
 
   def backwards(e: E[F], from: DateTime): IsEq[Option[DateTime]] =
     e.prevIn(from) <-> e.stepIn(from, -1)
-
 }
 
 object DateTimeNodeLaws {
-
   def apply[E[_ <: CronField], F <: CronField, DateTime](
       implicit
       dt0: IsDateTime[DateTime],
@@ -58,5 +56,4 @@ object DateTimeNodeLaws {
       implicit val expr = expr0
       implicit val TC   = TC0
     }
-
 }

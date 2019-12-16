@@ -114,7 +114,6 @@ lazy val publishSettings = Seq(
               .exists(child => child.label == "groupId" && child.text == "org.scoverage") =>
           Nil
         case _ => Seq(node)
-
       }
     }).transform(node).head
   }

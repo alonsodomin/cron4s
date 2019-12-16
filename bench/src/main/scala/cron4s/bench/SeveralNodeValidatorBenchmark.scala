@@ -107,5 +107,4 @@ class SeveralNodeValidatorBenchmark {
   @Benchmark
   def overlappingRanges(): List[InvalidField] =
     NodeValidator[SeveralNode[Second]].validate(_overlappingRanges)
-
 }

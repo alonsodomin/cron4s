@@ -24,7 +24,6 @@ import scala.scalajs.js.Date
   * Created by alonsodomin on 02/09/2016.
   */
 trait JSTestBase extends DateTimeTestKitBase[Date] {
-
   protected def createDateTime(
       seconds: Int,
       minutes: Int,
@@ -34,5 +33,4 @@ trait JSTestBase extends DateTimeTestKitBase[Date] {
       year: Int
   ): Date =
     new Date(Date.UTC(year, month - 1, dayOfMonth, hours, minutes, seconds, ms = 0))
-
 }

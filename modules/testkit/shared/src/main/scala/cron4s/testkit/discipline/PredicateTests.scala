@@ -32,7 +32,6 @@ import org.typelevel.discipline.Laws
   * Created by alonsodomin on 10/04/2017.
   */
 object PredicateTests extends Laws {
-
   def predicate[F[_]: Foldable, A](
       implicit
       arbPred: Arbitrary[Predicate[A]],
@@ -49,5 +48,4 @@ object PredicateTests extends Laws {
       "someMatch"   -> forAll(PredicateLaws.someMatch[F, A] _),
       "allMatch"    -> forAll(PredicateLaws.allMatch[F, A] _)
     )
-
 }

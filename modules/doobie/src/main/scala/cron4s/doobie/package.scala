@@ -20,7 +20,6 @@ import _root_.doobie.{Meta, Read, Write}
 import _root_.doobie.util.invariant.SecondaryValidationFailed
 
 package object doobie {
-
   implicit val cronExprMeta: Meta[CronExpr] =
     Meta[String].imap(parseOrException)(_.toString)
 
@@ -35,5 +34,4 @@ package object doobie {
       case Right(expr) => expr
       case Left(err)   => throw new SecondaryValidationFailed[CronExpr](err.getMessage)
     }
-
 }

@@ -25,7 +25,6 @@ import cats.{Eq, Show}
   */
 sealed trait CronField extends Serializable
 object CronField extends CronFieldInstances {
-
   sealed trait Second extends CronField
   case object Second  extends Second
 
@@ -46,13 +45,10 @@ object CronField extends CronFieldInstances {
 
   final val All: List[CronField] =
     List(Second, Minute, Hour, DayOfMonth, Month, DayOfWeek)
-
 }
 
 private[cron4s] trait CronFieldInstances {
-
   implicit val cronFieldEq: Eq[CronField] = Eq.fromUniversalEquals[CronField]
 
   implicit val cronFieldShow: Show[CronField] = Show.fromToString
-
 }

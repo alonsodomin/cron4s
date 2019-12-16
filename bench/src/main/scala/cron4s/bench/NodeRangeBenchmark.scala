@@ -95,5 +95,4 @@ class NodeRangeBenchmark {
 
   @Benchmark
   def everySeveralBetweenNodeRange() = everySeveralBetweenNode.range
-
 }

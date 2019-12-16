@@ -88,5 +88,4 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
         .leftMap(_ => InvalidFieldValue(field, value))
     }
   }
-
 }

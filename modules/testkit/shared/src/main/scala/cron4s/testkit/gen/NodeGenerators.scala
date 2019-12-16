@@ -26,7 +26,6 @@ import org.scalacheck._
   * Created by alonsodomin on 28/08/2016.
   */
 trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
-
   private[this] def filterImpliedElems[F <: CronField](
       xs: List[EnumerableNode[F]]
   ): List[EnumerableNode[F]] =
@@ -185,5 +184,4 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
         else every2FieldWithAny(x)
       }
     )
-
 }

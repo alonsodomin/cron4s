@@ -26,16 +26,13 @@ final case class DateCronExpr(
     months: MonthsNode,
     daysOfWeek: DaysOfWeekNode
 ) {
-
   private[cron4s] lazy val raw: RawDateCronExpr = Generic[DateCronExpr].to(this)
 
   override lazy val toString: String =
     raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
-
 }
 
 object DateCronExpr {
-
   implicit val dateCronEq: Eq[DateCronExpr] = Eq.instance { (lhs, rhs) =>
     lhs.daysOfMonth === rhs.daysOfMonth &&
     lhs.months === rhs.months &&
@@ -44,7 +41,6 @@ object DateCronExpr {
 
   implicit val dateCronShow: Show[DateCronExpr] =
     Show.fromToString[DateCronExpr]
-
 }
 
 final case class TimeCronExpr(
@@ -52,16 +48,13 @@ final case class TimeCronExpr(
     minutes: MinutesNode,
     hours: HoursNode
 ) {
-
   private[cron4s] lazy val raw: RawTimeCronExpr = Generic[TimeCronExpr].to(this)
 
   override lazy val toString: String =
     raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
-
 }
 
 object TimeCronExpr {
-
   implicit val timeCronEq: Eq[TimeCronExpr] = Eq.instance { (lhs, rhs) =>
     lhs.seconds === rhs.seconds &&
     lhs.minutes === rhs.minutes &&
@@ -70,5 +63,4 @@ object TimeCronExpr {
 
   implicit val timeCronShow: Show[TimeCronExpr] =
     Show.fromToString[TimeCronExpr]
-
 }

@@ -86,5 +86,4 @@ class DoobieSpec extends AnyFlatSpec with Matchers {
       sql"select '0- 0 30 * * ?'".query[CronExpr].unique.transact(xa).unsafeRunSync()
     }
   }
-
 }

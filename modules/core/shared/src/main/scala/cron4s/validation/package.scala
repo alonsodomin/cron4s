@@ -22,7 +22,6 @@ import cats.data.NonEmptyList
   * Created by alonsodomin on 30/08/2016.
   */
 package object validation {
-
   def validateCron(expr: CronExpr): Either[InvalidCron, CronExpr] = {
     val dayFieldError = validateDayFields(expr)
     val fieldErrors   = expr.raw.map(ops.validate).toList.flatten
@@ -55,5 +54,4 @@ package object validation {
         )
       )
   }
-
 }

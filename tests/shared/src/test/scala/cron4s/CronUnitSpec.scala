@@ -29,5 +29,4 @@ class CronUnitSpec extends Cron4sLawSuite with ArbitraryCronUnits {
   checkAll("CronUnit[DayOfMonth]", EnumeratedTests[CronUnit[DayOfMonth]].enumerated)
   checkAll("CronUnit[Month]", EnumeratedTests[CronUnit[Month]].enumerated)
   checkAll("CronUnit[DayOfWeek]", EnumeratedTests[CronUnit[DayOfWeek]].enumerated)
-
 }

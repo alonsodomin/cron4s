@@ -22,7 +22,6 @@ import shapeless._
   * Created by alonsodomin on 04/01/2016.
   */
 package object expr {
-
   private[expr] type RawFieldNode[F <: CronField] =
     EachNode[F] :+: ConstNode[F] :+: BetweenNode[F] :+: SeveralNode[F] :+:
       EveryNode[F] :+: CNil
@@ -50,5 +49,4 @@ package object expr {
 
   private[cron4s] type RawCronExpr =
     SecondsNode :: MinutesNode :: HoursNode :: DaysOfMonthNode :: MonthsNode :: DaysOfWeekNode :: HNil
-
 }

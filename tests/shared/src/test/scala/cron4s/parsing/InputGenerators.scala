@@ -119,5 +119,4 @@ trait InputGenerators {
   } yield (s"$start-$end", (start, end))
   val namedDaysOfWeekSeqGen: Gen[(String, List[Either[String, (String, String)]])] =
     sequencedGen(namedDaysOfWeekGen, namedDaysOfWeekRangeGen)
-
 }

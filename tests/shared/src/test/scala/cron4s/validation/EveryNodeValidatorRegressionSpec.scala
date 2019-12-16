@@ -50,5 +50,4 @@ class EveryNodeValidatorRegressionSpec extends AnyFlatSpec with Matchers {
     val returnedErrors = NodeValidator[EveryNode[Second]].validate(everyNode)
     returnedErrors shouldBe List(expectedError)
   }
-
 }
