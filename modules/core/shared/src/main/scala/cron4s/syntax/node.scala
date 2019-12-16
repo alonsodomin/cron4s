@@ -23,7 +23,6 @@ private[syntax] class DateTimeNodeOps[E[_ <: CronField], F <: CronField](
     self: E[F],
     tc: DateTimeNode[E, F]
 ) {
-
   def matchesIn[DateTime](dt: DateTime)(implicit DT: IsDateTime[DateTime]): Boolean =
     tc.matchesIn(self, DT)(dt)
 
@@ -37,16 +36,13 @@ private[syntax] class DateTimeNodeOps[E[_ <: CronField], F <: CronField](
       implicit DT: IsDateTime[DateTime]
   ): Option[DateTime] =
     tc.stepIn(self, DT)(dateTime, step)
-
 }
 
 private[syntax] trait DateTimeNodeSyntax {
-
   implicit def toDateTimeNodeOps[E[_ <: CronField], F <: CronField, DateTime](
       target: E[F]
   )(implicit tc0: DateTimeNode[E, F]): DateTimeNodeOps[E, F] =
     new DateTimeNodeOps[E, F](target, tc0)
-
 }
 
 object node extends DateTimeNodeSyntax

@@ -109,11 +109,9 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
   protected def getField(dateTime: DT, field: DateTimeFieldType): Option[Int]
 
   protected def setField(dateTime: DT, field: CronField, value: Int): Either[DateTimeError, DT]
-
 }
 
 private[joda] final class JodaDateTimeInstance extends JodaInstance[DateTime] {
-
   override protected def isSupported(dateTime: DateTime, field: DateTimeFieldType): Boolean =
     dateTime.isSupported(field)
 
@@ -141,22 +139,18 @@ private[joda] final class JodaDateTimeInstance extends JodaInstance[DateTime] {
       else newDate
     } else UnsupportedField(field).asLeft
   }
-
 }
 
 private[joda] abstract class JodaLocalBaseInstance[DT <: BaseLocal] extends JodaInstance[DT] {
-
   override protected def isSupported(dateTime: DT, field: DateTimeFieldType): Boolean =
     dateTime.isSupported(field)
 
   override protected def getField(dateTime: DT, field: DateTimeFieldType): Option[Int] =
     if (dateTime.isSupported(field)) Some(dateTime.get(field))
     else None
-
 }
 
 private[joda] final class JodaLocalTimeInstance extends JodaLocalBaseInstance[LocalTime] {
-
   override protected def plusPeriod(
       dateTime: LocalTime,
       period: ReadablePeriod
@@ -180,11 +174,9 @@ private[joda] final class JodaLocalTimeInstance extends JodaLocalBaseInstance[Lo
       else newDate
     } else UnsupportedField(field).asLeft
   }
-
 }
 
 private[joda] final class JodaLocalDateInstance extends JodaLocalBaseInstance[LocalDate] {
-
   override protected def plusPeriod(
       dateTime: LocalDate,
       period: ReadablePeriod
@@ -204,11 +196,9 @@ private[joda] final class JodaLocalDateInstance extends JodaLocalBaseInstance[Lo
         .leftMap(_ => InvalidFieldValue(field, value))
     } else UnsupportedField(field).asLeft
   }
-
 }
 
 private[joda] final class JodaLocalDateTimeInstance extends JodaLocalBaseInstance[LocalDateTime] {
-
   override protected def plusPeriod(
       dateTime: LocalDateTime,
       period: ReadablePeriod
@@ -232,5 +222,4 @@ private[joda] final class JodaLocalDateTimeInstance extends JodaLocalBaseInstanc
       else newDate
     } else UnsupportedField(field).asLeft
   }
-
 }

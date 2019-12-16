@@ -32,7 +32,6 @@ import shapeless._
 private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime])(
     implicit M: MonoidK[Predicate]
 ) {
-
   object asPredicate extends Poly1 {
     import CronField._
     import cats.syntax.either._
@@ -66,5 +65,4 @@ private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime
 
   def run(cron: AnyCron): Predicate[DateTime] =
     asOf(cron.fold(fromRaw))
-
 }

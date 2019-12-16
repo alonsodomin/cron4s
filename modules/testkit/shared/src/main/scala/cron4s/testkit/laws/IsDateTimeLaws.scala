@@ -59,11 +59,9 @@ trait IsDateTimeLaws[DateTime] {
 
       check.fold(Prop.exception(_), _ ?= fieldValue.value)
     } else Prop.proved
-
 }
 
 object IsDateTimeLaws {
-
   def apply[DateTime](
       implicit
       dtEv: IsDateTime[DateTime],
@@ -73,5 +71,4 @@ object IsDateTimeLaws {
       implicit val eq: Eq[DateTime]         = eqEv
       implicit val DT: IsDateTime[DateTime] = dtEv
     }
-
 }

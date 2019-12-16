@@ -27,7 +27,6 @@ import scala.scalajs.js.Date
   * Created by alonsodomin on 25/02/2017.
   */
 class JSDateCronRegressionSpec extends AnyFlatSpec with Matchers {
-
   "Cron" should "not advance to the next day" in {
     val from = new Date("2017-02-18T16:39:42.541")
 
@@ -45,5 +44,4 @@ class JSDateCronRegressionSpec extends AnyFlatSpec with Matchers {
 
     next.getMilliseconds() shouldBe 0
   }
-
 }

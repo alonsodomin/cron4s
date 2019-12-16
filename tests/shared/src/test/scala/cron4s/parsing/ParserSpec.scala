@@ -32,7 +32,6 @@ import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 class ParserSpec
     extends Cron4sPropSpec with ScalaCheckDrivenPropertyChecks with InputGenerators
     with NodeGenerators with ArbitraryEachNode {
-
   import CronField._
   import CronUnit._
   import CronParser._
@@ -321,5 +320,4 @@ class ParserSpec
         }
     }
   }
-
 }

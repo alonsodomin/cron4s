@@ -24,7 +24,5 @@ import io.circe.testing.{CodecTests, ArbitraryInstances => CirceArbitraryInstanc
 
 class CronExprCodecSpec
     extends SlowCron4sLawSuite with CronGenerators with CirceArbitraryInstances {
-
   checkAll("Codec[CronExpr]", CodecTests[CronExpr].codec)
-
 }

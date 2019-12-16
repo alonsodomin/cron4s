@@ -26,7 +26,6 @@ import org.joda.time.{DateTime, LocalDate, LocalDateTime, LocalTime}
   * Created by alonsodomin on 11/12/2016.
   */
 package object joda {
-
   implicit val jodaDateTimeEq: Eq[DateTime] = Eq.fromUniversalEquals[DateTime]
   implicit val jodaLocalDateEq: Eq[LocalDate] =
     Eq.fromUniversalEquals[LocalDate]
@@ -48,5 +47,4 @@ package object joda {
     new JodaLocalTimeInstance
   implicit val jodaLocalDateTimeInstance: IsDateTime[LocalDateTime] =
     new JodaLocalDateTimeInstance
-
 }

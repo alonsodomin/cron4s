@@ -27,13 +27,10 @@ import shapeless._
   * Created by alonsodomin on 23/01/2017.
   */
 final class FieldNode[F <: CronField](private[cron4s] val raw: RawFieldNode[F]) extends AnyVal {
-
   override def toString: String = raw.fold(_root_.cron4s.expr.ops.show)
-
 }
 
 object FieldNode {
-
   implicit def fieldNodeEq[F <: CronField]: Eq[FieldNode[F]] =
     Eq.fromUniversalEquals
 
@@ -62,18 +59,14 @@ object FieldNode {
       def unit(node: FieldNode[F]): CronUnit[F] =
         node.raw.fold(_root_.cron4s.expr.ops.unit)
     }
-
 }
 
 final class FieldNodeWithAny[F <: CronField](private[cron4s] val raw: RawFieldNodeWithAny[F])
     extends AnyVal {
-
   override def toString: String = raw.fold(_root_.cron4s.expr.ops.show)
-
 }
 
 object FieldNodeWithAny {
-
   implicit def fieldNodeWithAnyEq[F <: CronField]: Eq[FieldNodeWithAny[F]] =
     Eq.fromUniversalEquals
 
@@ -98,18 +91,14 @@ object FieldNodeWithAny {
       def unit(node: FieldNodeWithAny[F]): CronUnit[F] =
         node.raw.fold(_root_.cron4s.expr.ops.unit)
     }
-
 }
 
 final class EnumerableNode[F <: CronField](private[cron4s] val raw: RawEnumerableNode[F])
     extends AnyVal {
-
   override def toString: String = raw.fold(_root_.cron4s.expr.ops.show)
-
 }
 
 object EnumerableNode {
-
   implicit def enumerableNodeEq[F <: CronField]: Eq[EnumerableNode[F]] =
     Eq.fromUniversalEquals
 
@@ -136,18 +125,14 @@ object EnumerableNode {
       def unit(node: EnumerableNode[F]): CronUnit[F] =
         node.raw.fold(_root_.cron4s.expr.ops.unit)
     }
-
 }
 
 final class DivisibleNode[F <: CronField](private[cron4s] val raw: RawDivisibleNode[F])
     extends AnyVal {
-
   override def toString: String = raw.fold(_root_.cron4s.expr.ops.show)
-
 }
 
 object DivisibleNode {
-
   implicit def divisibleNodeEq[F <: CronField]: Eq[DivisibleNode[F]] =
     Eq.fromUniversalEquals
 
@@ -174,5 +159,4 @@ object DivisibleNode {
       def unit(node: DivisibleNode[F]): CronUnit[F] =
         node.raw.fold(_root_.cron4s.expr.ops.unit)
     }
-
 }

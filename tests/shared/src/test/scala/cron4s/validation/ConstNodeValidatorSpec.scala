@@ -25,7 +25,6 @@ import cron4s.testkit.Cron4sPropSpec
   * Created by alonsodomin on 29/12/2016.
   */
 class ConstNodeValidatorSpec extends Cron4sPropSpec with ValidatorPropSpec {
-
   import CronField._
 
   private[this] def check[F <: CronField](
@@ -56,5 +55,4 @@ class ConstNodeValidatorSpec extends Cron4sPropSpec with ValidatorPropSpec {
   check[DayOfMonth]
   check[Month]
   check[DayOfWeek]
-
 }

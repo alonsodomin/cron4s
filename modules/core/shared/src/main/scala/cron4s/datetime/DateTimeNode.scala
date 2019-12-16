@@ -78,11 +78,9 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
       adjusted <- DT.set(dateTime, expr.unit.field, newValue).toOption
     } yield adjusted
   }
-
 }
 
 object DateTimeNode {
-
   @inline def apply[E[_ <: CronField], F <: CronField](
       implicit ev: DateTimeNode[E, F]
   ): DateTimeNode[E, F] = ev
@@ -93,5 +91,4 @@ object DateTimeNode {
     new DateTimeNode[E, F] {
       implicit val E = E0
     }
-
 }

@@ -44,7 +44,6 @@ trait FieldExprLaws[E[_ <: CronField], F <: CronField] extends EnumeratedLaws[E[
       EE: FieldExpr[EE, F]
   ): IsEq[Boolean] =
     (left.impliedBy(right) && right.impliedBy(left)) <-> (left.range == right.range)
-
 }
 
 object FieldExprLaws {

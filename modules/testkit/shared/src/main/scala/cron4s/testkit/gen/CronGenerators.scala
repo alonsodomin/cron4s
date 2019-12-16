@@ -27,7 +27,6 @@ import org.scalacheck._
   * Created by alonsodomin on 29/01/2017.
   */
 trait CronGenerators extends NodeGenerators {
-
   private[this] def chooseDaysOfWeek(
       daysOfMonth: DaysOfMonthNode
   ): Gen[DaysOfWeekNode] =
@@ -63,5 +62,4 @@ trait CronGenerators extends NodeGenerators {
     Arbitrary(timeCronGen)
   implicit lazy val arbitraryDateCron: Arbitrary[DateCronExpr] =
     Arbitrary(dateCronGen)
-
 }

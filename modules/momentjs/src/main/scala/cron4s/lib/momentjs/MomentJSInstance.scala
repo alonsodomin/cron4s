@@ -113,5 +113,4 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
     if (assignmentSucceeded(modifiedDate)) Right(modifiedDate)
     else Left(InvalidFieldValue(field, value))
   }
-
 }

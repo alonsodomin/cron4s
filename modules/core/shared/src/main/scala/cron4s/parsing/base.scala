@@ -20,8 +20,6 @@ package parsing
 import scala.util.parsing.combinator.Parsers
 
 private[parsing] trait BaseParser extends Parsers {
-
   protected def handleError(err: NoSuccess): ParseFailed =
     ParseFailed(err.msg, err.next.first.toString, err.next.pos.column)
-
 }

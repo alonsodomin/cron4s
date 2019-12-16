@@ -24,7 +24,6 @@ import org.joda.time._
   * Created by alonsodomin on 29/08/2016.
   */
 trait JodaDateTimeTestBase extends DateTimeTestKitBase[DateTime] {
-
   protected def createDateTime(
       seconds: Int,
       minutes: Int,
@@ -34,11 +33,9 @@ trait JodaDateTimeTestBase extends DateTimeTestKitBase[DateTime] {
       year: Int
   ): DateTime =
     new DateTime(year, month, dayOfMonth, hours, minutes, seconds, DateTimeZone.UTC)
-
 }
 
 trait JodaLocalDateTestBase extends DateTimeTestKitBase[LocalDate] {
-
   protected def createDateTime(
       seconds: Int,
       minutes: Int,
@@ -48,11 +45,9 @@ trait JodaLocalDateTestBase extends DateTimeTestKitBase[LocalDate] {
       year: Int
   ): LocalDate =
     new LocalDate(year, month, dayOfMonth)
-
 }
 
 trait JodaLocalTimeTestBase extends DateTimeTestKitBase[LocalTime] {
-
   protected def createDateTime(
       seconds: Int,
       minutes: Int,
@@ -62,11 +57,9 @@ trait JodaLocalTimeTestBase extends DateTimeTestKitBase[LocalTime] {
       year: Int
   ): LocalTime =
     new LocalTime(hours, minutes, seconds)
-
 }
 
 trait JodaLocalDateTimeTestBase extends DateTimeTestKitBase[LocalDateTime] {
-
   protected def createDateTime(
       seconds: Int,
       minutes: Int,
@@ -76,5 +69,4 @@ trait JodaLocalDateTimeTestBase extends DateTimeTestKitBase[LocalDateTime] {
       year: Int
   ): LocalDateTime =
     new LocalDateTime(year, month, dayOfMonth, hours, minutes, seconds)
-
 }

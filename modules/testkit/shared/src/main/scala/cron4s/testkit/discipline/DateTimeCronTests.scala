@@ -48,7 +48,6 @@ trait DateTimeCronTests[E, DateTime] extends Laws {
     "backwards"       -> forAll(laws.backwards _),
     "supportedFields" -> forAll(laws.supportedFieldsEquality _)
   )
-
 }
 
 object DateTimeCronTests {

@@ -26,7 +26,6 @@ import cron4s.expr._
   * Created by alonsodomin on 14/01/2017.
   */
 trait DateTimeCron[T] {
-
   protected def matches[DateTime](expr: T, dt: IsDateTime[DateTime])(
       implicit M: MonoidK[Predicate]
   ): Predicate[DateTime]
@@ -56,7 +55,6 @@ trait DateTimeCron[T] {
 
   def field[F <: CronField](expr: T)(implicit selector: FieldSelector[T, F]): selector.Out[F] =
     selector.selectFrom(expr)
-
 }
 
 object DateTimeCron {
@@ -68,7 +66,6 @@ object DateTimeCron {
 }
 
 private[datetime] final class FullCron extends DateTimeCron[CronExpr] {
-
   protected def matches[DateTime](expr: CronExpr, dt: IsDateTime[DateTime])(
       implicit M: MonoidK[Predicate]
   ): Predicate[DateTime] = {
@@ -89,11 +86,9 @@ private[datetime] final class FullCron extends DateTimeCron[CronExpr] {
 
   @inline
   val supportedFields: List[CronField] = CronField.All
-
 }
 
 private[datetime] final class TimeCron extends DateTimeCron[TimeCronExpr] {
-
   protected def matches[DateTime](expr: TimeCronExpr, dt: IsDateTime[DateTime])(
       implicit M: MonoidK[Predicate]
   ): Predicate[DateTime] = {
@@ -115,11 +110,9 @@ private[datetime] final class TimeCron extends DateTimeCron[TimeCronExpr] {
   @inline
   val supportedFields: List[CronField] =
     List(CronField.Second, CronField.Minute, CronField.Hour)
-
 }
 
 private[datetime] final class DateCron extends DateTimeCron[DateCronExpr] {
-
   protected def matches[DateTime](expr: DateCronExpr, dt: IsDateTime[DateTime])(
       implicit M: MonoidK[Predicate]
   ): Predicate[DateTime] = {
@@ -141,5 +134,4 @@ private[datetime] final class DateCron extends DateTimeCron[DateCronExpr] {
   @inline
   val supportedFields: List[CronField] =
     List(CronField.DayOfMonth, CronField.Month, CronField.DayOfWeek)
-
 }

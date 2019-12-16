@@ -49,11 +49,9 @@ trait IsDateTimeTests[DateTime] extends Laws {
       "immutability" -> forAll(laws.immutability[F] _),
       "settable"     -> forAll(laws.settable[F] _)
     )
-
 }
 
 object IsDateTimeTests {
-
   def apply[DateTime](
       implicit
       dtEv: IsDateTime[DateTime],
@@ -62,5 +60,4 @@ object IsDateTimeTests {
     new IsDateTimeTests[DateTime] {
       val laws: IsDateTimeLaws[DateTime] = IsDateTimeLaws[DateTime]
     }
-
 }

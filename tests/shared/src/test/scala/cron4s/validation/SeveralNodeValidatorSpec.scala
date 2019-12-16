@@ -57,5 +57,4 @@ class SeveralNodeValidatorSpec extends SlowCron4sPropSpec with ValidatorPropSpec
   check[DayOfMonth]
   check[Month]
   check[DayOfWeek]
-
 }

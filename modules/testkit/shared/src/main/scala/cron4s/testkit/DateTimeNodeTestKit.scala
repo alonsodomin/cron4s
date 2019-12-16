@@ -178,5 +178,4 @@ abstract class DateTimeNodeTestKit[DateTime: IsDateTime: Eq]
   }
 
   for (node <- Seq(each, const, between, several, every)) node.check()
-
 }

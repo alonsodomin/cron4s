@@ -8,16 +8,15 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSVersion
 import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.npmDependencies
 
 object Dependencies {
-
   object version {
-    val atto       = "0.7.1"
+    val atto       = "0.7.2"
     val cats       = "2.0.0"
     val shapeless  = "2.3.3"
     val discipline = "1.0.0-RC1"
     val decline    = "1.0.0"
     val circe      = "0.12.3"
     val parserc    = "1.1.2"
-    val doobie     = "0.8.6"
+    val doobie     = "0.8.7"
 
     val jodaTime    = "2.10.5"
     val jodaConvert = "2.2.1"
@@ -107,5 +106,4 @@ object Dependencies {
       "org.tpolecat" %% "doobie-h2"   % version.doobie % Test
     )
   )
-
 }

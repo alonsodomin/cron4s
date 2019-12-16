@@ -23,7 +23,6 @@ import cron4s.base.{Enumerated, Predicate}
   * Created by alonsodomin on 25/08/2016.
   */
 trait FieldExpr[E[_ <: CronField], F <: CronField] extends Enumerated[E[F]] {
-
   def matches(e: E[F]): Predicate[Int]
 
   def implies[EE[_ <: CronField]](e: E[F])(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean
@@ -34,7 +33,6 @@ trait FieldExpr[E[_ <: CronField], F <: CronField] extends Enumerated[E[F]] {
     EE.implies(ee)(e)(this)
 
   def unit(e: E[F]): CronUnit[F]
-
 }
 
 object FieldExpr {

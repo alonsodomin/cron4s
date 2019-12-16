@@ -27,11 +27,9 @@ import moment._
   * Created by alonsodomin on 11/04/2017.
   */
 package object momentjs {
-
   implicit val momentjsEq: Eq[Date] = Eq.by(_.unix())
 
   implicit val momentjsShow: Show[Date] = Show.show(_.toISOString())
 
   implicit val momentjsInstance: IsDateTime[Date] = new MomentJSInstance
-
 }
