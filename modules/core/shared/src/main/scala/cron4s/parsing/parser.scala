@@ -183,5 +183,4 @@ object CronParser extends Parsers with BaseParser {
       case Success(expr, _) => Right(expr)
     }
   }
-
 }

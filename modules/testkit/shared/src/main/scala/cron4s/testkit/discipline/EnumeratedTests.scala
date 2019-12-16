@@ -47,7 +47,6 @@ trait EnumeratedTests[A] extends Laws {
       "fromMaxToMinForwards"  -> forAll(laws.fromMaxToMinForwards _),
       "fromMaxToMinBackwards" -> forAll(laws.fromMaxToMinBackwards _)
     )
-
 }
 
 object EnumeratedTests {

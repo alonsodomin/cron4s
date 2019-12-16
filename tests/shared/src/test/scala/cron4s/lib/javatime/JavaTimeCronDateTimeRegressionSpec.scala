@@ -28,7 +28,6 @@ import org.scalatest.flatspec.AnyFlatSpec
   * Created by alonsodomin on 24/02/2017.
   */
 class JavaTimeCronDateTimeRegressionSpec extends AnyFlatSpec with Matchers {
-
   "Cron" should "not advance to the next day" in {
     val from = LocalDateTime.parse("2017-02-18T16:39:42.541")
 
@@ -65,5 +64,4 @@ class JavaTimeCronDateTimeRegressionSpec extends AnyFlatSpec with Matchers {
       cron.next(from).forall(_.isAfter(from)) shouldBe true
     }
   }
-
 }

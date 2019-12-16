@@ -58,5 +58,4 @@ class PredicateSpec extends Cron4sLawSuite {
   property("always") = forAll(alwaysPredicates) {
     case (matcher, returnVal, value) => matcher(value) == returnVal
   }*/
-
 }

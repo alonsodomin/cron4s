@@ -29,7 +29,6 @@ import cron4s.testkit.gen.{ArbitraryCronField, ArbitraryCronFieldValues}
 abstract class IsDateTimeTestKit[DateTime: IsDateTime: Eq](name: String)
     extends Cron4sLawSuite with ArbitraryCronFieldValues with ArbitraryCronField
     with DateTimeTestKitBase[DateTime] {
-
   import CronField._
 
   checkAll(s"IsDateTime[$name, Second]", IsDateTimeTests[DateTime].dateTime[Second])
@@ -38,5 +37,4 @@ abstract class IsDateTimeTestKit[DateTime: IsDateTime: Eq](name: String)
   checkAll(s"IsDateTime[$name, DayOfMonth]", IsDateTimeTests[DateTime].dateTime[DayOfMonth])
   checkAll(s"IsDateTime[$name, Month]", IsDateTimeTests[DateTime].dateTime[Month])
   checkAll(s"IsDateTime[$name, DayOfWeek]", IsDateTimeTests[DateTime].dateTime[DayOfWeek])
-
 }

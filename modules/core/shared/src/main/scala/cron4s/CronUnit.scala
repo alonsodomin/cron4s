@@ -30,7 +30,6 @@ import cats.{Eq, Show}
   */
 @implicitNotFound("Field ${F} is not supported on Cron expressions")
 sealed trait CronUnit[+F <: CronField] extends Serializable {
-
   /**
     * @return the CronField for this unit
     */
@@ -42,17 +41,14 @@ sealed trait CronUnit[+F <: CronField] extends Serializable {
     * @return the range of valid values
     */
   def range: IndexedSeq[Int]
-
 }
 
 object CronUnit extends CronUnitInstances {
-
   @inline def apply[F <: CronField](implicit unit: CronUnit[F]): CronUnit[F] =
     unit
 
   final val All: List[CronUnit[_ <: CronField]] =
     List(Seconds, Minutes, Hours, DaysOfMonth, Months, DaysOfWeek)
-
 }
 
 private[cron4s] trait CronUnits {
@@ -71,9 +67,7 @@ private[cron4s] trait CronUnits {
       val min: Int,
       val max: Int
   ) extends CronUnit[F] {
-
     val range: IndexedSeq[Int] = min to max
-
   }
 
   implicit case object Seconds     extends AbstractCronUnit[Second](Second, 0, 59)
@@ -99,11 +93,9 @@ private[cron4s] trait CronUnits {
   implicit case object DaysOfWeek extends AbstractCronUnit[DayOfWeek](DayOfWeek, 0, 6) {
     val textValues = IndexedSeq("mon", "tue", "wed", "thu", "fri", "sat", "sun")
   }
-
 }
 
 private[cron4s] trait CronUnitInstances extends CronUnits {
-
   private[this] def enumerated[F <: CronField](unit: CronUnit[F]): Enumerated[CronUnit[F]] =
     new Enumerated[CronUnit[F]] {
       override def range(fL: CronUnit[F]): IndexedSeq[Int] = unit.range
@@ -115,5 +107,4 @@ private[cron4s] trait CronUnitInstances extends CronUnits {
   implicit val daysOfMonthInstance = enumerated(DaysOfMonth)
   implicit val monthsInstance      = enumerated(Months)
   implicit val daysOfWeekInstance  = enumerated(DaysOfWeek)
-
 }

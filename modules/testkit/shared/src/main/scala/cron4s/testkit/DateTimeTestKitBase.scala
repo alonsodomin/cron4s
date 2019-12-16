@@ -26,7 +26,6 @@ import org.scalacheck.{Arbitrary, Gen}
   * Created by alonsodomin on 29/08/2016.
   */
 trait DateTimeTestKitBase[DateTime] {
-
   implicit final lazy val arbitraryDateTime: Arbitrary[DateTime] = Arbitrary(for {
     second     <- Gen.choose(Seconds.min, Seconds.max)
     minute     <- Gen.choose(Minutes.min, Minutes.max)
@@ -44,5 +43,4 @@ trait DateTimeTestKitBase[DateTime] {
       month: Int,
       year: Int
   ): DateTime
-
 }

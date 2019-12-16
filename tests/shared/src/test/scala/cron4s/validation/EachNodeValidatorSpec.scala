@@ -24,7 +24,6 @@ import cron4s.testkit.gen._
 import org.scalacheck._
 
 class EachNodeValidatorSpec extends Cron4sPropSpec with ValidatorPropSpec with ArbitraryEachNode {
-
   import CronField._
 
   private[this] def check[F <: CronField](
@@ -44,5 +43,4 @@ class EachNodeValidatorSpec extends Cron4sPropSpec with ValidatorPropSpec with A
   check[DayOfMonth]
   check[Month]
   check[DayOfWeek]
-
 }

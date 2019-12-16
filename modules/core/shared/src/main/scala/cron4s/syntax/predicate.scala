@@ -25,7 +25,6 @@ import cron4s.base.Predicate
   * Created by alonsodomin on 29/07/2016.
   */
 trait PredicateSyntax {
-
   def always[A](value: => Boolean): Predicate[A] = Predicate { _ =>
     value
   }
@@ -53,7 +52,6 @@ trait PredicateSyntax {
 
   def asOf[C[_]: Foldable, A](c: C[Predicate[A]])(implicit M: MonoidK[Predicate]): Predicate[A] =
     c.foldLeft(M.empty[A])((a, b) => M.combineK(a, b))
-
 }
 
 object predicate extends PredicateSyntax

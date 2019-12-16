@@ -29,7 +29,6 @@ import scala.annotation.implicitNotFound
   "Type ${DateTime} is not supported on current scope. You may be missing some imports, check the documentation to know more."
 )
 trait IsDateTime[DateTime] {
-
   def plus(dateTime: DateTime, amount: Int, unit: DateTimeUnit): Option[DateTime]
 
   /**
@@ -60,7 +59,6 @@ trait IsDateTime[DateTime] {
     * @return a new date-time with the given field set to the new value
     */
   def set[F <: CronField](dateTime: DateTime, field: F, value: Int): Either[DateTimeError, DateTime]
-
 }
 
 object IsDateTime {

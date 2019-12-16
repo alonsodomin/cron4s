@@ -111,5 +111,4 @@ object CronLexer extends RegexParsers with BaseParser {
       case err: NoSuccess     => Left(handleError(err))
       case Success(result, _) => Right(result)
     }
-
 }
