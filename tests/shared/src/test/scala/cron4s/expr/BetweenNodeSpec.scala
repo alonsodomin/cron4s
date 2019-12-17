@@ -25,12 +25,10 @@ import cron4s.testkit.gen.ArbitraryBetweenNode
   * Created by alonsodomin on 31/07/2016.
   */
 class BetweenNodeSpec extends Cron4sLawSuite with ArbitraryBetweenNode {
-
   checkAll("Between[Second]", FieldExprTests[BetweenNode, Second].expr)
   checkAll("Between[Minute]", FieldExprTests[BetweenNode, Minute].expr)
   checkAll("Between[Hour]", FieldExprTests[BetweenNode, Hour].expr)
   checkAll("Between[DayOfMonth]", FieldExprTests[BetweenNode, DayOfMonth].expr)
   checkAll("Between[Month]", FieldExprTests[BetweenNode, Month].expr)
   checkAll("Between[DayOfWeek]", FieldExprTests[BetweenNode, DayOfWeek].expr)
-
 }

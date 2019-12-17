@@ -24,12 +24,10 @@ import org.scalacheck.Arbitrary
   * Created by alonsodomin on 10/02/2017.
   */
 trait ArbitratyAnyNode extends NodeGenerators {
-
   implicit lazy val arbitraryAnySecond     = Arbitrary(anyGen[Second])
   implicit lazy val arbitraryAnyMinute     = Arbitrary(anyGen[Minute])
   implicit lazy val arbitraryAnyHour       = Arbitrary(anyGen[Hour])
   implicit lazy val arbitraryAnyDayOfMonth = Arbitrary(anyGen[DayOfMonth])
   implicit lazy val arbitraryAnyMonth      = Arbitrary(anyGen[Month])
   implicit lazy val arbitraryAnyDayOfWeek  = Arbitrary(anyGen[DayOfWeek])
-
 }

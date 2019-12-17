@@ -29,7 +29,6 @@ private[syntax] class FieldExprOps[E[_ <: CronField], F <: CronField](
     self: E[F],
     tc: FieldExpr[E, F]
 ) extends EnumeratedOps[E[F]](self, tc) {
-
   def matches: Predicate[Int] = tc.matches(self)
 
   def implies[EE[_ <: CronField]](ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
@@ -39,16 +38,13 @@ private[syntax] class FieldExprOps[E[_ <: CronField], F <: CronField](
     tc.impliedBy(self)(ee)
 
   def unit: CronUnit[F] = tc.unit(self)
-
 }
 
 private[syntax] trait FieldExprSyntax extends EnumeratedSyntax {
-
   implicit def toExprOps[E[_ <: CronField], F <: CronField](
       target: E[F]
   )(implicit tc: FieldExpr[E, F]): FieldExprOps[E, F] =
     new FieldExprOps[E, F](target, tc)
-
 }
 
 object field extends FieldExprSyntax

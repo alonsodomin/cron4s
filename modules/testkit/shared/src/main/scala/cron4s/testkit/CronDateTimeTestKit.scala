@@ -28,7 +28,6 @@ import org.scalatest.flatspec.AnyFlatSpec
   * Created by alonsodomin on 29/08/2016.
   */
 object CronDateTimeTestKit {
-
   final val OnlyTuesdaysAt12     = Cron.unsafeParse("0 0 12 ? * 1")
   final val EachMinutesOnSundays = Cron.unsafeParse("0 * * ? * 6")
 
@@ -44,7 +43,6 @@ object CronDateTimeTestKit {
 
   // https://github.com/alonsodomin/cron4s/issues/80
   final val AnyDayOfMonth = Cron.unsafeParse("4 31 4 ? * *")
-
 }
 
 abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show] extends AnyFlatSpec {
@@ -111,5 +109,4 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show] extends AnyFl
       )
     }
   }
-
 }

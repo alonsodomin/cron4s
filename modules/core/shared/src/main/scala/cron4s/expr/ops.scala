@@ -26,7 +26,6 @@ import shapeless._
   * Created by alonsodomin on 17/12/2016.
   */
 private[cron4s] object ops {
-
   object matches extends Poly1 {
     implicit def caseEach[F <: CronField]    = at[EachNode[F]](_.matches)
     implicit def caseAny[F <: CronField]     = at[AnyNode[F]](_.matches)
@@ -102,5 +101,4 @@ private[cron4s] object ops {
     implicit def caseDivisible[F <: CronField] =
       at[DivisibleNode[F]](_.raw.fold(unit))
   }
-
 }

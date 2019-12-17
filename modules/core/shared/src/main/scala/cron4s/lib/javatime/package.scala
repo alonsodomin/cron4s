@@ -51,5 +51,4 @@ package object javatime {
 
   implicit def javaTemporalInstance[DT <: Temporal]: IsDateTime[DT] =
     new JavaTemporalInstance[DT]
-
 }

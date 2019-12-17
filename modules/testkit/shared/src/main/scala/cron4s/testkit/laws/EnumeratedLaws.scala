@@ -60,7 +60,6 @@ trait EnumeratedLaws[A] {
     val expected = if (a.range.size == 1) None else Some(a.min -> 0)
     a.step(a.max, -(a.range.size - 1)) <-> expected
   }
-
 }
 
 object EnumeratedLaws {

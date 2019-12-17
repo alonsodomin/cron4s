@@ -47,11 +47,9 @@ trait DateTimeNodeTests[E[_ <: CronField], F <: CronField, DateTime] extends Law
     "backwards" -> forAll(laws.backwards _),
     "matchable" -> forAll(laws.matchable _)
   )
-
 }
 
 object DateTimeNodeTests {
-
   def apply[E[_ <: CronField], F <: CronField, DateTime](
       implicit
       dtEv: IsDateTime[DateTime],
@@ -60,5 +58,4 @@ object DateTimeNodeTests {
     new DateTimeNodeTests[E, F, DateTime] {
       val laws = DateTimeNodeLaws[E, F, DateTime]
     }
-
 }

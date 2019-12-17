@@ -33,5 +33,4 @@ class EveryNodeSpec extends SlowCron4sLawSuite with ArbitraryEveryNode {
   checkAll("Every[DayOfMonth]", FieldExprTests[EveryNode, DayOfMonth].expr)
   checkAll("Every[Month]", FieldExprTests[EveryNode, Month].expr)
   checkAll("Every[DayOfWeek]", FieldExprTests[EveryNode, DayOfWeek].expr)
-
 }

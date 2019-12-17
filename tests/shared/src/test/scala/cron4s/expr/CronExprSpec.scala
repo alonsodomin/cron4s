@@ -83,5 +83,4 @@ class CronExprSpec extends AnyFlatSpec with Matchers {
 
     datePart.toString shouldBe "12 6 ?"
   }
-
 }

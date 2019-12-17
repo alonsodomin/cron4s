@@ -43,5 +43,4 @@ package object datetime {
   private[datetime] type FieldSeq =
     Second :: Minute :: Hour :: DayOfMonth :: Month :: DayOfWeek :: HNil
   val FieldSeq: FieldSeq = Second :: Minute :: Hour :: DayOfMonth :: Month :: DayOfWeek :: HNil
-
 }

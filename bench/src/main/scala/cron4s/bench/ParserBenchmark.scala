@@ -26,7 +26,6 @@ import org.openjdk.jmh.annotations._
 @BenchmarkMode(Array(Mode.AverageTime))
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 class ParserBenchmark {
-
   @Param(
     Array(
       "10-35 2,4,6 * ? * *",
@@ -43,5 +42,4 @@ class ParserBenchmark {
 
   @Benchmark
   def attoParser() = atto.parse(cronString)
-
 }

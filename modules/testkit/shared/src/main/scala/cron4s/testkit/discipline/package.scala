@@ -23,10 +23,8 @@ import org.scalacheck.{Arbitrary, Gen}
   * Created by alonsodomin on 03/01/2017.
   */
 package object discipline {
-
   private[cron4s] val directionGen: Gen[Direction] =
     Gen.oneOf(Direction.Forward, Direction.Backwards)
   private[cron4s] implicit lazy val arbitraryDirection: Arbitrary[Direction] =
     Arbitrary(directionGen)
-
 }

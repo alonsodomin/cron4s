@@ -33,5 +33,4 @@ class ConstNodeSpec extends Cron4sLawSuite with ArbitraryConstNode {
   checkAll("Const[DayOfMonth]", FieldExprTests[ConstNode, DayOfMonth].expr)
   checkAll("Const[Month]", FieldExprTests[ConstNode, Month].expr)
   checkAll("Const[DayOfWeek]", FieldExprTests[ConstNode, DayOfWeek].expr)
-
 }

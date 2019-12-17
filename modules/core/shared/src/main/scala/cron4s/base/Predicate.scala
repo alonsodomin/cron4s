@@ -39,22 +39,18 @@ trait Predicate[A] extends (A => Boolean) { self =>
   def ||(m: => Predicate[A]): Predicate[A] = or(m)
 
   def unary_! : Predicate[A] = not(self)
-
 }
 
 object Predicate {
-
   def apply[A](f: A => Boolean): Predicate[A] = new Predicate[A] {
     def apply(a: A): Boolean = f(a)
   }
 
   implicit val contravariant = new Contravariant[Predicate] {
-
     def contramap[A, B](fa: Predicate[A])(f: B => A): Predicate[B] =
       Predicate { b =>
         fa(f(b))
       }
-
   }
 
   object conjunction {
@@ -76,5 +72,4 @@ object Predicate {
 
     implicit def monoid[A]: Monoid[Predicate[A]] = monoidK.algebra[A]
   }
-
 }

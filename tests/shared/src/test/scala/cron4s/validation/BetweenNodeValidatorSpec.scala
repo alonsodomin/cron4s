@@ -25,7 +25,6 @@ import cron4s.testkit.SlowCron4sPropSpec
   * Created by alonsodomin on 29/12/2016.
   */
 class BetweenNodeValidatorSpec extends SlowCron4sPropSpec with ValidatorPropSpec {
-
   import CronField._
 
   private[this] def check[F <: CronField](
@@ -73,5 +72,4 @@ class BetweenNodeValidatorSpec extends SlowCron4sPropSpec with ValidatorPropSpec
   check[DayOfMonth]
   check[Month]
   check[DayOfWeek]
-
 }

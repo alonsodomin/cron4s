@@ -34,7 +34,6 @@ final case class CronExpr(
     months: MonthsNode,
     daysOfWeek: DaysOfWeekNode
 ) {
-
   private[cron4s] lazy val raw: RawCronExpr = Generic[CronExpr].to(this)
 
   /**
@@ -50,11 +49,9 @@ final case class CronExpr(
 
   override lazy val toString: String =
     raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
-
 }
 
 object CronExpr {
-
   implicit val CronExprEq: Eq[CronExpr] =
     Eq.instance { (lhs, rhs) =>
       lhs.seconds === rhs.seconds &&
@@ -67,5 +64,4 @@ object CronExpr {
 
   implicit val CronExprShow: Show[CronExpr] =
     Show.fromToString[CronExpr]
-
 }

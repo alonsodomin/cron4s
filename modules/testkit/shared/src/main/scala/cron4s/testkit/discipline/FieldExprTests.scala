@@ -45,7 +45,6 @@ trait FieldExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[
     "implicationCommutative" -> forAll(laws.implicationCommutative[EE] _),
     "implicationEquivalence" -> forAll(laws.implicationEquivalence[EE] _)
   )
-
 }
 
 object FieldExprTests {

@@ -45,7 +45,6 @@ object CronSpec {
     EachNode[Month],
     AnyNode[DayOfWeek]
   )
-
 }
 
 class CronSpec extends AnyFlatSpec with Matchers {
@@ -90,5 +89,4 @@ class CronSpec extends AnyFlatSpec with Matchers {
 
     Cron.unsafeParse(exprStr) shouldBe ValidExpr
   }
-
 }

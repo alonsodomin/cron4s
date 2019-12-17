@@ -21,11 +21,9 @@ import cats.syntax.either._
 import io.circe.{Encoder, Decoder}
 
 package object circe {
-
   implicit val cronExprEncoder: Encoder[CronExpr] =
     Encoder[String].contramap(_.toString)
 
   implicit val cronExprDecoder: Decoder[CronExpr] =
     Decoder[String].emap(Cron.parse(_).leftMap(_.getMessage))
-
 }
