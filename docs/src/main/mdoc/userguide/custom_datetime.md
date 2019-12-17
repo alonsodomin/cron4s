@@ -4,7 +4,7 @@ title: "Custom DateTime"
 section: "userguide"
 ---
 
-As already mentioned in [Built-in libs](builtin_libs.html), **cron4s** comes with support for some DateTime libraries
+As already mentioned in [Built-in libs](builtin_libs.md), **cron4s** comes with support for some DateTime libraries
 out of the box. But implementations of DateTime are many, both in the JVM and in JavaScript and adding support for all
 of them as a _batteries included_ is impossible. Also, asking all the potential users to stick to a very limited range
 of libraries to be able to use **cron4s** is quite unrealistic.

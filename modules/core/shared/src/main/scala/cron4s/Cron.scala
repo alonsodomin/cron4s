@@ -26,6 +26,7 @@ import scala.util.{Failure, Success, Try}
   */
 @JSExportTopLevel("Cron")
 object Cron {
+
   /**
     * Parses the given cron expression into a cron AST using Either as return type. This is a short-hand for
     * `Cron.parse(...)`

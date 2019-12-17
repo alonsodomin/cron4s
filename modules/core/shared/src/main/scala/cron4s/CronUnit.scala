@@ -30,6 +30,7 @@ import cats.{Eq, Show}
   */
 @implicitNotFound("Field ${F} is not supported on Cron expressions")
 sealed trait CronUnit[+F <: CronField] extends Serializable {
+
   /**
     * @return the CronField for this unit
     */
