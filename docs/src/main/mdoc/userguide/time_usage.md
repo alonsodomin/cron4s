@@ -19,5 +19,5 @@ library in your sources.
 
 Now let's take a look at what are the main operations:
 
--   [Matching Date & Time](time_usage/matching.html)
--   [Forwards & Backwards In Time](time_usage/forward_backwards.html)
+-   [Matching Date & Time](time_usage/matching.md)
+-   [Forwards & Backwards In Time](time_usage/forward_backwards.md)

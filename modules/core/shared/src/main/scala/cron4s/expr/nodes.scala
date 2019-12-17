@@ -35,6 +35,7 @@ import scala.collection.immutable.LazyList
   * @author Antonio Alonso Dominguez
   */
 sealed trait Node[F <: CronField] {
+
   /**
     * Unit of this expression
     */

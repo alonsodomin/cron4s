@@ -26,7 +26,7 @@ import doobie.implicits._
 Now define a case class that represents your database data (and which should contain a cron expression):
 
 ```scala mdoc
-case class MeetingId(value: Long) extends AnyVal
+case class MeetingId(value: Long)
 case class RecurringMeeting(subject: String, description: String, frequency: CronExpr)
 ```
 

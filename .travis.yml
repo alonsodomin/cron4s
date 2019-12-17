@@ -15,12 +15,9 @@ scala:
 cache:
   directories:
     - $HOME/.m2
-    - $HOME/.sbt/0.13/dependency
-    - $HOME/.sbt/1.0/dependency
-    - $HOME/.sbt/boot/scala*
-    - $HOME/.sbt/launchers
+    - $HOME/.sbt
     - $HOME/.ivy2
-    - $HOME/.cache/coursier/v1
+    - $HOME/.cache/coursier
     - $HOME/.nvm
 
 env:
