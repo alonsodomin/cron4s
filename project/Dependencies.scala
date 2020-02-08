@@ -14,7 +14,7 @@ object Dependencies {
     val shapeless  = "2.3.3"
     val discipline = "1.0.0-RC2"
     val decline    = "1.0.0"
-    val circe      = "0.12.3"
+    val circe      = "0.13.0"
     val parserc    = "1.1.2"
     val doobie     = "0.8.7"
 
