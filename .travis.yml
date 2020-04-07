@@ -9,7 +9,7 @@ jdk:
   - openjdk11
 
 scala:
-  - 2.12.10
+  - 2.12.11
   - 2.13.1
 
 cache:
