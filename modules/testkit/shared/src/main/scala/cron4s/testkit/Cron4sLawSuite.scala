@@ -21,7 +21,7 @@ import cats.syntax.AllSyntax
 
 import cron4s.platform.Platform
 
-import org.typelevel.discipline.scalatest.Discipline
+import org.typelevel.discipline.scalatest.FunSuiteDiscipline
 
 import org.scalactic.anyvals.{PosInt, PosZInt}
 import org.scalatest.matchers.should.Matchers
@@ -45,7 +45,7 @@ trait TestSettings extends Configuration {
 }
 
 trait Cron4sLawSuite
-    extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyChecks with Discipline
+    extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyChecks with FunSuiteDiscipline
     with TestSettings with AllInstances with AllSyntax {
   implicit override val generatorDrivenConfig: PropertyCheckConfiguration =
     defaultPropertyCheckConfig
