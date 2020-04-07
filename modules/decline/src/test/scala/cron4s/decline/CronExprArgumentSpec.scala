@@ -30,8 +30,6 @@ class CronExprArgumentSpec extends SlowCron4sLawSuite with CronGenerators {
   }
 
   test("valid cron expressions can be parsed") {
-    forAll { (expr: CronExpr) =>
-      argument.read(expr.show) == expr.validNel[String]
-    }
+    forAll((expr: CronExpr) => argument.read(expr.show) == expr.validNel[String])
   }
 }

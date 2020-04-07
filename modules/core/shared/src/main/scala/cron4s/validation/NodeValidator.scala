@@ -111,9 +111,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
         else Nil
 
       State { seen =>
-        val errors = seen.foldMap { elem =>
-          impliesError(elem) ++ impliedByError(elem)
-        }
+        val errors = seen.foldMap(elem => impliesError(elem) ++ impliedByError(elem))
         (curr :: seen) -> List(errors)
       }
     }
