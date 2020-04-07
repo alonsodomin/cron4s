@@ -9,12 +9,17 @@ import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.npmDependencies
 
 object Dependencies {
   object version {
-    val atto       = "0.7.2"
-    val cats       = "2.1.1"
+    val atto = "0.7.2"
+
+    object cats {
+      val main      = "2.1.1"
+      val scalatest = "1.0.1"
+    }
+
     val shapeless  = "2.3.3"
-    val discipline = "1.0.0-RC2"
+    val discipline = "1.0.1"
     val decline    = "1.0.0"
-    val circe      = "0.12.3"
+    val circe      = "0.13.0"
     val parserc    = "1.1.2"
     val doobie     = "0.9.0"
 
@@ -29,7 +34,7 @@ object Dependencies {
   lazy val core = Def.settings(
     libraryDependencies ++= Seq(
       "com.chuusai"            %%% "shapeless"                % version.shapeless,
-      "org.typelevel"          %%% "cats-core"                % version.cats,
+      "org.typelevel"          %%% "cats-core"                % version.cats.main,
       "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parserc
     )
   )
@@ -44,9 +49,10 @@ object Dependencies {
 
   lazy val testkit = Def.settings {
     libraryDependencies ++= Seq(
-      "org.typelevel" %%% "cats-laws"            % version.cats,
-      "org.typelevel" %%% "cats-testkit"         % version.cats,
-      "org.typelevel" %%% "discipline-scalatest" % version.discipline
+      "org.typelevel" %%% "cats-laws"              % version.cats.main,
+      "org.typelevel" %%% "cats-testkit"           % version.cats.main,
+      "org.typelevel" %%% "cats-testkit-scalatest" % version.cats.scalatest,
+      "org.typelevel" %%% "discipline-scalatest"   % version.discipline
     )
   }
 
