@@ -55,9 +55,7 @@ object CronLexer extends RegexParsers with BaseParser {
   override val whiteSpace     = "[ \t\r\f]+".r
 
   private val number = positioned {
-    """\d+""".r ^^ { x =>
-      Number(x.toInt)
-    }
+    """\d+""".r ^^ { x => Number(x.toInt) }
   }
 
   private val text = positioned {
@@ -65,33 +63,23 @@ object CronLexer extends RegexParsers with BaseParser {
   }
 
   private val asterisk = positioned {
-    """\*""".r ^^ { _ =>
-      Asterisk
-    }
+    """\*""".r ^^ { _ => Asterisk }
   }
 
   private val questionMark = positioned {
-    """\?""".r ^^ { _ =>
-      QuestionMark
-    }
+    """\?""".r ^^ { _ => QuestionMark }
   }
 
   private val hyphen = positioned {
-    """\-""".r ^^ { _ =>
-      Hyphen
-    }
+    """\-""".r ^^ { _ => Hyphen }
   }
 
   private val slash = positioned {
-    """\/""".r ^^ { _ =>
-      Slash
-    }
+    """\/""".r ^^ { _ => Slash }
   }
 
   private val comma = positioned {
-    ",".r ^^ { _ =>
-      Comma
-    }
+    ",".r ^^ { _ => Comma }
   }
 
   private val blank = positioned {

@@ -102,9 +102,7 @@ class ParserSpec
     Gen.oneOf(CronUnit.All.map(each(_).asInstanceOf[Parser[EachNode[CronField]]]))
 
   property("should be able to parse an asterisk in any field") {
-    forAll(eachParserGen) { parser =>
-      verifyEach(parser, "*")
-    }
+    forAll(eachParserGen)(parser => verifyEach(parser, "*"))
   }
 
   val anyParserGen: Gen[Parser[AnyNode[CronField]]] =
@@ -114,48 +112,28 @@ class ParserSpec
     )
 
   property("should be able to parse a question mark in any field") {
-    forAll(anyParserGen) { parser =>
-      verifyAny(parser, "?")
-    }
+    forAll(anyParserGen)(parser => verifyAny(parser, "?"))
   }
 
   property("should be able to parse seconds") {
-    forAll(secondsOrMinutesGen) { x =>
-      verifyConst(seconds, x) { expr =>
-        expr.value == x.toInt
-      }
-    }
+    forAll(secondsOrMinutesGen)(x => verifyConst(seconds, x)(expr => expr.value == x.toInt))
   }
 
   property("should be able to parse minutes") {
-    forAll(secondsOrMinutesGen) { x =>
-      verifyConst(minutes, x) { expr =>
-        expr.value == x.toInt
-      }
-    }
+    forAll(secondsOrMinutesGen)(x => verifyConst(minutes, x)(expr => expr.value == x.toInt))
   }
 
   property("should be able to parse hours") {
-    forAll(hoursGen) { x =>
-      verifyConst(hours, x) { expr =>
-        expr.value == x.toInt
-      }
-    }
+    forAll(hoursGen)(x => verifyConst(hours, x)(expr => expr.value == x.toInt))
   }
 
   property("should be able to parse days of month") {
-    forAll(daysOfMonthGen) { x =>
-      verifyConst(daysOfMonth, x) { expr =>
-        expr.value == x.toInt
-      }
-    }
+    forAll(daysOfMonthGen)(x => verifyConst(daysOfMonth, x)(expr => expr.value == x.toInt))
   }
 
   property("should be able to parse numeric months") {
     forAll(numericMonthsGen) { x =>
-      verifyConst(months, x.toString) { expr =>
-        expr.value == x.toInt && expr.textValue.isEmpty
-      }
+      verifyConst(months, x.toString)(expr => expr.value == x.toInt && expr.textValue.isEmpty)
     }
   }
   property("should be able to parse named months") {
@@ -167,9 +145,7 @@ class ParserSpec
   }
 
   property("should be able to parse numeric days of week") {
-    forAll(numericDaysOfWeekGen) { x =>
-      verifyConst(daysOfWeek, x) { _.value == x.toInt }
-    }
+    forAll(numericDaysOfWeekGen)(x => verifyConst(daysOfWeek, x)(_.value == x.toInt))
   }
   property("should be able to parse named days of week") {
     forAll(namedDaysOfWeekGen) { x =>
