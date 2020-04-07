@@ -60,9 +60,7 @@ class NodeRangeBenchmark {
     val chunkSize = unit.max / 10
 
     val minuteRanges = (unit.min to unit.max by chunkSize)
-      .map { lower =>
-        BetweenNode[Minute](ConstNode(lower), ConstNode(lower + chunkSize - 1))
-      }
+      .map(lower => BetweenNode[Minute](ConstNode(lower), ConstNode(lower + chunkSize - 1)))
       .map(between2Enumerable)
 
     SeveralNode.fromSeq[Minute](minuteRanges).get
