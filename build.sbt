@@ -561,7 +561,7 @@ addCommandAlias(
   Seq(
     "checkfmt",
     "validateJS",
-    "validateJVM",
+    "validateJVM"
     //"binCompatCheck"
   ).mkString(";")
 )
