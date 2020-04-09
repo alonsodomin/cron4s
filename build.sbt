@@ -121,7 +121,8 @@ lazy val publishSettings = Seq(
 
 lazy val noPublishSettings = publishSettings ++ Seq(
   skip in publish := true,
-  publishArtifact := false
+  publishArtifact := false,
+  mimaFailOnNoPrevious := false
 )
 
 lazy val coverageSettings = Seq(
@@ -359,7 +360,7 @@ lazy val docSettings = Seq(
 lazy val cron4s = (project in file("."))
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .aggregate(cron4sJS, cron4sJVM, docs)
+  .aggregate(cron4sJS, cron4sJVM, docs, bench)
 
 lazy val cron4sJS = (project in file(".js"))
   .settings(
@@ -382,7 +383,7 @@ lazy val cron4sJVM = (project in file(".jvm"))
   .settings(commonJvmSettings)
   .settings(consoleSettings)
   .settings(noPublishSettings)
-  .aggregate(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm, bench)
+  .aggregate(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm)
   .dependsOn(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm % Test)
 
 lazy val docs = project
