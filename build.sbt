@@ -121,7 +121,8 @@ lazy val publishSettings = Seq(
 
 lazy val noPublishSettings = publishSettings ++ Seq(
   skip in publish := true,
-  publishArtifact := false
+  publishArtifact := false,
+  mimaFailOnNoPrevious := false
 )
 
 lazy val coverageSettings = Seq(
@@ -132,7 +133,7 @@ lazy val coverageSettings = Seq(
 )
 
 def mimaSettings(module: String): Seq[Setting[_]] =
-  mimaDefaultSettings ++ Seq(
+  Seq(
     mimaPreviousArtifacts := previousStableVersion.value
       .map(organization.value %% s"cron4s-$module" % _)
       .toSet,
@@ -359,7 +360,7 @@ lazy val docSettings = Seq(
 lazy val cron4s = (project in file("."))
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .aggregate(cron4sJS, cron4sJVM, docs)
+  .aggregate(cron4sJS, cron4sJVM, docs, bench)
 
 lazy val cron4sJS = (project in file(".js"))
   .settings(
@@ -382,7 +383,7 @@ lazy val cron4sJVM = (project in file(".jvm"))
   .settings(commonJvmSettings)
   .settings(consoleSettings)
   .settings(noPublishSettings)
-  .aggregate(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm, bench)
+  .aggregate(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm)
   .dependsOn(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm % Test)
 
 lazy val docs = project
@@ -400,7 +401,7 @@ lazy val docs = project
 // =================================================================================
 
 lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))
-  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
   .settings(
     name := "core",
     moduleName := "cron4s-core"
@@ -417,7 +418,7 @@ lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))
 
 lazy val testkit =
   (crossProject(JSPlatform, JVMPlatform) in file("modules/testkit"))
-    .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+    .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
     .settings(
       name := "testkit",
       moduleName := "cron4s-testkit"
@@ -464,7 +465,7 @@ lazy val bench = (project in file("bench"))
 // =================================================================================
 
 lazy val joda = (project in file("modules/joda"))
-  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
   .settings(
     name := "joda",
     moduleName := "cron4s-joda",
@@ -495,7 +496,7 @@ lazy val momentjs = (project in file("modules/momentjs"))
 
 lazy val circe =
   (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("modules/circe"))
-    .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+    .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
     .settings(
       name := "circe",
       moduleName := "cron4s-circe"
@@ -510,7 +511,7 @@ lazy val circe =
 
 lazy val decline =
   (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("modules/decline"))
-    .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+    .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
     .settings(
       name := "decline",
       moduleName := "cron4s-decline"
@@ -524,7 +525,7 @@ lazy val decline =
     .dependsOn(core, testkit % Test)
 
 lazy val doobie = (project in file("modules/doobie"))
-  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
   .settings(
     name := "doobie",
     moduleName := "cron4s-doobie"
@@ -532,7 +533,7 @@ lazy val doobie = (project in file("modules/doobie"))
   .settings(commonSettings)
   .settings(publishSettings)
   .settings(commonJvmSettings)
-  //.settings(mimaSettings("doobie"))
+  .settings(mimaSettings("doobie"))
   .settings(Dependencies.doobie)
   .dependsOn(core.jvm, testkit.jvm % Test)
 
@@ -552,9 +553,16 @@ addCommandAlias(
     "testJVM",
     "coverageReport",
     "coverageAggregate"
-    //"binCompatCheck"
   ).mkString(";")
 )
 addCommandAlias("validateJS", "testJS")
-addCommandAlias("validate", "checkfmt;validateJS;validateJVM")
+addCommandAlias(
+  "validate",
+  Seq(
+    "checkfmt",
+    "validateJS",
+    "validateJVM"
+    //"binCompatCheck"
+  ).mkString(";")
+)
 addCommandAlias("rebuild", "clean;validate")
