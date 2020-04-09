@@ -132,7 +132,7 @@ lazy val coverageSettings = Seq(
 )
 
 def mimaSettings(module: String): Seq[Setting[_]] =
-  mimaDefaultSettings ++ Seq(
+  Seq(
     mimaPreviousArtifacts := previousStableVersion.value
       .map(organization.value %% s"cron4s-$module" % _)
       .toSet,
@@ -400,7 +400,7 @@ lazy val docs = project
 // =================================================================================
 
 lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))
-  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
   .settings(
     name := "core",
     moduleName := "cron4s-core"
@@ -417,7 +417,7 @@ lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))
 
 lazy val testkit =
   (crossProject(JSPlatform, JVMPlatform) in file("modules/testkit"))
-    .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+    .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
     .settings(
       name := "testkit",
       moduleName := "cron4s-testkit"
@@ -464,7 +464,7 @@ lazy val bench = (project in file("bench"))
 // =================================================================================
 
 lazy val joda = (project in file("modules/joda"))
-  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
   .settings(
     name := "joda",
     moduleName := "cron4s-joda",
@@ -495,7 +495,7 @@ lazy val momentjs = (project in file("modules/momentjs"))
 
 lazy val circe =
   (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("modules/circe"))
-    .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+    .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
     .settings(
       name := "circe",
       moduleName := "cron4s-circe"
@@ -510,7 +510,7 @@ lazy val circe =
 
 lazy val decline =
   (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("modules/decline"))
-    .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+    .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
     .settings(
       name := "decline",
       moduleName := "cron4s-decline"
@@ -524,7 +524,7 @@ lazy val decline =
     .dependsOn(core, testkit % Test)
 
 lazy val doobie = (project in file("modules/doobie"))
-  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
+  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
   .settings(
     name := "doobie",
     moduleName := "cron4s-doobie"
@@ -532,7 +532,7 @@ lazy val doobie = (project in file("modules/doobie"))
   .settings(commonSettings)
   .settings(publishSettings)
   .settings(commonJvmSettings)
-  //.settings(mimaSettings("doobie"))
+  .settings(mimaSettings("doobie"))
   .settings(Dependencies.doobie)
   .dependsOn(core.jvm, testkit.jvm % Test)
 
@@ -552,9 +552,16 @@ addCommandAlias(
     "testJVM",
     "coverageReport",
     "coverageAggregate"
-    //"binCompatCheck"
   ).mkString(";")
 )
 addCommandAlias("validateJS", "testJS")
-addCommandAlias("validate", "checkfmt;validateJS;validateJVM")
+addCommandAlias(
+  "validate",
+  Seq(
+    "checkfmt",
+    "validateJS",
+    "validateJVM",
+    //"binCompatCheck"
+  ).mkString(";")
+)
 addCommandAlias("rebuild", "clean;validate")

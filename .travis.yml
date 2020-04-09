@@ -1,7 +1,6 @@
 language: scala
 
-sudo: required
-
+os: linux
 dist: trusty
 
 jdk:
