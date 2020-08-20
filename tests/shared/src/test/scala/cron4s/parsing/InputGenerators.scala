@@ -31,13 +31,13 @@ trait InputGenerators {
   // --------------------------------------------------------------
 
   private[this] def withLeadingZero(base: Int): Gen[String] =
-    if (base < 10) {
+    if (base < 10)
       arbitrary[Boolean].map { doubleDigit =>
-        if (doubleDigit) {
+        if (doubleDigit)
           s"0$base"
-        } else base.toString
+        else base.toString
       }
-    } else base.toString
+    else base.toString
 
   private[this] def rangedIntGen(min: Int, max: Int): Gen[(String, (Int, Int))] =
     for {

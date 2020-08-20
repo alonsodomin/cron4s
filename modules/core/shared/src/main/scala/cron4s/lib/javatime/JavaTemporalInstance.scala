@@ -42,14 +42,15 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
       case DayOfWeek  => ChronoField.DAY_OF_WEEK
     }
 
-  private[this] def asTemporalUnit[F <: CronField](unit: DateTimeUnit): TemporalUnit = unit match {
-    case Seconds => ChronoUnit.SECONDS
-    case Minutes => ChronoUnit.MINUTES
-    case Hours   => ChronoUnit.HOURS
-    case Days    => ChronoUnit.DAYS
-    case Months  => ChronoUnit.MONTHS
-    case Weeks   => ChronoUnit.WEEKS
-  }
+  private[this] def asTemporalUnit[F <: CronField](unit: DateTimeUnit): TemporalUnit =
+    unit match {
+      case Seconds => ChronoUnit.SECONDS
+      case Minutes => ChronoUnit.MINUTES
+      case Hours   => ChronoUnit.HOURS
+      case Days    => ChronoUnit.DAYS
+      case Months  => ChronoUnit.MONTHS
+      case Weeks   => ChronoUnit.WEEKS
+    }
 
   override def plus(dateTime: DT, amount: Int, unit: DateTimeUnit): Option[DT] =
     Try(dateTime.plus(amount.toLong, asTemporalUnit(unit)).asInstanceOf[DT]).toOption
@@ -76,9 +77,9 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
       Try(dt.`with`(temporalField, realVal.toLong).asInstanceOf[DT])
 
     def postAdjust(dt: DT): Try[DT] =
-      if (dt.isSupported(ChronoField.MILLI_OF_SECOND)) {
+      if (dt.isSupported(ChronoField.MILLI_OF_SECOND))
         Try(dt.`with`(ChronoField.MILLI_OF_SECOND, 0).asInstanceOf[DT])
-      } else Success(dt)
+      else Success(dt)
 
     if (!dateTime.isSupported(temporalField)) UnsupportedField(field).asLeft
     else {

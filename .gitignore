@@ -97,3 +97,4 @@ build
 ##########
 .metals/
 .bloop/
+metals.sbt

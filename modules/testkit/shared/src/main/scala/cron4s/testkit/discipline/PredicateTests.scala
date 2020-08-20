@@ -32,8 +32,7 @@ import org.typelevel.discipline.Laws
   * Created by alonsodomin on 10/04/2017.
   */
 object PredicateTests extends Laws {
-  def predicate[F[_]: Foldable, A](
-      implicit
+  def predicate[F[_]: Foldable, A](implicit
       arbPred: Arbitrary[Predicate[A]],
       arbFold: Arbitrary[F[Predicate[A]]],
       arbA: Arbitrary[A]

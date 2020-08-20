@@ -86,13 +86,12 @@ object CronLexer extends RegexParsers with BaseParser {
     whiteSpace.map(_ => Blank)
   }
 
-  private lazy val tokens: Parser[List[CronToken]] = {
+  private lazy val tokens: Parser[List[CronToken]] =
     phrase(
       rep1(
         number | text | hyphen | slash | comma | asterisk | questionMark | blank
       )
     )
-  }
 
   def tokenize(expr: String): Either[ParseFailed, List[CronToken]] =
     parse(tokens, expr) match {
