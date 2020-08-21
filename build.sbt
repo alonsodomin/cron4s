@@ -154,6 +154,13 @@ def mimaSettings(module: String): Seq[Setting[_]] =
       ProblemFilters.exclude[InheritedNewAbstractMethodProblem](
         "cron4s.syntax.AllSyntax.cron4s$syntax$CronStringSyntax$_setter_$embedCronStrings_="
       ),
+      ProblemFilters.exclude[MissingTypesProblem]("cron4s.ParseFailed$"),
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.tupled"),
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.curried"),
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.msg"),
+      ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.ParseFailed.*"),
+      ProblemFilters.exclude[IncompatibleResultTypeProblem]("cron4s.ParseFailed.*"),
+      ProblemFilters.exclude[IncompatibleResultTypeProblem]("cron4s.parsing.*.handleError"),
       // Doobie exclusions
       ProblemFilters.exclude[IncompatibleResultTypeProblem]("cron4s.doobie.package.cronExprMeta"),
       // Exclussions due to changes in scalatest and cats-testkit
