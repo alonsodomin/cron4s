@@ -226,7 +226,7 @@ object BetweenNode {
       def implies[EE[_ <: CronField]](
           node: BetweenNode[F]
       )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
-        (node.min <= ee.min) && (node.max >= ee.max)
+        (min(node) <= ee.min) && (max(node) >= ee.max)
 
       def range(node: BetweenNode[F]): IndexedSeq[Int] = node.range
     }

@@ -21,7 +21,7 @@ import cats.effect.{IO, ContextShift}
 
 import _root_.doobie._
 import _root_.doobie.implicits._
-import _root_.doobie.util.invariant._
+import _root_.doobie.util.invariant.SecondaryValidationFailed
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
@@ -60,7 +60,7 @@ class DoobieSpec extends AnyFlatSpec with Matchers {
     } yield MeetingId(id)
   }
 
-  def loadMeeting(meetingId: MeetingId) =
+  def loadMeeting(meetingId: MeetingId): ConnectionIO[Meeting] =
     sql"select subject, description, frequency from meeting where meeting_id = $meetingId"
       .query[Meeting]
       .unique
