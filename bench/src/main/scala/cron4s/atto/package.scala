@@ -170,6 +170,6 @@ package object atto {
       case ParseResult.Done(_, result) => Right(result)
       case ParseResult.Fail(rest, _, msg) =>
         val position = e.length() - rest.length() + 1
-        Left(ParseFailed(msg, rest, position))
+        Left(ParseFailed(msg, position, Some(rest)))
     }
 }

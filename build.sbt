@@ -436,12 +436,14 @@ addCommandAlias(
   ).mkString(";")
 )
 addCommandAlias("validateJS", "testJS")
+addCommandAlias("validateBench", "bench/compile")
 addCommandAlias(
   "validate",
   Seq(
     "checkfmt",
     "validateJS",
     "validateJVM",
+    "validateBench",
     "binCompatCheck"
   ).mkString(";")
 )
