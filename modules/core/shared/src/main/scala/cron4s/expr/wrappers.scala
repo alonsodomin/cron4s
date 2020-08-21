@@ -47,14 +47,15 @@ object FieldNode {
 
       def implies[EE[_ <: CronField]](
           node: FieldNode[F]
-      )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean = node.raw match {
-        case Inl(each)                      => each.implies(ee)
-        case Inr(Inl(const))                => const.implies(ee)
-        case Inr(Inr(Inl(between)))         => between.implies(ee)
-        case Inr(Inr(Inr(Inl(several))))    => several.implies(ee)
-        case Inr(Inr(Inr(Inr(Inl(every))))) => every.implies(ee)
-        case _                              => sys.error("Impossible!")
-      }
+      )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
+        node.raw match {
+          case Inl(each)                      => each.implies(ee)
+          case Inr(Inl(const))                => const.implies(ee)
+          case Inr(Inr(Inl(between)))         => between.implies(ee)
+          case Inr(Inr(Inr(Inl(several))))    => several.implies(ee)
+          case Inr(Inr(Inr(Inr(Inl(every))))) => every.implies(ee)
+          case _                              => sys.error("Impossible!")
+        }
 
       def unit(node: FieldNode[F]): CronUnit[F] =
         node.raw.fold(_root_.cron4s.expr.ops.unit)
@@ -83,10 +84,11 @@ object FieldNodeWithAny {
 
       def implies[EE[_ <: CronField]](
           node: FieldNodeWithAny[F]
-      )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean = node.raw match {
-        case Inl(any)  => any.implies(ee)
-        case Inr(tail) => new FieldNode[F](tail).implies(ee)
-      }
+      )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
+        node.raw match {
+          case Inl(any)  => any.implies(ee)
+          case Inr(tail) => new FieldNode[F](tail).implies(ee)
+        }
 
       def unit(node: FieldNodeWithAny[F]): CronUnit[F] =
         node.raw.fold(_root_.cron4s.expr.ops.unit)
@@ -146,12 +148,13 @@ object DivisibleNode {
 
       def implies[EE[_ <: CronField]](
           node: DivisibleNode[F]
-      )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean = node.raw match {
-        case Inl(each)              => each.implies(ee)
-        case Inr(Inl(between))      => between.implies(ee)
-        case Inr(Inr(Inl(several))) => several.implies(ee)
-        case _                      => sys.error("Impossible!")
-      }
+      )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
+        node.raw match {
+          case Inl(each)              => each.implies(ee)
+          case Inr(Inl(between))      => between.implies(ee)
+          case Inr(Inr(Inl(several))) => several.implies(ee)
+          case _                      => sys.error("Impossible!")
+        }
 
       def range(node: DivisibleNode[F]): IndexedSeq[Int] =
         node.raw.fold(_root_.cron4s.expr.ops.range)

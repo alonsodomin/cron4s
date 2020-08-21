@@ -27,8 +27,8 @@ import cron4s.testkit.Cron4sPropSpec
 class EveryNodeValidatorSpec extends Cron4sPropSpec with ValidatorPropSpec {
   import CronField._
 
-  private[this] def check[F <: CronField](
-      implicit unit: CronUnit[F],
+  private[this] def check[F <: CronField](implicit
+      unit: CronUnit[F],
       enum: Enumerated[CronUnit[F]]
   ): Unit =
     property(s"EveryNode[${unit.field}] with invalid base returns the invalid errors of its base") {

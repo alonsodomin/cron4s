@@ -110,13 +110,13 @@ object CronParser extends Parsers with BaseParser {
   def any[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyNode[F]] =
     accept("?", { case QuestionMark => AnyNode[F] })
 
-  def between[F <: CronField](base: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]
+  def between[F <: CronField](base: Parser[ConstNode[F]])(implicit
+      unit: CronUnit[F]
   ): Parser[BetweenNode[F]] =
     ((base <~ Hyphen) ~ base) ^^ { case min ~ max => BetweenNode[F](min, max) }
 
-  def several[F <: CronField](base: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]
+  def several[F <: CronField](base: Parser[ConstNode[F]])(implicit
+      unit: CronUnit[F]
   ): Parser[SeveralNode[F]] = {
     def compose(b: Parser[EnumerableNode[F]]) =
       repsep(b, Comma)
@@ -126,8 +126,8 @@ object CronParser extends Parsers with BaseParser {
     compose(between(base).map(between2Enumerable) | base.map(const2Enumerable))
   }
 
-  def every[F <: CronField](base: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]
+  def every[F <: CronField](base: Parser[ConstNode[F]])(implicit
+      unit: CronUnit[F]
   ): Parser[EveryNode[F]] = {
     def compose(b: Parser[DivisibleNode[F]]) =
       ((b <~ Slash) ~ decimal.filter(_ > 0)) ^^ {
@@ -145,8 +145,8 @@ object CronParser extends Parsers with BaseParser {
   // AST Parsing & Building
   //----------------------------------------
 
-  def field[F <: CronField](base: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]
+  def field[F <: CronField](base: Parser[ConstNode[F]])(implicit
+      unit: CronUnit[F]
   ): Parser[FieldNode[F]] =
     every(base).map(every2Field) |
       several(base).map(several2Field) |
@@ -154,8 +154,8 @@ object CronParser extends Parsers with BaseParser {
       base.map(const2Field) |
       each[F].map(each2Field)
 
-  def fieldWithAny[F <: CronField](base: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]
+  def fieldWithAny[F <: CronField](base: Parser[ConstNode[F]])(implicit
+      unit: CronUnit[F]
   ): Parser[FieldNodeWithAny[F]] =
     every(base).map(every2FieldWithAny) |
       several(base).map(several2FieldWithAny) |
@@ -165,12 +165,14 @@ object CronParser extends Parsers with BaseParser {
       any[F].map(any2FieldWithAny)
 
   val cron: Parser[CronExpr] = {
-    (field(seconds) <~ blank) ~
-      (field(minutes) <~ blank) ~
-      (field(hours) <~ blank) ~
-      (fieldWithAny(daysOfMonth) <~ blank) ~
-      (field(months) <~ blank) ~
-      fieldWithAny(daysOfWeek) ^^ {
+    phrase(
+      (field(seconds) <~ blank) ~!
+        (field(minutes) <~ blank) ~!
+        (field(hours) <~ blank) ~!
+        (fieldWithAny(daysOfMonth) <~ blank) ~!
+        (field(months) <~ blank) ~!
+        fieldWithAny(daysOfWeek)
+    ) ^^ {
       case sec ~ min ~ hour ~ day ~ month ~ weekDay =>
         CronExpr(sec, min, hour, day, month, weekDay)
     }

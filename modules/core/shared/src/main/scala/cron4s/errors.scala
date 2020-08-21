@@ -29,8 +29,10 @@ object Error {
   implicit val errorShow: Show[Error] = Show.show(_.getMessage)
 }
 
-final case class ParseFailed(msg: String, found: String, position: Int)
-    extends Error(s"$msg at position $position but found '$found'")
+case object ExprTooShort extends Error("The provided expression was too short")
+
+final case class ParseFailed(expected: String, position: Int, found: Option[String] = None)
+    extends Error(s"$expected at position ${position}${found.fold("")(f => s" but found '$f'")}")
 
 sealed trait ValidationError
 object ValidationError {

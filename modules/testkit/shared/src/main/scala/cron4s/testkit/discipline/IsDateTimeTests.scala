@@ -36,8 +36,7 @@ import org.typelevel.discipline.Laws
 trait IsDateTimeTests[DateTime] extends Laws {
   def laws: IsDateTimeLaws[DateTime]
 
-  def dateTime[F <: CronField](
-      implicit
+  def dateTime[F <: CronField](implicit
       arbDateTime: Arbitrary[DateTime],
       arbFieldValue: Arbitrary[CronFieldValue[F]],
       arbField: Arbitrary[F]
@@ -52,8 +51,7 @@ trait IsDateTimeTests[DateTime] extends Laws {
 }
 
 object IsDateTimeTests {
-  def apply[DateTime](
-      implicit
+  def apply[DateTime](implicit
       dtEv: IsDateTime[DateTime],
       eqEv: Eq[DateTime]
   ): IsDateTimeTests[DateTime] =
