@@ -39,7 +39,8 @@ object ParseFailed {
     new ParseFailed(expected, position, found)
 
   @deprecated("Use the other apply method signature with optional 'found'", "0.6.1")
-  def apply(msg: String, found: String, position: Int): ParseFailed = ParseFailed(msg, position, Some(found))
+  def apply(msg: String, found: String, position: Int): ParseFailed =
+    ParseFailed(msg, position, Some(found))
 }
 
 sealed trait ValidationError
