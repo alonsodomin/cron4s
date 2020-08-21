@@ -442,6 +442,7 @@ addCommandAlias(
     "checkfmt",
     "validateJS",
     "validateJVM",
+    "bench/compile",
     "binCompatCheck"
   ).mkString(";")
 )
