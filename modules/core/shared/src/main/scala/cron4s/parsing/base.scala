@@ -21,7 +21,7 @@ import scala.util.parsing.combinator.Parsers
 import scala.util.parsing.input.{Position, NoPosition}
 
 private[parsing] trait BaseParser extends Parsers {
-  protected def handleError(err: NoSuccess): _root_.cron4s.Error = {
+  protected def handleError(err: NoSuccess): _root_.cron4s.Error =
     err.next.pos match {
       case NoPosition => ExprTooShort
       case pos: Position =>
@@ -32,5 +32,4 @@ private[parsing] trait BaseParser extends Parsers {
         }
         ParseFailed(err.msg, position, found)
     }
-  }
 }

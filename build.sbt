@@ -68,8 +68,7 @@ val commonSettings = Def.settings(
   consoleImports := Seq("cron4s._"),
   initialCommands in console := consoleImports.value
     .map(s => s"import $s")
-    .mkString("\n"),
-  scalafmtOnCompile := true
+    .mkString("\n")
 ) ++ CompilerPlugins.All
 
 lazy val commonJvmSettings = Seq(
