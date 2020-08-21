@@ -28,7 +28,7 @@ object Dependencies {
 
     val momentjs      = "0.10.3"
     val momenttz      = "0.5.25"
-    val scalaJavaTime = "2.0.0-RC5"
+    val scalaJavaTime = "2.0.0"
   }
 
   lazy val core = Def.settings(
