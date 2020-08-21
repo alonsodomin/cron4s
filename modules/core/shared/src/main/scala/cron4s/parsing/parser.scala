@@ -165,12 +165,14 @@ object CronParser extends Parsers with BaseParser {
       any[F].map(any2FieldWithAny)
 
   val cron: Parser[CronExpr] = {
-    (field(seconds) <~ blank) ~
-      (field(minutes) <~ blank) ~
-      (field(hours) <~ blank) ~
-      (fieldWithAny(daysOfMonth) <~ blank) ~
-      (field(months) <~ blank) ~
-      fieldWithAny(daysOfWeek) ^^ {
+    phrase(
+      (field(seconds) <~ blank) ~!
+        (field(minutes) <~ blank) ~!
+        (field(hours) <~ blank) ~!
+        (fieldWithAny(daysOfMonth) <~ blank) ~!
+        (field(months) <~ blank) ~!
+        fieldWithAny(daysOfWeek)
+    ) ^^ {
       case sec ~ min ~ hour ~ day ~ month ~ weekDay =>
         CronExpr(sec, min, hour, day, month, weekDay)
     }
