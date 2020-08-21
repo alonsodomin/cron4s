@@ -71,8 +71,7 @@ trait DateTimeCronLaws[E, DateTime] {
 }
 
 object DateTimeCronLaws {
-  def apply[E, DateTime](
-      implicit
+  def apply[E, DateTime](implicit
       dt0: IsDateTime[DateTime],
       TC0: DateTimeCron[E]
   ): DateTimeCronLaws[E, DateTime] =

@@ -60,9 +60,8 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
       getField(dateTime, jodaField)
         .map(_ + offset)
         .fold(UnsupportedField(field).asLeft[Int])(_.asRight)
-    } else {
+    } else
       UnsupportedField(field).asLeft
-    }
   }
 
   /**
@@ -93,14 +92,15 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
       case DateTimeUnit.Weeks   => Weeks.weeks(amount)
     }
 
-  protected def asDateTimeFieldType[F <: CronField](field: F): DateTimeFieldType = field match {
-    case Second     => DateTimeFieldType.secondOfMinute()
-    case Minute     => DateTimeFieldType.minuteOfHour()
-    case Hour       => DateTimeFieldType.hourOfDay()
-    case DayOfMonth => DateTimeFieldType.dayOfMonth()
-    case Month      => DateTimeFieldType.monthOfYear()
-    case DayOfWeek  => DateTimeFieldType.dayOfWeek()
-  }
+  protected def asDateTimeFieldType[F <: CronField](field: F): DateTimeFieldType =
+    field match {
+      case Second     => DateTimeFieldType.secondOfMinute()
+      case Minute     => DateTimeFieldType.minuteOfHour()
+      case Hour       => DateTimeFieldType.hourOfDay()
+      case DayOfMonth => DateTimeFieldType.dayOfMonth()
+      case Month      => DateTimeFieldType.monthOfYear()
+      case DayOfWeek  => DateTimeFieldType.dayOfWeek()
+    }
 
   protected def isSupported(dateTime: DT, field: DateTimeFieldType): Boolean
 
@@ -190,11 +190,11 @@ private[joda] final class JodaLocalDateInstance extends JodaLocalBaseInstance[Lo
   ): Either[DateTimeError, LocalDate] = {
     val fieldType = asDateTimeFieldType(field)
 
-    if (dateTime.isSupported(fieldType)) {
+    if (dateTime.isSupported(fieldType))
       Either
         .catchNonFatal(dateTime.withField(fieldType, value))
         .leftMap(_ => InvalidFieldValue(field, value))
-    } else UnsupportedField(field).asLeft
+    else UnsupportedField(field).asLeft
   }
 }
 

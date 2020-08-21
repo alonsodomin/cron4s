@@ -89,19 +89,20 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       newDateTime
     }
 
-    def assignFieldValue: Date = field match {
-      case Second     => setter(_.setUTCSeconds(value, 0))
-      case Minute     => setter(_.setUTCMinutes(value))
-      case Hour       => setter(_.setUTCHours(value))
-      case DayOfMonth => setter(_.setUTCDate(value))
-      case Month =>
-        val monthToSet = value - 1
-        setter(_.setUTCMonth(monthToSet))
-      case DayOfWeek =>
-        val dayToSet = (value % DaysInWeek) + 1
-        val offset   = dayToSet - dateTime.getUTCDay()
-        setter(d => d.setUTCDate(d.getUTCDate() + offset))
-    }
+    def assignFieldValue: Date =
+      field match {
+        case Second     => setter(_.setUTCSeconds(value, 0))
+        case Minute     => setter(_.setUTCMinutes(value))
+        case Hour       => setter(_.setUTCHours(value))
+        case DayOfMonth => setter(_.setUTCDate(value))
+        case Month =>
+          val monthToSet = value - 1
+          setter(_.setUTCMonth(monthToSet))
+        case DayOfWeek =>
+          val dayToSet = (value % DaysInWeek) + 1
+          val offset   = dayToSet - dateTime.getUTCDay()
+          setter(d => d.setUTCDate(d.getUTCDate() + offset))
+      }
 
     def assignmentSucceeded(date: Date) =
       get[F](date, field).toOption.contains(value)

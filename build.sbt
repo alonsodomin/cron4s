@@ -68,8 +68,7 @@ val commonSettings = Def.settings(
   consoleImports := Seq("cron4s._"),
   initialCommands in console := consoleImports.value
     .map(s => s"import $s")
-    .mkString("\n"),
-  scalafmtOnCompile := true
+    .mkString("\n")
 ) ++ CompilerPlugins.All
 
 lazy val commonJvmSettings = Seq(
@@ -108,13 +107,14 @@ lazy val publishSettings = Seq(
   // this code was copied from https://github.com/mongodb/mongo-spark
   pomPostProcess := { (node: xml.Node) =>
     new RuleTransformer(new RewriteRule {
-      override def transform(node: xml.Node): Seq[xml.Node] = node match {
-        case e: xml.Elem
-            if e.label == "dependency" && e.child
-              .exists(child => child.label == "groupId" && child.text == "org.scoverage") =>
-          Nil
-        case _ => Seq(node)
-      }
+      override def transform(node: xml.Node): Seq[xml.Node] =
+        node match {
+          case e: xml.Elem
+              if e.label == "dependency" && e.child
+                .exists(child => child.label == "groupId" && child.text == "org.scoverage") =>
+            Nil
+          case _ => Seq(node)
+        }
     }).transform(node).head
   }
 )
@@ -154,6 +154,13 @@ def mimaSettings(module: String): Seq[Setting[_]] =
       ProblemFilters.exclude[InheritedNewAbstractMethodProblem](
         "cron4s.syntax.AllSyntax.cron4s$syntax$CronStringSyntax$_setter_$embedCronStrings_="
       ),
+      ProblemFilters.exclude[MissingTypesProblem]("cron4s.ParseFailed$"),
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.tupled"),
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.curried"),
+      ProblemFilters.exclude[DirectMissingMethodProblem]("cron4s.ParseFailed.msg"),
+      ProblemFilters.exclude[IncompatibleMethTypeProblem]("cron4s.ParseFailed.*"),
+      ProblemFilters.exclude[IncompatibleResultTypeProblem]("cron4s.ParseFailed.*"),
+      ProblemFilters.exclude[IncompatibleResultTypeProblem]("cron4s.parsing.*.handleError"),
       // Doobie exclusions
       ProblemFilters.exclude[IncompatibleResultTypeProblem]("cron4s.doobie.package.cronExprMeta"),
       // Exclussions due to changes in scalatest and cats-testkit
@@ -436,12 +443,14 @@ addCommandAlias(
   ).mkString(";")
 )
 addCommandAlias("validateJS", "testJS")
+addCommandAlias("validateBench", "bench/compile")
 addCommandAlias(
   "validate",
   Seq(
     "checkfmt",
     "validateJS",
     "validateJVM",
+    "validateBench",
     "binCompatCheck"
   ).mkString(";")
 )

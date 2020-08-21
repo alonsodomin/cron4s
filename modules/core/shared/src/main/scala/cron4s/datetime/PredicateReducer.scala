@@ -29,15 +29,15 @@ import shapeless._
 /**
   * Created by domingueza on 29/07/2016.
   */
-private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime])(
-    implicit M: MonoidK[Predicate]
+private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime])(implicit
+    M: MonoidK[Predicate]
 ) {
   object asPredicate extends Poly1 {
     import CronField._
     import cats.syntax.either._
 
-    private[this] def predicateFor[N[_ <: CronField], F <: CronField](field: F, node: N[F])(
-        implicit expr: FieldExpr[N, F]
+    private[this] def predicateFor[N[_ <: CronField], F <: CronField](field: F, node: N[F])(implicit
+        expr: FieldExpr[N, F]
     ): Predicate[DateTime] =
       Predicate { dt =>
         DT.get(dt, field)

@@ -18,17 +18,17 @@ object Dependencies {
 
     val shapeless  = "2.3.3"
     val discipline = "1.0.1"
-    val decline    = "1.0.0"
+    val decline    = "1.2.0"
     val circe      = "0.13.0"
     val parserc    = "1.1.2"
     val doobie     = "0.9.0"
 
-    val jodaTime    = "2.10.5"
+    val jodaTime    = "2.10.6"
     val jodaConvert = "2.2.1"
 
-    val momentjs      = "0.10.3"
-    val momenttz      = "0.5.25"
-    val scalaJavaTime = "2.0.0-RC5"
+    val momentjs      = "0.10.4"
+    val momenttz      = "0.5.28"
+    val scalaJavaTime = "2.0.0"
   }
 
   lazy val core = Def.settings(

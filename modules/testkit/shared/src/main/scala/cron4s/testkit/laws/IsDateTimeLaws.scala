@@ -42,10 +42,9 @@ trait IsDateTimeLaws[DateTime] {
       val check = for {
         current     <- DT.get(dt, fieldValue.field)
         newDateTime <- DT.set(dt, fieldValue.field, fieldValue.value)
-      } yield {
+      } yield
         if (current === fieldValue.value) Prop.undecided
         else Prop(newDateTime =!= dt)
-      }
 
       check.fold(Prop.exception(_), identity)
     } else Prop.proved
@@ -62,8 +61,7 @@ trait IsDateTimeLaws[DateTime] {
 }
 
 object IsDateTimeLaws {
-  def apply[DateTime](
-      implicit
+  def apply[DateTime](implicit
       dtEv: IsDateTime[DateTime],
       eqEv: Eq[DateTime]
   ): IsDateTimeLaws[DateTime] =

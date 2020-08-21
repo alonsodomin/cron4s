@@ -23,19 +23,57 @@ import cron4s.syntax.all._
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.prop.TableDrivenPropertyChecks
 
 import scala.util.{Failure, Success}
 
 /**
   * Created by alonsodomin on 12/04/2017.
   */
-object CronSpec {
+object CronSpec extends TableDrivenPropertyChecks {
   import CronField._
 
-  final val AllEachExpr = "* * * * * *"
-  final val AnyDaysExpr = "* * * ? * ?"
+  final val AllEachExpr  = "* * * * * *"
+  final val AnyDaysExpr  = "* * * ? * ?"
+  final val TooLongExpr  = "* * * ? * * *"
+  final val TooShortExpr = "* * * * *"
 
-  final val InvalidExprs = List(AllEachExpr, AnyDaysExpr)
+  final val InvalidExprs =
+    Table(
+      ("description", "expression", "expected error"),
+      (
+        "all stars",
+        AllEachExpr,
+        InvalidCron(
+          NonEmptyList.of(
+            InvalidFieldCombination(
+              "Fields DayOfMonth and DayOfWeek can't both have the expression: *"
+            )
+          )
+        )
+      ),
+      (
+        "symbol ? at two positions",
+        AnyDaysExpr,
+        InvalidCron(
+          NonEmptyList.of(
+            InvalidFieldCombination(
+              "Fields DayOfMonth and DayOfWeek can't both have the expression: ?"
+            )
+          )
+        )
+      ),
+      (
+        "too long expression",
+        TooLongExpr,
+        ParseFailed("end of input expected", 2, Some(" "))
+      ),
+      (
+        "too short expression",
+        TooShortExpr,
+        ExprTooShort
+      )
+    )
 
   final val ValidExpr = CronExpr(
     SeveralNode(BetweenNode[Second](ConstNode(17), ConstNode(30)), ConstNode[Second](5)),
@@ -45,38 +83,26 @@ object CronSpec {
     EachNode[Month],
     AnyNode[DayOfWeek]
   )
+
 }
 
 class CronSpec extends AnyFlatSpec with Matchers {
   import CronSpec._
 
-  "Cron" should "not parse an expression with all *" in {
+  "Cron" should "not parse an invalid expression" in {
     val expectedError =
       InvalidFieldCombination("Fields DayOfMonth and DayOfWeek can't both have the expression: *")
 
-    val parsed = Cron(AllEachExpr)
-    parsed shouldBe Left(InvalidCron(NonEmptyList.of(expectedError)))
+    forAll(InvalidExprs) { (desc: String, expr: String, err: Error) =>
+      val parsed = Cron(expr)
+      parsed shouldBe Left(err)
 
-    val parsedTry = Cron.tryParse(AllEachExpr)
-    parsedTry should matchPattern { case Failure(InvalidCron(_)) => }
+      val parsedTry = Cron.tryParse(expr)
+      parsedTry should matchPattern { case Failure(`err`) => }
 
-    intercept[InvalidCron] {
-      Cron.unsafeParse(AllEachExpr)
-    }
-  }
-
-  it should "not parse an expression with ? in both DayOfMonth and DayOfWeek" in {
-    val expectedError =
-      InvalidFieldCombination("Fields DayOfMonth and DayOfWeek can't both have the expression: ?")
-
-    val parsed = Cron(AnyDaysExpr)
-    parsed shouldBe Left(InvalidCron(NonEmptyList.of(expectedError)))
-
-    val parsedTry = Cron.tryParse(AnyDaysExpr)
-    parsedTry should matchPattern { case Failure(InvalidCron(_)) => }
-
-    intercept[InvalidCron] {
-      Cron.unsafeParse(AnyDaysExpr)
+      intercept[Error] {
+        Cron.unsafeParse(expr)
+      }
     }
   }
 

@@ -27,8 +27,8 @@ import cron4s.testkit.SlowCron4sPropSpec
 class SeveralNodeValidatorSpec extends SlowCron4sPropSpec with ValidatorPropSpec {
   import CronField._
 
-  private[this] def check[F <: CronField](
-      implicit unit: CronUnit[F],
+  private[this] def check[F <: CronField](implicit
+      unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
   ): Unit = {
     val severalValidator = NodeValidator[SeveralNode[F]]

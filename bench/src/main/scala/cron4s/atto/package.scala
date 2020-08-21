@@ -99,16 +99,16 @@ package object atto {
   def any[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyNode[F]] =
     questionMark.as(AnyNode[F])
 
-  def between[F <: CronField](base: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]
+  def between[F <: CronField](base: Parser[ConstNode[F]])(implicit
+      unit: CronUnit[F]
   ): Parser[BetweenNode[F]] =
     for {
       min <- base <~ hyphen
       max <- base
     } yield BetweenNode[F](min, max)
 
-  def several[F <: CronField](base: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]
+  def several[F <: CronField](base: Parser[ConstNode[F]])(implicit
+      unit: CronUnit[F]
   ): Parser[SeveralNode[F]] = {
     def compose(b: => Parser[EnumerableNode[F]]) =
       sepBy1(b, comma)
@@ -118,8 +118,8 @@ package object atto {
     compose(between(base).map(between2Enumerable) | base.map(const2Enumerable))
   }
 
-  def every[F <: CronField](base: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]
+  def every[F <: CronField](base: Parser[ConstNode[F]])(implicit
+      unit: CronUnit[F]
   ): Parser[EveryNode[F]] = {
     def compose(b: => Parser[DivisibleNode[F]]) =
       ((b <~ slash) ~ decimal.filter(_ > 0)).map {
@@ -137,8 +137,8 @@ package object atto {
   // AST Parsing & Building
   //----------------------------------------
 
-  def field[F <: CronField](base: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]
+  def field[F <: CronField](base: Parser[ConstNode[F]])(implicit
+      unit: CronUnit[F]
   ): Parser[FieldNode[F]] =
     every(base).map(every2Field) |
       several(base).map(several2Field) |
@@ -146,8 +146,8 @@ package object atto {
       base.map(const2Field) |
       each[F].map(each2Field)
 
-  def fieldWithAny[F <: CronField](base: Parser[ConstNode[F]])(
-      implicit unit: CronUnit[F]
+  def fieldWithAny[F <: CronField](base: Parser[ConstNode[F]])(implicit
+      unit: CronUnit[F]
   ): Parser[FieldNodeWithAny[F]] =
     every(base).map(every2FieldWithAny) |
       several(base).map(several2FieldWithAny) |
@@ -169,7 +169,7 @@ package object atto {
     (cron.parseOnly(e): @unchecked) match {
       case ParseResult.Done(_, result) => Right(result)
       case ParseResult.Fail(rest, _, msg) =>
-        val position = (e.length() - rest.length() + 1)
-        Left(ParseFailed(msg, rest, position))
+        val position = e.length() - rest.length() + 1
+        Left(ParseFailed(msg, position, Some(rest)))
     }
 }

@@ -95,16 +95,17 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
       newDateTime
     }
 
-    def assignFieldValue: Date = field match {
-      case Second     => setter(_.second(value.toDouble).millisecond(0))
-      case Minute     => setter(_.minute(value.toDouble))
-      case Hour       => setter(_.hour(value.toDouble))
-      case DayOfMonth => setter(_.date(value.toDouble))
-      case Month      => setter(_.month((value - 1).toDouble))
-      case DayOfWeek =>
-        val dayToSet = (value % DaysInWeek) + 1
-        setter(_.day(dayToSet.toDouble))
-    }
+    def assignFieldValue: Date =
+      field match {
+        case Second     => setter(_.second(value.toDouble).millisecond(0))
+        case Minute     => setter(_.minute(value.toDouble))
+        case Hour       => setter(_.hour(value.toDouble))
+        case DayOfMonth => setter(_.date(value.toDouble))
+        case Month      => setter(_.month((value - 1).toDouble))
+        case DayOfWeek =>
+          val dayToSet = (value % DaysInWeek) + 1
+          setter(_.day(dayToSet.toDouble))
+      }
 
     def assignmentSucceeded(date: Date) =
       get[F](date, field).toOption.contains(value)

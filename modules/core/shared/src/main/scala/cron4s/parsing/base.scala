@@ -18,8 +18,18 @@ package cron4s
 package parsing
 
 import scala.util.parsing.combinator.Parsers
+import scala.util.parsing.input.{Position, NoPosition}
 
 private[parsing] trait BaseParser extends Parsers {
-  protected def handleError(err: NoSuccess): ParseFailed =
-    ParseFailed(err.msg, err.next.first.toString, err.next.pos.column)
+  protected def handleError(err: NoSuccess): _root_.cron4s.Error =
+    err.next.pos match {
+      case NoPosition => ExprTooShort
+      case pos: Position =>
+        val position = err.next.pos.column
+        val found = {
+          if (err.next.atEnd) None
+          else Option(err.next.first.toString).filter(_.nonEmpty)
+        }
+        ParseFailed(err.msg, position, found)
+    }
 }
