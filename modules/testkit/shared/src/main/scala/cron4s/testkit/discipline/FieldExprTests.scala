@@ -32,19 +32,19 @@ import org.scalacheck.Prop._
 trait FieldExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[E[F]] {
   def laws: FieldExprLaws[E, F]
 
-  def expr[EE[_ <: CronField]](
-      implicit
+  def expr[EE[_ <: CronField]](implicit
       arbEF: Arbitrary[E[F]],
       arbEEF: Arbitrary[EE[F]],
       arbFrom: Arbitrary[Int],
       e: FieldExpr[EE, F]
-  ): RuleSet = new DefaultRuleSet(
-    name = "expr",
-    parent = Some(enumerated),
-    "matchable"              -> forAll(laws.matchable _),
-    "implicationCommutative" -> forAll(laws.implicationCommutative[EE] _),
-    "implicationEquivalence" -> forAll(laws.implicationEquivalence[EE] _)
-  )
+  ): RuleSet =
+    new DefaultRuleSet(
+      name = "expr",
+      parent = Some(enumerated),
+      "matchable"              -> forAll(laws.matchable _),
+      "implicationCommutative" -> forAll(laws.implicationCommutative[EE] _),
+      "implicationEquivalence" -> forAll(laws.implicationEquivalence[EE] _)
+    )
 }
 
 object FieldExprTests {

@@ -38,9 +38,10 @@ trait Predicate[A] extends (A => Boolean) { self =>
 }
 
 object Predicate {
-  def apply[A](f: A => Boolean): Predicate[A] = new Predicate[A] {
-    def apply(a: A): Boolean = f(a)
-  }
+  def apply[A](f: A => Boolean): Predicate[A] =
+    new Predicate[A] {
+      def apply(a: A): Boolean = f(a)
+    }
 
   implicit val contravariant = new Contravariant[Predicate] {
     def contramap[A, B](fa: Predicate[A])(f: B => A): Predicate[B] =

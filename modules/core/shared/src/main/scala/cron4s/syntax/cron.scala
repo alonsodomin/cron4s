@@ -36,8 +36,8 @@ private[syntax] class DateTimeCronOps[E](self: E, tc: DateTimeCron[E]) {
   def prev[DateTime](from: DateTime)(implicit DT: IsDateTime[DateTime]): Option[DateTime] =
     step(from, -1)
 
-  def step[DateTime](from: DateTime, stepSize: Int)(
-      implicit DT: IsDateTime[DateTime]
+  def step[DateTime](from: DateTime, stepSize: Int)(implicit
+      DT: IsDateTime[DateTime]
   ): Option[DateTime] =
     tc.step(self, DT)(from, stepSize)
 

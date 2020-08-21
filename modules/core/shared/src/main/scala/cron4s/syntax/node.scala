@@ -32,8 +32,8 @@ private[syntax] class DateTimeNodeOps[E[_ <: CronField], F <: CronField](
   def prevIn[DateTime](dateTime: DateTime)(implicit DT: IsDateTime[DateTime]): Option[DateTime] =
     tc.prevIn(self, DT)(dateTime)
 
-  def stepIn[DateTime](dateTime: DateTime, step: Int)(
-      implicit DT: IsDateTime[DateTime]
+  def stepIn[DateTime](dateTime: DateTime, step: Int)(implicit
+      DT: IsDateTime[DateTime]
   ): Option[DateTime] =
     tc.stepIn(self, DT)(dateTime, step)
 }

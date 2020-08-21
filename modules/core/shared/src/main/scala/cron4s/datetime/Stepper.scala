@@ -109,17 +109,19 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   }
 
   object foldInternalExpr extends Poly2 {
-    implicit def caseFullExpr = at[StepST, CronExpr] { (stepSt, expr) =>
-      val dateWithoutDOW = expr.datePart.raw.take(2)
-      val daysOfWeekNode = expr.datePart.raw.select[DaysOfWeekNode]
+    implicit def caseFullExpr =
+      at[StepST, CronExpr] { (stepSt, expr) =>
+        val dateWithoutDOW = expr.datePart.raw.take(2)
+        val daysOfWeekNode = expr.datePart.raw.select[DaysOfWeekNode]
 
-      for {
-        st @ (resetTime, _, _) <- expr.timePart.raw
-          .foldLeft(stepSt)(stepPerNode)
-        (_, dt, step) <- dateWithoutDOW.foldLeft(Some(st): StepST)(stepPerNode)
-        result        <- stepOverDayOfWeek(Some((resetTime, dt, step)), daysOfWeekNode)
-      } yield result
-    }
+        for {
+          st @ (resetTime, _, _) <-
+            expr.timePart.raw
+              .foldLeft(stepSt)(stepPerNode)
+          (_, dt, step) <- dateWithoutDOW.foldLeft(Some(st): StepST)(stepPerNode)
+          result        <- stepOverDayOfWeek(Some((resetTime, dt, step)), daysOfWeekNode)
+        } yield result
+      }
     implicit def caseDateExpr =
       at[StepST, DateCronExpr]((stepSt, expr) => expr.raw.foldLeft(stepSt)(stepPerNode))
     implicit def caseTimeExpr =
@@ -133,14 +135,13 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
     @tailrec
     def go(stepSt: StepST, iteration: Int): StepST =
       if (iteration == step.amount) stepSt
-      else {
+      else
         cron.foldLeft(stepSt)(foldInternalExpr) match {
           case Some((_, dt, _)) =>
             go(initial(dt), iteration + 1)
 
           case None => None
         }
-      }
 
     go(initial(from), 0).map(_._2)
   }
