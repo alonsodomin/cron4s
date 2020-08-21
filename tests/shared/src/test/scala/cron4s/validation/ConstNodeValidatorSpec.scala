@@ -27,8 +27,8 @@ import cron4s.testkit.Cron4sPropSpec
 class ConstNodeValidatorSpec extends Cron4sPropSpec with ValidatorPropSpec {
   import CronField._
 
-  private[this] def check[F <: CronField](
-      implicit unit: CronUnit[F],
+  private[this] def check[F <: CronField](implicit
+      unit: CronUnit[F],
       ev: Enumerated[CronUnit[F]]
   ): Unit = {
     property(s"ConstNode[${unit.field}] with value within range should pass validation") {

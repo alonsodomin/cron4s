@@ -69,8 +69,9 @@ object Cron {
     * @example val cron = Cron.unsafeParse("10-35 2,4,6 * ? * *")
     */
   @throws(classOf[Error])
-  def unsafeParse(e: String): CronExpr = parse(e) match {
-    case Left(err)   => throw err
-    case Right(expr) => expr
-  }
+  def unsafeParse(e: String): CronExpr =
+    parse(e) match {
+      case Left(err)   => throw err
+      case Right(expr) => expr
+    }
 }

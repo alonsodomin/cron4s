@@ -57,20 +57,21 @@ trait Enumerated[A] {
     else {
       val aRange = range(a)
 
-      def nearestNeighbourIndex = step.direction match {
-        case Direction.Forward =>
-          val idx = aRange.indexWhere(from < _)
-          if (idx == -1) aRange.size
-          else idx
+      def nearestNeighbourIndex =
+        step.direction match {
+          case Direction.Forward =>
+            val idx = aRange.indexWhere(from < _)
+            if (idx == -1) aRange.size
+            else idx
 
-        case Direction.Backwards =>
-          aRange.lastIndexWhere(from > _)
-      }
+          case Direction.Backwards =>
+            aRange.lastIndexWhere(from > _)
+        }
 
       def currentIdx =
-        if (aRange.contains(from)) {
+        if (aRange.contains(from))
           aRange.indexOf(from)
-        } else {
+        else {
           val correction =
             if (step.amount != 0) step.direction.reverse.sign else 0
           nearestNeighbourIndex + correction
@@ -82,11 +83,11 @@ trait Enumerated[A] {
         if (mod < 0) aRange.size + mod
         else mod
       }
-      val offset = if (pointer < 0) {
-        pointer - (aRange.size - 1)
-      } else {
-        pointer
-      }
+      val offset =
+        if (pointer < 0)
+          pointer - (aRange.size - 1)
+        else
+          pointer
 
       val newValue  = aRange(index)
       val carryOver = offset / aRange.size

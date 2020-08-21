@@ -45,10 +45,11 @@ sealed trait Node[F <: CronField] {
 }
 
 final class EachNode[F <: CronField] private (val unit: CronUnit[F]) extends Node[F] {
-  override def equals(other: Any): Boolean = other match {
-    case _: EachNode[F] => true
-    case _              => false
-  }
+  override def equals(other: Any): Boolean =
+    other match {
+      case _: EachNode[F] => true
+      case _              => false
+    }
 
   override lazy val hashCode: Int = toString.hashCode()
 
@@ -70,23 +71,25 @@ object EachNode {
     new FieldExpr[EachNode, F] {
       def unit(node: EachNode[F]): CronUnit[F] = node.unit
 
-      def implies[EE[_ <: CronField]](node: EachNode[F])(ee: EE[F])(
-          implicit EE: FieldExpr[EE, F]
+      def implies[EE[_ <: CronField]](node: EachNode[F])(ee: EE[F])(implicit
+          EE: FieldExpr[EE, F]
       ): Boolean = true
 
-      def matches(node: EachNode[F]): Predicate[Int] = Predicate { x =>
-        x >= min(node) && x <= max(node)
-      }
+      def matches(node: EachNode[F]): Predicate[Int] =
+        Predicate { x =>
+          x >= min(node) && x <= max(node)
+        }
 
       def range(node: EachNode[F]): IndexedSeq[Int] = node.range
     }
 }
 
 final class AnyNode[F <: CronField] private (val unit: CronUnit[F]) extends Node[F] {
-  override def equals(other: Any): Boolean = other match {
-    case _: AnyNode[F] => true
-    case _             => false
-  }
+  override def equals(other: Any): Boolean =
+    other match {
+      case _: AnyNode[F] => true
+      case _             => false
+    }
 
   override lazy val hashCode: Int = toString.hashCode()
 
@@ -108,13 +111,14 @@ object AnyNode {
     new FieldExpr[AnyNode, F] {
       def unit(node: AnyNode[F]): CronUnit[F] = node.unit
 
-      def implies[EE[_ <: CronField]](node: AnyNode[F])(ee: EE[F])(
-          implicit EE: FieldExpr[EE, F]
+      def implies[EE[_ <: CronField]](node: AnyNode[F])(ee: EE[F])(implicit
+          EE: FieldExpr[EE, F]
       ): Boolean = true
 
-      def matches(node: AnyNode[F]): Predicate[Int] = Predicate { x =>
-        x >= min(node) && x <= max(node)
-      }
+      def matches(node: AnyNode[F]): Predicate[Int] =
+        Predicate { x =>
+          x >= min(node) && x <= max(node)
+        }
 
       def range(node: AnyNode[F]): IndexedSeq[Int] = node.range
     }
@@ -125,10 +129,11 @@ final class ConstNode[F <: CronField] private (
     val textValue: Option[String],
     val unit: CronUnit[F]
 ) extends Node[F] {
-  override def equals(other: Any): Boolean = other match {
-    case node: ConstNode[F] => this.value === node.value
-    case _                  => false
-  }
+  override def equals(other: Any): Boolean =
+    other match {
+      case node: ConstNode[F] => this.value === node.value
+      case _                  => false
+    }
 
   override lazy val hashCode: Int = value.hashCode()
 
@@ -173,11 +178,12 @@ final class BetweenNode[F <: CronField] private (
     val end: ConstNode[F],
     val unit: CronUnit[F]
 ) extends Node[F] {
-  override def equals(other: Any): Boolean = other match {
-    case node: BetweenNode[F] =>
-      (this.begin === node.begin) && (this.end === node.end)
-    case _ => false
-  }
+  override def equals(other: Any): Boolean =
+    other match {
+      case node: BetweenNode[F] =>
+        (this.begin === node.begin) && (this.end === node.end)
+      case _ => false
+    }
 
   override lazy val hashCode: Int =
     begin.hashCode * 31 + end.hashCode * 31
@@ -193,8 +199,8 @@ final class BetweenNode[F <: CronField] private (
 }
 
 object BetweenNode {
-  @inline def apply[F <: CronField](begin: ConstNode[F], end: ConstNode[F])(
-      implicit unit: CronUnit[F]
+  @inline def apply[F <: CronField](begin: ConstNode[F], end: ConstNode[F])(implicit
+      unit: CronUnit[F]
   ): BetweenNode[F] =
     new BetweenNode(begin, end, unit)
 
@@ -204,22 +210,23 @@ object BetweenNode {
   implicit def betweenNodeShow[F <: CronField]: Show[BetweenNode[F]] =
     Show.fromToString[BetweenNode[F]]
 
-  implicit def betweenNodeInstance[F <: CronField](
-      implicit elemExpr: FieldExpr[ConstNode, F]
+  implicit def betweenNodeInstance[F <: CronField](implicit
+      elemExpr: FieldExpr[ConstNode, F]
   ): FieldExpr[BetweenNode, F] =
     new FieldExpr[BetweenNode, F] {
       def unit(node: BetweenNode[F]): CronUnit[F] = node.unit
 
-      def matches(node: BetweenNode[F]): Predicate[Int] = Predicate { x =>
-        if (node.begin.value < node.end.value)
-          x >= node.begin.value && x <= node.end.value
-        else false
-      }
+      def matches(node: BetweenNode[F]): Predicate[Int] =
+        Predicate { x =>
+          if (node.begin.value < node.end.value)
+            x >= node.begin.value && x <= node.end.value
+          else false
+        }
 
       def implies[EE[_ <: CronField]](
           node: BetweenNode[F]
       )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
-        (node.min <= ee.min) && (node.max >= ee.max)
+        (min(node) <= ee.min) && (max(node) >= ee.max)
 
       def range(node: BetweenNode[F]): IndexedSeq[Int] = node.range
     }
@@ -230,10 +237,11 @@ final class SeveralNode[F <: CronField] private (
     val tail: NonEmptyList[EnumerableNode[F]],
     val unit: CronUnit[F]
 ) extends Node[F] {
-  override def equals(other: Any): Boolean = other match {
-    case node: SeveralNode[F] => this.values === node.values
-    case _                    => false
-  }
+  override def equals(other: Any): Boolean =
+    other match {
+      case node: SeveralNode[F] => this.values === node.values
+      case _                    => false
+    }
 
   lazy val values: NonEmptyList[EnumerableNode[F]] = head :: tail
 
@@ -255,8 +263,8 @@ object SeveralNode {
   )(implicit unit: CronUnit[F]): SeveralNode[F] =
     new SeveralNode(first, NonEmptyList.of(second, tail: _*), unit)
 
-  def fromSeq[F <: CronField](xs: Seq[EnumerableNode[F]])(
-      implicit unit: CronUnit[F]
+  def fromSeq[F <: CronField](xs: Seq[EnumerableNode[F]])(implicit
+      unit: CronUnit[F]
   ): Option[SeveralNode[F]] = {
     def splitSeq(
         xs: Seq[EnumerableNode[F]]
@@ -275,8 +283,8 @@ object SeveralNode {
   implicit def severalNodeShow[F <: CronField]: Show[SeveralNode[F]] =
     Show.fromToString[SeveralNode[F]]
 
-  implicit def severalNodeInstance[F <: CronField](
-      implicit elemExpr: FieldExpr[EnumerableNode, F]
+  implicit def severalNodeInstance[F <: CronField](implicit
+      elemExpr: FieldExpr[EnumerableNode, F]
   ): FieldExpr[SeveralNode, F] =
     new FieldExpr[SeveralNode, F] {
       def unit(node: SeveralNode[F]): CronUnit[F] = node.unit
@@ -298,11 +306,12 @@ final class EveryNode[F <: CronField] private (
     val freq: Int,
     val unit: CronUnit[F]
 ) extends Node[F] {
-  override def equals(other: Any): Boolean = other match {
-    case node: EveryNode[F] =>
-      (this.base === node.base) && (this.freq === node.freq)
-    case _ => false
-  }
+  override def equals(other: Any): Boolean =
+    other match {
+      case node: EveryNode[F] =>
+        (this.base === node.base) && (this.freq === node.freq)
+      case _ => false
+    }
 
   override lazy val hashCode: Int =
     base.hashCode() * 31 + freq
@@ -324,8 +333,8 @@ final class EveryNode[F <: CronField] private (
 }
 
 object EveryNode {
-  @inline def apply[F <: CronField](base: DivisibleNode[F], freq: Int)(
-      implicit unit: CronUnit[F]
+  @inline def apply[F <: CronField](base: DivisibleNode[F], freq: Int)(implicit
+      unit: CronUnit[F]
   ): EveryNode[F] =
     new EveryNode(base, freq, unit)
 

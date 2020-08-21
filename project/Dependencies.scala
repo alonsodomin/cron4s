@@ -9,7 +9,7 @@ import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.npmDependencies
 
 object Dependencies {
   object version {
-    val atto = "0.7.2"
+    val atto = "0.8.0"
 
     object cats {
       val main      = "2.1.1"
@@ -18,7 +18,7 @@ object Dependencies {
 
     val shapeless  = "2.3.3"
     val discipline = "1.0.1"
-    val decline    = "1.0.0"
+    val decline    = "1.2.0"
     val circe      = "0.13.0"
     val parserc    = "1.1.2"
     val doobie     = "0.9.0"
@@ -28,7 +28,7 @@ object Dependencies {
 
     val momentjs      = "0.10.3"
     val momenttz      = "0.5.25"
-    val scalaJavaTime = "2.0.0-RC5"
+    val scalaJavaTime = "2.0.0"
   }
 
   lazy val core = Def.settings(

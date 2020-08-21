@@ -108,13 +108,14 @@ lazy val publishSettings = Seq(
   // this code was copied from https://github.com/mongodb/mongo-spark
   pomPostProcess := { (node: xml.Node) =>
     new RuleTransformer(new RewriteRule {
-      override def transform(node: xml.Node): Seq[xml.Node] = node match {
-        case e: xml.Elem
-            if e.label == "dependency" && e.child
-              .exists(child => child.label == "groupId" && child.text == "org.scoverage") =>
-          Nil
-        case _ => Seq(node)
-      }
+      override def transform(node: xml.Node): Seq[xml.Node] =
+        node match {
+          case e: xml.Elem
+              if e.label == "dependency" && e.child
+                .exists(child => child.label == "groupId" && child.text == "org.scoverage") =>
+            Nil
+          case _ => Seq(node)
+        }
     }).transform(node).head
   }
 )

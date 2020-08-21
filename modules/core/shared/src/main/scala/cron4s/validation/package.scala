@@ -39,15 +39,15 @@ package object validation {
     val dayOfMonth = expr.field[CronField.DayOfMonth].toString
     val dayOfWeek  = expr.field[CronField.DayOfWeek].toString
 
-    if (dayOfMonth == dayOfWeek) {
+    if (dayOfMonth == dayOfWeek)
       Some(
         InvalidFieldCombination(
           s"Fields ${CronField.DayOfMonth} and ${CronField.DayOfWeek} can't both have the expression: $dayOfMonth"
         )
       )
-    } else if ((dayOfMonth != "?" && dayOfWeek == "?") || (dayOfMonth == "?" && dayOfWeek != "?")) {
+    else if ((dayOfMonth != "?" && dayOfWeek == "?") || (dayOfMonth == "?" && dayOfWeek != "?"))
       None
-    } else
+    else
       Some(
         InvalidFieldCombination(
           s"Either ${CronField.DayOfMonth} and ${CronField.DayOfWeek} must have a ? expression"

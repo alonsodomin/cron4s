@@ -45,8 +45,7 @@ trait DateTimeNodeLaws[E[_ <: CronField], F <: CronField, DateTime] {
 }
 
 object DateTimeNodeLaws {
-  def apply[E[_ <: CronField], F <: CronField, DateTime](
-      implicit
+  def apply[E[_ <: CronField], F <: CronField, DateTime](implicit
       dt0: IsDateTime[DateTime],
       expr0: FieldExpr[E, F],
       TC0: DateTimeNode[E, F]

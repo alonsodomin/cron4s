@@ -81,12 +81,12 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
 }
 
 object DateTimeNode {
-  @inline def apply[E[_ <: CronField], F <: CronField](
-      implicit ev: DateTimeNode[E, F]
+  @inline def apply[E[_ <: CronField], F <: CronField](implicit
+      ev: DateTimeNode[E, F]
   ): DateTimeNode[E, F] = ev
 
-  implicit def derive[E[_ <: CronField], F <: CronField](
-      implicit E0: FieldExpr[E, F]
+  implicit def derive[E[_ <: CronField], F <: CronField](implicit
+      E0: FieldExpr[E, F]
   ): DateTimeNode[E, F] =
     new DateTimeNode[E, F] {
       implicit val E = E0

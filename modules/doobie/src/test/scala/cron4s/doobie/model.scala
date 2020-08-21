@@ -17,5 +17,18 @@
 package cron4s
 package doobie
 
+import _root_.doobie.{Meta, Read, Write}
+
 final case class MeetingId(value: Long) extends AnyVal
+object MeetingId {
+  implicit val meetingIdRead: Read[MeetingId] =
+    Read[Long].map(MeetingId(_))
+
+  implicit val meetingIdWrite: Write[MeetingId] =
+    Write[Long].contramap(_.value)
+
+  implicit val meetingIdMeta: Meta[MeetingId] =
+    Meta[Long].imap(MeetingId(_))(_.value)
+}
+
 final case class Meeting(subject: String, description: String, frequency: CronExpr)
