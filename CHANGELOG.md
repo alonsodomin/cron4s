@@ -1,5 +1,23 @@
 # Cron4s Change Log
 
+## 0.6.1
+
+Bug fixes
+
+* [#335](https://github.com/alonsodomin/cron4s/pull/335): Fix exception thrown when parsing an incomplete expression.
+
+Version upgrades:
+
+* Scala 2.12.12 / Scala 2.13.2
+* ScalaJS 0.6.33
+* Cats 2.1.1
+* Decline 1.2.0
+* Circe 0.13.0
+* Doobie 0.9.0
+* JodaTime 2.10.6
+* ScalaJS MomentJS 0.10.4 / MomentJS 0.5.28
+* Scala Java Time 2.0.0
+
 ## 0.6.0
 
 New Features:
