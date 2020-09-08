@@ -21,7 +21,7 @@ object Dependencies {
     val decline    = "1.2.0"
     val circe      = "0.13.0"
     val parserc    = "1.1.2"
-    val doobie     = "0.9.0"
+    val doobie     = "0.9.2"
 
     val jodaTime    = "2.10.6"
     val jodaConvert = "2.2.1"
