@@ -78,7 +78,7 @@ lazy val commonJvmSettings = Seq(
 lazy val commonJsSettings = Seq(
   scalaJSStage in Global := FastOptStage,
   // batch mode decreases the amount of memory needed to compile scala.js code
-  scalaJSLinkerConfig :=  scalaJSLinkerConfig.value.withBatchMode(isTravisBuild.value),
+  scalaJSLinkerConfig := scalaJSLinkerConfig.value.withBatchMode(isTravisBuild.value),
   scalacOptions += {
     val tagOrHash = {
       if (isSnapshot.value)
