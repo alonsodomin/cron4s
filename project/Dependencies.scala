@@ -18,7 +18,7 @@ object Dependencies {
 
     val shapeless  = "2.3.3"
     val discipline = "1.0.1"
-    val decline    = "1.2.0"
+    val decline    = "1.3.0"
     val circe      = "0.13.0"
     val parserc    = "1.1.2"
     val doobie     = "0.9.2"
@@ -29,6 +29,8 @@ object Dependencies {
     val momentjs      = "0.10.4"
     val momenttz      = "0.5.28"
     val scalaJavaTime = "2.0.0"
+
+    val scalaJSStubs = "1.0.0"
   }
 
   lazy val core = Def.settings(
@@ -44,7 +46,7 @@ object Dependencies {
   }
 
   lazy val coreJVM = Def.settings {
-    libraryDependencies += "org.scala-js" %% "scalajs-stubs" % scalaJSVersion % Provided
+    libraryDependencies += "org.scala-js" %% "scalajs-stubs" % version.scalaJSStubs % Provided
   }
 
   lazy val testkit = Def.settings {
