@@ -2,7 +2,7 @@ resolvers += "Typesafe Repository" at "https://repo.typesafe.com/typesafe/releas
 
 addSbtPlugin("org.scala-js"       % "sbt-scalajs"               % "0.6.33")
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject"  % "1.0.0")
-addSbtPlugin("org.scoverage"      % "sbt-scoverage"             % "1.6.1")
+addSbtPlugin("org.scoverage"      % "sbt-scoverage"             % "1.8.1")
 addSbtPlugin("com.codacy"         % "sbt-codacy-coverage"       % "3.0.3")
 addSbtPlugin("pl.project13.scala" % "sbt-jmh"                   % "0.3.7")
 addSbtPlugin("com.47deg"          % "sbt-microsites"            % "1.2.1")
