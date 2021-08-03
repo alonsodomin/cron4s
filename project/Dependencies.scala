@@ -91,8 +91,8 @@ object Dependencies {
   )
   lazy val momentjs = Def.settings(
     libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % version.momentjs,
-    npmDependencies in Compile ++= momentjsNpmDeps,
-    npmDependencies in Test ++= momentjsNpmDeps
+    Compile / npmDependencies ++= momentjsNpmDeps,
+    Test / npmDependencies ++= momentjsNpmDeps
   )
 
   lazy val circe = Def.settings(

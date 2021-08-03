@@ -13,7 +13,6 @@ lazy val consoleImports =
 
 inThisBuild(
   Seq(
-    name := "cron4s",
     organization := "com.github.alonsodomin.cron4s",
     organizationName := "Antonio Alonso Dominguez",
     description := "CRON expression parser for Scala",
@@ -31,8 +30,7 @@ inThisBuild(
       "A. Alonso Dominguez",
       "",
       url("https://github.com/alonsodomin")
-    ),
-    parallelExecution := false
+    )
   )
 )
 
@@ -57,26 +55,25 @@ val commonSettings = Def.settings(
       case _                       => Nil
     }
   },
-  scalacOptions in (Compile, console) := scalacOptions.value.filterNot(
+  Compile / console / scalacOptions := scalacOptions.value.filterNot(
     Set("-Xlint:-unused,_", "-Xfatal-warnings")
   ),
-  scalacOptions in (Test, console) := (scalacOptions in (Compile, console)).value,
-  scalacOptions in Tut := (scalacOptions in (Compile, console)).value,
+  Test / console / scalacOptions := (Compile / console / scalacOptions).value,
   apiURL := Some(url("https://alonsodomin.github.io/cron4s/api/")),
   autoAPIMappings := true,
-  parallelExecution in Test := false,
+  Test / parallelExecution := false,
   consoleImports := Seq("cron4s._"),
-  initialCommands in console := consoleImports.value
+  console / initialCommands := consoleImports.value
     .map(s => s"import $s")
     .mkString("\n")
 ) ++ CompilerPlugins.All
 
 lazy val commonJvmSettings = Seq(
-  fork in Test := true
+  Test / fork := true
 )
 
 lazy val commonJsSettings = Seq(
-  scalaJSStage in Global := FastOptStage,
+  Global / scalaJSStage := FastOptStage,
   // batch mode decreases the amount of memory needed to compile scala.js code
   scalaJSOptimizerOptions := scalaJSOptimizerOptions.value.withBatchMode(isTravisBuild.value),
   scalacOptions += {
@@ -85,11 +82,10 @@ lazy val commonJsSettings = Seq(
         sys.process.Process("git rev-parse HEAD").lineStream_!.head
       else version.value
     }
-    val a = (baseDirectory in LocalRootProject).value.toURI.toString
+    val a = (LocalRootProject / baseDirectory).value.toURI.toString
     val g = "https://raw.githubusercontent.com/alonsodomin/cron4s/" + tagOrHash
     s"-P:scalajs:mapSourceURI:$a->$g/"
   },
-  parallelExecution := false,
   scalaJSLinkerConfig := scalaJSLinkerConfig.value.withModuleKind(ModuleKind.CommonJSModule),
   jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv()
 )
@@ -101,7 +97,7 @@ lazy val consoleSettings = Seq(
 lazy val publishSettings = Seq(
   sonatypeProfileName := "com.github.alonsodomin",
   publishMavenStyle := true,
-  publishArtifact in Test := false,
+  Test / publishArtifact := false,
   // don't include scoverage as a dependency in the pom
   // see issue #980
   // this code was copied from https://github.com/mongodb/mongo-spark
@@ -120,13 +116,14 @@ lazy val publishSettings = Seq(
 )
 
 lazy val noPublishSettings = publishSettings ++ Seq(
-  skip in publish := true,
+  publish / skip := true,
   publishArtifact := false,
   mimaFailOnNoPrevious := false
 )
 
 lazy val coverageSettings = Seq(
-  coverageMinimum := 80,
+  coverageMinimumStmtTotal := 90,
+  coverageMinimumBranchTotal := 80,
   coverageFailOnMinimum := true,
   coverageHighlighting := true,
   coverageExcludedPackages := "cron4s\\.bench\\..*"
@@ -214,16 +211,15 @@ lazy val docSettings = Seq(
   ),
   micrositeCompilingDocsTool := WithMdoc,
   mdocIn := sourceDirectory.value / "main" / "mdoc",
-  fork in Test := true,
-  fork in (ScalaUnidoc, unidoc) := true,
+  Test / fork := true,
   docsMappingsAPIDir := "api",
   addMappingsToSiteDir(
-    mappings in (ScalaUnidoc, packageDoc),
+    ScalaUnidoc / packageDoc / mappings,
     docsMappingsAPIDir
   ),
   ghpagesNoJekyll := false,
   git.remoteRepo := "https://github.com/alonsodomin/cron4s.git",
-  unidocProjectFilter in (ScalaUnidoc, unidoc) := inProjects(
+  ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(
     core.jvm,
     circe.jvm,
     decline.jvm,
@@ -232,14 +228,15 @@ lazy val docSettings = Seq(
     momentjs,
     testkit.jvm
   ),
-  scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
+  ScalaUnidoc / unidoc / scalacOptions ++= Seq(
     "-Xfatal-warnings",
     "-doc-source-url",
     scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
     "-sourcepath",
-    baseDirectory.in(LocalRootProject).value.getAbsolutePath,
+    (LocalRootProject / baseDirectory).value.getAbsolutePath,
     "-diagrams"
-  )
+  ),
+  Tut / scalacOptions := (Compile / console / scalacOptions).value
 )
 
 // =================================================================================
