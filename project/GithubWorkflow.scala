@@ -24,6 +24,12 @@ object GithubWorkflow {
       ),
       githubWorkflowBuildMatrixAdditions +=
         "platform" -> List("jvm", "js"),
+      githubWorkflowBuildMatrixExclusions ++=
+        githubWorkflowJavaVersions.value.filterNot(Set(DefaultJVM)).flatMap { java =>
+          Seq(
+            MatrixExclude(Map("platform" -> "js", "java" -> java))
+          )
+        },
       githubWorkflowBuild := Seq(
         WorkflowStep
           .Sbt(List("validateJS"), name = Some("Validate JavaScript"), cond = Some(JsCond)),
@@ -31,12 +37,12 @@ object GithubWorkflow {
           List("validateJVM", "validateBench"),
           name = Some("Validate JVM"),
           cond = Some(JvmCond)
-        ),
-        WorkflowStep.Sbt(
+        )
+        /*WorkflowStep.Sbt(
           List("clean", "binCompatCheck"),
           name = Some("Binary compatibility ${{ matrix.scala }}"),
           cond = Some(JvmCond)
-        )
+        )*/
       )
     )
 
