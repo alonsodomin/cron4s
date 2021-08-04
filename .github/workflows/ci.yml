@@ -25,6 +25,7 @@ jobs:
         os: [ubuntu-latest]
         scala: [2.12.14]
         java: [adopt@1.8, adopt@1.11, adopt@1.15]
+        platform: [jvm, js]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout current branch (full)
@@ -52,8 +53,17 @@ jobs:
       - name: Check that workflows are up to date
         run: sbt --client '++${{ matrix.scala }}; githubWorkflowCheck'
 
-      - name: Build project
-        run: sbt --client '++${{ matrix.scala }}; test'
+      - name: Validate JavaScript
+        if: matrix.platform == 'js'
+        run: sbt --client '++${{ matrix.scala }}; validateJS'
+
+      - name: Validate JVM
+        if: matrix.platform == 'jvm'
+        run: sbt --client '++${{ matrix.scala }}; validateJVM; validateBench'
+
+      - name: Binary compatibility ${{ matrix.scala }}
+        if: matrix.platform == 'jvm'
+        run: sbt --client '++${{ matrix.scala }}; clean; binCompatCheck'
 
       - name: Compress target directories
         run: tar cf targets.tar modules/circe/.jvm/target modules/decline/.jvm/target modules/doobie/target modules/testkit/js/target docs/target modules/decline/.js/target modules/momentjs/target modules/joda/target .js/target modules/core/js/target .jvm/target target modules/circe/.js/target modules/core/jvm/target tests/js/target tests/jvm/target modules/testkit/jvm/target bench/target project/target
