@@ -27,7 +27,7 @@ object Dependencies {
     val jodaConvert = "2.2.1"
 
     val momentjs      = "0.10.5"
-    val momenttz      = "0.5.28"
+    val momenttz      = "0.5.31"
     val scalaJavaTime = "2.3.0"
   }
 
