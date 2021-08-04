@@ -30,6 +30,7 @@ object GithubWorkflow {
             MatrixExclude(Map("platform" -> "js", "java" -> java))
           )
         },
+      githubWorkflowArtifactUpload := false,
       githubWorkflowBuild := Seq(
         WorkflowStep
           .Sbt(List("validateJS"), name = Some("Validate JavaScript"), cond = Some(JsCond)),
