@@ -11,6 +11,8 @@ lazy val consoleImports =
 // Settings
 // =================================================================================
 
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 inThisBuild(
   Seq(
     name := "cron4s",
@@ -18,6 +20,7 @@ inThisBuild(
     organizationName := "Antonio Alonso Dominguez",
     description := "CRON expression parser for Scala",
     startYear := Some(2017),
+    crossScalaVersions := Seq("2.13.6", "2.12.14"),
     homepage := Some(url("https://github.com/alonsodomin/cron4s")),
     licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt")),
     scmInfo := Some(
@@ -32,7 +35,21 @@ inThisBuild(
       "",
       url("https://github.com/alonsodomin")
     ),
-    parallelExecution := false
+    parallelExecution := false,
+    githubWorkflowJavaVersions ++= Seq("adopt@1.11", "adopt@1.15"),
+    githubWorkflowTargetTags ++= Seq("v*"),
+    githubWorkflowPublishTargetBranches := Seq(RefPredicate.StartsWith(Ref.Tag("v"))),
+    githubWorkflowPublish := Seq(
+      WorkflowStep.Sbt(
+        List("ci-release"),
+        env = Map(
+          "PGP_PASSPHRASE"    -> "${{ secrets.PGP_PASSPHRASE }}",
+          "PGP_SECRET"        -> "${{ secrets.PGP_SECRET }}",
+          "SONATYPE_PASSWORD" -> "${{ secrets.SONATYPE_PASSWORD }}",
+          "SONATYPE_USERNAME" -> "${{ secrets.SONATYPE_USERNAME }}"
+        )
+      )
+    )
   )
 )
 
@@ -78,7 +95,9 @@ lazy val commonJvmSettings = Seq(
 lazy val commonJsSettings = Seq(
   scalaJSStage in Global := FastOptStage,
   // batch mode decreases the amount of memory needed to compile scala.js code
-  scalaJSOptimizerOptions := scalaJSOptimizerOptions.value.withBatchMode(isTravisBuild.value),
+  scalaJSOptimizerOptions := scalaJSOptimizerOptions.value.withBatchMode(
+    githubIsWorkflowBuild.value
+  ),
   scalacOptions += {
     val tagOrHash = {
       if (isSnapshot.value)
@@ -197,7 +216,7 @@ lazy val docSettings = Seq(
     )
   ),
   micrositePushSiteWith := {
-    if (isTravisBuild.value) GitHub4s else GHPagesPlugin
+    if (githubIsWorkflowBuild.value) GitHub4s else GHPagesPlugin
   },
   micrositeGithubToken := sys.env.get("GITHUB_MICROSITES_TOKEN"),
   micrositeConfigYaml := ConfigYml(
