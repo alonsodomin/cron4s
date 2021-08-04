@@ -75,7 +75,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
         dayOfWeek
     }
 
-    Right(value)
+    Right(value.toInt)
   }
 
   override def set[F <: CronField](
