@@ -11,6 +11,8 @@ lazy val consoleImports =
 // Settings
 // =================================================================================
 
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 inThisBuild(
   Seq(
     name := "cron4s",
