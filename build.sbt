@@ -224,7 +224,6 @@ lazy val docSettings = Seq(
       "momentjsVersion"    -> Dependencies.version.momentjs
     )
   ),
-  micrositeCompilingDocsTool := WithMdoc,
   mdocIn := sourceDirectory.value / "main" / "mdoc",
   Test / fork := true,
   docsMappingsAPIDir := "api",
@@ -250,8 +249,7 @@ lazy val docSettings = Seq(
     "-sourcepath",
     (LocalRootProject / baseDirectory).value.getAbsolutePath,
     "-diagrams"
-  ),
-  Tut / scalacOptions := (Compile / console / scalacOptions).value
+  )
 )
 
 // =================================================================================
