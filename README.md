@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/alonsodomin/cron4s](https://badges.gitter.im/alonsodomin/cron4s.svg)](https://gitter.im/alonsodomin/cron4s?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/alonsodomin/cron4s.svg?branch=master)](https://travis-ci.org/alonsodomin/cron4s)
-[![Scala.js](https://www.scala-js.org/assets/badges/scalajs-0.6.17.svg)](https://www.scala-js.org)
+[![Scala.js](https://www.scala-js.org/assets/badges/scalajs-1.0.0.svg)](https://www.scala-js.org)
 [![License](http://img.shields.io/:license-Apache%202-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.alonsodomin.cron4s/cron4s-core_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.alonsodomin.cron4s/cron4s-core_2.12)
 
