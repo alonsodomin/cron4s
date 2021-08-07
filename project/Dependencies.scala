@@ -12,23 +12,23 @@ object Dependencies {
     val atto = "0.9.0"
 
     object cats {
-      val main      = "2.1.1"
-      val scalatest = "1.0.1"
+      val main      = "2.6.1"
+      val scalatest = "2.1.5"
     }
 
-    val shapeless  = "2.3.3"
+    val shapeless  = "2.3.7"
     val discipline = "1.0.1"
-    val decline    = "1.2.0"
-    val circe      = "0.13.0"
+    val decline    = "1.4.0"
+    val circe      = "0.14.1"
     val parserc    = "1.1.2"
-    val doobie     = "0.9.2"
+    val doobie     = "0.13.4"
 
     val jodaTime    = "2.10.10"
     val jodaConvert = "2.2.1"
 
-    val momentjs      = "0.10.4"
-    val momenttz      = "0.5.28"
-    val scalaJavaTime = "2.0.0"
+    val momentjs      = "0.10.5"
+    val momenttz      = "0.5.31"
+    val scalaJavaTime = "2.3.0"
   }
 
   lazy val core = Def.settings(
@@ -44,7 +44,7 @@ object Dependencies {
   }
 
   lazy val coreJVM = Def.settings {
-    libraryDependencies += "org.scala-js" %% "scalajs-stubs" % scalaJSVersion % Provided
+    libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.0.0" % Provided
   }
 
   lazy val testkit = Def.settings {
@@ -91,8 +91,8 @@ object Dependencies {
   )
   lazy val momentjs = Def.settings(
     libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % version.momentjs,
-    npmDependencies in Compile ++= momentjsNpmDeps,
-    npmDependencies in Test ++= momentjsNpmDeps
+    Compile / npmDependencies ++= momentjsNpmDeps,
+    Test / npmDependencies ++= momentjsNpmDeps
   )
 
   lazy val circe = Def.settings(

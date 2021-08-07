@@ -97,4 +97,5 @@ build
 ##########
 .metals/
 .bloop/
+.bsp/
 metals.sbt
