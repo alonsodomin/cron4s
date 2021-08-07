@@ -66,7 +66,7 @@ object CronSpec extends TableDrivenPropertyChecks {
       (
         "too long expression",
         TooLongExpr,
-        ParseFailed("end of input expected", 2, Some(" "))
+        ParseFailed("'/' expected but   found", 12, None)
       ),
       (
         "too short expression",
@@ -90,10 +90,7 @@ class CronSpec extends AnyFlatSpec with Matchers {
   import CronSpec._
 
   "Cron" should "not parse an invalid expression" in {
-    val expectedError =
-      InvalidFieldCombination("Fields DayOfMonth and DayOfWeek can't both have the expression: *")
-
-    forAll(InvalidExprs) { (desc: String, expr: String, err: Error) =>
+    forAll(InvalidExprs) { (_: String, expr: String, err: Error) =>
       val parsed = Cron(expr)
       parsed shouldBe Left(err)
 

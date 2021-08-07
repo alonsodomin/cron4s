@@ -37,10 +37,6 @@ final case class ParseFailed(expected: String, position: Int, found: Option[Stri
 object ParseFailed {
   def apply(expected: String, position: Int, found: Option[String] = None): ParseFailed =
     new ParseFailed(expected, position, found)
-
-  @deprecated("Use the other apply method signature with optional 'found'", "0.6.1")
-  def apply(msg: String, found: String, position: Int): ParseFailed =
-    ParseFailed(msg, position, Some(found))
 }
 
 sealed trait ValidationError

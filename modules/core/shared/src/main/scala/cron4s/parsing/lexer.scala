@@ -28,22 +28,22 @@ object CronToken {
   case class Text(value: String) extends CronToken {
     override def toString = value.toString
   }
-  case object Hyphen extends CronToken {
+  case class Hyphen() extends CronToken {
     override def toString = "-"
   }
-  case object Slash extends CronToken {
+  case class Slash() extends CronToken {
     override def toString = "/"
   }
-  case object Comma extends CronToken {
+  case class Comma() extends CronToken {
     override def toString = ","
   }
-  case object Asterisk extends CronToken {
+  case class Asterisk() extends CronToken {
     override def toString = "*"
   }
-  case object QuestionMark extends CronToken {
+  case class QuestionMark() extends CronToken {
     override def toString = "?"
   }
-  case object Blank extends CronToken {
+  case class Blank() extends CronToken {
     override def toString = " "
   }
 }
@@ -63,27 +63,27 @@ object CronLexer extends RegexParsers with BaseParser {
   }
 
   private val asterisk = positioned {
-    """\*""".r ^^ { _ => Asterisk }
+    """\*""".r ^^ { _ => Asterisk() }
   }
 
   private val questionMark = positioned {
-    """\?""".r ^^ { _ => QuestionMark }
+    """\?""".r ^^ { _ => QuestionMark() }
   }
 
   private val hyphen = positioned {
-    """\-""".r ^^ { _ => Hyphen }
+    """\-""".r ^^ { _ => Hyphen() }
   }
 
   private val slash = positioned {
-    """\/""".r ^^ { _ => Slash }
+    """\/""".r ^^ { _ => Slash() }
   }
 
   private val comma = positioned {
-    ",".r ^^ { _ => Comma }
+    ",".r ^^ { _ => Comma() }
   }
 
   private val blank = positioned {
-    whiteSpace.map(_ => Blank)
+    whiteSpace.map(_ => Blank())
   }
 
   private lazy val tokens: Parser[List[CronToken]] =

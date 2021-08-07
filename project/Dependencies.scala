@@ -9,7 +9,7 @@ import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.npmDependencies
 
 object Dependencies {
   object version {
-    val atto = "0.9.0"
+    val atto = "0.9.5"
 
     object cats {
       val main      = "2.6.1"
@@ -18,9 +18,9 @@ object Dependencies {
 
     val shapeless  = "2.3.7"
     val discipline = "1.0.1"
-    val decline    = "1.4.0"
+    val decline    = "2.1.0"
     val circe      = "0.14.1"
-    val parserc    = "1.1.2"
+    val parserc    = "2.0.0"
     val doobie     = "0.13.4"
 
     val jodaTime    = "2.10.10"

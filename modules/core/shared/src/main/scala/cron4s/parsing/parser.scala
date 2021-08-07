@@ -22,11 +22,13 @@ import cron4s.expr._
 import scala.util.parsing.input._
 import scala.util.parsing.combinator._
 
-class CronTokenReader(tokens: List[CronToken]) extends Reader[CronToken] {
+final class CronTokenReader(tokens: List[CronToken]) extends Reader[CronToken] {
   override def first: CronToken        = tokens.head
   override def atEnd: Boolean          = tokens.isEmpty
   override def pos: Position           = tokens.headOption.map(_.pos).getOrElse(NoPosition)
   override def rest: Reader[CronToken] = new CronTokenReader(tokens.tail)
+
+  override def toString: String = tokens.toString()
 }
 
 object CronParser extends Parsers with BaseParser {
@@ -37,16 +39,16 @@ object CronParser extends Parsers with BaseParser {
   override type Elem = CronToken
 
   private val sexagesimal: Parser[Int] =
-    accept("sexagesimal", { case Number(s) if s >= 0 && s < 60 => s })
+    acceptMatch("sexagesimal", { case Number(s) if s >= 0 && s < 60 => s })
 
   private val decimal: Parser[Int] =
-    accept("decimal", { case Number(d) if d >= 0 => d })
+    acceptMatch("decimal", { case Number(d) if d >= 0 => d })
 
   private val literal: Parser[String] =
-    accept("literal", { case Text(l) => l })
+    acceptMatch("literal", { case Text(l) => l })
 
   private val blank: Parser[Char] =
-    accept("blank", { case Blank => ' ' })
+    acceptMatch("blank", { case Blank() => ' ' })
 
   //----------------------------------------
   // Individual Expression Atoms
@@ -105,21 +107,21 @@ object CronParser extends Parsers with BaseParser {
   //----------------------------------------
 
   def each[F <: CronField](implicit unit: CronUnit[F]): Parser[EachNode[F]] =
-    accept("*", { case Asterisk => EachNode[F] })
+    accept("*", { case Asterisk() => EachNode[F] })
 
   def any[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyNode[F]] =
-    accept("?", { case QuestionMark => AnyNode[F] })
+    accept("?", { case QuestionMark() => AnyNode[F] })
 
   def between[F <: CronField](base: Parser[ConstNode[F]])(implicit
       unit: CronUnit[F]
   ): Parser[BetweenNode[F]] =
-    ((base <~ Hyphen) ~ base) ^^ { case min ~ max => BetweenNode[F](min, max) }
+    ((base <~ Hyphen()) ~ base) ^^ { case min ~ max => BetweenNode[F](min, max) }
 
   def several[F <: CronField](base: Parser[ConstNode[F]])(implicit
       unit: CronUnit[F]
   ): Parser[SeveralNode[F]] = {
     def compose(b: Parser[EnumerableNode[F]]) =
-      repsep(b, Comma)
+      repsep(b, Comma())
         .filter(_.length > 1)
         .map(values => SeveralNode.fromSeq[F](values).get)
 
@@ -130,7 +132,7 @@ object CronParser extends Parsers with BaseParser {
       unit: CronUnit[F]
   ): Parser[EveryNode[F]] = {
     def compose(b: Parser[DivisibleNode[F]]) =
-      ((b <~ Slash) ~ decimal.filter(_ > 0)) ^^ {
+      ((b <~ Slash()) ~! decimal.filter(_ > 0)) ^^ {
         case exp ~ freq => EveryNode[F](exp, freq)
       }
 
@@ -165,14 +167,14 @@ object CronParser extends Parsers with BaseParser {
       any[F].map(any2FieldWithAny)
 
   val cron: Parser[CronExpr] = {
-    phrase(
-      (field(seconds) <~ blank) ~!
-        (field(minutes) <~ blank) ~!
-        (field(hours) <~ blank) ~!
-        (fieldWithAny(daysOfMonth) <~ blank) ~!
-        (field(months) <~ blank) ~!
-        fieldWithAny(daysOfWeek)
-    ) ^^ {
+    val secs  = field(seconds) <~! blank
+    val mins  = field(minutes) <~! blank
+    val hrs   = field(hours) <~! blank
+    val daysm = fieldWithAny(daysOfMonth) <~! blank
+    val mnths = field(months) <~! blank
+    val daysw = fieldWithAny(daysOfWeek)
+
+    phrase(secs ~! mins ~! hrs ~! daysm ~! mnths ~! daysw) ^^ {
       case sec ~ min ~ hour ~ day ~ month ~ weekDay =>
         CronExpr(sec, min, hour, day, month, weekDay)
     }
