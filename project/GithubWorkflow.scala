@@ -9,6 +9,7 @@ object GithubWorkflow {
   def settings =
     Seq(
       githubWorkflowJavaVersions := Seq(DefaultJVM, "adopt@1.11", "adopt@1.15"),
+      githubWorkflowTargetBranches := Seq("master"),
       githubWorkflowTargetTags ++= Seq("v*"),
       githubWorkflowPublishTargetBranches := Seq(RefPredicate.StartsWith(Ref.Tag("v"))),
       githubWorkflowPublish := Seq(
