@@ -17,11 +17,9 @@
 package cron4s.datetime
 
 import cats.syntax.either._
-
 import cron4s._
 import cron4s.base.{Direction, Step}
 import cron4s.expr._
-
 import shapeless._
 
 import scala.annotation.tailrec
@@ -60,6 +58,14 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
           val resetValue = step.direction match {
             case Direction.Forward   => node.min
             case Direction.Backwards => node.max
+          }
+
+          @tailrec def reset(dt: DateTime, rv: Int = resetValue): Option[DateTime] = {
+            DT.set(dt, node.unit.field, rv) match {
+              case Left(_) if node.unit.field == CronField.DayOfMonth && rv > 28 && step.direction == Direction.Backwards =>
+
+              case other => other.toOption
+            }
           }
 
           resetPrevious.andThen(_.flatMap(DT.set(_, node.unit.field, resetValue).toOption))
