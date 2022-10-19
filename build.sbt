@@ -19,7 +19,7 @@ inThisBuild(
     organizationName := "Antonio Alonso Dominguez",
     description := "CRON expression parser for Scala",
     startYear := Some(2017),
-    crossScalaVersions := Seq("2.13.6", "2.12.14"),
+    crossScalaVersions := Seq("2.13.10", "2.12.14"),
     homepage := Some(url("https://github.com/alonsodomin/cron4s")),
     licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt")),
     scmInfo := Some(
