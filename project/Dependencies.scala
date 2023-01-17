@@ -24,7 +24,7 @@ object Dependencies {
     val doobie     = "0.13.4"
 
     val jodaTime    = "2.10.10"
-    val jodaConvert = "2.2.1"
+    val jodaConvert = "2.2.3"
 
     val momentjs      = "0.10.5"
     val momenttz      = "0.5.31"
