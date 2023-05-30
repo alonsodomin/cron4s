@@ -29,7 +29,7 @@ class EveryNodeValidatorSpec extends Cron4sPropSpec with ValidatorPropSpec {
 
   private[this] def check[F <: CronField](implicit
       unit: CronUnit[F],
-      enum: Enumerated[CronUnit[F]]
+      `enum`: Enumerated[CronUnit[F]]
   ): Unit =
     property(s"EveryNode[${unit.field}] with invalid base returns the invalid errors of its base") {
       forAll(everyGen[F]) { node =>
