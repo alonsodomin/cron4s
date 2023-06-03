@@ -27,13 +27,13 @@ jobs:
         java:
           - adopt-hotspot@1.8
           - adopt-hotspot@11
-          - adopt-hotspot@1.15
+          - temurin@17
         platform: [jvm, js]
         exclude:
           - platform: js
             java: adopt-hotspot@11
           - platform: js
-            java: adopt-hotspot@1.15
+            java: temurin@17
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout current branch (full)
@@ -55,12 +55,12 @@ jobs:
           distribution: adopt-hotspot
           java-version: 11
 
-      - name: Setup Java (adopt-hotspot@1.15)
-        if: matrix.java == 'adopt-hotspot@1.15'
+      - name: Setup Java (temurin@17)
+        if: matrix.java == 'temurin@17'
         uses: actions/setup-java@v2
         with:
-          distribution: adopt-hotspot
-          java-version: 1.15
+          distribution: temurin
+          java-version: 17
 
       - name: Cache sbt
         uses: actions/cache@v2
@@ -115,12 +115,12 @@ jobs:
           distribution: adopt-hotspot
           java-version: 11
 
-      - name: Setup Java (adopt-hotspot@1.15)
-        if: matrix.java == 'adopt-hotspot@1.15'
+      - name: Setup Java (temurin@17)
+        if: matrix.java == 'temurin@17'
         uses: actions/setup-java@v2
         with:
-          distribution: adopt-hotspot
-          java-version: 1.15
+          distribution: temurin
+          java-version: 17
 
       - name: Cache sbt
         uses: actions/cache@v2
