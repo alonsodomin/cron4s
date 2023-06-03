@@ -61,8 +61,9 @@ val commonSettings = Def.settings(
   },
   scalacOptions ++= {
     CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, n)) if n > 12 => Seq("-Xlint:-byname-implicit")
-      case _                      => Nil
+      case Some((2, n)) if n > 12 =>
+        Seq("-Xlint:-byname-implicit", "-Ymacro-annotations")
+      case _ => Nil
     }
   },
   Compile / console / scalacOptions := scalacOptions.value.filterNot(
