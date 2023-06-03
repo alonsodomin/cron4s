@@ -44,7 +44,7 @@ object Dependencies {
   }
 
   lazy val coreJVM = Def.settings {
-    libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.0.0" % Provided
+    libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.1.0" % Provided
   }
 
   lazy val testkit = Def.settings {
