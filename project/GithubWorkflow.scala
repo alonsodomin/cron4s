@@ -1,14 +1,14 @@
 import sbtghactions.GenerativePlugin.autoImport._
 
 object GithubWorkflow {
-  val DefaultJVM = JavaSpec(JavaSpec.Distribution.Adopt,"1.8")
+  val DefaultJVM = JavaSpec(JavaSpec.Distribution.Adopt,"8")
 
   val JvmCond = s"matrix.platform == 'jvm'"
   val JsCond  = s"matrix.platform == 'js'"
 
   def settings =
     Seq(
-      githubWorkflowJavaVersions := Seq(DefaultJVM, JavaSpec(JavaSpec.Distribution.Adopt,"11"),JavaSpec(JavaSpec.Distribution.Adopt,"1.15")),
+      githubWorkflowJavaVersions := Seq(DefaultJVM, JavaSpec(JavaSpec.Distribution.Adopt,"11"),JavaSpec(JavaSpec.Distribution.Temurin,"17")),
       githubWorkflowTargetBranches := Seq("master"),
       githubWorkflowTargetTags ++= Seq("v*"),
       githubWorkflowPublishTargetBranches := Seq(RefPredicate.StartsWith(Ref.Tag("v"))),

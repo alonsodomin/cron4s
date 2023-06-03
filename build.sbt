@@ -15,6 +15,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 inThisBuild(
   Seq(
+    libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
     organization := "com.github.alonsodomin.cron4s",
     organizationName := "Antonio Alonso Dominguez",
     description := "CRON expression parser for Scala",
