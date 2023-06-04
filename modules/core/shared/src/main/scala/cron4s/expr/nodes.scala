@@ -47,7 +47,7 @@ sealed trait Node[F <: CronField] {
 final class EachNode[F <: CronField] private (val unit: CronUnit[F]) extends Node[F] {
   override def equals(other: Any): Boolean =
     other match {
-      case _: EachNode[F] => true
+      case _: EachNode[_] => true
       case _              => false
     }
 
@@ -87,7 +87,7 @@ object EachNode {
 final class AnyNode[F <: CronField] private (val unit: CronUnit[F]) extends Node[F] {
   override def equals(other: Any): Boolean =
     other match {
-      case _: AnyNode[F] => true
+      case _: AnyNode[_] => true
       case _             => false
     }
 
@@ -131,7 +131,7 @@ final class ConstNode[F <: CronField] private (
 ) extends Node[F] {
   override def equals(other: Any): Boolean =
     other match {
-      case node: ConstNode[F] => this.value === node.value
+      case node: ConstNode[_] => this.value === node.value
       case _                  => false
     }
 
@@ -180,8 +180,9 @@ final class BetweenNode[F <: CronField] private (
 ) extends Node[F] {
   override def equals(other: Any): Boolean =
     other match {
-      case node: BetweenNode[F] =>
-        (this.begin === node.begin) && (this.end === node.end)
+      case node: BetweenNode[_] =>
+        (this.begin == node.begin) && (this.end == node.end)
+
       case _ => false
     }
 
@@ -239,7 +240,7 @@ final class SeveralNode[F <: CronField] private (
 ) extends Node[F] {
   override def equals(other: Any): Boolean =
     other match {
-      case node: SeveralNode[F] => this.values === node.values
+      case node: SeveralNode[_] => this.values == node.values
       case _                    => false
     }
 
@@ -308,8 +309,8 @@ final class EveryNode[F <: CronField] private (
 ) extends Node[F] {
   override def equals(other: Any): Boolean =
     other match {
-      case node: EveryNode[F] =>
-        (this.base === node.base) && (this.freq === node.freq)
+      case node: EveryNode[_] =>
+        (this.base == node.base) && (this.freq == node.freq)
       case _ => false
     }
 

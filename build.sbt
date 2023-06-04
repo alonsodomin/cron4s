@@ -15,11 +15,12 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 inThisBuild(
   Seq(
+    libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
     organization := "com.github.alonsodomin.cron4s",
     organizationName := "Antonio Alonso Dominguez",
     description := "CRON expression parser for Scala",
     startYear := Some(2017),
-    crossScalaVersions := Seq("2.13.6", "2.12.14"),
+    crossScalaVersions := Seq("2.13.10", "2.12.17"),
     homepage := Some(url("https://github.com/alonsodomin/cron4s")),
     licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt")),
     scmInfo := Some(
@@ -60,8 +61,9 @@ val commonSettings = Def.settings(
   },
   scalacOptions ++= {
     CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, n)) if n > 12 => Seq("-Xlint:-byname-implicit")
-      case _                      => Nil
+      case Some((2, n)) if n > 12 =>
+        Seq("-Xlint:-byname-implicit", "-Ymacro-annotations")
+      case _ => Nil
     }
   },
   Compile / console / scalacOptions := scalacOptions.value.filterNot(
