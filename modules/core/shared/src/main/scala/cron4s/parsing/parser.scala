@@ -27,6 +27,7 @@ class CronTokenReader(tokens: List[CronToken]) extends Reader[CronToken] {
   override def atEnd: Boolean          = tokens.isEmpty
   override def pos: Position           = tokens.headOption.map(_.pos).getOrElse(NoPosition)
   override def rest: Reader[CronToken] = new CronTokenReader(tokens.tail)
+  override def toString(): String      = tokens.toString()
 }
 
 object CronParser extends Parsers with BaseParser {
@@ -166,12 +167,12 @@ object CronParser extends Parsers with BaseParser {
 
   val cron: Parser[CronExpr] = {
     phrase(
-      (field(seconds) <~ blank) ~!
-        (field(minutes) <~ blank) ~!
-        (field(hours) <~ blank) ~!
-        (fieldWithAny(daysOfMonth) <~ blank) ~!
-        (field(months) <~ blank) ~!
-        fieldWithAny(daysOfWeek)
+      (field(seconds) <~! blank) ~!
+        (field(minutes) <~! blank) ~!
+        (field(hours) <~! blank) ~!
+        (fieldWithAny(daysOfMonth) <~! blank) ~!
+        (field(months) <~! blank) ~!
+        (fieldWithAny(daysOfWeek))
     ) ^^ {
       case sec ~ min ~ hour ~ day ~ month ~ weekDay =>
         CronExpr(sec, min, hour, day, month, weekDay)
