@@ -16,7 +16,7 @@ object Dependencies {
       val scalatest = "2.1.5"
     }
 
-    val shapeless  = "2.3.7"
+    val shapeless  = "2.3.10"
     val discipline = "2.2.0"
     val decline    = "2.4.1"
     val circe      = "0.14.5"
