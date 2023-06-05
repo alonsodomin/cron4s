@@ -27,8 +27,7 @@ import cron4s.testkit._
 import org.scalacheck.Prop
 import Prop._
 
-/**
-  * Created by alonsodomin on 29/08/2016.
+/** Created by alonsodomin on 29/08/2016.
   */
 trait IsDateTimeLaws[DateTime] {
   implicit def DT: IsDateTime[DateTime]

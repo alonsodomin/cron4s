@@ -24,8 +24,7 @@ import cron4s.datetime.IsDateTime
 import cron4s.testkit.discipline.DateTimeNodeTests
 import cron4s.testkit.gen._
 
-/**
-  * Created by alonsodomin on 04/08/2016.
+/** Created by alonsodomin on 04/08/2016.
   */
 abstract class DateTimeNodeTestKit[DateTime: IsDateTime: Eq]
     extends Cron4sLawSuite with DateTimeTestKitBase[DateTime] {

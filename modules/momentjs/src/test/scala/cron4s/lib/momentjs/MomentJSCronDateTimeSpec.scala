@@ -20,7 +20,6 @@ import cron4s.testkit.CronDateTimeTestKit
 
 import moment.Date
 
-/**
-  * Created by alonsodomin on 11/04/2017.
+/** Created by alonsodomin on 11/04/2017.
   */
 class MomentJSCronDateTimeSpec extends CronDateTimeTestKit[Date] with MomentJSTestBase

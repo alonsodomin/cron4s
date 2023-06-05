@@ -24,8 +24,7 @@ import cron4s.datetime.{IsDateTime, DateTimeNode}
 import cron4s.expr.FieldExpr
 import cron4s.syntax.node._
 
-/**
-  * Created by alonsodomin on 28/08/2016.
+/** Created by alonsodomin on 28/08/2016.
   */
 trait DateTimeNodeLaws[E[_ <: CronField], F <: CronField, DateTime] {
   implicit def DT: IsDateTime[DateTime]

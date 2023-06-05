@@ -23,8 +23,7 @@ import cron4s.datetime.{DateTimeError, DateTimeUnit, InvalidFieldValue, IsDateTi
 
 import moment._
 
-/**
-  * Created by alonsodomin on 11/04/2017.
+/** Created by alonsodomin on 11/04/2017.
   */
 private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
   import CronField._
@@ -42,22 +41,26 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
       case Months  => dateTime.add(amount, Units.Month)
     })
 
-  /**
-    * List of the fields supported by this date time representation
+  /** List of the fields supported by this date time representation
     *
-    * @param dateTime the date time representation
-    * @return list of the supported fields
+    * @param dateTime
+    *   the date time representation
+    * @return
+    *   list of the supported fields
     */
   @inline
   override def supportedFields(dateTime: Date): List[CronField] = CronField.All
 
-  /**
-    * Getter access for a specific field in a date-time
+  /** Getter access for a specific field in a date-time
     *
-    * @param dateTime a date-time
-    * @param field    a CronField
-    * @tparam F the CronField type
-    * @return value of the field
+    * @param dateTime
+    *   a date-time
+    * @param field
+    *   a CronField
+    * @tparam F
+    *   the CronField type
+    * @return
+    *   value of the field
     */
   override def get[F <: CronField](dateTime: Date, field: F): Either[DateTimeError, Int] =
     Right(field match {
@@ -75,14 +78,18 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
         dayOfWeek
     })
 
-  /**
-    * Setter access for a specific field in a date-time
+  /** Setter access for a specific field in a date-time
     *
-    * @param dateTime a date-time
-    * @param field    a CronField
-    * @param value    new value for the field
-    * @tparam F the CronField type
-    * @return a new date-time with the given field set to the new value
+    * @param dateTime
+    *   a date-time
+    * @param field
+    *   a CronField
+    * @param value
+    *   new value for the field
+    * @tparam F
+    *   the CronField type
+    * @return
+    *   a new date-time with the given field set to the new value
     */
   override def set[F <: CronField](
       dateTime: Date,

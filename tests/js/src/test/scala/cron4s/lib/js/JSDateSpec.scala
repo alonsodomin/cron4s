@@ -20,7 +20,6 @@ import cron4s.testkit.IsDateTimeTestKit
 
 import scala.scalajs.js.Date
 
-/**
-  * Created by alonsodomin on 02/09/2016.
+/** Created by alonsodomin on 02/09/2016.
   */
 class JSDateSpec extends IsDateTimeTestKit[Date]("JSDate") with JSTestBase

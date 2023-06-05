@@ -20,8 +20,7 @@ import cats.Show
 import cats.data.NonEmptyList
 import cats.syntax.show._
 
-/**
-  * Created by alonsodomin on 30/08/2016.
+/** Created by alonsodomin on 30/08/2016.
   */
 sealed abstract class Error(description: String) extends Exception(description)
 

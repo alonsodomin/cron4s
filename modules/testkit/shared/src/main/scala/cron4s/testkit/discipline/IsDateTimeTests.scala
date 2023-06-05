@@ -30,8 +30,7 @@ import Prop._
 
 import org.typelevel.discipline.Laws
 
-/**
-  * Created by alonsodomin on 29/08/2016.
+/** Created by alonsodomin on 29/08/2016.
   */
 trait IsDateTimeTests[DateTime] extends Laws {
   def laws: IsDateTimeLaws[DateTime]

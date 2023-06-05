@@ -23,8 +23,7 @@ import cats.implicits._
 import cron4s.base.Predicate
 import cron4s.syntax.predicate._
 
-/**
-  * Created by alonsodomin on 10/04/2017.
+/** Created by alonsodomin on 10/04/2017.
   */
 object PredicateLaws {
   def negation[A](self: Predicate[A], a: A): IsEq[Boolean] =

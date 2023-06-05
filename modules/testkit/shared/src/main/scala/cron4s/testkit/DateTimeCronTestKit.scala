@@ -23,8 +23,7 @@ import cron4s.expr.{CronExpr, DateCronExpr, TimeCronExpr}
 import cron4s.testkit.discipline.DateTimeCronTests
 import cron4s.testkit.gen.CronGenerators
 
-/**
-  * Created by alonsodomin on 29/01/2017.
+/** Created by alonsodomin on 29/01/2017.
   */
 abstract class DateTimeCronTestKit[DateTime: IsDateTime: Eq]
     extends SlowCron4sLawSuite with DateTimeTestKitBase[DateTime] with CronGenerators {

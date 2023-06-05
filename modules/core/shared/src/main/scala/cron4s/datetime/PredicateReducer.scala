@@ -26,8 +26,7 @@ import cron4s.syntax.predicate._
 
 import shapeless._
 
-/**
-  * Created by domingueza on 29/07/2016.
+/** Created by domingueza on 29/07/2016.
   */
 private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime])(implicit
     M: MonoidK[Predicate]

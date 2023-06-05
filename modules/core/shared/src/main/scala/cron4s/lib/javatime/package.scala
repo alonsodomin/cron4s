@@ -23,8 +23,7 @@ import cats.{Eq, Show}
 
 import cron4s.datetime.IsDateTime
 
-/**
-  * Created by alonsodomin on 11/12/2016.
+/** Created by alonsodomin on 11/12/2016.
   */
 package object javatime {
   private[javatime] final val DayOfWeekOffset = 1

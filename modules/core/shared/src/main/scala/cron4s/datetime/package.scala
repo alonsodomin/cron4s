@@ -22,8 +22,7 @@ import shapeless._
 
 import scala.language.implicitConversions
 
-/**
-  * Created by alonsodomin on 24/01/2017.
+/** Created by alonsodomin on 24/01/2017.
   */
 package object datetime {
   import CronField._

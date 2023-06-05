@@ -18,8 +18,7 @@ package cron4s
 
 import cats.data.NonEmptyList
 
-/**
-  * Created by alonsodomin on 30/08/2016.
+/** Created by alonsodomin on 30/08/2016.
   */
 package object validation {
   def validateCron(expr: CronExpr): Either[InvalidCron, CronExpr] = {

@@ -21,8 +21,7 @@ import cats.Contravariant
 
 import cron4s.syntax.predicate._
 
-/**
-  * Created by alonsodomin on 02/01/2016.
+/** Created by alonsodomin on 02/01/2016.
   */
 trait Predicate[A] extends (A => Boolean) { self =>
 

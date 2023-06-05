@@ -21,8 +21,7 @@ import cron4s.expr._
 import cron4s.base.Enumerated
 import cron4s.testkit.Cron4sPropSpec
 
-/**
-  * Created by alonsodomin on 30/12/2016.
+/** Created by alonsodomin on 30/12/2016.
   */
 class EveryNodeValidatorSpec extends Cron4sPropSpec with ValidatorPropSpec {
   import CronField._

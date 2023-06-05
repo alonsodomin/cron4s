@@ -28,8 +28,7 @@ import org.scalacheck.Prop._
 
 import org.typelevel.discipline.Laws
 
-/**
-  * Created by alonsodomin on 10/04/2017.
+/** Created by alonsodomin on 10/04/2017.
   */
 object PredicateTests extends Laws {
   def predicate[F[_]: Foldable, A](implicit

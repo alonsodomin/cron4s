@@ -23,8 +23,7 @@ import cron4s.datetime.IsDateTime
 
 import moment._
 
-/**
-  * Created by alonsodomin on 11/04/2017.
+/** Created by alonsodomin on 11/04/2017.
   */
 package object momentjs {
   implicit val momentjsEq: Eq[Date] = Eq.by(_.unix())

@@ -20,7 +20,7 @@ import _root_.atto._
 import Atto._
 import cats.implicits._
 
-import cron4s.expr._
+import cron4s.expr.{CronExpr => _, _}
 
 package object atto {
   import CronField._
@@ -37,9 +37,9 @@ package object atto {
   private val questionMark: Parser[Char] = elem(_ == '?', "question-mark")
   private val blank: Parser[Char]        = elem(_ == ' ', "blank")
 
-  //----------------------------------------
+  // ----------------------------------------
   // Individual Expression Atoms
-  //----------------------------------------
+  // ----------------------------------------
 
   // Seconds
 
@@ -89,9 +89,9 @@ package object atto {
   val daysOfWeek: Parser[ConstNode[DayOfWeek]] =
     textualDaysOfWeek | numericDaysOfWeek
 
-  //----------------------------------------
+  // ----------------------------------------
   // Field-Based Expression Atoms
-  //----------------------------------------
+  // ----------------------------------------
 
   def each[F <: CronField](implicit unit: CronUnit[F]): Parser[EachNode[F]] =
     asterisk.as(EachNode[F])
@@ -122,8 +122,8 @@ package object atto {
       unit: CronUnit[F]
   ): Parser[EveryNode[F]] = {
     def compose(b: => Parser[DivisibleNode[F]]) =
-      ((b <~ slash) ~ decimal.filter(_ > 0)).map {
-        case (exp, freq) => EveryNode[F](exp, freq)
+      ((b <~ slash) ~ decimal.filter(_ > 0)).map { case (exp, freq) =>
+        EveryNode[F](exp, freq)
       }
 
     compose(
@@ -133,9 +133,9 @@ package object atto {
     )
   }
 
-  //----------------------------------------
+  // ----------------------------------------
   // AST Parsing & Building
-  //----------------------------------------
+  // ----------------------------------------
 
   def field[F <: CronField](base: Parser[ConstNode[F]])(implicit
       unit: CronUnit[F]
@@ -163,7 +163,7 @@ package object atto {
     day     <- fieldWithAny(daysOfMonth) <~ blank
     month   <- field(months) <~ blank
     weekDay <- fieldWithAny(daysOfWeek)
-  } yield CronExpr(sec, min, hour, day, month, weekDay)
+  } yield cron4s.expr.CronExpr(sec, min, hour, day, month, weekDay)
 
   def parse(e: String): Either[Error, CronExpr] =
     (cron.parseOnly(e): @unchecked) match {

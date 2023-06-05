@@ -28,8 +28,7 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 import scala.util.{Failure, Success}
 import org.scalatest.prop.TableFor3
 
-/**
-  * Created by alonsodomin on 12/04/2017.
+/** Created by alonsodomin on 12/04/2017.
   */
 object CronSpec extends TableDrivenPropertyChecks {
   import CronField._

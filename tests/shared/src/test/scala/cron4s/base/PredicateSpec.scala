@@ -25,8 +25,7 @@ import cron4s.testkit.discipline.PredicateTests
 
 import org.scalacheck._
 
-/**
-  * Created by alonsodomin on 04/08/2016.
+/** Created by alonsodomin on 04/08/2016.
   */
 class PredicateSpec extends Cron4sLawSuite {
   import Arbitrary._

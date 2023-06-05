@@ -24,10 +24,10 @@ import cron4s.syntax.field._
 trait DateTimeNode[E[_ <: CronField], F <: CronField] {
   implicit def E: FieldExpr[E, F]
 
-  /**
-    * Tests if this field expressions matches in the given date-time
+  /** Tests if this field expressions matches in the given date-time
     *
-    * @return true if there is a field in this date-time that matches this expression
+    * @return
+    *   true if there is a field in this date-time that matches this expression
     */
   def matchesIn[DateTime](expr: E[F], DT: IsDateTime[DateTime]): Predicate[DateTime] =
     Predicate { dt =>
@@ -36,36 +36,39 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
       current.map(expr.matches).getOrElse(false)
     }
 
-  /**
-    * Calculates the next date-time to a given one considering only the field
-    * represented by this expression.
+  /** Calculates the next date-time to a given one considering only the field represented by this
+    * expression.
     *
-    * @param dateTime date-time used as a reference
-    * @return the next date-time
+    * @param dateTime
+    *   date-time used as a reference
+    * @return
+    *   the next date-time
     */
   @inline
   def nextIn[DateTime](expr: E[F], DT: IsDateTime[DateTime])(dateTime: DateTime): Option[DateTime] =
     stepIn(expr, DT)(dateTime, 1)
 
-  /**
-    * Calculates the previous date-time to a given one considering only the field
-    * represented by this expression.
+  /** Calculates the previous date-time to a given one considering only the field represented by
+    * this expression.
     *
-    * @param dateTime date-time used as a reference
-    * @return the next date-time
+    * @param dateTime
+    *   date-time used as a reference
+    * @return
+    *   the next date-time
     */
   @inline
   def prevIn[DateTime](expr: E[F], DT: IsDateTime[DateTime])(dateTime: DateTime): Option[DateTime] =
     stepIn(expr, DT)(dateTime, -1)
 
-  /**
-    * Calculates a date-time that is in either the past or the future relative
-    * to a given one, a delta amount and considering only the field represented
-    * by this expression.
+  /** Calculates a date-time that is in either the past or the future relative to a given one, a
+    * delta amount and considering only the field represented by this expression.
     *
-    * @param dateTime date-time used as a reference
-    * @param step step size
-    * @return a date-time that is an amount of given steps from the given one
+    * @param dateTime
+    *   date-time used as a reference
+    * @param step
+    *   step size
+    * @return
+    *   a date-time that is an amount of given steps from the given one
     */
   def stepIn[DateTime](
       expr: E[F],

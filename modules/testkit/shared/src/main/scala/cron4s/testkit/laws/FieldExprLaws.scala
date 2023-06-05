@@ -22,8 +22,7 @@ import cron4s.CronField
 import cron4s.expr.FieldExpr
 import cron4s.syntax.field._
 
-/**
-  * Created by alonsodomin on 28/08/2016.
+/** Created by alonsodomin on 28/08/2016.
   */
 trait FieldExprLaws[E[_ <: CronField], F <: CronField] extends EnumeratedLaws[E[F]] {
   implicit def TC: FieldExpr[E, F]

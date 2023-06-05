@@ -23,8 +23,7 @@ import cron4s.CronField
 import cron4s.datetime.{DateTimeCron, IsDateTime}
 import cron4s.syntax.cron._
 
-/**
-  * Created by alonsodomin on 29/01/2017.
+/** Created by alonsodomin on 29/01/2017.
   */
 trait DateTimeCronLaws[E, DateTime] {
   implicit def DT: IsDateTime[DateTime]

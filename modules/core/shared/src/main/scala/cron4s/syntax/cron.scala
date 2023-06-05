@@ -20,8 +20,7 @@ import cron4s.CronField
 import cron4s.datetime.{DateTimeCron, IsDateTime}
 import cron4s.expr.FieldSelector
 
-/**
-  * Created by alonsodomin on 25/01/2017.
+/** Created by alonsodomin on 25/01/2017.
   */
 private[syntax] class DateTimeCronOps[E](self: E, tc: DateTimeCron[E]) {
   def allOf[DateTime](dt: DateTime)(implicit DT: IsDateTime[DateTime]): Boolean =

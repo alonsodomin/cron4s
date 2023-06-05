@@ -22,8 +22,7 @@ import cron4s.base._
 
 import org.scalacheck._
 
-/**
-  * Created by alonsodomin on 28/08/2016.
+/** Created by alonsodomin on 28/08/2016.
   */
 trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
   private[this] def filterImpliedElems[F <: CronField](

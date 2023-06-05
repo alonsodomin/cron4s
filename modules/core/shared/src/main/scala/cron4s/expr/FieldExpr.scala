@@ -19,8 +19,7 @@ package cron4s.expr
 import cron4s.{CronField, CronUnit}
 import cron4s.base.{Enumerated, Predicate}
 
-/**
-  * Created by alonsodomin on 25/08/2016.
+/** Created by alonsodomin on 25/08/2016.
   */
 trait FieldExpr[E[_ <: CronField], F <: CronField] extends Enumerated[E[F]] {
   def matches(e: E[F]): Predicate[Int]

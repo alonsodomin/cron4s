@@ -20,8 +20,7 @@ import cron4s.CronField
 
 import org.scalacheck.{Arbitrary, Gen}
 
-/**
-  * Created by domingueza on 31/01/2017.
+/** Created by domingueza on 31/01/2017.
   */
 trait ArbitraryCronField {
   import CronField._

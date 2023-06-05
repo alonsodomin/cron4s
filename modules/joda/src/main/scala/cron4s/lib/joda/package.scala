@@ -22,8 +22,7 @@ import cron4s.datetime.IsDateTime
 
 import org.joda.time.{DateTime, LocalDate, LocalDateTime, LocalTime}
 
-/**
-  * Created by alonsodomin on 11/12/2016.
+/** Created by alonsodomin on 11/12/2016.
   */
 package object joda {
   implicit val jodaDateTimeEq: Eq[DateTime] = Eq.fromUniversalEquals[DateTime]

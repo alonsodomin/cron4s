@@ -21,8 +21,7 @@ import cron4s.expr.{EnumerableNode, SeveralNode}
 import cron4s.base.Enumerated
 import cron4s.testkit.SlowCron4sPropSpec
 
-/**
-  * Created by alonsodomin on 29/12/2016.
+/** Created by alonsodomin on 29/12/2016.
   */
 class SeveralNodeValidatorSpec extends SlowCron4sPropSpec with ValidatorPropSpec {
   import CronField._

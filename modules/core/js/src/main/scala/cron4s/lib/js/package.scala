@@ -22,8 +22,7 @@ import cron4s.datetime.IsDateTime
 
 import scala.scalajs.js.Date
 
-/**
-  * Created by alonsodomin on 11/12/2016.
+/** Created by alonsodomin on 11/12/2016.
   */
 package object js {
   implicit val jsDateEq: Eq[Date] = Eq.instance { (lhs, rhs) =>

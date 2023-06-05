@@ -20,10 +20,10 @@ import cron4s.CronField
 
 import scala.annotation.implicitNotFound
 
-/**
-  * Bridge adapter between specific date-time libraries and expression support
+/** Bridge adapter between specific date-time libraries and expression support
   *
-  * @author Antonio Alonso Dominguez
+  * @author
+  *   Antonio Alonso Dominguez
   */
 @implicitNotFound(
   "Type ${DateTime} is not supported on current scope. You may be missing some imports, check the documentation to know more."
@@ -31,32 +31,40 @@ import scala.annotation.implicitNotFound
 trait IsDateTime[DateTime] {
   def plus(dateTime: DateTime, amount: Int, unit: DateTimeUnit): Option[DateTime]
 
-  /**
-    * List of the fields supported by this date time representation
+  /** List of the fields supported by this date time representation
     *
-    * @param dateTime the date time representation
-    * @return list of the supported fields
+    * @param dateTime
+    *   the date time representation
+    * @return
+    *   list of the supported fields
     */
   def supportedFields(dateTime: DateTime): List[CronField]
 
-  /**
-    * Getter access for a specific field in a date-time
+  /** Getter access for a specific field in a date-time
     *
-    * @param dateTime a date-time
-    * @param field a CronField
-    * @tparam F the CronField type
-    * @return value of the field
+    * @param dateTime
+    *   a date-time
+    * @param field
+    *   a CronField
+    * @tparam F
+    *   the CronField type
+    * @return
+    *   value of the field
     */
   def get[F <: CronField](dateTime: DateTime, field: F): Either[DateTimeError, Int]
 
-  /**
-    * Setter access for a specific field in a date-time
+  /** Setter access for a specific field in a date-time
     *
-    * @param dateTime a date-time
-    * @param field a CronField
-    * @param value new value for the field
-    * @tparam F the CronField type
-    * @return a new date-time with the given field set to the new value
+    * @param dateTime
+    *   a date-time
+    * @param field
+    *   a CronField
+    * @param value
+    *   new value for the field
+    * @tparam F
+    *   the CronField type
+    * @return
+    *   a new date-time with the given field set to the new value
     */
   def set[F <: CronField](dateTime: DateTime, field: F, value: Int): Either[DateTimeError, DateTime]
 }

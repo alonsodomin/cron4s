@@ -21,8 +21,7 @@ import cron4s.testkit.SlowCron4sLawSuite
 import cron4s.testkit.discipline.FieldExprTests
 import cron4s.testkit.gen.ArbitraryEveryNode
 
-/**
-  * Created by alonsodomin on 01/08/2016.
+/** Created by alonsodomin on 01/08/2016.
   */
 class EveryNodeSpec extends SlowCron4sLawSuite with ArbitraryEveryNode {
   import CronField._

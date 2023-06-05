@@ -20,8 +20,7 @@ import cron4s.testkit.DateTimeTestKitBase
 
 import scala.scalajs.js.Date
 
-/**
-  * Created by alonsodomin on 02/09/2016.
+/** Created by alonsodomin on 02/09/2016.
   */
 trait JSTestBase extends DateTimeTestKitBase[Date] {
   protected def createDateTime(

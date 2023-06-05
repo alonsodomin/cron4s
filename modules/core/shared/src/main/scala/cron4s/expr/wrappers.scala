@@ -23,8 +23,7 @@ import cron4s.base.Predicate
 
 import shapeless._
 
-/**
-  * Created by alonsodomin on 23/01/2017.
+/** Created by alonsodomin on 23/01/2017.
   */
 final class FieldNode[F <: CronField](private[cron4s] val raw: RawFieldNode[F]) extends AnyVal {
   override def toString: String = raw.fold(_root_.cron4s.expr.ops.show)

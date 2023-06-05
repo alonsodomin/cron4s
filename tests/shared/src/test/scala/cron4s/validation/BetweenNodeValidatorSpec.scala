@@ -21,8 +21,7 @@ import cron4s.base.Enumerated
 import cron4s.expr.{BetweenNode, ConstNode}
 import cron4s.testkit.SlowCron4sPropSpec
 
-/**
-  * Created by alonsodomin on 29/12/2016.
+/** Created by alonsodomin on 29/12/2016.
   */
 class BetweenNodeValidatorSpec extends SlowCron4sPropSpec with ValidatorPropSpec {
   import CronField._
@@ -48,7 +47,7 @@ class BetweenNodeValidatorSpec extends SlowCron4sPropSpec with ValidatorPropSpec
 
           beginErrors ::: endErrors
         }
-        val rangeErrors = {
+        val rangeErrors =
           if (node.begin.value >= node.end.value)
             List(
               InvalidField(
@@ -57,7 +56,6 @@ class BetweenNodeValidatorSpec extends SlowCron4sPropSpec with ValidatorPropSpec
               )
             )
           else List.empty[InvalidField]
-        }
         val expectedErrors = constErrors ::: rangeErrors
 
         NodeValidator[BetweenNode[F]]

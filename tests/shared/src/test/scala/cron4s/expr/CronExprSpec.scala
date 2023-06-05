@@ -23,8 +23,7 @@ import cron4s._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
 
-/**
-  * Created by alonsodomin on 07/08/2016.
+/** Created by alonsodomin on 07/08/2016.
   */
 class CronExprSpec extends AnyFlatSpec with Matchers {
   import CronField._

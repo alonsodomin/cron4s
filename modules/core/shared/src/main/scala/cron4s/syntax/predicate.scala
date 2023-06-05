@@ -21,8 +21,7 @@ import cats.syntax.foldable._
 
 import cron4s.base.Predicate
 
-/**
-  * Created by alonsodomin on 29/07/2016.
+/** Created by alonsodomin on 29/07/2016.
   */
 trait PredicateSyntax {
   def always[A](value: => Boolean): Predicate[A] = Predicate(_ => value)

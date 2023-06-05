@@ -24,8 +24,7 @@ import cron4s._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
 
-/**
-  * Created by alonsodomin on 24/02/2017.
+/** Created by alonsodomin on 24/02/2017.
   */
 class JavaTimeCronDateTimeRegressionSpec extends AnyFlatSpec with Matchers {
   "Cron" should "not advance to the next day" in {

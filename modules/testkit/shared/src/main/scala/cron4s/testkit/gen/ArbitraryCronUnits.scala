@@ -21,8 +21,7 @@ import cron4s.CronUnit
 
 import org.scalacheck._
 
-/**
-  * Created by alonsodomin on 28/08/2016.
+/** Created by alonsodomin on 28/08/2016.
   */
 trait ArbitraryCronUnits {
   implicit lazy val arbitrarySecondsUnit     = Arbitrary(Gen.const(CronUnit[Second]))

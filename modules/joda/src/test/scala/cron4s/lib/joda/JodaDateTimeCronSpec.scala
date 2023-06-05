@@ -19,8 +19,7 @@ package cron4s.lib.joda
 import cron4s.testkit.DateTimeCronTestKit
 import org.joda.time.{DateTime, LocalDate, LocalDateTime, LocalTime}
 
-/**
-  * Created by alonsodomin on 29/01/2017.
+/** Created by alonsodomin on 29/01/2017.
   */
 class JodaDateTimeCronSpec  extends DateTimeCronTestKit[DateTime] with JodaDateTimeTestBase
 class JodaLocalDateCronSpec extends DateTimeCronTestKit[LocalDate] with JodaLocalDateTestBase

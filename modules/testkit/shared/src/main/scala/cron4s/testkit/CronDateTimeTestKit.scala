@@ -24,8 +24,7 @@ import cron4s.datetime.IsDateTime
 
 import org.scalatest.flatspec.AnyFlatSpec
 
-/**
-  * Created by alonsodomin on 29/08/2016.
+/** Created by alonsodomin on 29/08/2016.
   */
 object CronDateTimeTestKit {
   final val OnlyTuesdaysAt12     = Cron.unsafeParse("0 0 12 ? * 1")
@@ -50,7 +49,7 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show] extends AnyFl
   import CronDateTimeTestKit._
 
   lazy val samples = Seq(
-    //("expr",           "from",                              "stepSize", "expected"),
+    // ("expr",           "from",                              "stepSize", "expected"),
     (
       OnlyTuesdaysAt12,
       createDateTime(0, 0, 0, 1, 8, 2016),

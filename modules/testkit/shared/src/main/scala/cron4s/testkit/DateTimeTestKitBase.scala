@@ -22,8 +22,7 @@ import cron4s.CronUnit._
 
 import org.scalacheck.{Arbitrary, Gen}
 
-/**
-  * Created by alonsodomin on 29/08/2016.
+/** Created by alonsodomin on 29/08/2016.
   */
 trait DateTimeTestKitBase[DateTime] {
   implicit final lazy val arbitraryDateTime: Arbitrary[DateTime] = Arbitrary(for {

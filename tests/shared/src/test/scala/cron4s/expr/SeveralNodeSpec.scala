@@ -21,8 +21,7 @@ import cron4s.testkit.SlowCron4sLawSuite
 import cron4s.testkit.discipline.FieldExprTests
 import cron4s.testkit.gen.ArbitrarySeveralNode
 
-/**
-  * Created by alonsodomin on 01/08/2016.
+/** Created by alonsodomin on 01/08/2016.
   */
 class SeveralNodeSpec extends SlowCron4sLawSuite with ArbitrarySeveralNode {
   checkAll("Several[Second]", FieldExprTests[SeveralNode, Second].expr)

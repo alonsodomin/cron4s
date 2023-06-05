@@ -20,8 +20,7 @@ import java.time._
 
 import cron4s.testkit.IsDateTimeTestKit
 
-/**
-  * Created by alonsodomin on 29/08/2016.
+/** Created by alonsodomin on 29/08/2016.
   */
 class JavaLocalDateSpec
     extends IsDateTimeTestKit[LocalDate]("JavaLocalDate") with JavaLocalDateTestBase

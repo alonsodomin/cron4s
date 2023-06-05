@@ -23,8 +23,7 @@ import cron4s.CronField
 import cron4s.testkit.discipline.IsDateTimeTests
 import cron4s.testkit.gen.{ArbitraryCronField, ArbitraryCronFieldValues}
 
-/**
-  * Created by alonsodomin on 29/08/2016.
+/** Created by alonsodomin on 29/08/2016.
   */
 abstract class IsDateTimeTestKit[DateTime: IsDateTime: Eq](name: String)
     extends Cron4sLawSuite with ArbitraryCronFieldValues with ArbitraryCronField

@@ -24,8 +24,7 @@ import cron4s.expr.{EachNode, EveryNode}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
 
-/**
-  * Created by alonsodomin on 31/12/2016.
+/** Created by alonsodomin on 31/12/2016.
   */
 class EveryNodeValidatorRegressionSpec extends AnyFlatSpec with Matchers {
   import CronField._

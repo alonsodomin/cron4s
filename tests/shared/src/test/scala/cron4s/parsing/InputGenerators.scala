@@ -19,8 +19,7 @@ package parsing
 
 import org.scalacheck.{Arbitrary, Gen}
 
-/**
-  * Created by alonsodomin on 13/01/2016.
+/** Created by alonsodomin on 13/01/2016.
   */
 trait InputGenerators {
   import Arbitrary._
@@ -53,8 +52,8 @@ trait InputGenerators {
   ): Gen[(String, List[Either[String, (A, A)]])] = {
     val eitherConstOrRange = for {
       const <- constGen.map(v => v -> Left(v))
-      range <- rangeGen.map {
-        case (input, (start, end)) => input -> Right(start -> end)
+      range <- rangeGen.map { case (input, (start, end)) =>
+        input -> Right(start -> end)
       }
       either <- Gen.oneOf(const, range)
     } yield either
@@ -63,12 +62,11 @@ trait InputGenerators {
     Gen
       .nonEmptyListOf(eitherConstOrRange)
       .suchThat(_.size > 1)
-      .map(_.foldRight(zero) {
-        case ((inputPart, resultPart), (inputList, resultList)) =>
-          (inputPart :: inputList) -> (resultPart :: resultList)
+      .map(_.foldRight(zero) { case ((inputPart, resultPart), (inputList, resultList)) =>
+        (inputPart :: inputList) -> (resultPart :: resultList)
       })
-      .map {
-        case (input, expected) => input.mkString(",") -> expected
+      .map { case (input, expected) =>
+        input.mkString(",") -> expected
       }
   }
 

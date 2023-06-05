@@ -22,8 +22,7 @@ import cron4s.expr._
 import shapeless._
 import cron4s.InvalidField
 
-/**
-  * Created by alonsodomin on 03/02/2017.
+/** Created by alonsodomin on 03/02/2017.
   */
 private[validation] object ops {
   object validate extends Poly1 {

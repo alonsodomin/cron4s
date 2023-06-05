@@ -20,8 +20,7 @@ import java.time._
 
 import cron4s.testkit.DateTimeCronTestKit
 
-/**
-  * Created by alonsodomin on 29/01/2017.
+/** Created by alonsodomin on 29/01/2017.
   */
 class JavaLocalDateCronSpec extends DateTimeCronTestKit[LocalDate] with JavaLocalDateTestBase
 class JavaLocalTimeCronSpec extends DateTimeCronTestKit[LocalTime] with JavaLocalTimeTestBase

@@ -26,8 +26,7 @@ import cron4s.testkit.laws.FieldExprLaws
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
 
-/**
-  * Created by alonsodomin on 28/08/2016.
+/** Created by alonsodomin on 28/08/2016.
   */
 trait FieldExprTests[E[_ <: CronField], F <: CronField] extends EnumeratedTests[E[F]] {
   def laws: FieldExprLaws[E, F]

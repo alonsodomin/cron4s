@@ -21,8 +21,7 @@ import cron4s.testkit.Cron4sLawSuite
 import cron4s.testkit.discipline.FieldExprTests
 import cron4s.testkit.gen.ArbitratyAnyNode
 
-/**
-  * Created by alonsodomin on 10/02/2017.
+/** Created by alonsodomin on 10/02/2017.
   */
 class AnyNodeSpec extends Cron4sLawSuite with ArbitratyAnyNode {
   import CronField._

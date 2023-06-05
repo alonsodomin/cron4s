@@ -23,8 +23,7 @@ import cron4s.datetime.{DateTimeError, DateTimeUnit, InvalidFieldValue, IsDateTi
 
 import scala.scalajs.js.Date
 
-/**
-  * Created by alonsodomin on 30/01/2017.
+/** Created by alonsodomin on 30/01/2017.
   */
 private[js] final class JsDateInstance extends IsDateTime[Date] {
   import CronField._

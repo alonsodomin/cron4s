@@ -21,8 +21,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.propspec.AnyPropSpecLike
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-/**
-  * Created by alonsodomin on 04/02/2017.
+/** Created by alonsodomin on 04/02/2017.
   */
 trait ValidatorPropSpec extends ScalaCheckDrivenPropertyChecks with Matchers with NodeGenerators {
   this: AnyPropSpecLike =>

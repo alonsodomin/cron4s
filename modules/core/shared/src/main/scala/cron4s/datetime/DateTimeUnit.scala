@@ -16,8 +16,7 @@
 
 package cron4s.datetime
 
-/**
-  * Created by alonsodomin on 09/04/2017.
+/** Created by alonsodomin on 09/04/2017.
   */
 sealed trait DateTimeUnit
 object DateTimeUnit {

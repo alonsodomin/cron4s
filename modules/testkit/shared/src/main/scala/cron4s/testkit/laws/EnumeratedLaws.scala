@@ -21,8 +21,7 @@ import cats.laws._
 import cron4s.base.Enumerated
 import cron4s.syntax.enumerated._
 
-/**
-  * Created by alonsodomin on 27/08/2016.
+/** Created by alonsodomin on 27/08/2016.
   */
 trait EnumeratedLaws[A] {
   implicit def TC: Enumerated[A]

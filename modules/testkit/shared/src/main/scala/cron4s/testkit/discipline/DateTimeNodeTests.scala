@@ -29,8 +29,7 @@ import org.scalacheck.Prop._
 import org.scalacheck._
 import org.typelevel.discipline.Laws
 
-/**
-  * Created by alonsodomin on 28/08/2016.
+/** Created by alonsodomin on 28/08/2016.
   */
 trait DateTimeNodeTests[E[_ <: CronField], F <: CronField, DateTime] extends Laws {
   def laws: DateTimeNodeLaws[E, F, DateTime]

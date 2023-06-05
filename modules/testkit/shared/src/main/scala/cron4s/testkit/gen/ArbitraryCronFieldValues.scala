@@ -23,8 +23,7 @@ import cron4s.syntax.enumerated._
 
 import org.scalacheck.{Arbitrary, Gen}
 
-/**
-  * Created by alonsodomin on 29/08/2016.
+/** Created by alonsodomin on 29/08/2016.
   */
 trait ArbitraryCronFieldValues {
   import CronField._

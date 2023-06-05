@@ -18,10 +18,10 @@ package cron4s
 
 import cats.{Eq, Show}
 
-/**
-  * Each of the different fields supported in CRON expressions
+/** Each of the different fields supported in CRON expressions
   *
-  * @author Antonio Alonso Dominguez
+  * @author
+  *   Antonio Alonso Dominguez
   */
 sealed trait CronField extends Serializable
 object CronField extends CronFieldInstances {

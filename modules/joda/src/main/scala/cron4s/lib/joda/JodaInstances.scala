@@ -26,8 +26,7 @@ import org.joda.time.base.BaseLocal
 
 import scala.util.Try
 
-/**
-  * Created by alonsodomin on 06/02/2017.
+/** Created by alonsodomin on 06/02/2017.
   */
 private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
   import CronField._
@@ -35,22 +34,26 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
   override def plus(dateTime: DT, amount: Int, unit: DateTimeUnit): Option[DT] =
     plusPeriod(dateTime, asPeriod(amount, unit))
 
-  /**
-    * List of the fields supported by this date time representation
+  /** List of the fields supported by this date time representation
     *
-    * @param dateTime the date time representation
-    * @return list of the supported fields
+    * @param dateTime
+    *   the date time representation
+    * @return
+    *   list of the supported fields
     */
   override def supportedFields(dateTime: DT): List[CronField] =
     CronField.All.filter(field => isSupported(dateTime, asDateTimeFieldType(field)))
 
-  /**
-    * Getter access for a specific field in a date-time
+  /** Getter access for a specific field in a date-time
     *
-    * @param dateTime a date-time
-    * @param field    a CronField
-    * @tparam F the CronField type
-    * @return value of the field
+    * @param dateTime
+    *   a date-time
+    * @param field
+    *   a CronField
+    * @tparam F
+    *   the CronField type
+    * @return
+    *   value of the field
     */
   override def get[F <: CronField](dateTime: DT, field: F): Either[DateTimeError, Int] = {
     val jodaField = asDateTimeFieldType(field)
@@ -64,14 +67,18 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
       UnsupportedField(field).asLeft
   }
 
-  /**
-    * Setter access for a specific field in a date-time
+  /** Setter access for a specific field in a date-time
     *
-    * @param dateTime a date-time
-    * @param field    a CronField
-    * @param value    new value for the field
-    * @tparam F the CronField type
-    * @return a new date-time with the given field set to the new value
+    * @param dateTime
+    *   a date-time
+    * @param field
+    *   a CronField
+    * @param value
+    *   new value for the field
+    * @tparam F
+    *   the CronField type
+    * @return
+    *   a new date-time with the given field set to the new value
     */
   override def set[F <: CronField](
       dateTime: DT,

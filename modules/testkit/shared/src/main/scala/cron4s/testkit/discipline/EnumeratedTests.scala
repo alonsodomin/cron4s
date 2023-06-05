@@ -26,8 +26,7 @@ import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
 import org.typelevel.discipline.Laws
 
-/**
-  * Created by alonsodomin on 27/08/2016.
+/** Created by alonsodomin on 27/08/2016.
   */
 trait EnumeratedTests[A] extends Laws {
   def laws: EnumeratedLaws[A]

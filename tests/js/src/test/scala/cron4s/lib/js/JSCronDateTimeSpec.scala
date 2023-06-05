@@ -20,7 +20,6 @@ import cron4s.testkit.CronDateTimeTestKit
 
 import scala.scalajs.js.Date
 
-/**
-  * Created by alonsodomin on 29/08/2016.
+/** Created by alonsodomin on 29/08/2016.
   */
 class JSCronDateTimeSpec extends CronDateTimeTestKit[Date] with JSTestBase

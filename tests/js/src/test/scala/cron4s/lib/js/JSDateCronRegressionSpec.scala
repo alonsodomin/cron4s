@@ -23,8 +23,7 @@ import cron4s._
 
 import scala.scalajs.js.Date
 
-/**
-  * Created by alonsodomin on 25/02/2017.
+/** Created by alonsodomin on 25/02/2017.
   */
 class JSDateCronRegressionSpec extends AnyFlatSpec with Matchers {
   "Cron" should "not advance to the next day" in {

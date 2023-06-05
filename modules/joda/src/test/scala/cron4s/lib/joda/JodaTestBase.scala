@@ -20,8 +20,7 @@ import cron4s.testkit.DateTimeTestKitBase
 
 import org.joda.time._
 
-/**
-  * Created by alonsodomin on 29/08/2016.
+/** Created by alonsodomin on 29/08/2016.
   */
 trait JodaDateTimeTestBase extends DateTimeTestKitBase[DateTime] {
   protected def createDateTime(

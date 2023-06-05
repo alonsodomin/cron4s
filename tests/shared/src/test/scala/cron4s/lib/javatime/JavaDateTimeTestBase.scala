@@ -20,8 +20,7 @@ import java.time._
 
 import cron4s.testkit.DateTimeTestKitBase
 
-/**
-  * Created by alonsodomin on 29/08/2016.
+/** Created by alonsodomin on 29/08/2016.
   */
 trait JavaLocalDateTestBase extends DateTimeTestKitBase[LocalDate] {
   def createDateTime(

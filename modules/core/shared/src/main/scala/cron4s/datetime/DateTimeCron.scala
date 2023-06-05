@@ -22,8 +22,7 @@ import cron4s.CronField
 import cron4s.base.{Predicate, Step}
 import cron4s.expr._
 
-/**
-  * Created by alonsodomin on 14/01/2017.
+/** Created by alonsodomin on 14/01/2017.
   */
 trait DateTimeCron[T] {
   protected def matches[DateTime](expr: T, dt: IsDateTime[DateTime])(implicit

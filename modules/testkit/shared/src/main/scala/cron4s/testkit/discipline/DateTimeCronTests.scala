@@ -28,8 +28,7 @@ import org.scalacheck._
 
 import org.typelevel.discipline.Laws
 
-/**
-  * Created by alonsodomin on 29/01/2017.
+/** Created by alonsodomin on 29/01/2017.
   */
 trait DateTimeCronTests[E, DateTime] extends Laws {
   def laws: DateTimeCronLaws[E, DateTime]

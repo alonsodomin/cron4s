@@ -23,8 +23,7 @@ import shapeless.ops.hlist.Selector
 
 import scala.annotation.implicitNotFound
 
-/**
-  * Created by alonsodomin on 10/02/2017.
+/** Created by alonsodomin on 10/02/2017.
   */
 @implicitNotFound("Field ${F} is not a member of expression ${A}")
 sealed trait FieldSelector[A, F <: CronField] {

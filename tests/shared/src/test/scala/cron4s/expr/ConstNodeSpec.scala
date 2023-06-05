@@ -21,8 +21,7 @@ import cron4s.testkit.Cron4sLawSuite
 import cron4s.testkit.discipline.FieldExprTests
 import cron4s.testkit.gen.ArbitraryConstNode
 
-/**
-  * Created by alonsodomin on 31/07/2016.
+/** Created by alonsodomin on 31/07/2016.
   */
 class ConstNodeSpec extends Cron4sLawSuite with ArbitraryConstNode {
   import CronField._

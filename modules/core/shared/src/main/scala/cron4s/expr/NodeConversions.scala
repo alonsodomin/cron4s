@@ -22,8 +22,7 @@ import shapeless.Coproduct
 
 import scala.language.implicitConversions
 
-/**
-  * Created by alonsodomin on 28/12/2016.
+/** Created by alonsodomin on 28/12/2016.
   */
 private[cron4s] trait NodeConversions {
   implicit def each2Field[F <: CronField](node: EachNode[F]): FieldNode[F] =

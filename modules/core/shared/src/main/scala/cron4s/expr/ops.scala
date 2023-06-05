@@ -24,8 +24,7 @@ import shapeless._
 import cron4s.base.Predicate
 import cron4s.CronUnit
 
-/**
-  * Created by alonsodomin on 17/12/2016.
+/** Created by alonsodomin on 17/12/2016.
   */
 private[cron4s] object ops {
   object matches extends Poly1 {

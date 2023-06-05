@@ -25,8 +25,7 @@ import cron4s.datetime._
 
 import scala.util.{Success, Try}
 
-/**
-  * Created by alonsodomin on 30/01/2017.
+/** Created by alonsodomin on 30/01/2017.
   */
 private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDateTime[DT] {
   import CronField._

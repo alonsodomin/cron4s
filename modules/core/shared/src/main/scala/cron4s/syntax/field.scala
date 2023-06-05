@@ -22,8 +22,7 @@ import cron4s.base.Predicate
 
 import scala.language.higherKinds
 
-/**
-  * Created by alonsodomin on 25/08/2016.
+/** Created by alonsodomin on 25/08/2016.
   */
 private[syntax] class FieldExprOps[E[_ <: CronField], F <: CronField](
     self: E[F],

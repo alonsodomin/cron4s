@@ -26,8 +26,7 @@ import cron4s.testkit.gen.{ArbitraryEachNode, NodeGenerators}
 import org.scalacheck.Gen
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-/**
-  * Created by alonsodomin on 13/01/2016.
+/** Created by alonsodomin on 13/01/2016.
   */
 class ParserSpec
     extends Cron4sPropSpec with ScalaCheckDrivenPropertyChecks with InputGenerators
@@ -77,17 +76,16 @@ class ParserSpec
   ): Boolean =
     verifyParsed[F, SeveralNode[F]](parser, input) { expr =>
       if (expr.values.toList.size == expected.size) {
-        val matches = expr.values.toList.zip(expected).map {
-          case (exprPart, expectedPart) =>
-            expectedPart match {
-              case Left(value) =>
-                exprPart.raw.select[ConstNode[F]].exists(verify(_, value))
+        val matches = expr.values.toList.zip(expected).map { case (exprPart, expectedPart) =>
+          expectedPart match {
+            case Left(value) =>
+              exprPart.raw.select[ConstNode[F]].exists(verify(_, value))
 
-              case Right((start, end)) =>
-                exprPart.raw.select[BetweenNode[F]].exists { part =>
-                  verify(part.begin, start.toString) && verify(part.end, end.toString)
-                }
-            }
+            case Right((start, end)) =>
+              exprPart.raw.select[BetweenNode[F]].exists { part =>
+                verify(part.begin, start.toString) && verify(part.end, end.toString)
+              }
+          }
         }
 
         !matches.contains(false)
@@ -156,144 +154,128 @@ class ParserSpec
   }
 
   property("should be able to parse ranges in seconds") {
-    forAll(secondsOrMinutesRangeGen) {
-      case (input, (start, end)) =>
-        verifyBetween(between(seconds), input) { expr =>
-          expr.begin.value == start && expr.end.value == end
-        }
+    forAll(secondsOrMinutesRangeGen) { case (input, (start, end)) =>
+      verifyBetween(between(seconds), input) { expr =>
+        expr.begin.value == start && expr.end.value == end
+      }
     }
   }
 
   property("should be able to parse ranges in minutes") {
-    forAll(secondsOrMinutesRangeGen) {
-      case (input, (start, end)) =>
-        verifyBetween(between(minutes), input) { expr =>
-          expr.begin.value == start && expr.end.value == end
-        }
+    forAll(secondsOrMinutesRangeGen) { case (input, (start, end)) =>
+      verifyBetween(between(minutes), input) { expr =>
+        expr.begin.value == start && expr.end.value == end
+      }
     }
   }
 
   property("should be able to parse ranges in hours") {
-    forAll(hoursRangeGen) {
-      case (input, (start, end)) =>
-        verifyBetween(between(hours), input) { expr =>
-          expr.begin.value == start && expr.end.value == end
-        }
+    forAll(hoursRangeGen) { case (input, (start, end)) =>
+      verifyBetween(between(hours), input) { expr =>
+        expr.begin.value == start && expr.end.value == end
+      }
     }
   }
 
   property("should be able to parse ranges in days of month") {
-    forAll(daysOfMonthRangeGen) {
-      case (input, (start, end)) =>
-        verifyBetween(between(daysOfMonth), input) { expr =>
-          expr.begin.value == start && expr.end.value == end
-        }
+    forAll(daysOfMonthRangeGen) { case (input, (start, end)) =>
+      verifyBetween(between(daysOfMonth), input) { expr =>
+        expr.begin.value == start && expr.end.value == end
+      }
     }
   }
 
   property("should be able to parse ranges for numeric months") {
-    forAll(numericMonthsRangeGen) {
-      case (input, (start, end)) =>
-        verifyBetween(between(months), input) { expr =>
-          expr.begin.value == start && expr.end.value == end
-        }
+    forAll(numericMonthsRangeGen) { case (input, (start, end)) =>
+      verifyBetween(between(months), input) { expr =>
+        expr.begin.value == start && expr.end.value == end
+      }
     }
   }
   property("should be able to parse ranges for named months") {
-    forAll(namedMonthsRangeGen) {
-      case (input, (start, end)) =>
-        verifyBetween(between(months), input) { expr =>
-          expr.begin.textValue.contains(start) && expr.end.textValue
-            .contains(end)
-        }
+    forAll(namedMonthsRangeGen) { case (input, (start, end)) =>
+      verifyBetween(between(months), input) { expr =>
+        expr.begin.textValue.contains(start) && expr.end.textValue
+          .contains(end)
+      }
     }
   }
 
   property("should be able to parse ranges for numeric days of week") {
-    forAll(numericDaysOfWeekRangeGen) {
-      case (input, (start, end)) =>
-        verifyBetween(between(daysOfWeek), input) { expr =>
-          expr.begin.value == start && expr.end.value == end
-        }
+    forAll(numericDaysOfWeekRangeGen) { case (input, (start, end)) =>
+      verifyBetween(between(daysOfWeek), input) { expr =>
+        expr.begin.value == start && expr.end.value == end
+      }
     }
   }
   property("should be able to parse ranges for named days of week") {
-    forAll(namedDaysOfWeekRangeGen) {
-      case (input, (start, end)) =>
-        verifyBetween(between(daysOfWeek), input) { expr =>
-          expr.begin.textValue.contains(start) && expr.end.textValue
-            .contains(end)
-        }
+    forAll(namedDaysOfWeekRangeGen) { case (input, (start, end)) =>
+      verifyBetween(between(daysOfWeek), input) { expr =>
+        expr.begin.textValue.contains(start) && expr.end.textValue
+          .contains(end)
+      }
     }
   }
 
   property("should be able to parse sequences of second expressions") {
-    forAll(secondsOrMinutesSeqGen) {
-      case (input, values) =>
-        verifySeveral(several(seconds), input, values) { (expr, expected) =>
-          expr.value == expected.toInt
-        }
+    forAll(secondsOrMinutesSeqGen) { case (input, values) =>
+      verifySeveral(several(seconds), input, values) { (expr, expected) =>
+        expr.value == expected.toInt
+      }
     }
   }
 
   property("should be able to parse sequences of minutes expressions") {
-    forAll(secondsOrMinutesSeqGen) {
-      case (input, values) =>
-        verifySeveral(several(minutes), input, values) { (expr, expected) =>
-          expr.value == expected.toInt
-        }
+    forAll(secondsOrMinutesSeqGen) { case (input, values) =>
+      verifySeveral(several(minutes), input, values) { (expr, expected) =>
+        expr.value == expected.toInt
+      }
     }
   }
 
   property("should be able to parse sequences of hour expressions") {
-    forAll(hoursSeqGen) {
-      case (input, values) =>
-        verifySeveral(several(hours), input, values) { (expr, expected) =>
-          expr.value == expected.toInt
-        }
+    forAll(hoursSeqGen) { case (input, values) =>
+      verifySeveral(several(hours), input, values) { (expr, expected) =>
+        expr.value == expected.toInt
+      }
     }
   }
 
   property("should be able to parse sequences of days of month expressions") {
-    forAll(daysOfMonthSeqGen) {
-      case (input, values) =>
-        verifySeveral(several(daysOfMonth), input, values) { (expr, expected) =>
-          expr.value == expected.toInt
-        }
+    forAll(daysOfMonthSeqGen) { case (input, values) =>
+      verifySeveral(several(daysOfMonth), input, values) { (expr, expected) =>
+        expr.value == expected.toInt
+      }
     }
   }
 
   property("should be able to parse sequences of numeric month expressions") {
-    forAll(numericMonthsSeqGen) {
-      case (input, values) =>
-        verifySeveral(several(months), input, values) { (expr, expected) =>
-          expr.value == expected.toInt
-        }
+    forAll(numericMonthsSeqGen) { case (input, values) =>
+      verifySeveral(several(months), input, values) { (expr, expected) =>
+        expr.value == expected.toInt
+      }
     }
   }
   property("should be able to parse sequences of named month expressions") {
-    forAll(namedMonthsSeqGen) {
-      case (input, values) =>
-        verifySeveral(several(months), input, values) { (expr, expected) =>
-          expr.textValue.contains(expected)
-        }
+    forAll(namedMonthsSeqGen) { case (input, values) =>
+      verifySeveral(several(months), input, values) { (expr, expected) =>
+        expr.textValue.contains(expected)
+      }
     }
   }
 
   property("should be able to parse sequences of numeric days of week expressions") {
-    forAll(numericDaysOfWeekSeqGen) {
-      case (input, values) =>
-        verifySeveral(several(daysOfWeek), input, values) { (expr, expected) =>
-          expr.value == expected.toInt
-        }
+    forAll(numericDaysOfWeekSeqGen) { case (input, values) =>
+      verifySeveral(several(daysOfWeek), input, values) { (expr, expected) =>
+        expr.value == expected.toInt
+      }
     }
   }
   property("should be able to parse sequences of named days of week expressions") {
-    forAll(namedDaysOfWeekSeqGen) {
-      case (input, values) =>
-        verifySeveral(several(daysOfWeek), input, values) { (expr, expected) =>
-          expr.textValue.contains(expected)
-        }
+    forAll(namedDaysOfWeekSeqGen) { case (input, values) =>
+      verifySeveral(several(daysOfWeek), input, values) { (expr, expected) =>
+        expr.textValue.contains(expected)
+      }
     }
   }
 }

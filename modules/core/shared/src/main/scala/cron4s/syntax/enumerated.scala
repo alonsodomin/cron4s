@@ -18,8 +18,7 @@ package cron4s.syntax
 
 import cron4s.base.{Step, Enumerated}
 
-/**
-  * Created by alonsodomin on 23/08/2016.
+/** Created by alonsodomin on 23/08/2016.
   */
 private[syntax] class EnumeratedOps[A](self: A, tc: Enumerated[A]) {
   def max: Int = tc.max(self)

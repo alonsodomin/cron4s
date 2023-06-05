@@ -49,9 +49,9 @@ object CronParser extends Parsers with BaseParser {
   private val blank: Parser[Char] =
     accept("blank", { case Blank => ' ' })
 
-  //----------------------------------------
+  // ----------------------------------------
   // Individual Expression Atoms
-  //----------------------------------------
+  // ----------------------------------------
 
   // Seconds
 
@@ -101,9 +101,9 @@ object CronParser extends Parsers with BaseParser {
   val daysOfWeek: Parser[ConstNode[DayOfWeek]] =
     textualDaysOfWeek | numericDaysOfWeek
 
-  //----------------------------------------
+  // ----------------------------------------
   // Field-Based Expression Atoms
-  //----------------------------------------
+  // ----------------------------------------
 
   def each[F <: CronField](implicit unit: CronUnit[F]): Parser[EachNode[F]] =
     accept("*", { case Asterisk => EachNode[F] })
@@ -131,8 +131,8 @@ object CronParser extends Parsers with BaseParser {
       unit: CronUnit[F]
   ): Parser[EveryNode[F]] = {
     def compose(b: Parser[DivisibleNode[F]]) =
-      ((b <~ Slash) ~ decimal.filter(_ > 0)) ^^ {
-        case exp ~ freq => EveryNode[F](exp, freq)
+      ((b <~ Slash) ~ decimal.filter(_ > 0)) ^^ { case exp ~ freq =>
+        EveryNode[F](exp, freq)
       }
 
     compose(
@@ -142,9 +142,9 @@ object CronParser extends Parsers with BaseParser {
     )
   }
 
-  //----------------------------------------
+  // ----------------------------------------
   // AST Parsing & Building
-  //----------------------------------------
+  // ----------------------------------------
 
   def field[F <: CronField](base: Parser[ConstNode[F]])(implicit
       unit: CronUnit[F]
@@ -165,7 +165,7 @@ object CronParser extends Parsers with BaseParser {
       each[F].map(each2FieldWithAny) |
       any[F].map(any2FieldWithAny)
 
-  val cron: Parser[CronExpr] = {
+  val cron: Parser[CronExpr] =
     phrase(
       (field(seconds) <~! blank) ~!
         (field(minutes) <~! blank) ~!
@@ -173,11 +173,9 @@ object CronParser extends Parsers with BaseParser {
         (fieldWithAny(daysOfMonth) <~! blank) ~!
         (field(months) <~! blank) ~!
         (fieldWithAny(daysOfWeek))
-    ) ^^ {
-      case sec ~ min ~ hour ~ day ~ month ~ weekDay =>
-        CronExpr(sec, min, hour, day, month, weekDay)
+    ) ^^ { case sec ~ min ~ hour ~ day ~ month ~ weekDay =>
+      CronExpr(sec, min, hour, day, month, weekDay)
     }
-  }
 
   def read(tokens: List[CronToken]): Either[_root_.cron4s.Error, CronExpr] = {
     val reader = new CronTokenReader(tokens)

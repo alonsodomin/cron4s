@@ -18,8 +18,7 @@ package cron4s
 
 import shapeless._
 
-/**
-  * Created by alonsodomin on 04/01/2016.
+/** Created by alonsodomin on 04/01/2016.
   */
 package object expr {
   private[expr] type RawFieldNode[F <: CronField] =

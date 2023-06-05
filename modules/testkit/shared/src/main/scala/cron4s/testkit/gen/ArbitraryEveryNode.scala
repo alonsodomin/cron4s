@@ -20,8 +20,7 @@ import cron4s.CronField._
 
 import org.scalacheck.Arbitrary
 
-/**
-  * Created by alonsodomin on 28/08/2016.
+/** Created by alonsodomin on 28/08/2016.
   */
 trait ArbitraryEveryNode extends NodeGenerators {
   implicit lazy val arbitraryEverySecond     = Arbitrary(everyGen[Second])

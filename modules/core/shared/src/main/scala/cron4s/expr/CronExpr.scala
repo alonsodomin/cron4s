@@ -21,10 +21,10 @@ import cats.implicits._
 
 import shapeless._
 
-/**
-  * Representation of a valid CRON expression as an AST
+/** Representation of a valid CRON expression as an AST
   *
-  * @author Antonio Alonso Dominguez
+  * @author
+  *   Antonio Alonso Dominguez
   */
 final case class CronExpr(
     seconds: SecondsNode,
@@ -36,13 +36,11 @@ final case class CronExpr(
 ) {
   private[cron4s] lazy val raw: RawCronExpr = Generic[CronExpr].to(this)
 
-  /**
-    * Time part of the CRON expression
+  /** Time part of the CRON expression
     */
   lazy val timePart: TimeCronExpr = TimeCronExpr(seconds, minutes, hours)
 
-  /**
-    * Date part of the CRON expression
+  /** Date part of the CRON expression
     */
   lazy val datePart: DateCronExpr =
     DateCronExpr(daysOfMonth, months, daysOfWeek)

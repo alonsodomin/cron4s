@@ -23,8 +23,7 @@ import cron4s.testkit.gen.ArbitratyAnyNode
 
 import org.scalacheck.Arbitrary
 
-/**
-  * Created by alonsodomin on 10/02/2017.
+/** Created by alonsodomin on 10/02/2017.
   */
 class AnyNodeValidatorSpec extends Cron4sPropSpec with ValidatorPropSpec with ArbitratyAnyNode {
   import CronField._

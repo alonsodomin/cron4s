@@ -21,8 +21,7 @@ import moment.{Date, Moment}
 
 import scala.scalajs.js.{Date => JsDate}
 
-/**
-  * Created by alonsodomin on 11/04/2017.
+/** Created by alonsodomin on 11/04/2017.
   */
 trait MomentJSTestBase extends DateTimeTestKitBase[Date] {
   protected def createDateTime(

@@ -26,10 +26,9 @@ private[parsing] trait BaseParser extends Parsers {
       case NoPosition => ExprTooShort
       case pos: Position =>
         val position = err.next.pos.column
-        val found = {
+        val found =
           if (err.next.atEnd) None
           else Option(err.next.first.toString).filter(_.nonEmpty)
-        }
         ParseFailed(err.msg, position, found)
     }
 }

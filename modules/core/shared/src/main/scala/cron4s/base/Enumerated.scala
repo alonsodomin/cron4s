@@ -18,8 +18,7 @@ package cron4s.base
 
 import cats.implicits._
 
-/**
-  * Created by alonsodomin on 23/08/2016.
+/** Created by alonsodomin on 23/08/2016.
   */
 final case class Step private[cron4s] (amount: Int, direction: Direction) {
   require(amount >= 0, "Step amount must be a positive integer")

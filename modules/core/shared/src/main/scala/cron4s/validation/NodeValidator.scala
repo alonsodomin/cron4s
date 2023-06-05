@@ -24,8 +24,7 @@ import cron4s.expr._
 import cron4s.base.Enumerated
 import cron4s.syntax.field._
 
-/**
-  * Created by alonsodomin on 18/12/2016.
+/** Created by alonsodomin on 18/12/2016.
   */
 sealed trait NodeValidator[A] {
   def validate(node: A): List[InvalidField]
