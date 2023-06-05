@@ -45,22 +45,27 @@ private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime
           .getOrElse(M.empty[DateTime](dt))
       }
 
-    implicit def caseSeconds =
+    implicit def caseSeconds: Case.Aux[SecondsNode, Predicate[DateTime]] =
       at[SecondsNode](node => predicateFor(Second, node))
-    implicit def caseMinutes =
+    implicit def caseMinutes: Case.Aux[MinutesNode, Predicate[DateTime]] =
       at[MinutesNode](node => predicateFor(Minute, node))
-    implicit def caseHours = at[HoursNode](node => predicateFor(Hour, node))
-    implicit def caseDaysOfMonth =
+    implicit def caseHours: Case.Aux[HoursNode, Predicate[DateTime]] =
+      at[HoursNode](node => predicateFor(Hour, node))
+    implicit def caseDaysOfMonth: Case.Aux[DaysOfMonthNode, Predicate[DateTime]] =
       at[DaysOfMonthNode](node => predicateFor(DayOfMonth, node))
-    implicit def caseMonths = at[MonthsNode](node => predicateFor(Month, node))
-    implicit def caseDaysOfWeek =
+    implicit def caseMonths: Case.Aux[MonthsNode, Predicate[DateTime]] =
+      at[MonthsNode](node => predicateFor(Month, node))
+    implicit def caseDaysOfWeek: Case.Aux[DaysOfWeekNode, Predicate[DateTime]] =
       at[DaysOfWeekNode](node => predicateFor(DayOfWeek, node))
   }
 
   object fromRaw extends Poly1 {
-    implicit def caseFullExpr = at[CronExpr](_.raw.map(asPredicate).toList)
-    implicit def caseDateExpr = at[DateCronExpr](_.raw.map(asPredicate).toList)
-    implicit def caseTimeExpr = at[TimeCronExpr](_.raw.map(asPredicate).toList)
+    implicit def caseFullExpr: Case.Aux[CronExpr, List[Predicate[DateTime]]] =
+      at[CronExpr](_.raw.map(asPredicate).toList)
+    implicit def caseDateExpr: Case.Aux[DateCronExpr, List[Predicate[DateTime]]] =
+      at[DateCronExpr](_.raw.map(asPredicate).toList)
+    implicit def caseTimeExpr: Case.Aux[TimeCronExpr, List[Predicate[DateTime]]] =
+      at[TimeCronExpr](_.raw.map(asPredicate).toList)
   }
 
   def run(cron: AnyCron): Predicate[DateTime] =

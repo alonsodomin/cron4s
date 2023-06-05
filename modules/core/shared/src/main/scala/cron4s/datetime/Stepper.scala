@@ -96,20 +96,22 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
     } yield (identityReset, newDateTime, s.copy(amount = 0))
 
   object stepPerNode extends Poly2 {
-    implicit def caseSeconds =
+    implicit def caseSeconds: Case.Aux[StepST, SecondsNode, StepST] =
       at[StepST, SecondsNode]((step, node) => stepNode(step, node))
-    implicit def caseMinutes =
+    implicit def caseMinutes: Case.Aux[StepST, MinutesNode, StepST] =
       at[StepST, MinutesNode]((step, node) => stepNode(step, node))
-    implicit def caseHours =
+    implicit def caseHours: Case.Aux[StepST, HoursNode, StepST] =
       at[StepST, HoursNode]((step, node) => stepNode(step, node))
-    implicit def caseDaysOfMonth =
+    implicit def caseDaysOfMonth: Case.Aux[StepST, DaysOfMonthNode, StepST] =
       at[StepST, DaysOfMonthNode]((step, node) => stepNode(step, node))
-    implicit def caseMonths     = at[StepST, MonthsNode](stepOverMonth)
-    implicit def caseDaysOfWeek = at[StepST, DaysOfWeekNode](stepOverDayOfWeek)
+    implicit def caseMonths: Case.Aux[StepST, MonthsNode, StepST] =
+      at[StepST, MonthsNode](stepOverMonth)
+    implicit def caseDaysOfWeek: Case.Aux[StepST, DaysOfWeekNode, StepST] =
+      at[StepST, DaysOfWeekNode](stepOverDayOfWeek)
   }
 
   object foldInternalExpr extends Poly2 {
-    implicit def caseFullExpr =
+    implicit def caseFullExpr: Case.Aux[StepST, CronExpr, Option[(ResetPrevFn, DateTime, Step)]] =
       at[StepST, CronExpr] { (stepSt, expr) =>
         val dateWithoutDOW = expr.datePart.raw.take(2)
         val daysOfWeekNode = expr.datePart.raw.select[DaysOfWeekNode]
@@ -122,9 +124,11 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
           result        <- stepOverDayOfWeek(Some((resetTime, dt, step)), daysOfWeekNode)
         } yield result
       }
-    implicit def caseDateExpr =
+    implicit def caseDateExpr
+        : Case.Aux[StepST, DateCronExpr, Option[(DateTime => Option[DateTime], DateTime, Step)]] =
       at[StepST, DateCronExpr]((stepSt, expr) => expr.raw.foldLeft(stepSt)(stepPerNode))
-    implicit def caseTimeExpr =
+    implicit def caseTimeExpr
+        : Case.Aux[StepST, TimeCronExpr, Option[(DateTime => Option[DateTime], DateTime, Step)]] =
       at[StepST, TimeCronExpr]((stepSt, expr) => expr.raw.foldLeft(stepSt)(stepPerNode))
   }
 

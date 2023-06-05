@@ -90,7 +90,8 @@ object Dependencies {
     "moment-timezone" -> version.momenttz
   )
   lazy val momentjs = Def.settings(
-    libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % version.momentjs,
+    libraryDependencies += ("ru.pavkin" %%% "scala-js-momentjs" % version.momentjs)
+      .cross(CrossVersion.for3Use2_13),
     Compile / npmDependencies ++= momentjsNpmDeps,
     Test / npmDependencies ++= momentjsNpmDeps
   )
