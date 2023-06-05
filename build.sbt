@@ -61,6 +61,17 @@ val commonSettings = Def.settings(
   },
   scalacOptions ++= {
     CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((3, _)) => Seq("-Ykind-projector:underscores")
+      case Some((2, 12 | 13)) =>
+        Seq(
+          "-Xsource:3",
+          "-P:kind-projector:underscore-placeholders",
+          "-Wconf:cat=deprecation&msg=package\\sobject\\sinheritance\\sis\\sdeprecated:s"
+        )
+    }
+  },
+  scalacOptions ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((2, n)) if n > 12 =>
         Seq("-Xlint:-byname-implicit", "-Ymacro-annotations")
       case _ => Nil

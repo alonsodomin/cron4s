@@ -22,24 +22,23 @@ import scala.annotation.implicitNotFound
 
 import cats.{Eq, Show}
 
-/**
-  * A Cron Unit is the representation of valid values that are accepted
-  * at a given Cron Field.
+/** A Cron Unit is the representation of valid values that are accepted at a given Cron Field.
   *
-  * @author Antonio Alonso Dominguez
+  * @author
+  *   Antonio Alonso Dominguez
   */
 @implicitNotFound("Field ${F} is not supported on Cron expressions")
 sealed trait CronUnit[+F <: CronField] extends Serializable {
 
-  /**
-    * @return the CronField for this unit
+  /** @return
+    *   the CronField for this unit
     */
   def field: F
 
-  /**
-    * Cron units have a range of valid values
+  /** Cron units have a range of valid values
     *
-    * @return the range of valid values
+    * @return
+    *   the range of valid values
     */
   def range: IndexedSeq[Int]
 }
@@ -48,7 +47,7 @@ object CronUnit extends CronUnitInstances {
   @inline def apply[F <: CronField](implicit unit: CronUnit[F]): CronUnit[F] =
     unit
 
-  final val All: List[CronUnit[_ <: CronField]] =
+  final val All: List[CronUnit[? <: CronField]] =
     List(Seconds, Minutes, Hours, DaysOfMonth, Months, DaysOfWeek)
 }
 

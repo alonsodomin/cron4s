@@ -29,15 +29,14 @@ import cron4s.syntax.predicate._
 
 import scala.collection.immutable.LazyList
 
-/**
-  * Generic representation of the expression node for a given field
+/** Generic representation of the expression node for a given field
   *
-  * @author Antonio Alonso Dominguez
+  * @author
+  *   Antonio Alonso Dominguez
   */
 sealed trait Node[F <: CronField] {
 
-  /**
-    * Unit of this expression
+  /** Unit of this expression
     */
   val unit: CronUnit[F]
 
@@ -47,7 +46,7 @@ sealed trait Node[F <: CronField] {
 final class EachNode[F <: CronField] private (val unit: CronUnit[F]) extends Node[F] {
   override def equals(other: Any): Boolean =
     other match {
-      case _: EachNode[_] => true
+      case _: EachNode[?] => true
       case _              => false
     }
 
@@ -87,7 +86,7 @@ object EachNode {
 final class AnyNode[F <: CronField] private (val unit: CronUnit[F]) extends Node[F] {
   override def equals(other: Any): Boolean =
     other match {
-      case _: AnyNode[_] => true
+      case _: AnyNode[?] => true
       case _             => false
     }
 
@@ -131,7 +130,7 @@ final class ConstNode[F <: CronField] private (
 ) extends Node[F] {
   override def equals(other: Any): Boolean =
     other match {
-      case node: ConstNode[_] => this.value === node.value
+      case node: ConstNode[?] => this.value === node.value
       case _                  => false
     }
 
@@ -180,7 +179,7 @@ final class BetweenNode[F <: CronField] private (
 ) extends Node[F] {
   override def equals(other: Any): Boolean =
     other match {
-      case node: BetweenNode[_] =>
+      case node: BetweenNode[?] =>
         (this.begin == node.begin) && (this.end == node.end)
 
       case _ => false
@@ -240,7 +239,7 @@ final class SeveralNode[F <: CronField] private (
 ) extends Node[F] {
   override def equals(other: Any): Boolean =
     other match {
-      case node: SeveralNode[_] => this.values == node.values
+      case node: SeveralNode[?] => this.values == node.values
       case _                    => false
     }
 
@@ -273,8 +272,8 @@ object SeveralNode {
       if (xs.length < 2) None
       else Some((xs.head, xs.tail.head, xs.tail.tail))
 
-    splitSeq(xs).map {
-      case (first, second, tail) => SeveralNode(first, second, tail: _*)
+    splitSeq(xs).map { case (first, second, tail) =>
+      SeveralNode(first, second, tail: _*)
     }
   }
 
@@ -309,7 +308,7 @@ final class EveryNode[F <: CronField] private (
 ) extends Node[F] {
   override def equals(other: Any): Boolean =
     other match {
-      case node: EveryNode[_] =>
+      case node: EveryNode[?] =>
         (this.base == node.base) && (this.freq == node.freq)
       case _ => false
     }
