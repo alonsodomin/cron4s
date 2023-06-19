@@ -86,7 +86,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   private[this] def stepOverMonth(prev: StepST, expr: MonthsNode): StepST =
     for {
       (_, dt, s @ Step(carryOver, dir)) <- stepNode(prev, expr)
-      newDateTime                       <- DT.plus(dt, carryOver * 12 * dir.sign, DateTimeUnit.Months)
+      newDateTime <- DT.plus(dt, carryOver * 12 * dir.sign, DateTimeUnit.Months)
     } yield (identityReset, newDateTime, s.copy(amount = 0))
 
   private[this] def stepOverDayOfWeek(prev: StepST, expr: DaysOfWeekNode): StepST =
