@@ -32,16 +32,7 @@ final case class DateCronExpr(
     raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
 }
 
-object DateCronExpr {
-  implicit val dateCronEq: Eq[DateCronExpr] = Eq.instance { (lhs, rhs) =>
-    lhs.daysOfMonth === rhs.daysOfMonth &&
-    lhs.months === rhs.months &&
-    lhs.daysOfWeek === rhs.daysOfWeek
-  }
-
-  implicit val dateCronShow: Show[DateCronExpr] =
-    Show.fromToString[DateCronExpr]
-}
+object DateCronExpr extends DateCronExprInstances
 
 final case class TimeCronExpr(
     seconds: SecondsNode,
@@ -54,13 +45,4 @@ final case class TimeCronExpr(
     raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
 }
 
-object TimeCronExpr {
-  implicit val timeCronEq: Eq[TimeCronExpr] = Eq.instance { (lhs, rhs) =>
-    lhs.seconds === rhs.seconds &&
-    lhs.minutes === rhs.minutes &&
-    lhs.hours === rhs.hours
-  }
-
-  implicit val timeCronShow: Show[TimeCronExpr] =
-    Show.fromToString[TimeCronExpr]
-}
+object TimeCronExpr extends TimeCronExprInstances
