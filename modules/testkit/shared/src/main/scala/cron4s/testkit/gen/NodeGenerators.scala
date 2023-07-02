@@ -19,8 +19,9 @@ package cron4s.testkit.gen
 import cron4s.{CronField, CronUnit}
 import cron4s.expr._
 import cron4s.base._
-
 import org.scalacheck._
+import cron4s.syntax.all.toExprOps
+import cron4s.syntax.all.toEnumeratedOps
 
 /**
   * Created by alonsodomin on 28/08/2016.

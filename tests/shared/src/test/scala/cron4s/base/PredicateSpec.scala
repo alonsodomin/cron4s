@@ -31,11 +31,11 @@ import org.scalacheck._
 class PredicateSpec extends Cron4sLawSuite {
   import Arbitrary._
 
-  implicit lazy val arbitraryPredicate = Arbitrary[Predicate[Int]] {
+  implicit lazy val arbitraryPredicate: Arbitrary[Predicate[Int]] = Arbitrary[Predicate[Int]] {
     for { x <- arbitrary[Int] } yield equalTo(x)
   }
 
-  implicit val predicateEq = Eq.by[Predicate[Int], Boolean](_.apply(0))
+  implicit val predicateEq: Eq[Predicate[Int]] = Eq.by[Predicate[Int], Boolean](_.apply(0))
 
   checkAll("ContravariantPredicate", ContravariantTests[Predicate].contravariant[Int, Int, Int])
   checkAll(
