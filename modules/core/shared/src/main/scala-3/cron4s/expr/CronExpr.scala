@@ -15,7 +15,6 @@
  */
 
 package cron4s.expr
-import cron4s.CronField
 import cats.syntax.all._
 
 /**

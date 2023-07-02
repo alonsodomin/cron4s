@@ -100,7 +100,6 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       expr: FoldInternalExprable
   ): Option[(ResetPrevFn, DateTime, Step)] = expr match {
     case expr: CronExpr =>
-      val dateWithoutDOW         = expr.datePart.raw.take(2)
       val (dom,mt)         = expr.datePart.raw.take(2)
       val (_, _, daysOfWeekNode) = expr.datePart.raw
 

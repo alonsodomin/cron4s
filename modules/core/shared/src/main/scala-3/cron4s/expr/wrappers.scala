@@ -16,10 +16,8 @@
 
 package cron4s.expr
 
-import cats.{Eq, Show}
 import cats.syntax.all._
-import cron4s.{CronField, CronUnit}
-import cron4s.base.Predicate
+import cron4s.CronField
 
 /**
   * Created by alonsodomin on 23/01/2017.

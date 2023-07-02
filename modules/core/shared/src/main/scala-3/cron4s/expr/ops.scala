@@ -16,10 +16,8 @@
 
 package cron4s.expr
 
-import cats.Show
-import cats.implicits.toShow
 import cron4s.CronField
-
+import cats.syntax.all.toShow
 import cron4s.base.Predicate
 import cron4s.CronUnit
 

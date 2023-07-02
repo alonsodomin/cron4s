@@ -17,7 +17,6 @@
 package cron4s.testkit.laws
 
 import cats.laws._
-import cats.syntax.either._
 
 import cron4s.CronField
 import cron4s.datetime.{IsDateTime, DateTimeNode}

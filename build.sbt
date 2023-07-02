@@ -56,18 +56,19 @@ val commonSettings = Def.settings(
                        Seq(
                          "-Xlint:-unused,_"
                        ),
-                     } else { Seq.empty }),
+                     } else
+                       Seq(
+                         "-Wunused:imports",
+                         "-Wunused:locals",
+                         "-Wunused:implicits",
+                         "-Wunused:privates"
+                       )),
   scalacOptions ++= {
     CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((2, n)) if n == 12 => Seq("-Ypartial-unification")
-      case _                       => Nil
-    }
-  },
-  scalacOptions ++= {
-    CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, n)) if n > 12 =>
+      case Some((2,n)) if n > 12 =>
         Seq("-Xlint:-byname-implicit", "-Ymacro-annotations")
-      case _ => Nil
+      case _                       => Nil
     }
   },
   Compile / console / scalacOptions := scalacOptions.value.filterNot(
