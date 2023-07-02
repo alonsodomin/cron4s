@@ -32,7 +32,6 @@ final class FieldNode[F <: CronField](private[cron4s] val raw: RawFieldNode[F]) 
 
 object FieldNode extends FieldNodeInstances
 
-
 final class FieldNodeWithAny[F <: CronField](private[cron4s] val raw: RawFieldNodeWithAny[F])
     extends AnyVal {
   override def toString: String = raw.fold(_root_.cron4s.expr.ops.show)

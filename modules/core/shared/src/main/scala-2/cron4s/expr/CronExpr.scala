@@ -16,7 +16,6 @@
 
 package cron4s.expr
 
-
 import shapeless._
 
 /**
