@@ -93,16 +93,6 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       newDateTime                       <- DT.plus(dt, carryOver * dir.sign, DateTimeUnit.Weeks)
     } yield (identityReset, newDateTime, s.copy(amount = 0))
 
-  type Steppable =
-    SecondsNode | MinutesNode | HoursNode | DaysOfMonthNode | MonthsNode | DaysOfWeekNode
-  def stepPerNode(step: StepST, node: Steppable): StepST = node match {
-    case node: SecondsNode     => stepNode(step, node)
-    case node: MinutesNode     => stepNode(step, node)
-    case node: HoursNode       => stepNode(step, node)
-    case node: DaysOfMonthNode => stepNode(step, node)
-    case node: MonthsNode      => stepOverMonth(step, node)
-    case node: DaysOfWeekNode  => stepOverDayOfWeek(step, node)
-  }
 
   type FoldInternalExprable = CronExpr | DateCronExpr | TimeCronExpr
   def foldInternalExpr(
@@ -111,18 +101,34 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
   ): Option[(ResetPrevFn, DateTime, Step)] = expr match {
     case expr: CronExpr =>
       val dateWithoutDOW         = expr.datePart.raw.take(2)
+      val (dom,mt)         = expr.datePart.raw.take(2)
       val (_, _, daysOfWeekNode) = expr.datePart.raw
 
       for {
-        st @ (resetTime, _, _) <-
-          expr.timePart.raw.toList.foldLeft(stepSt)(stepPerNode)
-        (_, dt, step) <- dateWithoutDOW.toList.foldLeft(Some(st): StepST)(stepPerNode)
+        st @ (resetTime, _, _) <- foldInternalExpr(stepSt,expr.timePart)
+        (_, dt, step) <- 
+          List(
+            (step:StepST) => stepNode(step,dom),
+            (step:StepST) => stepOverMonth(step,mt),
+          ).foldLeft(Some(st): StepST){case (step,f) => f(step)}
         result        <- stepOverDayOfWeek(Some((resetTime, dt, step)), daysOfWeekNode)
       } yield result
     case expr: DateCronExpr =>
-      expr.raw.toList.foldLeft(stepSt)(stepPerNode)
+      expr.raw match
+        case (daysOfMonth,month,daysOfWeek) =>
+          List(
+             (step:StepST) => stepNode(step, daysOfMonth),
+             (step:StepST) => stepOverMonth(step,month),
+             (step:StepST) => stepOverDayOfWeek(step,daysOfWeek),
+          ).foldLeft(stepSt){case (step,f) => f(step)}
     case expr: TimeCronExpr =>
-      expr.raw.toList.foldLeft(stepSt)(stepPerNode)
+      expr.raw match
+        case  (seconds, minutes, hours) =>
+          List(
+            (step:StepST) => stepNode(step, seconds),
+            (step:StepST) => stepNode(step, minutes),
+            (step:StepST) => stepNode(step, hours),
+          ).foldLeft(stepSt){case (step,f) => f(step)}
   }
 
   def run(cron: AnyCron, from: DateTime, step: Step): Option[DateTime] = {
