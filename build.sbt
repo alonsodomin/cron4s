@@ -89,16 +89,17 @@ lazy val commonJvmSettings = Seq(
 
 lazy val commonJsSettings = Seq(
   Global / scalaJSStage := FastOptStage,
-  scalacOptions += {
-    val tagOrHash = {
-      if (isSnapshot.value)
-        sys.process.Process("git rev-parse HEAD").lineStream_!.head
-      else version.value
-    }
-    val a = (LocalRootProject / baseDirectory).value.toURI.toString
-    val g = "https://raw.githubusercontent.com/alonsodomin/cron4s/" + tagOrHash
-    s"-P:scalajs:mapSourceURI:$a->$g/"
-  },
+  scalacOptions ++= (if (scalaVersion.value.startsWith("2.")) Seq {
+                       val tagOrHash = {
+                         if (isSnapshot.value)
+                           sys.process.Process("git rev-parse HEAD").lineStream_!.head
+                         else version.value
+                       }
+                       val a = (LocalRootProject / baseDirectory).value.toURI.toString
+                       val g = "https://raw.githubusercontent.com/alonsodomin/cron4s/" + tagOrHash
+                       s"-P:scalajs:mapSourceURI:$a->$g/"
+                     }
+                     else Seq.empty),
   scalaJSLinkerConfig := scalaJSLinkerConfig.value.withModuleKind(ModuleKind.CommonJSModule),
   jsEnv               := new org.scalajs.jsenv.nodejs.NodeJSEnv()
 )
