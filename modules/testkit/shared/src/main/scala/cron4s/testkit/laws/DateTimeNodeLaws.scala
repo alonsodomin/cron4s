@@ -51,8 +51,8 @@ object DateTimeNodeLaws {
       TC0: DateTimeNode[E, F]
   ): DateTimeNodeLaws[E, F, DateTime] =
     new DateTimeNodeLaws[E, F, DateTime] {
-      implicit val DT   = dt0
-      implicit val expr = expr0
-      implicit val TC   = TC0
+      implicit def DT: IsDateTime[DateTime] = dt0
+      implicit def expr: FieldExpr[E, F]    = expr0
+      implicit def TC: DateTimeNode[E, F]   = TC0
     }
 }
