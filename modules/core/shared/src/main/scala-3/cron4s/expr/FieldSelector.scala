@@ -29,7 +29,6 @@ sealed trait FieldSelector[A, F <: CronField] {
   type Raw <: Tuple
   type Out[X <: CronField]
 
-  //protected implicit def hlistSelect: Lazy[Selector[Raw, Out[F]]]
   val hlistSelect: (expr:Raw) => Out[F]
   def selectFrom(expr: A): Out[F]
 }
