@@ -37,8 +37,8 @@ object Dependencies {
       "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parserc
     ),
     libraryDependencies ++= (if (scalaVersion.value.startsWith("2."))
-                               Seq("com.chuusai"     %%% "shapeless"           % version.shapeless)
-                             else Seq("org.typelevel" %% "shapeless3-deriving" % "3.0.1"))
+                               Seq("com.chuusai" %%% "shapeless" % version.shapeless)
+                             else Seq.empty)
   )
 
   lazy val coreJS = Def.settings {
@@ -56,10 +56,6 @@ object Dependencies {
       "org.typelevel" %%% "cats-testkit-scalatest" % version.cats.scalatest,
       "org.typelevel" %%% "discipline-scalatest"   % version.discipline
     )
-  }
-
-  lazy val tests = Def.settings {
-    libraryDependencies ++= Seq()
   }
 
   lazy val testsJS = Def.settings {
