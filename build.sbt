@@ -20,7 +20,7 @@ inThisBuild(
     organizationName                                     := "Antonio Alonso Dominguez",
     description                                          := "CRON expression parser for Scala",
     startYear                                            := Some(2017),
-    crossScalaVersions                                   := Seq("2.13.10", "2.12.17"),
+    crossScalaVersions                                   := Seq("2.13.10", "2.12.17", "3.3.0"),
     homepage := Some(url("https://github.com/alonsodomin/cron4s")),
     licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt")),
     scmInfo := Some(
@@ -300,9 +300,8 @@ lazy val docs = project
 lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
   .settings(
-    crossScalaVersions := Seq("2.13.10", "2.12.17", "3.3.0"),
-    name               := "core",
-    moduleName         := "cron4s-core"
+    name       := "core",
+    moduleName := "cron4s-core"
   )
   .settings(commonSettings)
   .settings(publishSettings)
@@ -328,9 +327,6 @@ lazy val testkit =
     .jvmSettings(commonJvmSettings)
     .jvmSettings(consoleSettings)
     .jvmSettings(mimaSettings("testkit"))
-    .settings(
-      crossScalaVersions := Seq("2.13.10", "2.12.17", "3.3.0")
-    )
     .dependsOn(core)
 
 lazy val tests = (crossProject(JSPlatform, JVMPlatform) in file("tests"))
@@ -345,9 +341,6 @@ lazy val tests = (crossProject(JSPlatform, JVMPlatform) in file("tests"))
   .jsSettings(Dependencies.testsJS)
   .jvmSettings(commonJvmSettings)
   .jvmSettings(Dependencies.testsJVM)
-  .settings(
-    crossScalaVersions := Seq("2.13.10", "2.12.17", "3.3.0")
-  )
   .dependsOn(testkit % Test)
 
 lazy val bench = (project in file("bench"))
