@@ -18,10 +18,9 @@ package cron4s.datetime
 
 import cats.MonoidK
 import cats.instances.list._
-
 import cron4s.CronField
-import cron4s.expr._
 import cron4s.base._
+import cron4s.expr._
 import cron4s.syntax.predicate._
 
 /**
@@ -30,34 +29,44 @@ import cron4s.syntax.predicate._
 private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime])(implicit
     M: MonoidK[Predicate]
 ) {
+  private def predicateFor[N[_ <: CronField], F <: CronField](field: F, node: N[F])(implicit
+      expr: FieldExpr[N, F]
+  ): Predicate[DateTime] =
+    Predicate { dt =>
+      DT.get(dt, field)
+        .map(expr.matches(node))
+        .getOrElse(M.empty[DateTime](dt))
+    }
   type Predicatable =
     SecondsNode | MinutesNode | HoursNode | DaysOfMonthNode | MonthsNode | DaysOfWeekNode
 
-  def asPredicate(t: Predicatable): Predicate[DateTime] = {
-    def predicateFor[N[_ <: CronField], F <: CronField](field: F, node: N[F])(implicit
-        expr: FieldExpr[N, F]
-    ): Predicate[DateTime] =
-      Predicate { dt =>
-        DT.get(dt, field)
-          .map(expr.matches(node))
-          .getOrElse(M.empty[DateTime](dt))
-      }
-    import CronField._
-    t match {
-      case t: SecondsNode     => predicateFor(Second, t)
-      case t: MinutesNode     => predicateFor(Minute, t)
-      case t: HoursNode       => predicateFor(Hour, t)
-      case t: DaysOfMonthNode => predicateFor(DayOfMonth, t)
-      case t: MonthsNode      => predicateFor(Month, t)
-      case t: DaysOfWeekNode  => predicateFor(DayOfWeek, t)
-    }
-  }
-
   type FromRawable = CronExpr | DateCronExpr | TimeCronExpr
+  import CronField._
   def fromRaw(t: FromRawable): List[Predicate[DateTime]] = t match {
-    case t: CronExpr     => t.raw.toList.map(asPredicate)
-    case t: DateCronExpr => t.raw.toList.map(asPredicate)
-    case t: TimeCronExpr => t.raw.toList.map(asPredicate)
+    case t: CronExpr     => t.raw match
+      case (seconds, minutes, hours, daysOfMonth, months, daysOfWeek) =>
+        List(
+            predicateFor(Second, seconds),
+            predicateFor(Minute, minutes),
+            predicateFor(Hour, hours),
+            predicateFor(DayOfMonth, daysOfMonth),
+            predicateFor(Month, months),
+            predicateFor(DayOfWeek, daysOfWeek),
+        )
+    case t: DateCronExpr => t.raw match
+        case (daysOfMonth, months, daysOfWeek) =>
+          List(
+            predicateFor(DayOfMonth, daysOfMonth),
+            predicateFor(Month, months),
+            predicateFor(DayOfWeek, daysOfWeek),
+          )
+    case t: TimeCronExpr => t.raw match
+       case (seconds, minutes, hours) =>
+         List(
+            predicateFor(Second, seconds),
+            predicateFor(Minute, minutes),
+            predicateFor(Hour, hours),
+          )
   }
 
   def run(cron: AnyCron): Predicate[DateTime] =
