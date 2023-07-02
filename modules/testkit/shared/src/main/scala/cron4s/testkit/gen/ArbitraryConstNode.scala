@@ -17,6 +17,7 @@
 package cron4s.testkit.gen
 
 import cron4s.CronField._
+import cron4s.expr.ConstNode
 
 import org.scalacheck.Arbitrary
 
@@ -24,10 +25,14 @@ import org.scalacheck.Arbitrary
   * Created by alonsodomin on 28/08/2016.
   */
 trait ArbitraryConstNode extends NodeGenerators {
-  implicit lazy val arbitraryConstSecond     = Arbitrary(constGen[Second])
-  implicit lazy val arbitraryConstMinute     = Arbitrary(constGen[Minute])
-  implicit lazy val arbitraryConstHour       = Arbitrary(constGen[Hour])
-  implicit lazy val arbitraryConstDayOfMonth = Arbitrary(constGen[DayOfMonth])
-  implicit lazy val arbitraryConstMonth      = Arbitrary(constGen[Month])
-  implicit lazy val arbitraryConstDayOfWeek  = Arbitrary(constGen[DayOfWeek])
+  implicit lazy val arbitraryConstSecond: Arbitrary[ConstNode[Second]] = Arbitrary(constGen[Second])
+  implicit lazy val arbitraryConstMinute: Arbitrary[ConstNode[Minute]] = Arbitrary(constGen[Minute])
+  implicit lazy val arbitraryConstHour: Arbitrary[ConstNode[Hour]]     = Arbitrary(constGen[Hour])
+  implicit lazy val arbitraryConstDayOfMonth: Arbitrary[ConstNode[DayOfMonth]] = Arbitrary(
+    constGen[DayOfMonth]
+  )
+  implicit lazy val arbitraryConstMonth: Arbitrary[ConstNode[Month]] = Arbitrary(constGen[Month])
+  implicit lazy val arbitraryConstDayOfWeek: Arbitrary[ConstNode[DayOfWeek]] = Arbitrary(
+    constGen[DayOfWeek]
+  )
 }

@@ -21,7 +21,7 @@ import cats.implicits._
 
 import cron4s.Cron
 import cron4s.datetime.IsDateTime
-
+import cron4s.syntax.all.toDateTimeCronOps
 import org.scalatest.flatspec.AnyFlatSpec
 
 /**

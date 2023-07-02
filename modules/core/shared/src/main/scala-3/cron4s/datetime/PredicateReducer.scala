@@ -44,8 +44,7 @@ private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime
       }
     import CronField._
     t match {
-      case t: SecondsNode =>
-        predicateFor(Second, t)
+      case t: SecondsNode     => predicateFor(Second, t)
       case t: MinutesNode     => predicateFor(Minute, t)
       case t: HoursNode       => predicateFor(Hour, t)
       case t: DaysOfMonthNode => predicateFor(DayOfMonth, t)

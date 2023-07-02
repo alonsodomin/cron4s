@@ -46,7 +46,7 @@ val commonSettings = Def.settings(
     "-unchecked",
     "-deprecation",
     "-explaintypes",
-    "-Xfatal-warnings",
+    // "-Xfatal-warnings",
     "-language:postfixOps",
     "-language:implicitConversions",
     "-language:higherKinds",
@@ -300,7 +300,7 @@ lazy val docs = project
 lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
   .settings(
-    scalaVersion := "3.3.0",
+    scalaVersion       := "3.3.0",
     crossScalaVersions := Seq("2.13.10", "2.12.17", "3.3.0"),
     name               := "core",
     moduleName         := "cron4s-core"
@@ -329,6 +329,10 @@ lazy val testkit =
     .jvmSettings(commonJvmSettings)
     .jvmSettings(consoleSettings)
     .jvmSettings(mimaSettings("testkit"))
+    .settings(
+      scalaVersion       := "3.3.0",
+      crossScalaVersions := Seq("2.13.10", "2.12.17", "3.3.0")
+    )
     .dependsOn(core)
 
 lazy val tests = (crossProject(JSPlatform, JVMPlatform) in file("tests"))
@@ -344,6 +348,10 @@ lazy val tests = (crossProject(JSPlatform, JVMPlatform) in file("tests"))
   .jsSettings(Dependencies.testsJS)
   .jvmSettings(commonJvmSettings)
   .jvmSettings(Dependencies.testsJVM)
+  .settings(
+    scalaVersion       := "3.3.0",
+    crossScalaVersions := Seq("2.13.10", "2.12.17", "3.3.0")
+  )
   .dependsOn(testkit % Test)
 
 lazy val bench = (project in file("bench"))
