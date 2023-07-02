@@ -16,7 +16,6 @@
 
 package cron4s.lib.js
 
-
 import cron4s.CronField
 import cron4s.datetime.{DateTimeError, DateTimeUnit, InvalidFieldValue, IsDateTime}
 
