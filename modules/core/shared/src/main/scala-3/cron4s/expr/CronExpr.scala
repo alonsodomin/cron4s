@@ -15,8 +15,9 @@
  */
 
 package cron4s.expr
-
+import cron4s.CronField
 import cats.syntax.all._
+
 /**
   * Representation of a valid CRON expression as an AST
   *
@@ -30,7 +31,8 @@ final case class CronExpr(
     months: MonthsNode,
     daysOfWeek: DaysOfWeekNode
 ) {
-  private[cron4s] lazy val raw: RawCronExpr = (seconds,minutes,hours,daysOfMonth,months,daysOfWeek)
+  private[cron4s] lazy val raw: RawCronExpr =
+    (seconds, minutes, hours, daysOfMonth, months, daysOfWeek)
 
   /**
     * Time part of the CRON expression
@@ -44,9 +46,16 @@ final case class CronExpr(
     DateCronExpr(daysOfMonth, months, daysOfWeek)
 
   override lazy val toString: String =
-    //raw.map([T:Show]=>> (a:T) => _root_.cron4s.expr.ops.show).toList.mkString(" ")
     raw match {
-      case (sec,min,hs,d,m,dw) => List[cron4s.expr.FieldNode[cron4s.CronField]](sec,min,hs,d,m,dw).map(_root_.cron4s.expr.ops.show).mkString(" ")
+      case (sec, min, hs, d, m, dw) =>
+        List(
+          _root_.cron4s.expr.ops.show(sec),
+          _root_.cron4s.expr.ops.show(min),
+          _root_.cron4s.expr.ops.show(hs),
+          _root_.cron4s.expr.ops.show(d),
+          _root_.cron4s.expr.ops.show(m),
+          _root_.cron4s.expr.ops.show(dw)
+        ).mkString(" ")
     }
 }
 

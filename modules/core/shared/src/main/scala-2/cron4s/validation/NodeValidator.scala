@@ -135,7 +135,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
     new NodeValidator[EveryNode[F]] {
       def validate(node: EveryNode[F]): List[InvalidField] = {
         lazy val baseErrors = NodeValidator[DivisibleNode[F]].validate(node.base)
-        val evenlyDivided   = (node.base.range.size % node.freq) == 0
+        val evenlyDivided   = (toEnumeratedOps(node.base).range.size % node.freq) == 0
         if (!evenlyDivided)
           InvalidField(
             node.unit.field,

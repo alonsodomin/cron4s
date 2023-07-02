@@ -27,7 +27,11 @@ final case class DateCronExpr(
   private[cron4s] lazy val raw: RawDateCronExpr = (daysOfMonth, months, daysOfWeek)
 
   override lazy val toString: String =
-    List(daysOfMonth, months, daysOfWeek).map(_root_.cron4s.expr.ops.show).mkString(" ")
+    List(
+      _root_.cron4s.expr.ops.show(daysOfMonth),
+      _root_.cron4s.expr.ops.show(months),
+      _root_.cron4s.expr.ops.show(daysOfWeek)
+    ).mkString(" ")
 }
 
 object DateCronExpr extends DateCronExprInstances

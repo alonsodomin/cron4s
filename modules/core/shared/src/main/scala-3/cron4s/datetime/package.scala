@@ -18,20 +18,59 @@ package cron4s
 
 import cron4s.expr.{DateCronExpr, TimeCronExpr}
 
-
 import scala.language.implicitConversions
 
 /**
   * Created by alonsodomin on 24/01/2017.
   */
 package object datetime {
+  private[datetime] def applyRange(
+      expr: DateCronExpr
+  ): List[IndexedSeq[Int]] = {
+    expr.raw match {
+      case (daysOfMonth, months, daysOfWeek) =>
+        List(
+          cron4s.expr.ops.range(daysOfMonth),
+          cron4s.expr.ops.range(months),
+          cron4s.expr.ops.range(daysOfWeek)
+        )
+    }
+  }
+  private[datetime] def applyRange(
+      expr: TimeCronExpr
+  ): List[IndexedSeq[Int]] = {
+    expr.raw match {
+      case (seconds, minutes, hours) =>
+        List(
+          cron4s.expr.ops.range(seconds),
+          cron4s.expr.ops.range(minutes),
+          cron4s.expr.ops.range(hours)
+        )
+    }
+  }
+  private[datetime] def applyRange(
+      expr: CronExpr
+  ): List[IndexedSeq[Int]] = {
+    expr.raw match {
+      case (seconds, minutes, hours, daysOfMonth, months, daysOfWeek) =>
+        List(
+          cron4s.expr.ops.range(seconds),
+          cron4s.expr.ops.range(minutes),
+          cron4s.expr.ops.range(hours),
+          cron4s.expr.ops.range(daysOfMonth),
+          cron4s.expr.ops.range(months),
+          cron4s.expr.ops.range(daysOfWeek)
+        )
+    }
+  }
+
   import CronField._
 
   private[datetime] type AnyCron =
     CronExpr | TimeCronExpr | DateCronExpr
 
-
   private[datetime] type FieldSeq =
     Second *: Minute *: Hour *: DayOfMonth *: Month *: DayOfWeek *: EmptyTuple
-  val FieldSeq: FieldSeq = Second *: Minute *: Hour *: DayOfMonth *: Month *: DayOfWeek *: EmptyTuple
+  val FieldSeq: FieldSeq =
+    Second *: Minute *: Hour *: DayOfMonth *: Month *: DayOfWeek *: EmptyTuple
 }

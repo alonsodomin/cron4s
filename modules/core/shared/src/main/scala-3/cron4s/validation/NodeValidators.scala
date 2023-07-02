@@ -23,7 +23,6 @@ import cats.implicits._
 import cron4s.{CronField, CronUnit, InvalidField}
 import cron4s.expr._
 import cron4s.base.Enumerated
-import cron4s.syntax.field._
 
 /**
   * Created by alonsodomin on 18/12/2016.
@@ -53,6 +52,8 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       ev: Enumerated[CronUnit[F]]
   ): NodeValidator[ConstNode[F]] =
     new NodeValidator[ConstNode[F]] {
+      import scala.language.implicitConversions
+      import cron4s.syntax.all.toEnumeratedOps
       def validate(node: ConstNode[F]): List[InvalidField] =
         if (node.value < node.unit.min || node.value > node.unit.max)
           List(
@@ -99,6 +100,8 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       def checkImplication(
           curr: EnumerableNode[F]
       ): State[List[EnumerableNode[F]], List[List[InvalidField]]] = {
+        import scala.language.implicitConversions
+        import cron4s.syntax.all.toExprOps
         lazy val currField = curr.unit.field
 
         def impliedByError(elem: EnumerableNode[F]): List[InvalidField] =
@@ -133,6 +136,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
   implicit def everyValidator[F <: CronField](implicit
       ev: Enumerated[CronUnit[F]]
   ): NodeValidator[EveryNode[F]] =
+    import cron4s.syntax.enumerated.toEnumeratedOps
     new NodeValidator[EveryNode[F]] {
       def validate(node: EveryNode[F]): List[InvalidField] = {
         lazy val baseErrors = NodeValidator[DivisibleNode[F]].validate(node.base)

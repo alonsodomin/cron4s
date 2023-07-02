@@ -48,3 +48,4 @@ final class DivisibleNode[F <: CronField](private[cron4s] val raw: RawDivisibleN
     extends AnyVal {
   override def toString: String = _root_.cron4s.expr.ops.show(raw)
 }
+object DivisibleNode extends DivisibleNodeInstances
