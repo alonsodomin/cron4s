@@ -46,7 +46,7 @@ val commonSettings = Def.settings(
     "-unchecked",
     "-deprecation",
     "-explaintypes",
-    // "-Xfatal-warnings",
+    "-Xfatal-warnings",
     "-language:postfixOps",
     "-language:implicitConversions",
     "-language:higherKinds",

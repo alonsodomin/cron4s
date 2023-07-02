@@ -31,7 +31,7 @@ package object expr {
   private[expr] type RawEnumerableNode[F <: CronField] =
     ConstNode[F] | BetweenNode[F]
   extension [F<:CronField](t: RawEnumerableNode[F]) {
-    def select[T]: Option[T] = t match
+    private[cron4s] inline def select[T]: Option[T] = t match
       case t: T => Some(t)
       case _ => None
   }
