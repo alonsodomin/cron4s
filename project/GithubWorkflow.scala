@@ -11,7 +11,7 @@ object GithubWorkflow {
   val JekyllSetupSteps = Seq(
     WorkflowStep.Use(
       UseRef.Public("actions", "setup-ruby", "v1"),
-      params = Map("ruby-version" -> "2.6"),
+      params = Map("ruby-version" -> "2.7"),
       cond = Some(IsJvm)
     ),
     WorkflowStep.Run(
