@@ -18,7 +18,6 @@ package cron4s.expr
 
 import cron4s.CronField
 
-
 import scala.annotation.implicitNotFound
 
 /**
@@ -29,7 +28,9 @@ sealed trait FieldSelector[A, F <: CronField] {
   type Raw <: Tuple
   type Out[X <: CronField]
 
+  // format: off
   val hlistSelect: (expr:Raw) => Out[F]
+  // format: on
   def selectFrom(expr: A): Out[F]
 }
 
@@ -40,57 +41,57 @@ object FieldSelector {
 
   implicit val SecondsFromCronExpr: FieldSelector[CronExpr, Second] =
     new FullCronFieldNodeSelector[Second] {
-      val hlistSelect  = (expr:RawCronExpr) => expr._1
+      val hlistSelect = (expr: RawCronExpr) => expr._1
     }
   implicit val SecondsFromTimeExpr: FieldSelector[TimeCronExpr, Second] =
     new TimeCronFieldNodeSelector[Second] {
-      val hlistSelect  = (expr:RawTimeCronExpr) => expr._1
+      val hlistSelect = (expr: RawTimeCronExpr) => expr._1
     }
 
   implicit val MinutesFromCronExpr: FieldSelector[CronExpr, Minute] =
     new FullCronFieldNodeSelector[Minute] {
-      val hlistSelect  = (expr:RawCronExpr) => expr._2
+      val hlistSelect = (expr: RawCronExpr) => expr._2
     }
   implicit val MinutesFromTimeExpr: FieldSelector[TimeCronExpr, Minute] =
     new TimeCronFieldNodeSelector[Minute] {
-      val hlistSelect  = (expr:RawTimeCronExpr) => expr._2
+      val hlistSelect = (expr: RawTimeCronExpr) => expr._2
 
     }
 
   implicit val HoursFromCronExpr: FieldSelector[CronExpr, Hour] =
     new FullCronFieldNodeSelector[Hour] {
-      val hlistSelect  = (expr:RawCronExpr) => expr._3
+      val hlistSelect = (expr: RawCronExpr) => expr._3
     }
   implicit val HoursFromTimeExpr: FieldSelector[TimeCronExpr, Hour] =
     new TimeCronFieldNodeSelector[Hour] {
-      val hlistSelect  = (expr:RawTimeCronExpr) => expr._3
+      val hlistSelect = (expr: RawTimeCronExpr) => expr._3
     }
 
   implicit val DayOfMonthFromCronExpr: FieldSelector[CronExpr, DayOfMonth] =
     new FullCronFieldNodeWithAnySelector[DayOfMonth] {
-      val hlistSelect  = (expr:RawCronExpr) => expr._4
+      val hlistSelect = (expr: RawCronExpr) => expr._4
     }
   implicit val DayOfMonthFromDateExpr: FieldSelector[DateCronExpr, DayOfMonth] =
     new DateCronFieldNodeWithAnySelector[DayOfMonth] {
-      val hlistSelect  = (expr:RawDateCronExpr) => expr._1
+      val hlistSelect = (expr: RawDateCronExpr) => expr._1
     }
 
   implicit val MonthFromCronExpr: FieldSelector[CronExpr, Month] =
     new FullCronFieldNodeSelector[Month] {
-      val hlistSelect  = (expr:RawCronExpr) => expr._5
+      val hlistSelect = (expr: RawCronExpr) => expr._5
     }
   implicit val MonthFromDateExpr: FieldSelector[DateCronExpr, Month] =
     new DateCronFieldNodeSelector[Month] {
-      val hlistSelect  = (expr:RawDateCronExpr) => expr._2
+      val hlistSelect = (expr: RawDateCronExpr) => expr._2
     }
 
   implicit val DayOfWeekFromCronExpr: FieldSelector[CronExpr, DayOfWeek] =
     new FullCronFieldNodeWithAnySelector[DayOfWeek] {
-      val hlistSelect  = (expr:RawCronExpr) => expr._6
+      val hlistSelect = (expr: RawCronExpr) => expr._6
     }
   implicit val DayOfWeekFromDateExpr: FieldSelector[DateCronExpr, DayOfWeek] =
     new DateCronFieldNodeWithAnySelector[DayOfWeek] {
-      val hlistSelect  = (expr:RawDateCronExpr) => expr._3
+      val hlistSelect = (expr: RawDateCronExpr) => expr._3
     }
 
   // Base classes adding type refinements for the typeclass instances
@@ -108,7 +109,7 @@ object FieldSelector {
       extends FieldNodeSelector[TimeCronExpr, F] {
     type Raw = RawTimeCronExpr
 
-    def selectFrom(expr: TimeCronExpr): FieldNode[F] =  hlistSelect(expr.raw)
+    def selectFrom(expr: TimeCronExpr): FieldNode[F] = hlistSelect(expr.raw)
   }
   private[this] abstract class DateCronFieldNodeSelector[F <: CronField]
       extends FieldNodeSelector[DateCronExpr, F] {

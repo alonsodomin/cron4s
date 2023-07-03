@@ -26,10 +26,13 @@ import cron4s.InvalidField
   * Created by alonsodomin on 03/02/2017.
   */
 private[validation] object ops extends NodeValidatorInstances {
-  type Validatable[F<: CronField] = EachNode[F] | AnyNode[F] | ConstNode[F] | BetweenNode[F] | SeveralNode[
-    F
-  ] | EveryNode[F] | FieldNode[F] | FieldNodeWithAny[F] | Nothing
-  def validate[F <: CronField](node: Validatable[F])(using  Enumerated[CronUnit[F]]): List[InvalidField] = node match {
+  type Validatable[F <: CronField] = EachNode[F] | AnyNode[F] | ConstNode[F] | BetweenNode[F] |
+    SeveralNode[
+      F
+    ] | EveryNode[F] | FieldNode[F] | FieldNodeWithAny[F] | Nothing
+  def validate[F <: CronField](
+      node: Validatable[F]
+  )(using Enumerated[CronUnit[F]]): List[InvalidField] = node match {
     case field: EachNode[F]    => summon[NodeValidator[EachNode[F]]].validate(field)
     case field: AnyNode[F]     => summon[NodeValidator[AnyNode[F]]].validate(field)
     case field: ConstNode[F]   => summon[NodeValidator[ConstNode[F]]].validate(field)
