@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package cron4s
+package cron4s.expr
+import cats._
+import cats.implicits._
 
-package object parsing {
-  private[cron4s] def parse(e: String): Either[Error, CronExpr] =
-    for {
-      tokens <- CronLexer.tokenize(e)
-      expr   <- CronParser.read(tokens)
-    } yield expr
+private[cron4s] trait TimeCronExprInstances {
+  implicit val timeCronEq: Eq[TimeCronExpr] = Eq.instance { (lhs, rhs) =>
+    lhs.seconds === rhs.seconds &&
+    lhs.minutes === rhs.minutes &&
+    lhs.hours === rhs.hours
+  }
+
+  implicit val timeCronShow: Show[TimeCronExpr] =
+    Show.fromToString[TimeCronExpr]
 }

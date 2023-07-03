@@ -31,7 +31,6 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
     */
   def matchesIn[DateTime](expr: E[F], DT: IsDateTime[DateTime]): Predicate[DateTime] =
     Predicate { dt =>
-      import cats.syntax.either._
       val current = DT.get(dt, expr.unit.field)
       current.map(expr.matches).getOrElse(false)
     }
@@ -71,7 +70,6 @@ trait DateTimeNode[E[_ <: CronField], F <: CronField] {
       expr: E[F],
       DT: IsDateTime[DateTime]
   )(dateTime: DateTime, step: Int): Option[DateTime] = {
-    import cats.syntax.either._
     for {
       current  <- DT.get(dateTime, expr.unit.field).toOption
       newValue <- expr.step(current, step).map(_._1)

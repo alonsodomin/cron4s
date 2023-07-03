@@ -19,7 +19,6 @@ package cron4s
 import cats.data.NonEmptyList
 
 import cron4s.expr._
-import cron4s.syntax.all._
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
@@ -94,7 +93,7 @@ class CronSpec extends AnyFlatSpec with Matchers {
   import CronSpec._
 
   "Cron" should "not parse an invalid expression" in {
-    val expectedError =
+    val _ =
       InvalidFieldCombination("Fields DayOfMonth and DayOfWeek can't both have the expression: *")
 
     forAll(InvalidExprs) { (desc: String, expr: String, err: Error) =>

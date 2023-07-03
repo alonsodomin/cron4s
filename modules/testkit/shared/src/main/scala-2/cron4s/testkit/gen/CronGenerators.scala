@@ -35,7 +35,7 @@ trait CronGenerators extends NodeGenerators {
       case _      => anyGen[CronField.DayOfWeek].map(any2FieldWithAny)
     }
 
-  private[this] val fullCronGen = for {
+  private[this] val fullCronGen: Gen[CronExpr] = for {
     seconds     <- nodeGen[CronField.Second]
     minutes     <- nodeGen[CronField.Minute]
     hours       <- nodeGen[CronField.Hour]
@@ -44,13 +44,13 @@ trait CronGenerators extends NodeGenerators {
     daysOfWeek  <- chooseDaysOfWeek(daysOfMonth)
   } yield CronExpr(seconds, minutes, hours, daysOfMonth, months, daysOfWeek)
 
-  private[this] val timeCronGen = for {
+  private[this] val timeCronGen: Gen[TimeCronExpr] = for {
     seconds <- nodeGen[CronField.Second]
     minutes <- nodeGen[CronField.Minute]
     hours   <- nodeGen[CronField.Hour]
   } yield TimeCronExpr(seconds, minutes, hours)
 
-  private[this] val dateCronGen = for {
+  private[this] val dateCronGen: Gen[DateCronExpr] = for {
     daysOfMonth <- nodeWithAnyGen[CronField.DayOfMonth]
     months      <- nodeGen[CronField.Month]
     daysOfWeek  <- chooseDaysOfWeek(daysOfMonth)

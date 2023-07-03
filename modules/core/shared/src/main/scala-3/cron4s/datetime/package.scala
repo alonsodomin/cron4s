@@ -1,0 +1,76 @@
+/*
+ * Copyright 2017 Antonio Alonso Dominguez
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package cron4s
+
+import cron4s.expr.{DateCronExpr, TimeCronExpr}
+
+import scala.language.implicitConversions
+
+/**
+  * Created by alonsodomin on 24/01/2017.
+  */
+package object datetime {
+  private[datetime] def applyRange(
+      expr: DateCronExpr
+  ): List[IndexedSeq[Int]] = {
+    expr.raw match {
+      case (daysOfMonth, months, daysOfWeek) =>
+        List(
+          cron4s.expr.ops.range(daysOfMonth),
+          cron4s.expr.ops.range(months),
+          cron4s.expr.ops.range(daysOfWeek)
+        )
+    }
+  }
+  private[datetime] def applyRange(
+      expr: TimeCronExpr
+  ): List[IndexedSeq[Int]] = {
+    expr.raw match {
+      case (seconds, minutes, hours) =>
+        List(
+          cron4s.expr.ops.range(seconds),
+          cron4s.expr.ops.range(minutes),
+          cron4s.expr.ops.range(hours)
+        )
+    }
+  }
+  private[datetime] def applyRange(
+      expr: CronExpr
+  ): List[IndexedSeq[Int]] = {
+    expr.raw match {
+      case (seconds, minutes, hours, daysOfMonth, months, daysOfWeek) =>
+        List(
+          cron4s.expr.ops.range(seconds),
+          cron4s.expr.ops.range(minutes),
+          cron4s.expr.ops.range(hours),
+          cron4s.expr.ops.range(daysOfMonth),
+          cron4s.expr.ops.range(months),
+          cron4s.expr.ops.range(daysOfWeek)
+        )
+    }
+  }
+
+  import CronField._
+
+  private[datetime] type AnyCron =
+    CronExpr | TimeCronExpr | DateCronExpr
+
+  private[datetime] type FieldSeq =
+    Second *: Minute *: Hour *: DayOfMonth *: Month *: DayOfWeek *: EmptyTuple
+  val FieldSeq: FieldSeq =
+    Second *: Minute *: Hour *: DayOfMonth *: Month *: DayOfWeek *: EmptyTuple
+}
