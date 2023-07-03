@@ -6,6 +6,20 @@ object GithubWorkflow {
   val JvmCond = s"matrix.platform == 'jvm'"
   val JsCond  = s"matrix.platform == 'js'"
 
+  // SBT Microsites https://47degrees.github.io/sbt-microsites/docs/getting-started/
+  val JekyllSetupSteps = Seq(
+    WorkflowStep.Use(
+      UseRef.Public("actions", "setup-ruby", "v1"),
+      params = Map("ruby-version" -> "2.6"),
+      cond = Some(JvmCond)
+    ),
+    WorkflowStep.Run(
+      commands = List("gem install jekyll -v 4"),
+      name = Some("Configure Jekyll"),
+      cond = Some(JvmCond)
+    )
+  )
+
   def settings =
     Seq(
       githubWorkflowJavaVersions := Seq(
@@ -15,10 +29,14 @@ object GithubWorkflow {
       ),
       githubWorkflowTargetBranches := Seq("master"),
       githubWorkflowTargetTags ++= Seq("v*"),
-      githubWorkflowPublishTargetBranches := Seq(RefPredicate.StartsWith(Ref.Tag("v"))),
+      githubWorkflowPublishTargetBranches := Seq(
+        RefPredicate.StartsWith(Ref.Tag("v")),
+        RefPredicate.Equals(Ref.Branch("main"))
+      ),
       githubWorkflowPublish := Seq(
         WorkflowStep.Sbt(
           List("ci-release"),
+          name = Some("Publish library"),
           env = Map(
             "PGP_PASSPHRASE"    -> "${{ secrets.PGP_PASSPHRASE }}",
             "PGP_SECRET"        -> "${{ secrets.PGP_SECRET }}",
@@ -27,8 +45,7 @@ object GithubWorkflow {
           )
         )
       ),
-      githubWorkflowBuildMatrixAdditions +=
-        "platform" -> List("jvm", "js"),
+      githubWorkflowBuildMatrixAdditions += "platform" -> List("jvm", "js"),
       githubWorkflowBuildMatrixExclusions ++=
         githubWorkflowJavaVersions.value.filterNot(Set(DefaultJVM)).flatMap { java =>
           Seq(
@@ -36,7 +53,12 @@ object GithubWorkflow {
           )
         },
       githubWorkflowArtifactUpload := false,
+      githubWorkflowBuildPreamble  := JekyllSetupSteps,
       githubWorkflowBuild := Seq(
+        WorkflowStep.Sbt(
+          List("checkfmt"),
+          name = Some("Check source code formatting")
+        ),
         WorkflowStep
           .Sbt(List("validateJS"), name = Some("Validate JavaScript"), cond = Some(JsCond)),
         WorkflowStep.Sbt(
@@ -49,6 +71,21 @@ object GithubWorkflow {
           name = Some("Binary compatibility ${{ matrix.scala }}"),
           cond = Some(JvmCond)
         )*/
+      ),
+      githubWorkflowBuildPostamble := Seq(
+        WorkflowStep.Sbt(
+          List("makeMicrosite"),
+          name = Some("Compile documentation"),
+          cond = Some(JvmCond)
+        )
+      ),
+      githubWorkflowPublishPreamble := JekyllSetupSteps,
+      githubWorkflowPublishPostamble := Seq(
+        WorkflowStep.Sbt(
+          List("publishMicrosite"),
+          name = Some("Publish documentation"),
+          cond = Some("startsWith(github.ref, 'refs/tags/v')")
+        )
       )
     )
 
