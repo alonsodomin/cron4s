@@ -10,8 +10,8 @@ object GithubWorkflow {
   // SBT Microsites https://47degrees.github.io/sbt-microsites/docs/getting-started/
   val JekyllSetupSteps = Seq(
     WorkflowStep.Use(
-      UseRef.Public("actions", "setup-ruby", "v1"),
-      params = Map("ruby-version" -> "2.7"),
+      UseRef.Public("ruby", "setup-ruby", "v1"),
+      params = Map("ruby-version" -> "2.6"),
       cond = Some(IsJvm)
     ),
     WorkflowStep.Run(
