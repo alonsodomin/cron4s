@@ -16,13 +16,13 @@
 
 package cron4s.validation
 
+
 import cats.data._
 import cats.implicits._
 
 import cron4s.{CronField, CronUnit, InvalidField}
 import cron4s.expr._
 import cron4s.base.Enumerated
-import cron4s.syntax.field._
 
 /**
   * Created by alonsodomin on 18/12/2016.
@@ -52,6 +52,8 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       ev: Enumerated[CronUnit[F]]
   ): NodeValidator[ConstNode[F]] =
     new NodeValidator[ConstNode[F]] {
+      import scala.language.implicitConversions
+      import cron4s.syntax.all.toEnumeratedOps
       def validate(node: ConstNode[F]): List[InvalidField] =
         if (node.value < node.unit.min || node.value > node.unit.max)
           List(
@@ -98,6 +100,8 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
       def checkImplication(
           curr: EnumerableNode[F]
       ): State[List[EnumerableNode[F]], List[List[InvalidField]]] = {
+        import scala.language.implicitConversions
+        import cron4s.syntax.all.toExprOps
         lazy val currField = curr.unit.field
 
         def impliedByError(elem: EnumerableNode[F]): List[InvalidField] =
@@ -132,6 +136,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
   implicit def everyValidator[F <: CronField](implicit
       ev: Enumerated[CronUnit[F]]
   ): NodeValidator[EveryNode[F]] =
+    import cron4s.syntax.enumerated.toEnumeratedOps
     new NodeValidator[EveryNode[F]] {
       def validate(node: EveryNode[F]): List[InvalidField] = {
         lazy val baseErrors = NodeValidator[DivisibleNode[F]].validate(node.base)
@@ -146,13 +151,14 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
     }
 }
 
+
 private[validation] trait LowPriorityNodeValidatorInstances {
   implicit def enumerableNodeValidator[F <: CronField](implicit
       ev: Enumerated[CronUnit[F]]
   ): NodeValidator[EnumerableNode[F]] =
     new NodeValidator[EnumerableNode[F]] {
       def validate(node: EnumerableNode[F]): List[InvalidField] =
-        node.raw.fold(_root_.cron4s.validation.ops.validate)
+        _root_.cron4s.validation.ops.validate(node.raw)
     }
 
   implicit def divisibleNodeValidator[F <: CronField](implicit
@@ -160,7 +166,7 @@ private[validation] trait LowPriorityNodeValidatorInstances {
   ): NodeValidator[DivisibleNode[F]] =
     new NodeValidator[DivisibleNode[F]] {
       def validate(node: DivisibleNode[F]): List[InvalidField] =
-        node.raw.fold(_root_.cron4s.validation.ops.validate)
+        _root_.cron4s.validation.ops.validate(node.raw)
     }
 
   implicit def fieldNodeValidator[F <: CronField](implicit
@@ -168,7 +174,7 @@ private[validation] trait LowPriorityNodeValidatorInstances {
   ): NodeValidator[FieldNode[F]] =
     new NodeValidator[FieldNode[F]] {
       def validate(node: FieldNode[F]): List[InvalidField] =
-        node.raw.fold(_root_.cron4s.validation.ops.validate)
+        _root_.cron4s.validation.ops.validate(node.raw)
     }
 
   implicit def fieldNodeWithAnyValidator[F <: CronField](implicit
@@ -176,6 +182,6 @@ private[validation] trait LowPriorityNodeValidatorInstances {
   ): NodeValidator[FieldNodeWithAny[F]] =
     new NodeValidator[FieldNodeWithAny[F]] {
       def validate(node: FieldNodeWithAny[F]): List[InvalidField] =
-        node.raw.fold(_root_.cron4s.validation.ops.validate)
+        _root_.cron4s.validation.ops.validate(node.raw)
     }
 }

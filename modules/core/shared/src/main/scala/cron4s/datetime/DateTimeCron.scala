@@ -82,7 +82,7 @@ private[datetime] final class FullCron extends DateTimeCron[CronExpr] {
   }
 
   def ranges(expr: CronExpr): Map[CronField, IndexedSeq[Int]] =
-    supportedFields.zip(expr.raw.map(ops.range).toList).toMap
+    supportedFields.zip(applyRange(expr)).toMap
 
   @inline
   val supportedFields: List[CronField] = CronField.All
@@ -105,7 +105,7 @@ private[datetime] final class TimeCron extends DateTimeCron[TimeCronExpr] {
   }
 
   def ranges(expr: TimeCronExpr): Map[CronField, IndexedSeq[Int]] =
-    supportedFields.zip(expr.raw.map(ops.range).toList).toMap
+    supportedFields.zip(applyRange(expr)).toMap
 
   @inline
   val supportedFields: List[CronField] =
@@ -129,7 +129,7 @@ private[datetime] final class DateCron extends DateTimeCron[DateCronExpr] {
   }
 
   def ranges(expr: DateCronExpr): Map[CronField, IndexedSeq[Int]] =
-    supportedFields.zip(expr.raw.map(ops.range).toList).toMap
+    supportedFields.zip(applyRange(expr)).toMap
 
   @inline
   val supportedFields: List[CronField] =
