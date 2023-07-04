@@ -16,8 +16,6 @@
 
 package cron4s.lib.momentjs
 
-import cats.syntax.either._
-
 import cron4s.CronField
 import cron4s.datetime.{DateTimeError, DateTimeUnit, InvalidFieldValue, IsDateTime}
 

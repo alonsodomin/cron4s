@@ -16,11 +16,11 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 inThisBuild(
   Seq(
     libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
-    organization := "com.github.alonsodomin.cron4s",
-    organizationName := "Antonio Alonso Dominguez",
-    description := "CRON expression parser for Scala",
-    startYear := Some(2017),
-    crossScalaVersions := Seq("2.13.10", "2.12.17"),
+    organization                                         := "com.github.alonsodomin.cron4s",
+    organizationName                                     := "Antonio Alonso Dominguez",
+    description                                          := "CRON expression parser for Scala",
+    startYear                                            := Some(2017),
+    crossScalaVersions                                   := Seq("2.13.10", "2.12.17", "3.3.0"),
     homepage := Some(url("https://github.com/alonsodomin/cron4s")),
     licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt")),
     scmInfo := Some(
@@ -46,21 +46,26 @@ val commonSettings = Def.settings(
     "-unchecked",
     "-deprecation",
     "-explaintypes",
-    "-Xlint:-unused,_",
     "-Xfatal-warnings",
     "-language:postfixOps",
     "-language:implicitConversions",
     "-language:higherKinds",
     "-language:existentials"
   ),
+  scalacOptions ++= (if (scalaVersion.value.startsWith("2.")) {
+                       Seq(
+                         "-Xlint:-unused,_"
+                       ),
+                     } else
+                       Seq(
+                         "-Wunused:imports",
+                         "-Wunused:locals",
+                         "-Wunused:implicits",
+                         "-Wunused:privates"
+                       )),
   scalacOptions ++= {
     CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((2, n)) if n == 12 => Seq("-Ypartial-unification")
-      case _                       => Nil
-    }
-  },
-  scalacOptions ++= {
-    CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((2, n)) if n > 12 =>
         Seq("-Xlint:-byname-implicit", "-Ymacro-annotations")
       case _ => Nil
@@ -70,10 +75,10 @@ val commonSettings = Def.settings(
     Set("-Xlint:-unused,_", "-Xfatal-warnings")
   ),
   Test / console / scalacOptions := (Compile / console / scalacOptions).value,
-  apiURL := Some(url("https://alonsodomin.github.io/cron4s/api/")),
-  autoAPIMappings := true,
-  Test / parallelExecution := false,
-  consoleImports := Seq("cron4s._"),
+  apiURL                         := Some(url("https://alonsodomin.github.io/cron4s/api/")),
+  autoAPIMappings                := true,
+  Test / parallelExecution       := false,
+  consoleImports                 := Seq("cron4s._"),
   console / initialCommands := consoleImports.value
     .map(s => s"import $s")
     .mkString("\n")
@@ -85,18 +90,19 @@ lazy val commonJvmSettings = Seq(
 
 lazy val commonJsSettings = Seq(
   Global / scalaJSStage := FastOptStage,
-  scalacOptions += {
-    val tagOrHash = {
-      if (isSnapshot.value)
-        sys.process.Process("git rev-parse HEAD").lineStream_!.head
-      else version.value
-    }
-    val a = (LocalRootProject / baseDirectory).value.toURI.toString
-    val g = "https://raw.githubusercontent.com/alonsodomin/cron4s/" + tagOrHash
-    s"-P:scalajs:mapSourceURI:$a->$g/"
-  },
+  scalacOptions ++= (if (scalaVersion.value.startsWith("2.")) Seq {
+                       val tagOrHash = {
+                         if (isSnapshot.value)
+                           sys.process.Process("git rev-parse HEAD").lineStream_!.head
+                         else version.value
+                       }
+                       val a = (LocalRootProject / baseDirectory).value.toURI.toString
+                       val g = "https://raw.githubusercontent.com/alonsodomin/cron4s/" + tagOrHash
+                       s"-P:scalajs:mapSourceURI:$a->$g/"
+                     }
+                     else Seq.empty),
   scalaJSLinkerConfig := scalaJSLinkerConfig.value.withModuleKind(ModuleKind.CommonJSModule),
-  jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv()
+  jsEnv               := new org.scalajs.jsenv.nodejs.NodeJSEnv()
 )
 
 lazy val consoleSettings = Seq(
@@ -104,8 +110,8 @@ lazy val consoleSettings = Seq(
 )
 
 lazy val publishSettings = Seq(
-  sonatypeProfileName := "com.github.alonsodomin",
-  publishMavenStyle := true,
+  sonatypeProfileName    := "com.github.alonsodomin",
+  publishMavenStyle      := true,
   Test / publishArtifact := false,
   // don't include scoverage as a dependency in the pom
   // see issue #980
@@ -125,17 +131,17 @@ lazy val publishSettings = Seq(
 )
 
 lazy val noPublishSettings = publishSettings ++ Seq(
-  publish / skip := true,
-  publishArtifact := false,
+  publish / skip       := true,
+  publishArtifact      := false,
   mimaFailOnNoPrevious := false
 )
 
 lazy val coverageSettings = Seq(
-  coverageMinimumStmtTotal := 90,
+  coverageMinimumStmtTotal   := 90,
   coverageMinimumBranchTotal := 80,
-  coverageFailOnMinimum := true,
-  coverageHighlighting := true,
-  coverageExcludedPackages := "cron4s\\.bench\\..*"
+  coverageFailOnMinimum      := true,
+  coverageHighlighting       := true,
+  coverageExcludedPackages   := "cron4s\\.bench\\..*"
 )
 
 def mimaSettings(module: String): Seq[Setting[_]] =
@@ -178,19 +184,19 @@ lazy val docsMappingsAPIDir =
   settingKey[String]("Name of subdirectory in site target directory for api docs")
 
 lazy val docSettings = Seq(
-  micrositeName := "Cron4s",
-  micrositeDescription := "Scala CRON Parser",
-  micrositeHighlightTheme := "atom-one-light",
-  micrositeAuthor := "Antonio Alonso Dominguez",
-  micrositeGithubOwner := "alonsodomin",
-  micrositeGithubRepo := "cron4s",
-  micrositeGitterChannel := true,
-  micrositeUrl := "https://www.alonsodomin.me",
-  micrositeBaseUrl := "/cron4s",
-  micrositeHomepage := "https://www.alonsodomin.me/cron4s/",
-  micrositeDocumentationUrl := "/cron4s/api/cron4s/index.html",
+  micrositeName                          := "Cron4s",
+  micrositeDescription                   := "Scala CRON Parser",
+  micrositeHighlightTheme                := "atom-one-light",
+  micrositeAuthor                        := "Antonio Alonso Dominguez",
+  micrositeGithubOwner                   := "alonsodomin",
+  micrositeGithubRepo                    := "cron4s",
+  micrositeGitterChannel                 := true,
+  micrositeUrl                           := "https://www.alonsodomin.me",
+  micrositeBaseUrl                       := "/cron4s",
+  micrositeHomepage                      := "https://www.alonsodomin.me/cron4s/",
+  micrositeDocumentationUrl              := "/cron4s/api/cron4s/index.html",
   micrositeDocumentationLabelDescription := "API Documentation",
-  micrositeTwitterCreator := "@_alonsodomin_",
+  micrositeTwitterCreator                := "@_alonsodomin_",
   micrositeExtraMdFiles := Map(
     file("CHANGELOG.md") -> ExtraMdFileConfig(
       "changelog.md",
@@ -218,15 +224,15 @@ lazy val docSettings = Seq(
       "momentjsVersion"    -> Dependencies.version.momentjs
     )
   ),
-  mdocIn := sourceDirectory.value / "main" / "mdoc",
-  Test / fork := true,
+  mdocIn             := sourceDirectory.value / "main" / "mdoc",
+  Test / fork        := true,
   docsMappingsAPIDir := "api",
   addMappingsToSiteDir(
     ScalaUnidoc / packageDoc / mappings,
     docsMappingsAPIDir
   ),
   ghpagesNoJekyll := false,
-  git.remoteRepo := "https://github.com/alonsodomin/cron4s.git",
+  git.remoteRepo  := "https://github.com/alonsodomin/cron4s.git",
   ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(
     core.jvm,
     circe.jvm,
@@ -257,7 +263,7 @@ lazy val cron4s = (project in file("."))
 
 lazy val cron4sJS = (project in file(".js"))
   .settings(
-    name := "js",
+    name       := "js",
     moduleName := "cron4s-js"
   )
   .settings(commonSettings: _*)
@@ -269,7 +275,7 @@ lazy val cron4sJS = (project in file(".js"))
 
 lazy val cron4sJVM = (project in file(".jvm"))
   .settings(
-    name := "jvm",
+    name       := "jvm",
     moduleName := "cron4s-jvm"
   )
   .settings(commonSettings)
@@ -296,7 +302,7 @@ lazy val docs = project
 lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
   .settings(
-    name := "core",
+    name       := "core",
     moduleName := "cron4s-core"
   )
   .settings(commonSettings)
@@ -313,7 +319,7 @@ lazy val testkit =
   (crossProject(JSPlatform, JVMPlatform) in file("modules/testkit"))
     .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
     .settings(
-      name := "testkit",
+      name       := "testkit",
       moduleName := "cron4s-testkit"
     )
     .settings(commonSettings)
@@ -328,12 +334,11 @@ lazy val testkit =
 lazy val tests = (crossProject(JSPlatform, JVMPlatform) in file("tests"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
-    name := "tests",
+    name       := "tests",
     moduleName := "cron4s-tests"
   )
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .settings(Dependencies.tests)
   .jsSettings(commonJsSettings)
   .jsSettings(Dependencies.testsJS)
   .jvmSettings(commonJvmSettings)
@@ -343,7 +348,7 @@ lazy val tests = (crossProject(JSPlatform, JVMPlatform) in file("tests"))
 lazy val bench = (project in file("bench"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
-    name := "bench",
+    name       := "bench",
     moduleName := "cron4s-bench"
   )
   .settings(commonSettings)
@@ -360,7 +365,7 @@ lazy val bench = (project in file("bench"))
 lazy val joda = (project in file("modules/joda"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
   .settings(
-    name := "joda",
+    name       := "joda",
     moduleName := "cron4s-joda",
     consoleImports ++= Seq("org.joda.time._", "cron4s.lib.joda._")
   )
@@ -377,7 +382,7 @@ lazy val momentjs = (project in file("modules/momentjs"))
   .settings(commonJsSettings)
   .settings(publishSettings)
   .settings(
-    name := "momentjs",
+    name       := "momentjs",
     moduleName := "cron4s-momentjs"
   )
   .settings(Dependencies.momentjs)
@@ -391,7 +396,7 @@ lazy val circe =
   (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("modules/circe"))
     .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
     .settings(
-      name := "circe",
+      name       := "circe",
       moduleName := "cron4s-circe"
     )
     .settings(commonSettings)
@@ -406,7 +411,7 @@ lazy val decline =
   (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("modules/decline"))
     .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
     .settings(
-      name := "decline",
+      name       := "decline",
       moduleName := "cron4s-decline"
     )
     .settings(commonSettings)
@@ -420,7 +425,7 @@ lazy val decline =
 lazy val doobie = (project in file("modules/doobie"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
   .settings(
-    name := "doobie",
+    name       := "doobie",
     moduleName := "cron4s-doobie"
   )
   .settings(commonSettings)

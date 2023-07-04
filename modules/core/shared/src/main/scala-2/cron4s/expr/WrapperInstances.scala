@@ -15,28 +15,17 @@
  */
 
 package cron4s.expr
-
 import cats.{Eq, Show}
+import shapeless._
 
 import cron4s.{CronField, CronUnit}
 import cron4s.base.Predicate
 
-import shapeless._
-
-/**
-  * Created by alonsodomin on 23/01/2017.
-  */
-final class FieldNode[F <: CronField](private[cron4s] val raw: RawFieldNode[F]) extends AnyVal {
-  override def toString: String = raw.fold(_root_.cron4s.expr.ops.show)
-}
-
-object FieldNode {
+private[cron4s] trait FieldNodeInstances {
   implicit def fieldNodeEq[F <: CronField]: Eq[FieldNode[F]] =
     Eq.fromUniversalEquals
-
   implicit def fieldNodeShow[F <: CronField]: Show[FieldNode[F]] =
     Show.fromToString[FieldNode[F]]
-
   implicit def fieldNodeInstance[F <: CronField]: FieldExpr[FieldNode, F] =
     new FieldExpr[FieldNode, F] {
       def matches(node: FieldNode[F]): Predicate[Int] =
@@ -56,18 +45,12 @@ object FieldNode {
           case Inr(Inr(Inr(Inr(Inl(every))))) => every.implies(ee)
           case _                              => sys.error("Impossible!")
         }
-
       def unit(node: FieldNode[F]): CronUnit[F] =
         node.raw.fold(_root_.cron4s.expr.ops.unit)
     }
 }
 
-final class FieldNodeWithAny[F <: CronField](private[cron4s] val raw: RawFieldNodeWithAny[F])
-    extends AnyVal {
-  override def toString: String = raw.fold(_root_.cron4s.expr.ops.show)
-}
-
-object FieldNodeWithAny {
+private[cron4s] trait FieldNodeWithAnyInstances {
   implicit def fieldNodeWithAnyEq[F <: CronField]: Eq[FieldNodeWithAny[F]] =
     Eq.fromUniversalEquals
 
@@ -81,7 +64,6 @@ object FieldNodeWithAny {
 
       def range(node: FieldNodeWithAny[F]): IndexedSeq[Int] =
         node.raw.fold(_root_.cron4s.expr.ops.range)
-
       def implies[EE[_ <: CronField]](
           node: FieldNodeWithAny[F]
       )(ee: EE[F])(implicit EE: FieldExpr[EE, F]): Boolean =
@@ -95,12 +77,7 @@ object FieldNodeWithAny {
     }
 }
 
-final class EnumerableNode[F <: CronField](private[cron4s] val raw: RawEnumerableNode[F])
-    extends AnyVal {
-  override def toString: String = raw.fold(_root_.cron4s.expr.ops.show)
-}
-
-object EnumerableNode {
+private[cron4s] trait EnumerableNodeInstances {
   implicit def enumerableNodeEq[F <: CronField]: Eq[EnumerableNode[F]] =
     Eq.fromUniversalEquals
 
@@ -120,7 +97,6 @@ object EnumerableNode {
           case Inr(Inl(between)) => between.implies(ee)
           case _                 => sys.error("Impossible!")
         }
-
       def range(node: EnumerableNode[F]): IndexedSeq[Int] =
         node.raw.fold(_root_.cron4s.expr.ops.range)
 
@@ -129,12 +105,7 @@ object EnumerableNode {
     }
 }
 
-final class DivisibleNode[F <: CronField](private[cron4s] val raw: RawDivisibleNode[F])
-    extends AnyVal {
-  override def toString: String = raw.fold(_root_.cron4s.expr.ops.show)
-}
-
-object DivisibleNode {
+private[cron4s] trait DivisibleNodeInstances {
   implicit def divisibleNodeEq[F <: CronField]: Eq[DivisibleNode[F]] =
     Eq.fromUniversalEquals
 
