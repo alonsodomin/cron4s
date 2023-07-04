@@ -16,6 +16,7 @@
 
 package cron4s.testkit.gen
 
+import cron4s.expr.BetweenNode
 import cron4s.CronField._
 
 import org.scalacheck.Arbitrary
@@ -24,10 +25,20 @@ import org.scalacheck.Arbitrary
   * Created by alonsodomin on 28/08/2016.
   */
 trait ArbitraryBetweenNode extends NodeGenerators {
-  implicit lazy val arbitraryBetweenSecond     = Arbitrary(betweenGen[Second])
-  implicit lazy val arbitraryBetweenMinute     = Arbitrary(betweenGen[Minute])
-  implicit lazy val arbitraryBetweenHour       = Arbitrary(betweenGen[Hour])
-  implicit lazy val arbitraryBetweenDayOfMonth = Arbitrary(betweenGen[DayOfMonth])
-  implicit lazy val arbitraryBetweenMonth      = Arbitrary(betweenGen[Month])
-  implicit lazy val arbitraryBetweenDayOfWeek  = Arbitrary(betweenGen[DayOfWeek])
+  implicit lazy val arbitraryBetweenSecond: Arbitrary[BetweenNode[Second]] = Arbitrary(
+    betweenGen[Second]
+  )
+  implicit lazy val arbitraryBetweenMinute: Arbitrary[BetweenNode[Minute]] = Arbitrary(
+    betweenGen[Minute]
+  )
+  implicit lazy val arbitraryBetweenHour: Arbitrary[BetweenNode[Hour]] = Arbitrary(betweenGen[Hour])
+  implicit lazy val arbitraryBetweenDayOfMonth: Arbitrary[BetweenNode[DayOfMonth]] = Arbitrary(
+    betweenGen[DayOfMonth]
+  )
+  implicit lazy val arbitraryBetweenMonth: Arbitrary[BetweenNode[Month]] = Arbitrary(
+    betweenGen[Month]
+  )
+  implicit lazy val arbitraryBetweenDayOfWeek: Arbitrary[BetweenNode[DayOfWeek]] = Arbitrary(
+    betweenGen[DayOfWeek]
+  )
 }

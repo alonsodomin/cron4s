@@ -102,10 +102,14 @@ private[cron4s] trait CronUnitInstances extends CronUnits {
       override def range(fL: CronUnit[F]): IndexedSeq[Int] = unit.range
     }
 
-  implicit val secondsInstance     = enumerated(Seconds)
-  implicit val minutesInstance     = enumerated(Minutes)
-  implicit val hoursInstance       = enumerated(Hours)
-  implicit val daysOfMonthInstance = enumerated(DaysOfMonth)
-  implicit val monthsInstance      = enumerated(Months)
-  implicit val daysOfWeekInstance  = enumerated(DaysOfWeek)
+  implicit val secondsInstance: Enumerated[CronUnit[CronField.Second]] = enumerated(Seconds)
+  implicit val minutesInstance: Enumerated[CronUnit[CronField.Minute]] = enumerated(Minutes)
+  implicit val hoursInstance: Enumerated[CronUnit[CronField.Hour]]     = enumerated(Hours)
+  implicit val daysOfMonthInstance: Enumerated[CronUnit[CronField.DayOfMonth]] = enumerated(
+    DaysOfMonth
+  )
+  implicit val monthsInstance: Enumerated[CronUnit[CronField.Month]] = enumerated(Months)
+  implicit val daysOfWeekInstance: Enumerated[CronUnit[CronField.DayOfWeek]] = enumerated(
+    DaysOfWeek
+  )
 }
