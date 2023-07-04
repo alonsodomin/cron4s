@@ -49,9 +49,9 @@ object CronParser extends Parsers with BaseParser {
   private val blank: Parser[Char] =
     accept("blank", { case Blank => ' ' })
 
-  //----------------------------------------
+  // ----------------------------------------
   // Individual Expression Atoms
-  //----------------------------------------
+  // ----------------------------------------
 
   // Seconds
 
@@ -101,9 +101,9 @@ object CronParser extends Parsers with BaseParser {
   val daysOfWeek: Parser[ConstNode[DayOfWeek]] =
     textualDaysOfWeek | numericDaysOfWeek
 
-  //----------------------------------------
+  // ----------------------------------------
   // Field-Based Expression Atoms
-  //----------------------------------------
+  // ----------------------------------------
 
   def each[F <: CronField](implicit unit: CronUnit[F]): Parser[EachNode[F]] =
     accept("*", { case Asterisk => EachNode[F] })
@@ -142,9 +142,9 @@ object CronParser extends Parsers with BaseParser {
     )
   }
 
-  //----------------------------------------
+  // ----------------------------------------
   // AST Parsing & Building
-  //----------------------------------------
+  // ----------------------------------------
 
   def field[F <: CronField](base: Parser[ConstNode[F]])(implicit
       unit: CronUnit[F]

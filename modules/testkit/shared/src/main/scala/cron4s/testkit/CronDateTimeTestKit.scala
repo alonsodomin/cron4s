@@ -21,7 +21,7 @@ import cats.implicits._
 
 import cron4s.Cron
 import cron4s.datetime.IsDateTime
-
+import cron4s.syntax.all.toDateTimeCronOps
 import org.scalatest.flatspec.AnyFlatSpec
 
 /**
@@ -50,7 +50,7 @@ abstract class CronDateTimeTestKit[DateTime: IsDateTime: Eq: Show] extends AnyFl
   import CronDateTimeTestKit._
 
   lazy val samples = Seq(
-    //("expr",           "from",                              "stepSize", "expected"),
+    // ("expr",           "from",                              "stepSize", "expected"),
     (
       OnlyTuesdaysAt12,
       createDateTime(0, 0, 0, 1, 8, 2016),
