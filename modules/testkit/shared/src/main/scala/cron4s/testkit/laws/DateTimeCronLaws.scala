@@ -17,7 +17,6 @@
 package cron4s.testkit.laws
 
 import cats.laws._
-import cats.syntax.either._
 
 import cron4s.CronField
 import cron4s.datetime.{DateTimeCron, IsDateTime}
@@ -76,7 +75,7 @@ object DateTimeCronLaws {
       TC0: DateTimeCron[E]
   ): DateTimeCronLaws[E, DateTime] =
     new DateTimeCronLaws[E, DateTime] {
-      implicit val DT = dt0
-      implicit val TC = TC0
+      implicit def DT: IsDateTime[DateTime] = dt0
+      implicit def TC: DateTimeCron[E]      = TC0
     }
 }

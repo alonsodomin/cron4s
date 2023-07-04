@@ -23,6 +23,7 @@ import cron4s.CronField
 import shapeless._
 import cron4s.base.Predicate
 import cron4s.CronUnit
+
 /**
   * Created by alonsodomin on 17/12/2016.
   */

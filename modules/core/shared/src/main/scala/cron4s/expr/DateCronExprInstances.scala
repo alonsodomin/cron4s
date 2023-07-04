@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package cron4s
+package cron4s.expr
 
-package object parsing {
-  private[cron4s] def parse(e: String): Either[Error, CronExpr] =
-    for {
-      tokens <- CronLexer.tokenize(e)
-      expr   <- CronParser.read(tokens)
-    } yield expr
+import cats._
+import cats.implicits._
+
+private[cron4s] trait DateCronExprInstances {
+  implicit val dateCronEq: Eq[DateCronExpr] = Eq.instance { (lhs, rhs) =>
+    lhs.daysOfMonth === rhs.daysOfMonth &&
+    lhs.months === rhs.months &&
+    lhs.daysOfWeek === rhs.daysOfWeek
+  }
+  implicit val dateCronShow: Show[DateCronExpr] =
+    Show.fromToString[DateCronExpr]
 }

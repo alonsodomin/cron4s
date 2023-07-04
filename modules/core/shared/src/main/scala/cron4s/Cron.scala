@@ -17,7 +17,7 @@
 package cron4s
 
 import scala.scalajs.js.annotation.JSExportTopLevel
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
 /**
   * The entry point for parsing cron expressions
