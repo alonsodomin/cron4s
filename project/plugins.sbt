@@ -11,5 +11,5 @@ addSbtPlugin("de.heikoseeberger"                      % "sbt-header"            
 addSbtPlugin("org.scalameta"                          % "sbt-scalafmt"             % "2.5.0")
 addSbtPlugin("com.github.sbt"                         % "sbt-ci-release"           % "1.5.12")
 addSbtPlugin("ch.epfl.scala"                          % "sbt-scalajs-bundler"      % "0.21.1")
-addSbtPlugin("com.github.sbt"                         % "sbt-github-actions"       % "0.15.0")
+addSbtPlugin("com.codecommit"                         % "sbt-github-actions"       % "0.14.2")
 libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml"                % VersionScheme.Always
