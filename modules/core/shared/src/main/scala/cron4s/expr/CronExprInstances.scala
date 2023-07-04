@@ -19,39 +19,7 @@ package cron4s.expr
 import cats.{Eq, Show}
 import cats.implicits._
 
-import shapeless._
-
-/**
-  * Representation of a valid CRON expression as an AST
-  *
-  * @author Antonio Alonso Dominguez
-  */
-final case class CronExpr(
-    seconds: SecondsNode,
-    minutes: MinutesNode,
-    hours: HoursNode,
-    daysOfMonth: DaysOfMonthNode,
-    months: MonthsNode,
-    daysOfWeek: DaysOfWeekNode
-) {
-  private[cron4s] lazy val raw: RawCronExpr = Generic[CronExpr].to(this)
-
-  /**
-    * Time part of the CRON expression
-    */
-  lazy val timePart: TimeCronExpr = TimeCronExpr(seconds, minutes, hours)
-
-  /**
-    * Date part of the CRON expression
-    */
-  lazy val datePart: DateCronExpr =
-    DateCronExpr(daysOfMonth, months, daysOfWeek)
-
-  override lazy val toString: String =
-    raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
-}
-
-object CronExpr {
+private[cron4s] trait Cron4sInstances {
   implicit val CronExprEq: Eq[CronExpr] =
     Eq.instance { (lhs, rhs) =>
       lhs.seconds === rhs.seconds &&

@@ -19,48 +19,32 @@ package cron4s.expr
 import cats._
 import cats.implicits._
 
-import shapeless._
-
 final case class DateCronExpr(
     daysOfMonth: DaysOfMonthNode,
     months: MonthsNode,
     daysOfWeek: DaysOfWeekNode
 ) {
-  private[cron4s] lazy val raw: RawDateCronExpr = Generic[DateCronExpr].to(this)
+  private[cron4s] lazy val raw: RawDateCronExpr = (daysOfMonth, months, daysOfWeek)
 
   override lazy val toString: String =
-    raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
+    List(
+      _root_.cron4s.expr.ops.show(daysOfMonth),
+      _root_.cron4s.expr.ops.show(months),
+      _root_.cron4s.expr.ops.show(daysOfWeek)
+    ).mkString(" ")
 }
 
-object DateCronExpr {
-  implicit val dateCronEq: Eq[DateCronExpr] = Eq.instance { (lhs, rhs) =>
-    lhs.daysOfMonth === rhs.daysOfMonth &&
-    lhs.months === rhs.months &&
-    lhs.daysOfWeek === rhs.daysOfWeek
-  }
-
-  implicit val dateCronShow: Show[DateCronExpr] =
-    Show.fromToString[DateCronExpr]
-}
+object DateCronExpr extends DateCronExprInstances
 
 final case class TimeCronExpr(
     seconds: SecondsNode,
     minutes: MinutesNode,
     hours: HoursNode
 ) {
-  private[cron4s] lazy val raw: RawTimeCronExpr = Generic[TimeCronExpr].to(this)
+  private[cron4s] lazy val raw: RawTimeCronExpr = (seconds, minutes, hours)
 
   override lazy val toString: String =
-    raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
+    List(seconds, minutes, hours).map(_root_.cron4s.expr.ops.show).mkString(" ")
 }
 
-object TimeCronExpr {
-  implicit val timeCronEq: Eq[TimeCronExpr] = Eq.instance { (lhs, rhs) =>
-    lhs.seconds === rhs.seconds &&
-    lhs.minutes === rhs.minutes &&
-    lhs.hours === rhs.hours
-  }
-
-  implicit val timeCronShow: Show[TimeCronExpr] =
-    Show.fromToString[TimeCronExpr]
-}
+object TimeCronExpr extends TimeCronExprInstances

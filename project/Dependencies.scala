@@ -33,10 +33,12 @@ object Dependencies {
 
   lazy val core = Def.settings(
     libraryDependencies ++= Seq(
-      "com.chuusai"            %%% "shapeless"                % version.shapeless,
       "org.typelevel"          %%% "cats-core"                % version.cats.main,
       "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parserc
-    )
+    ),
+    libraryDependencies ++= (if (scalaVersion.value.startsWith("2."))
+                               Seq("com.chuusai" %%% "shapeless" % version.shapeless)
+                             else Seq.empty)
   )
 
   lazy val coreJS = Def.settings {
@@ -54,10 +56,6 @@ object Dependencies {
       "org.typelevel" %%% "cats-testkit-scalatest" % version.cats.scalatest,
       "org.typelevel" %%% "discipline-scalatest"   % version.discipline
     )
-  }
-
-  lazy val tests = Def.settings {
-    libraryDependencies ++= Seq()
   }
 
   lazy val testsJS = Def.settings {
@@ -90,7 +88,8 @@ object Dependencies {
     "moment-timezone" -> version.momenttz
   )
   lazy val momentjs = Def.settings(
-    libraryDependencies += "ru.pavkin" %%% "scala-js-momentjs" % version.momentjs,
+    libraryDependencies += ("ru.pavkin" %%% "scala-js-momentjs" % version.momentjs)
+      .cross(CrossVersion.for3Use2_13),
     Compile / npmDependencies ++= momentjsNpmDeps,
     Test / npmDependencies ++= momentjsNpmDeps
   )

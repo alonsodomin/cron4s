@@ -37,9 +37,9 @@ package object atto {
   private val questionMark: Parser[Char] = elem(_ == '?', "question-mark")
   private val blank: Parser[Char]        = elem(_ == ' ', "blank")
 
-  //----------------------------------------
+  // ----------------------------------------
   // Individual Expression Atoms
-  //----------------------------------------
+  // ----------------------------------------
 
   // Seconds
 
@@ -89,9 +89,9 @@ package object atto {
   val daysOfWeek: Parser[ConstNode[DayOfWeek]] =
     textualDaysOfWeek | numericDaysOfWeek
 
-  //----------------------------------------
+  // ----------------------------------------
   // Field-Based Expression Atoms
-  //----------------------------------------
+  // ----------------------------------------
 
   def each[F <: CronField](implicit unit: CronUnit[F]): Parser[EachNode[F]] =
     asterisk.as(EachNode[F])
@@ -133,9 +133,9 @@ package object atto {
     )
   }
 
-  //----------------------------------------
+  // ----------------------------------------
   // AST Parsing & Building
-  //----------------------------------------
+  // ----------------------------------------
 
   def field[F <: CronField](base: Parser[ConstNode[F]])(implicit
       unit: CronUnit[F]

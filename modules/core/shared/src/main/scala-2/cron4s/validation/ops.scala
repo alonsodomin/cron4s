@@ -20,6 +20,7 @@ import cron4s.CronField
 import cron4s.expr._
 
 import shapeless._
+import cron4s.InvalidField
 
 /**
   * Created by alonsodomin on 03/02/2017.
@@ -28,34 +29,35 @@ private[validation] object ops {
   object validate extends Poly1 {
     implicit def caseEach[F <: CronField](implicit
         validator: NodeValidator[EachNode[F]]
-    ) = at[EachNode[F]](validator.validate)
+    ): Case.Aux[EachNode[F], List[InvalidField]] = at[EachNode[F]](validator.validate)
 
     implicit def caseAny[F <: CronField](implicit
         validator: NodeValidator[AnyNode[F]]
-    ) = at[AnyNode[F]](validator.validate)
+    ): Case.Aux[AnyNode[F], List[InvalidField]] = at[AnyNode[F]](validator.validate)
 
     implicit def caseConst[F <: CronField](implicit
         validator: NodeValidator[ConstNode[F]]
-    ) = at[ConstNode[F]](validator.validate)
+    ): Case.Aux[ConstNode[F], List[InvalidField]] = at[ConstNode[F]](validator.validate)
 
     implicit def caseBetween[F <: CronField](implicit
         validator: NodeValidator[BetweenNode[F]]
-    ) = at[BetweenNode[F]](validator.validate)
+    ): Case.Aux[BetweenNode[F], List[InvalidField]] = at[BetweenNode[F]](validator.validate)
 
     implicit def caseSeveral[F <: CronField](implicit
         validator: NodeValidator[SeveralNode[F]]
-    ) = at[SeveralNode[F]](validator.validate)
+    ): Case.Aux[SeveralNode[F], List[InvalidField]] = at[SeveralNode[F]](validator.validate)
 
     implicit def caseEvery[F <: CronField](implicit
         validator: NodeValidator[EveryNode[F]]
-    ) = at[EveryNode[F]](validator.validate)
+    ): Case.Aux[EveryNode[F], List[InvalidField]] = at[EveryNode[F]](validator.validate)
 
     implicit def caseField[F <: CronField](implicit
         validator: NodeValidator[FieldNode[F]]
-    ) = at[FieldNode[F]](validator.validate)
+    ): Case.Aux[FieldNode[F], List[InvalidField]] = at[FieldNode[F]](validator.validate)
 
     implicit def caseFieldWithAny[F <: CronField](implicit
         validator: NodeValidator[FieldNodeWithAny[F]]
-    ) = at[FieldNodeWithAny[F]](validator.validate)
+    ): Case.Aux[FieldNodeWithAny[F], List[InvalidField]] =
+      at[FieldNodeWithAny[F]](validator.validate)
   }
 }
