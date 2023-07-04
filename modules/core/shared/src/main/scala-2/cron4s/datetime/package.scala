@@ -26,6 +26,16 @@ import scala.language.implicitConversions
   * Created by alonsodomin on 24/01/2017.
   */
 package object datetime {
+  import cron4s.expr._
+  private[datetime] def applyRange(
+      expr: DateCronExpr
+  ): List[IndexedSeq[Int]] = expr.raw.map(ops.range).toList
+  private[datetime] def applyRange(
+      expr: TimeCronExpr
+  ): List[IndexedSeq[Int]] = expr.raw.map(ops.range).toList
+  private[datetime] def applyRange(
+      expr: CronExpr
+  ): List[IndexedSeq[Int]] = expr.raw.map(ops.range).toList
   import CronField._
 
   private[datetime] type AnyCron =
