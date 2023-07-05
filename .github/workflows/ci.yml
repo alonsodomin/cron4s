@@ -32,7 +32,11 @@ jobs:
         exclude:
           - platform: js
             java: adopt-hotspot@8
+          - platform: native
+            java: adopt-hotspot@8
           - platform: js
+            java: temurin@17
+          - platform: native
             java: temurin@17
     runs-on: ${{ matrix.os }}
     steps:

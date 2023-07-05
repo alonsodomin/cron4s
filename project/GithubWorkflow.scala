@@ -36,7 +36,8 @@ object GithubWorkflow {
       githubWorkflowBuildMatrixExclusions ++=
         githubWorkflowJavaVersions.value.filterNot(Set(DefaultJVM)).flatMap { java =>
           Seq(
-            MatrixExclude(Map("platform" -> "js", "java" -> java.render))
+            MatrixExclude(Map("platform" -> "js", "java" -> java.render)),
+            MatrixExclude(Map("platform" -> "native", "java" -> java.render))
           )
         },
       githubWorkflowArtifactUpload := false,
