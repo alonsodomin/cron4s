@@ -49,12 +49,13 @@ object Dependencies {
     libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.1.0" % Provided
   }
 
+  lazy val coreNative = coreJS ++ coreJVM
+
   lazy val testkit = Def.settings {
     libraryDependencies ++= Seq(
-      "org.typelevel" %%% "cats-laws"              % version.cats.main,
-      "org.typelevel" %%% "cats-testkit"           % version.cats.main,
-      "org.typelevel" %%% "cats-testkit-scalatest" % version.cats.scalatest,
-      "org.typelevel" %%% "discipline-scalatest"   % version.discipline
+      "org.typelevel" %%% "cats-laws"            % version.cats.main,
+      "org.typelevel" %%% "cats-testkit"         % version.cats.main,
+      "org.typelevel" %%% "discipline-scalatest" % version.discipline
     )
   }
 

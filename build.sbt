@@ -267,7 +267,7 @@ lazy val docSettings = Seq(
 lazy val cron4s = (project in file("."))
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .aggregate(cron4sJS, cron4sJVM, docs, bench)
+  .aggregate(cron4sJS, cron4sJVM, cron4sNative, docs, bench)
 
 lazy val cron4sJS = (project in file(".js"))
   .settings(
@@ -293,6 +293,16 @@ lazy val cron4sJVM = (project in file(".jvm"))
   .aggregate(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm)
   .dependsOn(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm % Test)
 
+lazy val cron4sNative = (project in file(".native"))
+  .settings(
+    name       := "native",
+    moduleName := "cron4s-native"
+  )
+  .settings(commonSettings)
+  .settings(noPublishSettings)
+  .aggregate(core.native, circe.native, decline.native, testkit.native, tests.native)
+  .dependsOn(core.native, circe.native, decline.native, testkit.native, tests.native % Test)
+
 lazy val docs = project
   .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, GhpagesPlugin)
   .settings(
@@ -307,7 +317,7 @@ lazy val docs = project
 // Main modules
 // =================================================================================
 
-lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))
+lazy val core = (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("modules/core"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
   .settings(
     name       := "core",
@@ -322,9 +332,10 @@ lazy val core = (crossProject(JSPlatform, JVMPlatform) in file("modules/core"))
   .jvmSettings(consoleSettings)
   .jvmSettings(Dependencies.coreJVM)
   .jvmSettings(mimaSettings("core"))
+  .nativeSettings(Dependencies.coreNative)
 
 lazy val testkit =
-  (crossProject(JSPlatform, JVMPlatform) in file("modules/testkit"))
+  (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("modules/testkit"))
     .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
     .settings(
       name       := "testkit",
@@ -339,7 +350,7 @@ lazy val testkit =
     .jvmSettings(mimaSettings("testkit"))
     .dependsOn(core)
 
-lazy val tests = (crossProject(JSPlatform, JVMPlatform) in file("tests"))
+lazy val tests = (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("tests"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
   .settings(
     name       := "tests",
@@ -401,7 +412,9 @@ lazy val momentjs = (project in file("modules/momentjs"))
 // =================================================================================
 
 lazy val circe =
-  (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("modules/circe"))
+  (crossProject(JSPlatform, JVMPlatform, NativePlatform).crossType(CrossType.Pure) in file(
+    "modules/circe"
+  ))
     .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
     .settings(
       name       := "circe",
@@ -416,7 +429,9 @@ lazy val circe =
     .dependsOn(core, testkit % Test)
 
 lazy val decline =
-  (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("modules/decline"))
+  (crossProject(JSPlatform, JVMPlatform, NativePlatform).crossType(CrossType.Pure) in file(
+    "modules/decline"
+  ))
     .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
     .settings(
       name       := "decline",
@@ -451,6 +466,7 @@ addCommandAlias("fmt", "scalafmtSbt;scalafmt;Test/scalafmt")
 addCommandAlias("checkfmt", "scalafmtSbtCheck;scalafmtCheck;Test/scalafmtCheck")
 addCommandAlias("testJVM", "cron4sJVM/test")
 addCommandAlias("testJS", "cron4sJS/test")
+addCommandAlias("testNative", "cron4sNative/test")
 addCommandAlias("binCompatCheck", "cron4sJVM/mimaReportBinaryIssues")
 addCommandAlias(
   "validateJVM",
@@ -462,6 +478,7 @@ addCommandAlias(
   ).mkString(";")
 )
 addCommandAlias("validateJS", "testJS")
+addCommandAlias("validateNative", "testNative")
 addCommandAlias("validateBench", "bench/compile")
 addCommandAlias(
   "validate",
@@ -469,6 +486,7 @@ addCommandAlias(
     "checkfmt",
     "validateJS",
     "validateJVM",
+    "validateNative",
     "validateBench",
     "binCompatCheck"
   ).mkString(";")
