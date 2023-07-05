@@ -3,8 +3,8 @@ import sbtghactions.GenerativePlugin.autoImport._
 object GithubWorkflow {
   val DefaultJVM = JavaSpec(JavaSpec.Distribution.Adopt, "8")
 
-  val JvmCond = s"matrix.platform == 'jvm'"
-  val JsCond  = s"matrix.platform == 'js'"
+  val IsJvm = "matrix.platform == 'jvm'"
+  val IsJs  = "matrix.platform == 'js'"
 
   def settings =
     Seq(
@@ -15,10 +15,14 @@ object GithubWorkflow {
       ),
       githubWorkflowTargetBranches := Seq("master"),
       githubWorkflowTargetTags ++= Seq("v*"),
-      githubWorkflowPublishTargetBranches := Seq(RefPredicate.StartsWith(Ref.Tag("v"))),
+      githubWorkflowPublishTargetBranches := Seq(
+        RefPredicate.StartsWith(Ref.Tag("v")),
+        RefPredicate.Equals(Ref.Branch("main"))
+      ),
       githubWorkflowPublish := Seq(
         WorkflowStep.Sbt(
           List("ci-release"),
+          name = Some("Publish library"),
           env = Map(
             "PGP_PASSPHRASE"    -> "${{ secrets.PGP_PASSPHRASE }}",
             "PGP_SECRET"        -> "${{ secrets.PGP_SECRET }}",
@@ -27,8 +31,7 @@ object GithubWorkflow {
           )
         )
       ),
-      githubWorkflowBuildMatrixAdditions +=
-        "platform" -> List("jvm", "js"),
+      githubWorkflowBuildMatrixAdditions += "platform" -> List("jvm", "js"),
       githubWorkflowBuildMatrixExclusions ++=
         githubWorkflowJavaVersions.value.filterNot(Set(DefaultJVM)).flatMap { java =>
           Seq(
@@ -37,17 +40,21 @@ object GithubWorkflow {
         },
       githubWorkflowArtifactUpload := false,
       githubWorkflowBuild := Seq(
+        WorkflowStep.Sbt(
+          List("checkfmt"),
+          name = Some("Check source code formatting")
+        ),
         WorkflowStep
-          .Sbt(List("validateJS"), name = Some("Validate JavaScript"), cond = Some(JsCond)),
+          .Sbt(List("validateJS"), name = Some("Validate JavaScript"), cond = Some(IsJs)),
         WorkflowStep.Sbt(
           List("validateJVM", "validateBench"),
           name = Some("Validate JVM"),
-          cond = Some(JvmCond)
+          cond = Some(IsJvm)
         )
         /*WorkflowStep.Sbt(
           List("clean", "binCompatCheck"),
           name = Some("Binary compatibility ${{ matrix.scala }}"),
-          cond = Some(JvmCond)
+          cond = Some(IsJvm)
         )*/
       )
     )

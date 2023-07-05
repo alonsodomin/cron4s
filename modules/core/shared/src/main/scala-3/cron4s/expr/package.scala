@@ -16,24 +16,22 @@
 
 package cron4s
 
-
 /**
   * Created by alonsodomin on 04/01/2016.
   */
 package object expr {
   private[expr] type RawFieldNode[F <: CronField] =
-    EachNode[F] | ConstNode[F] | BetweenNode[F] | SeveralNode[F] |
-      EveryNode[F]
+    EachNode[F] | ConstNode[F] | BetweenNode[F] | SeveralNode[F] | EveryNode[F]
 
   private[expr] type RawFieldNodeWithAny[F <: CronField] =
     AnyNode[F] | RawFieldNode[F]
 
   private[expr] type RawEnumerableNode[F <: CronField] =
     ConstNode[F] | BetweenNode[F]
-  extension [F<:CronField](t: RawEnumerableNode[F]) {
+  extension [F <: CronField](t: RawEnumerableNode[F]) {
     private[cron4s] inline def select[T]: Option[T] = t match
       case t: T => Some(t)
-      case _ => None
+      case _    => None
   }
 
   private[expr] type RawDivisibleNode[F <: CronField] =
@@ -52,5 +50,6 @@ package object expr {
     DaysOfMonthNode *: MonthsNode *: DaysOfWeekNode *: EmptyTuple
 
   private[cron4s] type RawCronExpr =
-    SecondsNode *: MinutesNode *: HoursNode *: DaysOfMonthNode *: MonthsNode *: DaysOfWeekNode *: EmptyTuple
+    SecondsNode *: MinutesNode *: HoursNode *: DaysOfMonthNode *: MonthsNode *: DaysOfWeekNode *:
+      EmptyTuple
 }

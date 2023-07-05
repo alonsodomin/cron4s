@@ -38,19 +38,16 @@ Then make your browser point to <http://127.0.0.1:4000/cron4s> and that's all.
 
 ### Cross building
 
-`cron4s` is cross-built and published for several versions of Scala. The different set of versions are configured in the [`.travis.yml`](https://github.com/alonsodomin/cron4s/blob/master/.travis.yml) file in the `scala` section. For example:
+`cron4s` is cross-built and published for several versions of Scala. The different set of versions are configured in the [`build.sbt`](https://github.com/alonsodomin/cron4s/blob/master/build.sbt) file in the `crossScalaVersions` setting. We use the [SBT Github Actions](https://github.com/sbt/sbt-github-actions) plugin to generate Github Actions workflows that are in sync with what has been specified in the `build.sbt` file.
 
-```yaml
-scala:
-  - 2.12.9
-  - 2.13.0
-```
 
-Supporting additional Scala versions is a matter of adding a new version to that section and then make the codebase compile against it whilst preserving backwards compatibility. The easiest way to check that compatibility is triggering a cross build with SBT:
+Supporting additional Scala versions is a matter of adding a new version to that setting and then make the codebase compile against it whilst preserving backwards compatibility. The easiest way to check that compatibility is triggering a cross build with SBT:
 
 ```bash
 sbt +test
 ```
+
+When making changes to the `build.sbt` file, it is highly recommended to run the `sbt githubWorkflowGenerate` command to ensure that the Github Actions workflows are based on the latest updates.
 
 ### Repository Automation
 
@@ -58,7 +55,7 @@ There is some sort of automation configured in this repository to ease the manag
 
 * **Version upgrades**: The [Scala Steward](https://github.com/fthomas/scala-steward) will be producing pull requests with version upgrades of this library dependencies.
 * **Auto-merge**: [Mergify](https://mergify.io) is installed in this repo to do auto-merge of pull requests that meet a given criteria. This said criteria can be modified in the [.mergify](https://github.com/alonsodomin/cron4s/blob/master/.mergify.yml) at the project's root folder.
-* **Travis Release**: [Travis CI](https://travis-ci.org/alonsodomin/cron4s) has been configured, not just to build the project, but also to be able to release to Maven Central with minimal user interaction. Pushing a tag in the repo with the version number will sign and publish such a release in Maven Central, non-tagged commits to `master` will be published as `SNAPSHOT`.  
+* **CI Release**: A [Github Actions](https://github.com/alonsodomin/cron4s/actions) workflow has been configured, not just to build the project, but also to be able to release to Maven Central with minimal user interaction. Pushing a tag in the repo with the version number will sign and publish such a release in Maven Central, non-tagged commits to `master` will be published as `SNAPSHOT`.  
 
 ## Related Projects
 

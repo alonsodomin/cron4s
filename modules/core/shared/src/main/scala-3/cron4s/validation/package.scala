@@ -32,7 +32,7 @@ package object validation {
           ops.validate(hours),
           ops.validate(daysOfMonth),
           ops.validate(months),
-          ops.validate(daysOfWeek),
+          ops.validate(daysOfWeek)
         ).flatten
     }
 

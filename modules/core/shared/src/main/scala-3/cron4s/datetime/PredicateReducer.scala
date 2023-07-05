@@ -43,30 +43,36 @@ private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime
   type FromRawable = CronExpr | DateCronExpr | TimeCronExpr
   import CronField._
   def fromRaw(t: FromRawable): List[Predicate[DateTime]] = t match {
-    case t: CronExpr     => t.raw match
-      case (seconds, minutes, hours, daysOfMonth, months, daysOfWeek) =>
-        List(
+    case t: CronExpr =>
+      t.raw match {
+        case (seconds, minutes, hours, daysOfMonth, months, daysOfWeek) =>
+          List(
             predicateFor(Second, seconds),
             predicateFor(Minute, minutes),
             predicateFor(Hour, hours),
             predicateFor(DayOfMonth, daysOfMonth),
             predicateFor(Month, months),
-            predicateFor(DayOfWeek, daysOfWeek),
-        )
-    case t: DateCronExpr => t.raw match
+            predicateFor(DayOfWeek, daysOfWeek)
+          )
+      }
+    case t: DateCronExpr =>
+      t.raw match {
         case (daysOfMonth, months, daysOfWeek) =>
           List(
             predicateFor(DayOfMonth, daysOfMonth),
             predicateFor(Month, months),
-            predicateFor(DayOfWeek, daysOfWeek),
+            predicateFor(DayOfWeek, daysOfWeek)
           )
-    case t: TimeCronExpr => t.raw match
-       case (seconds, minutes, hours) =>
-         List(
+      }
+    case t: TimeCronExpr =>
+      t.raw match {
+        case (seconds, minutes, hours) =>
+          List(
             predicateFor(Second, seconds),
             predicateFor(Minute, minutes),
-            predicateFor(Hour, hours),
+            predicateFor(Hour, hours)
           )
+      }
   }
 
   def run(cron: AnyCron): Predicate[DateTime] =
