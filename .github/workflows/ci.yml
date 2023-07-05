@@ -28,11 +28,15 @@ jobs:
           - adopt-hotspot@8
           - adopt-hotspot@11
           - temurin@17
-        platform: [jvm, js]
+        platform: [jvm, js, native]
         exclude:
           - platform: js
-            java: adopt-hotspot@11
+            java: adopt-hotspot@8
+          - platform: native
+            java: adopt-hotspot@8
           - platform: js
+            java: temurin@17
+          - platform: native
             java: temurin@17
     runs-on: ${{ matrix.os }}
     steps:
@@ -78,6 +82,10 @@ jobs:
       - name: Validate JVM
         if: matrix.platform == 'jvm'
         run: sbt '++ ${{ matrix.scala }}' validateJVM validateBench
+
+      - name: Validate Native
+        if: matrix.platform == 'native'
+        run: sbt '++ ${{ matrix.scala }}' validateNative
 
   publish:
     name: Publish Artifacts

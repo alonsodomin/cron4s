@@ -1,16 +1,17 @@
 import sbtghactions.GenerativePlugin.autoImport._
 
 object GithubWorkflow {
-  val DefaultJVM = JavaSpec(JavaSpec.Distribution.Adopt, "8")
+  val DefaultJVM = JavaSpec(JavaSpec.Distribution.Adopt, "11")
 
-  val IsJvm = "matrix.platform == 'jvm'"
-  val IsJs  = "matrix.platform == 'js'"
+  val IsJvm    = "matrix.platform == 'jvm'"
+  val IsJs     = "matrix.platform == 'js'"
+  val IsNative = "matrix.platform == 'native'"
 
   def settings =
     Seq(
       githubWorkflowJavaVersions := Seq(
+        JavaSpec(JavaSpec.Distribution.Adopt, "8"),
         DefaultJVM,
-        JavaSpec(JavaSpec.Distribution.Adopt, "11"),
         JavaSpec(JavaSpec.Distribution.Temurin, "17")
       ),
       githubWorkflowTargetBranches := Seq("master"),
@@ -31,11 +32,12 @@ object GithubWorkflow {
           )
         )
       ),
-      githubWorkflowBuildMatrixAdditions += "platform" -> List("jvm", "js"),
+      githubWorkflowBuildMatrixAdditions += "platform" -> List("jvm", "js", "native"),
       githubWorkflowBuildMatrixExclusions ++=
         githubWorkflowJavaVersions.value.filterNot(Set(DefaultJVM)).flatMap { java =>
           Seq(
-            MatrixExclude(Map("platform" -> "js", "java" -> java.render))
+            MatrixExclude(Map("platform" -> "js", "java" -> java.render)),
+            MatrixExclude(Map("platform" -> "native", "java" -> java.render))
           )
         },
       githubWorkflowArtifactUpload := false,
@@ -50,6 +52,11 @@ object GithubWorkflow {
           List("validateJVM", "validateBench"),
           name = Some("Validate JVM"),
           cond = Some(IsJvm)
+        ),
+        WorkflowStep.Sbt(
+          List("validateNative"),
+          name = Some("Validate Native"),
+          cond = Some(IsNative)
         )
         /*WorkflowStep.Sbt(
           List("clean", "binCompatCheck"),

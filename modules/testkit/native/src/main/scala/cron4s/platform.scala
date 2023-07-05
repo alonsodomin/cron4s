@@ -18,8 +18,8 @@ package cron4s
 
 private[cron4s] object platform {
   object Platform {
-    val isJvm    = true
+    val isJvm    = false
     val isJs     = false
-    val isNative = false
+    val isNative = true
   }
 }

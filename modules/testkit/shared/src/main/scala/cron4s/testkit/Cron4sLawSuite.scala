@@ -33,9 +33,9 @@ import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 trait TestSettings extends Configuration {
   lazy val defaultPropertyCheckConfig: PropertyCheckConfiguration =
     PropertyCheckConfiguration(
-      minSuccessful = if (Platform.isJvm) PosInt(50) else PosInt(5),
+      minSuccessful = if (Platform.isJvm || Platform.isNative) PosInt(50) else PosInt(5),
       minSize = PosZInt(0),
-      sizeRange = if (Platform.isJvm) PosZInt(10) else PosZInt(5),
+      sizeRange = if (Platform.isJvm || Platform.isNative) PosZInt(10) else PosZInt(5),
       workers = PosInt(1)
     )
 
