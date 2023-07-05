@@ -29,11 +29,19 @@ inThisBuild(
         "scm:git:git@github.com:alonsodomin/cron4s.git"
       )
     ),
-    developers += Developer(
-      "alonsodomin",
-      "A. Alonso Dominguez",
-      "",
-      url("https://github.com/alonsodomin")
+    developers ++= List(
+      Developer(
+        "alonsodomin",
+        "A. Alonso Dominguez",
+        "work@alonsodomin.me",
+        url("https://github.com/alonsodomin")
+      ),
+      Developer(
+        "i110416",
+        "110416",
+        "contact.110416@gmail.com",
+        url("https://github.com/i10416")
+      )
     )
   ) ++ GithubWorkflow.settings
 )
@@ -211,7 +219,7 @@ lazy val docSettings = Seq(
   micrositePushSiteWith := {
     if (githubIsWorkflowBuild.value) GitHub4s else GHPagesPlugin
   },
-  micrositeGithubToken := sys.env.get("GITHUB_MICROSITES_TOKEN"),
+  micrositeGithubToken := sys.env.get("GITHUB_TOKEN"),
   micrositeConfigYaml := ConfigYml(
     yamlCustomProperties = Map(
       "cron4sVersion"      -> version.value,
@@ -439,8 +447,8 @@ lazy val doobie = (project in file("modules/doobie"))
 // Utility command aliases
 // =================================================================================
 
-addCommandAlias("fmt", "scalafmtSbt;scalafmt;test:scalafmt")
-addCommandAlias("checkfmt", "scalafmtSbtCheck;scalafmtCheck;test:scalafmtCheck")
+addCommandAlias("fmt", "scalafmtSbt;scalafmt;Test/scalafmt")
+addCommandAlias("checkfmt", "scalafmtSbtCheck;scalafmtCheck;Test/scalafmtCheck")
 addCommandAlias("testJVM", "cron4sJVM/test")
 addCommandAlias("testJS", "cron4sJS/test")
 addCommandAlias("binCompatCheck", "cron4sJVM/mimaReportBinaryIssues")

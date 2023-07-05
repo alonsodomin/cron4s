@@ -26,9 +26,10 @@ import cron4s.CronUnit
   */
 private[cron4s] object ops {
   type PolyField[F <: CronField] =
-    EachNode[F] | AnyNode[F] | ConstNode[F] | BetweenNode[F] | SeveralNode[F] | EveryNode[
-      F
-    ] | FieldNode[F] | FieldNodeWithAny[F] | EnumerableNode[F] | DivisibleNode[F]
+    EachNode[F] | AnyNode[F] | ConstNode[F] | BetweenNode[F] | SeveralNode[F] |
+      EveryNode[
+        F
+      ] | FieldNode[F] | FieldNodeWithAny[F] | EnumerableNode[F] | DivisibleNode[F]
   import cron4s.syntax.all.toExprOps
   def matches[F <: CronField](field: PolyField[F]): Predicate[Int] = field match {
     case node: EachNode[F]         => node.matches

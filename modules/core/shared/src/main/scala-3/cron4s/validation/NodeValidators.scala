@@ -16,7 +16,6 @@
 
 package cron4s.validation
 
-
 import cats.data._
 import cats.implicits._
 
@@ -135,7 +134,7 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
 
   implicit def everyValidator[F <: CronField](implicit
       ev: Enumerated[CronUnit[F]]
-  ): NodeValidator[EveryNode[F]] =
+  ): NodeValidator[EveryNode[F]] = {
     import cron4s.syntax.enumerated.toEnumeratedOps
     new NodeValidator[EveryNode[F]] {
       def validate(node: EveryNode[F]): List[InvalidField] = {
@@ -149,8 +148,8 @@ private[validation] trait NodeValidatorInstances extends LowPriorityNodeValidato
         else baseErrors
       }
     }
+  }
 }
-
 
 private[validation] trait LowPriorityNodeValidatorInstances {
   implicit def enumerableNodeValidator[F <: CronField](implicit
