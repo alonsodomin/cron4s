@@ -3,23 +3,8 @@ import sbtghactions.GenerativePlugin.autoImport._
 object GithubWorkflow {
   val DefaultJVM = JavaSpec(JavaSpec.Distribution.Adopt, "8")
 
-  val IsJvm           = "matrix.platform == 'jvm'"
-  val IsJs            = "matrix.platform == 'js'"
-  val IsTaggedRelease = "startsWith(github.ref, 'refs/tags/v')"
-
-  // SBT Microsites https://47degrees.github.io/sbt-microsites/docs/getting-started/
-  val JekyllSetupSteps = Seq(
-    WorkflowStep.Use(
-      UseRef.Public("ruby", "setup-ruby", "v1"),
-      params = Map("ruby-version" -> "2.6"),
-      cond = Some(IsJvm)
-    ),
-    WorkflowStep.Run(
-      commands = List("gem install jekyll -v 4"),
-      name = Some("Configure Jekyll"),
-      cond = Some(IsJvm)
-    )
-  )
+  val IsJvm = "matrix.platform == 'jvm'"
+  val IsJs  = "matrix.platform == 'js'"
 
   def settings =
     Seq(
@@ -54,7 +39,6 @@ object GithubWorkflow {
           )
         },
       githubWorkflowArtifactUpload := false,
-      githubWorkflowBuildPreamble  := JekyllSetupSteps,
       githubWorkflowBuild := Seq(
         WorkflowStep.Sbt(
           List("checkfmt"),
@@ -72,21 +56,6 @@ object GithubWorkflow {
           name = Some("Binary compatibility ${{ matrix.scala }}"),
           cond = Some(IsJvm)
         )*/
-      ),
-      githubWorkflowBuildPostamble := Seq(
-        WorkflowStep.Sbt(
-          List("makeMicrosite"),
-          name = Some("Compile documentation"),
-          cond = Some(IsJvm)
-        )
-      ),
-      githubWorkflowPublishPreamble := JekyllSetupSteps,
-      githubWorkflowPublishPostamble := Seq(
-        WorkflowStep.Sbt(
-          List("publishMicrosite"),
-          name = Some("Publish documentation"),
-          cond = Some(IsTaggedRelease)
-        )
       )
     )
 

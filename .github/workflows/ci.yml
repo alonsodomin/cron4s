@@ -65,15 +65,6 @@ jobs:
           java-version: 17
           cache: sbt
 
-      - if: matrix.platform == 'jvm'
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6
-
-      - name: Configure Jekyll
-        if: matrix.platform == 'jvm'
-        run: gem install jekyll -v 4
-
       - name: Check that workflows are up to date
         run: sbt '++ ${{ matrix.scala }}' githubWorkflowCheck
 
@@ -87,10 +78,6 @@ jobs:
       - name: Validate JVM
         if: matrix.platform == 'jvm'
         run: sbt '++ ${{ matrix.scala }}' validateJVM validateBench
-
-      - name: Compile documentation
-        if: matrix.platform == 'jvm'
-        run: sbt '++ ${{ matrix.scala }}' makeMicrosite
 
   publish:
     name: Publish Artifacts
@@ -132,15 +119,6 @@ jobs:
           java-version: 17
           cache: sbt
 
-      - if: matrix.platform == 'jvm'
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6
-
-      - name: Configure Jekyll
-        if: matrix.platform == 'jvm'
-        run: gem install jekyll -v 4
-
       - name: Publish library
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
@@ -148,7 +126,3 @@ jobs:
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
         run: sbt ci-release
-
-      - name: Publish documentation
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: sbt publishMicrosite
