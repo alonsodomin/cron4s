@@ -12,7 +12,7 @@ object Dependencies {
     val atto = "0.9.5"
 
     object cats {
-      val main      = "2.9.0"
+      val main      = "2.10.0"
       val scalatest = "2.1.5"
     }
 
