@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        scala: [2.13.10, 2.12.17, 3.3.0]
+        scala: [2.13.12, 2.12.17, 3.3.1]
         java:
           - adopt-hotspot@8
           - adopt-hotspot@11
@@ -35,9 +35,9 @@ jobs:
           - platform: native
             java: adopt-hotspot@8
           - platform: js
-            java: temurin@17
+            java: adopt-hotspot@11
           - platform: native
-            java: temurin@17
+            java: adopt-hotspot@11
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout current branch (full)
@@ -72,8 +72,8 @@ jobs:
       - name: Check that workflows are up to date
         run: sbt '++ ${{ matrix.scala }}' githubWorkflowCheck
 
-      - name: Check source code formatting
-        run: sbt '++ ${{ matrix.scala }}' checkfmt
+      - name: Lint source code
+        run: sbt '++ ${{ matrix.scala }}' lint
 
       - name: Validate JavaScript
         if: matrix.platform == 'js'
