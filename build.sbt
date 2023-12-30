@@ -15,13 +15,12 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 inThisBuild(
   Seq(
-    libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
-    organization                                         := "com.github.alonsodomin.cron4s",
-    organizationName                                     := "Antonio Alonso Dominguez",
-    description                                          := "CRON expression parser for Scala",
-    startYear                                            := Some(2017),
-    crossScalaVersions                                   := Seq("2.13.12", "2.12.17", "3.3.1"),
-    homepage := Some(url("https://github.com/alonsodomin/cron4s")),
+    organization       := "com.github.alonsodomin.cron4s",
+    organizationName   := "Antonio Alonso Dominguez",
+    description        := "CRON expression parser for Scala",
+    startYear          := Some(2017),
+    crossScalaVersions := Seq("2.13.12", "2.12.17", "3.3.1"),
+    homepage           := Some(url("https://github.com/alonsodomin/cron4s")),
     licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt")),
     scmInfo := Some(
       ScmInfo(
@@ -42,7 +41,9 @@ inThisBuild(
         "contact.110416@gmail.com",
         url("https://github.com/i10416")
       )
-    )
+    ),
+    libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
+    versionScheme                                        := Some("semver-spec")
   ) ++ GithubWorkflow.settings
 )
 
@@ -89,7 +90,7 @@ val commonSettings = Def.settings(
   consoleImports                 := Seq("cron4s._"),
   console / initialCommands := consoleImports.value
     .map(s => s"import $s")
-    .mkString("\n")
+    .mkString("\n") + "\n"
 ) ++ CompilerPlugins.All
 
 lazy val commonJvmSettings = Seq(
@@ -204,7 +205,6 @@ lazy val docSettings = Seq(
   micrositeHomepage                      := "https://www.alonsodomin.me/cron4s/",
   micrositeDocumentationUrl              := "/cron4s/api/cron4s/index.html",
   micrositeDocumentationLabelDescription := "API Documentation",
-  micrositeTwitterCreator                := "@_alonsodomin_",
   micrositeExtraMdFiles := Map(
     file("CHANGELOG.md") -> ExtraMdFileConfig(
       "changelog.md",
@@ -256,6 +256,7 @@ lazy val docSettings = Seq(
     scmInfo.value.get.browseUrl + "/tree/master€{FILE_PATH}.scala",
     "-sourcepath",
     (LocalRootProject / baseDirectory).value.getAbsolutePath,
+    "-groups",
     "-diagrams"
   )
 )
@@ -418,7 +419,8 @@ lazy val circe =
     .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
     .settings(
       name       := "circe",
-      moduleName := "cron4s-circe"
+      moduleName := "cron4s-circe",
+      consoleImports ++= Seq("cron4s.circe._", "io.circe._", "io.circe.syntax._")
     )
     .settings(commonSettings)
     .settings(publishSettings)
@@ -435,7 +437,8 @@ lazy val decline =
     .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
     .settings(
       name       := "decline",
-      moduleName := "cron4s-decline"
+      moduleName := "cron4s-decline",
+      consoleImports ++= Seq("cron4s.decline._", "com.monovore.decline._")
     )
     .settings(commonSettings)
     .settings(publishSettings)
@@ -449,7 +452,8 @@ lazy val doobie = (project in file("modules/doobie"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
   .settings(
     name       := "doobie",
-    moduleName := "cron4s-doobie"
+    moduleName := "cron4s-doobie",
+    consoleImports ++= Seq("cron4s.doobie._", "doobie._", "doobie.implicits._")
   )
   .settings(commonSettings)
   .settings(publishSettings)
