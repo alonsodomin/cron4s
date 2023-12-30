@@ -20,7 +20,7 @@ inThisBuild(
     organizationName                                     := "Antonio Alonso Dominguez",
     description                                          := "CRON expression parser for Scala",
     startYear                                            := Some(2017),
-    crossScalaVersions                                   := Seq("2.13.10", "2.12.17", "3.3.0"),
+    crossScalaVersions                                   := Seq("2.13.12", "2.12.17", "3.3.1"),
     homepage := Some(url("https://github.com/alonsodomin/cron4s")),
     licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt")),
     scmInfo := Some(
@@ -462,33 +462,30 @@ lazy val doobie = (project in file("modules/doobie"))
 // Utility command aliases
 // =================================================================================
 
-addCommandAlias("fmt", "scalafmtSbt;scalafmt;Test/scalafmt")
-addCommandAlias("checkfmt", "scalafmtSbtCheck;scalafmtCheck;Test/scalafmtCheck")
+def addCompoundCommandAlias(alias: String)(subcommands: String*) =
+  addCommandAlias(alias, subcommands.mkString(";"))
+
+addCompoundCommandAlias("fmt")("scalafmtSbt", "scalafmt", "Test/scalafmt")
+addCompoundCommandAlias("lint")("scalafmtSbtCheck", "scalafmtCheck", "Test/scalafmtCheck")
 addCommandAlias("testJVM", "cron4sJVM/test")
 addCommandAlias("testJS", "cron4sJS/test")
 addCommandAlias("testNative", "cron4sNative/test")
 addCommandAlias("binCompatCheck", "cron4sJVM/mimaReportBinaryIssues")
-addCommandAlias(
-  "validateJVM",
-  Seq(
-    "coverage",
-    "testJVM",
-    "coverageReport",
-    "coverageAggregate"
-  ).mkString(";")
+addCompoundCommandAlias("validateJVM")(
+  "coverage",
+  "testJVM",
+  "coverageReport",
+  "coverageAggregate"
 )
 addCommandAlias("validateJS", "testJS")
 addCommandAlias("validateNative", "testNative")
 addCommandAlias("validateBench", "bench/compile")
-addCommandAlias(
-  "validate",
-  Seq(
-    "checkfmt",
-    "validateJS",
-    "validateJVM",
-    "validateNative",
-    "validateBench",
-    "binCompatCheck"
-  ).mkString(";")
+addCompoundCommandAlias("validate")(
+  "lint",
+  "validateJS",
+  "validateJVM",
+  "validateNative",
+  "validateBench",
+  "binCompatCheck"
 )
-addCommandAlias("rebuild", "clean;validate")
+addCompoundCommandAlias("rebuild")("clean", "validate")

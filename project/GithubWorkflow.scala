@@ -1,7 +1,7 @@
 import sbtghactions.GenerativePlugin.autoImport._
 
 object GithubWorkflow {
-  val DefaultJVM = JavaSpec(JavaSpec.Distribution.Adopt, "11")
+  val DefaultJVM = JavaSpec(JavaSpec.Distribution.Temurin, "17")
 
   val IsJvm    = "matrix.platform == 'jvm'"
   val IsJs     = "matrix.platform == 'js'"
@@ -43,8 +43,8 @@ object GithubWorkflow {
       githubWorkflowArtifactUpload := false,
       githubWorkflowBuild := Seq(
         WorkflowStep.Sbt(
-          List("checkfmt"),
-          name = Some("Check source code formatting")
+          List("lint"),
+          name = Some("Lint source code")
         ),
         WorkflowStep
           .Sbt(List("validateJS"), name = Some("Validate JavaScript"), cond = Some(IsJs)),

@@ -87,6 +87,6 @@ object DateTimeNode {
       E0: FieldExpr[E, F]
   ): DateTimeNode[E, F] =
     new DateTimeNode[E, F] {
-      implicit val E = E0
+      implicit val E: FieldExpr[E, F] = E0
     }
 }
