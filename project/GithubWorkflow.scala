@@ -11,8 +11,8 @@ object GithubWorkflow {
     Seq(
       githubWorkflowJavaVersions := Seq(
         JavaSpec(JavaSpec.Distribution.Adopt, "8"),
-        DefaultJVM,
-        JavaSpec(JavaSpec.Distribution.Temurin, "17")
+        JavaSpec(JavaSpec.Distribution.Adopt, "11"),
+        DefaultJVM
       ),
       githubWorkflowTargetBranches := Seq("master"),
       githubWorkflowTargetTags ++= Seq("v*"),
