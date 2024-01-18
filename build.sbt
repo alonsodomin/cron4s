@@ -348,7 +348,9 @@ lazy val testkit =
     .jsSettings(commonJsSettings)
     .jvmSettings(commonJvmSettings)
     .jvmSettings(consoleSettings)
+    .jvmSettings(Dependencies.coreJVM)
     .jvmSettings(mimaSettings("testkit"))
+    .nativeSettings(Dependencies.coreNative)
     .dependsOn(core)
 
 lazy val tests = (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("tests"))
@@ -427,7 +429,9 @@ lazy val circe =
     .settings(Dependencies.circe)
     .settings(mimaSettings("circe"))
     .jvmSettings(commonJvmSettings)
+    .jvmSettings(Dependencies.coreJVM)
     .jsSettings(commonJsSettings)
+    .nativeSettings(Dependencies.coreNative)
     .dependsOn(core, testkit % Test)
 
 lazy val decline =
@@ -445,7 +449,9 @@ lazy val decline =
     .settings(Dependencies.decline)
     .settings(mimaSettings("decline"))
     .jvmSettings(commonJvmSettings)
+    .jvmSettings(Dependencies.coreJVM)
     .jsSettings(commonJsSettings)
+    .nativeSettings(Dependencies.coreNative)
     .dependsOn(core, testkit % Test)
 
 lazy val doobie = (project in file("modules/doobie"))
@@ -460,6 +466,7 @@ lazy val doobie = (project in file("modules/doobie"))
   .settings(commonJvmSettings)
   .settings(mimaSettings("doobie"))
   .settings(Dependencies.doobie)
+  .settings(Dependencies.coreJVM)
   .dependsOn(core.jvm, testkit.jvm % Test)
 
 // =================================================================================
