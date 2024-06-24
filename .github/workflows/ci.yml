@@ -69,6 +69,9 @@ jobs:
           java-version: 17
           cache: sbt
 
+      - name: Setup sbt
+        uses: sbt/setup-sbt@v1
+
       - name: Check that workflows are up to date
         run: sbt '++ ${{ matrix.scala }}' githubWorkflowCheck
 
@@ -126,6 +129,9 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: sbt
+
+      - name: Setup sbt
+        uses: sbt/setup-sbt@v1
 
       - name: Publish library
         env:
