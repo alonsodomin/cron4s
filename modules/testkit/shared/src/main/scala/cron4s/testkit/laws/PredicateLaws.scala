@@ -28,7 +28,7 @@ import cron4s.syntax.predicate._
   */
 object PredicateLaws {
   def negation[A](self: Predicate[A], a: A): IsEq[Boolean] =
-    (!self).apply(a) <-> !self.apply(a)
+    !self.apply(a) <-> !self.apply(a)
 
   def conjuction[A](self: Predicate[A], other: Predicate[A], value: A): IsEq[Boolean] =
     (self && other)(value) <-> (self(value) && other(value))
