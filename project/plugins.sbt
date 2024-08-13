@@ -11,7 +11,7 @@ addSbtPlugin("com.github.sbt"     % "sbt-unidoc"                    % "0.5.0")
 addSbtPlugin("com.typesafe"       % "sbt-mima-plugin"               % "1.1.3")
 addSbtPlugin("de.heikoseeberger"  % "sbt-header"                    % "5.9.0")
 addSbtPlugin("org.scalameta"      % "sbt-scalafmt"                  % "2.5.2")
-addSbtPlugin("com.github.sbt"     % "sbt-ci-release"                % "1.5.12")
+addSbtPlugin("com.github.sbt"     % "sbt-ci-release"                % "1.6.0")
 addSbtPlugin("ch.epfl.scala"      % "sbt-scalajs-bundler"           % "0.21.1")
 addSbtPlugin("com.github.sbt"     % "sbt-github-actions"            % "0.23.0")
 libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
