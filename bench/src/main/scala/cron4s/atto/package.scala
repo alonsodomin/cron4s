@@ -19,16 +19,33 @@ package cron4s
 import _root_.atto._
 import Atto._
 import cats.implicits._
-
 import cron4s.expr._
 
 package object atto {
   import CronField._
   import CronUnit._
 
-  private val sexagesimal: Parser[Int] = int.filter(x => x >= 0 && x < 60)
-  private val decimal: Parser[Int]     = int.filter(x => x >= 0)
-  private val literal: Parser[String]  = takeWhile1(_ >= ' ')
+  private def oneOrTwoDigitsPositiveInt: Parser[Int] = {
+
+    val getDigits = for {
+      d1 <- digit
+      d2 <- opt(digit)
+    } yield d2.fold(s"$d1")(x => s"$d1$x")
+
+    getDigits.flatMap(s =>
+      try
+        ok(s.toInt)
+      catch {
+        // scala-js can't parse non-alpha digits so we just fail in that case.
+        case _: java.lang.NumberFormatException =>
+          err[Int]("https://github.com/scala-js/scala-js/issues/2935")
+      }
+    )
+  } namedOpaque "oneOrTwoDigitsPositiveInt"
+
+  private val sexagesimal: Parser[Int] = oneOrTwoDigitsPositiveInt.filter(x => x >= 0 && x < 60)
+
+  private val literal: Parser[String] = takeWhile1(x => x != ' ' && x != '-')
 
   private val hyphen: Parser[Char]       = elem(_ == '-', "hyphen")
   private val comma: Parser[Char]        = elem(_ == ',', "comma")
@@ -54,17 +71,17 @@ package object atto {
   // Hours
 
   val hours: Parser[ConstNode[Hour]] =
-    decimal.filter(x => (x >= 0) && (x < 24)).map(ConstNode[Hour](_))
+    oneOrTwoDigitsPositiveInt.filter(x => (x >= 0) && (x < 24)).map(ConstNode[Hour](_))
 
   // Days Of Month
 
   val daysOfMonth: Parser[ConstNode[DayOfMonth]] =
-    decimal.filter(x => (x >= 1) && (x <= 31)).map(ConstNode[DayOfMonth](_))
+    oneOrTwoDigitsPositiveInt.filter(x => (x >= 1) && (x <= 31)).map(ConstNode[DayOfMonth](_))
 
   // Months
 
   private[this] val numericMonths =
-    decimal.filter(_ <= 12).map(ConstNode[Month](_))
+    oneOrTwoDigitsPositiveInt.filter(x => (x >= 0) && (x <= 12)).map(ConstNode[Month](_))
 
   private[this] val textualMonths =
     literal.filter(Months.textValues.contains).map { value =>
@@ -78,7 +95,7 @@ package object atto {
   // Days Of Week
 
   private[this] val numericDaysOfWeek =
-    decimal.filter(_ < 7).map(ConstNode[DayOfWeek](_))
+    oneOrTwoDigitsPositiveInt.filter(x => (x >= 0) && (x <= 6)).map(ConstNode[DayOfWeek](_))
 
   private[this] val textualDaysOfWeek =
     literal.filter(DaysOfWeek.textValues.contains).map { value =>
@@ -111,9 +128,10 @@ package object atto {
       unit: CronUnit[F]
   ): Parser[SeveralNode[F]] = {
     def compose(b: => Parser[EnumerableNode[F]]) =
-      sepBy1(b, comma)
-        .filter(_.size > 1)
-        .map(values => SeveralNode.fromSeq[F](values.toList).get)
+      sepBy(b, comma)
+        .collect {
+          case first :: second :: tail => SeveralNode(first, second, tail: _*)
+        }
 
     compose(between(base).map(between2Enumerable) | base.map(const2Enumerable))
   }
@@ -122,7 +140,7 @@ package object atto {
       unit: CronUnit[F]
   ): Parser[EveryNode[F]] = {
     def compose(b: => Parser[DivisibleNode[F]]) =
-      ((b <~ slash) ~ decimal.filter(_ > 0)).map {
+      ((b <~ slash) ~ oneOrTwoDigitsPositiveInt.filter(_ > 0)).map {
         case (exp, freq) => EveryNode[F](exp, freq)
       }
 
@@ -166,8 +184,9 @@ package object atto {
   } yield CronExpr(sec, min, hour, day, month, weekDay)
 
   def parse(e: String): Either[Error, CronExpr] =
-    (cron.parseOnly(e): @unchecked) match {
+    (phrase(cron).parseOnly(e): @unchecked) match {
       case ParseResult.Done(_, result) => Right(result)
+      case ParseResult.Fail("", _, _)  => Left(ExprTooShort)
       case ParseResult.Fail(rest, _, msg) =>
         val position = e.length() - rest.length() + 1
         Left(ParseFailed(msg, position, Some(rest)))
