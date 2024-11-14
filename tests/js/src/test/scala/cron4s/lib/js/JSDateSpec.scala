@@ -17,10 +17,16 @@
 package cron4s.lib.js
 
 import cron4s.testkit.IsDateTimeTestKit
+import org.scalacheck.Gen
 
 import scala.scalajs.js.Date
 
 /**
   * Created by alonsodomin on 02/09/2016.
   */
-class JSDateSpec extends IsDateTimeTestKit[Date]("JSDate") with JSTestBase
+class JSDateSpec extends IsDateTimeTestKit[Date]("JSDate") with JSTestBase {
+  // js date implementation has a very specific behavior when setting month : if the day
+  // doesn't exist in the target month (say the 31) then setting the month to n is actually
+  // setting it to n+1 and it makes property tests to fail
+  override protected def genDateTime: Gen[Date] = super.genDateTime.suchThat(_.getDate() < 29)
+}
