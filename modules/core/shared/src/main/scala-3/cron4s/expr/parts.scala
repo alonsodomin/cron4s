@@ -16,7 +16,6 @@
 
 package cron4s.expr
 
-import cats._
 import cats.implicits._
 
 final case class DateCronExpr(
