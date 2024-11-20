@@ -33,13 +33,18 @@ object Dependencies {
 
   lazy val core = Def.settings(
     libraryDependencies ++= Seq(
-      "org.typelevel"          %%% "cats-core"                % version.cats.main,
-      "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parserc
+      "org.typelevel" %%% "cats-core" % version.cats.main
     ),
     libraryDependencies ++= (if (scalaVersion.value.startsWith("2."))
                                Seq("com.chuusai" %%% "shapeless" % version.shapeless)
                              else Seq.empty)
   )
+
+  lazy val parserc = Def.settings {
+    libraryDependencies ++= Seq(
+      "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parserc
+    )
+  }
 
   lazy val coreJS = Def.settings {
     libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % version.scalaJavaTime
