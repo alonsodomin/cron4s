@@ -18,6 +18,7 @@ package cron4s
 
 import scala.util.Try
 
+@FunctionalInterface
 trait Parser {
   def parse(e: String): Either[Error, CronExpr]
 }
