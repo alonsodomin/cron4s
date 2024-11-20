@@ -407,7 +407,7 @@ lazy val testkit =
     .jvmSettings(Dependencies.coreJVM)
     .jvmSettings(mimaSettings("testkit"))
     .nativeSettings(Dependencies.coreNative)
-    .dependsOn(core, parserc)
+    .dependsOn(core, atto, parserc)
 
 lazy val tests = (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("tests"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)

@@ -89,8 +89,11 @@ object CronSpec extends TableDrivenPropertyChecks {
 
 }
 
-class CronSpec extends AnyFlatSpec with Matchers {
+trait CronSpec extends Matchers { this: AnyFlatSpec =>
   import CronSpec._
+
+  def parser: cron4s.Parser
+  def cron: CronImpl = new CronImpl(parser)
 
   "Cron" should "not parse an invalid expression" in {
     val _ =
@@ -112,10 +115,19 @@ class CronSpec extends AnyFlatSpec with Matchers {
   it should "parse a valid expression" in {
     val exprStr = ValidExpr.toString
 
-    Cron(exprStr) shouldBe Right(ValidExpr)
+    cron(exprStr) shouldBe Right(ValidExpr)
 
-    Cron.tryParse(exprStr) shouldBe Success(ValidExpr)
+    cron.tryParse(exprStr) shouldBe Success(ValidExpr)
 
-    Cron.unsafeParse(exprStr) shouldBe ValidExpr
+    cron.unsafeParse(exprStr) shouldBe ValidExpr
   }
+
+}
+
+class ParserCombinatorsCronSpec extends AnyFlatSpec with CronSpec {
+  def parser = parsing.parse
+}
+
+class AttoCronSpec extends AnyFlatSpec with CronSpec {
+  def parser = atto.Parser
 }
