@@ -16,6 +16,7 @@
 
 package cron4s
 
+import _root_.atto.{Parser => AttoParser}
 import _root_.atto._
 import Atto._
 import cats.implicits._
@@ -25,7 +26,7 @@ package object atto {
   import CronField._
   import CronUnit._
 
-  private def oneOrTwoDigitsPositiveInt: Parser[Int] = {
+  private def oneOrTwoDigitsPositiveInt: AttoParser[Int] = {
 
     val getDigits = for {
       d1 <- digit
@@ -43,16 +44,16 @@ package object atto {
     )
   } namedOpaque "oneOrTwoDigitsPositiveInt"
 
-  private val sexagesimal: Parser[Int] = oneOrTwoDigitsPositiveInt.filter(x => x >= 0 && x < 60)
+  private val sexagesimal: AttoParser[Int] = oneOrTwoDigitsPositiveInt.filter(x => x >= 0 && x < 60)
 
-  private val literal: Parser[String] = takeWhile1(x => x != ' ' && x != '-')
+  private val literal: AttoParser[String] = takeWhile1(x => x != ' ' && x != '-')
 
-  private val hyphen: Parser[Char]       = elem(_ == '-', "hyphen")
-  private val comma: Parser[Char]        = elem(_ == ',', "comma")
-  private val slash: Parser[Char]        = elem(_ == '/', "slash")
-  private val asterisk: Parser[Char]     = elem(_ == '*', "asterisk")
-  private val questionMark: Parser[Char] = elem(_ == '?', "question-mark")
-  private val blank: Parser[Char]        = elem(_ == ' ', "blank")
+  private val hyphen: AttoParser[Char]       = elem(_ == '-', "hyphen")
+  private val comma: AttoParser[Char]        = elem(_ == ',', "comma")
+  private val slash: AttoParser[Char]        = elem(_ == '/', "slash")
+  private val asterisk: AttoParser[Char]     = elem(_ == '*', "asterisk")
+  private val questionMark: AttoParser[Char] = elem(_ == '?', "question-mark")
+  private val blank: AttoParser[Char]        = elem(_ == ' ', "blank")
 
   // ----------------------------------------
   // Individual Expression Atoms
@@ -60,22 +61,22 @@ package object atto {
 
   // Seconds
 
-  val seconds: Parser[ConstNode[Second]] =
+  val seconds: AttoParser[ConstNode[Second]] =
     sexagesimal.map(ConstNode[Second](_))
 
   // Minutes
 
-  val minutes: Parser[ConstNode[Minute]] =
+  val minutes: AttoParser[ConstNode[Minute]] =
     sexagesimal.map(ConstNode[Minute](_))
 
   // Hours
 
-  val hours: Parser[ConstNode[Hour]] =
+  val hours: AttoParser[ConstNode[Hour]] =
     oneOrTwoDigitsPositiveInt.filter(x => (x >= 0) && (x < 24)).map(ConstNode[Hour](_))
 
   // Days Of Month
 
-  val daysOfMonth: Parser[ConstNode[DayOfMonth]] =
+  val daysOfMonth: AttoParser[ConstNode[DayOfMonth]] =
     oneOrTwoDigitsPositiveInt.filter(x => (x >= 1) && (x <= 31)).map(ConstNode[DayOfMonth](_))
 
   // Months
@@ -89,7 +90,7 @@ package object atto {
       ConstNode[Month](index + 1, Some(value))
     }
 
-  val months: Parser[ConstNode[Month]] =
+  val months: AttoParser[ConstNode[Month]] =
     textualMonths | numericMonths
 
   // Days Of Week
@@ -103,31 +104,31 @@ package object atto {
       ConstNode[DayOfWeek](index, Some(value))
     }
 
-  val daysOfWeek: Parser[ConstNode[DayOfWeek]] =
+  val daysOfWeek: AttoParser[ConstNode[DayOfWeek]] =
     textualDaysOfWeek | numericDaysOfWeek
 
   // ----------------------------------------
   // Field-Based Expression Atoms
   // ----------------------------------------
 
-  def each[F <: CronField](implicit unit: CronUnit[F]): Parser[EachNode[F]] =
+  def each[F <: CronField](implicit unit: CronUnit[F]): AttoParser[EachNode[F]] =
     asterisk.as(EachNode[F])
 
-  def any[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyNode[F]] =
+  def any[F <: CronField](implicit unit: CronUnit[F]): AttoParser[AnyNode[F]] =
     questionMark.as(AnyNode[F])
 
-  def between[F <: CronField](base: Parser[ConstNode[F]])(implicit
+  def between[F <: CronField](base: AttoParser[ConstNode[F]])(implicit
       unit: CronUnit[F]
-  ): Parser[BetweenNode[F]] =
+  ): AttoParser[BetweenNode[F]] =
     for {
       min <- base <~ hyphen
       max <- base
     } yield BetweenNode[F](min, max)
 
-  def several[F <: CronField](base: Parser[ConstNode[F]])(implicit
+  def several[F <: CronField](base: AttoParser[ConstNode[F]])(implicit
       unit: CronUnit[F]
-  ): Parser[SeveralNode[F]] = {
-    def compose(b: => Parser[EnumerableNode[F]]) =
+  ): AttoParser[SeveralNode[F]] = {
+    def compose(b: => AttoParser[EnumerableNode[F]]) =
       sepBy(b, comma)
         .collect {
           case first :: second :: tail => SeveralNode(first, second, tail: _*)
@@ -136,10 +137,10 @@ package object atto {
     compose(between(base).map(between2Enumerable) | base.map(const2Enumerable))
   }
 
-  def every[F <: CronField](base: Parser[ConstNode[F]])(implicit
+  def every[F <: CronField](base: AttoParser[ConstNode[F]])(implicit
       unit: CronUnit[F]
-  ): Parser[EveryNode[F]] = {
-    def compose(b: => Parser[DivisibleNode[F]]) =
+  ): AttoParser[EveryNode[F]] = {
+    def compose(b: => AttoParser[DivisibleNode[F]]) =
       ((b <~ slash) ~ oneOrTwoDigitsPositiveInt.filter(_ > 0)).map {
         case (exp, freq) => EveryNode[F](exp, freq)
       }
@@ -155,18 +156,18 @@ package object atto {
   // AST Parsing & Building
   // ----------------------------------------
 
-  def field[F <: CronField](base: Parser[ConstNode[F]])(implicit
+  def field[F <: CronField](base: AttoParser[ConstNode[F]])(implicit
       unit: CronUnit[F]
-  ): Parser[FieldNode[F]] =
+  ): AttoParser[FieldNode[F]] =
     every(base).map(every2Field) |
       several(base).map(several2Field) |
       between(base).map(between2Field) |
       base.map(const2Field) |
       each[F].map(each2Field)
 
-  def fieldWithAny[F <: CronField](base: Parser[ConstNode[F]])(implicit
+  def fieldWithAny[F <: CronField](base: AttoParser[ConstNode[F]])(implicit
       unit: CronUnit[F]
-  ): Parser[FieldNodeWithAny[F]] =
+  ): AttoParser[FieldNodeWithAny[F]] =
     every(base).map(every2FieldWithAny) |
       several(base).map(several2FieldWithAny) |
       between(base).map(between2FieldWithAny) |
@@ -174,7 +175,7 @@ package object atto {
       each[F].map(each2FieldWithAny) |
       any[F].map(any2FieldWithAny)
 
-  val cron: Parser[CronExpr] = for {
+  val cron: AttoParser[CronExpr] = for {
     sec     <- field(seconds) <~ blank
     min     <- field(minutes) <~ blank
     hour    <- field(hours) <~ blank
