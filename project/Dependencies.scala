@@ -46,6 +46,12 @@ object Dependencies {
     )
   }
 
+  lazy val atto = Def.settings {
+    libraryDependencies ++= Seq(
+      "org.tpolecat" %% "atto-core" % version.atto
+    )
+  }
+
   lazy val coreJS = Def.settings {
     libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % version.scalaJavaTime
   }
@@ -72,12 +78,6 @@ object Dependencies {
     libraryDependencies ++= Seq(
       "joda-time" % "joda-time"    % version.jodaTime,
       "org.joda"  % "joda-convert" % version.jodaConvert
-    )
-  }
-
-  lazy val bench = Def.settings {
-    libraryDependencies ++= Seq(
-      "org.tpolecat" %% "atto-core" % version.atto
     )
   }
 

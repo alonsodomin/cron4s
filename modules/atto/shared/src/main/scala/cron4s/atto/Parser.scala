@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package cron4s
+package cron4s.atto
 
-import _root_.atto.{Parser => AttoParser}
-import _root_.atto._
-import Atto._
+import _root_.atto.{Parser => AttoParser, _}
+import atto.Atto._
 import cats.implicits._
+import cron4s.CronField._
+import cron4s.CronUnit._
+import cron4s._
 import cron4s.expr._
 
-package object atto {
-  import CronField._
-  import CronUnit._
+object Parser extends cron4s.Parser {
 
   private def oneOrTwoDigitsPositiveInt: AttoParser[Int] = {
 
