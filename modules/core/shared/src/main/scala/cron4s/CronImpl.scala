@@ -18,11 +18,6 @@ package cron4s
 
 import scala.util.Try
 
-@FunctionalInterface
-trait Parser {
-  def parse(e: String): Either[Error, CronExpr]
-}
-
 private[cron4s] class CronImpl(parser: Parser) {
 
   /**
@@ -45,7 +40,7 @@ private[cron4s] class CronImpl(parser: Parser) {
     */
   @inline
   def parse(e: String): Either[Error, CronExpr] =
-    parser.parse(e).flatMap(validation.validateCron)
+    parser(e).flatMap(validation.validateCron)
 
   /**
     * Parses the given cron expression into a cron AST using Try as return type
