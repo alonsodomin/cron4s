@@ -139,7 +139,7 @@ class ParserCombinatorsCronSpec extends AnyFlatSpec with CronSpec {
 }
 
 class AttoCronSpec extends AnyFlatSpec with CronSpec {
-  def parser = atto.Parser
+  def parser = atto.parser
 }
 
 class CronParserComparisonSpec extends AnyFlatSpec with Matchers {
@@ -147,7 +147,7 @@ class CronParserComparisonSpec extends AnyFlatSpec with Matchers {
 
   "Parser-Combinators and Atto parsers" should "parse valid expressions with the same result" in {
     forAll(CronSpec.validExpressions) { expr =>
-      parsing.parse(expr) shouldBe atto.Parser.parse(expr)
+      parsing.parse(expr) shouldBe atto.parser(expr)
     }
   }
 }

@@ -24,7 +24,7 @@ import cron4s.CronUnit._
 import cron4s._
 import cron4s.expr._
 
-object Parser extends cron4s.Parser {
+private object Parser {
 
   private def oneOrTwoDigitsPositiveInt: AttoParser[Int] = {
 
