@@ -146,7 +146,7 @@ class CronParserComparisonSpec extends AnyFlatSpec with Matchers {
   import CronSpec._
 
   "Parser-Combinators and Atto parsers" should "parse valid expressions with the same result" in {
-    forAll(CronSpec.validExpressions) { expr: String =>
+    forAll(CronSpec.validExpressions) { expr =>
       parsing.parse(expr) shouldBe atto.Parser.parse(expr)
     }
   }
