@@ -375,6 +375,22 @@ lazy val parserc =
     .nativeSettings(Dependencies.coreNative)
     .dependsOn(core)
 
+lazy val atto = (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("modules/atto"))
+  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
+  .settings(
+    name       := "atto",
+    moduleName := "cron4s-atto"
+  )
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(Dependencies.atto)
+  .jsSettings(commonJsSettings)
+  .jsSettings(Dependencies.coreJS)
+  .jvmSettings(commonJvmSettings)
+  .jvmSettings(Dependencies.coreJVM)
+  .nativeSettings(Dependencies.coreNative)
+  .dependsOn(core)
+
 lazy val testkit =
   (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("modules/testkit"))
     .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
@@ -416,9 +432,8 @@ lazy val bench = (project in file("bench"))
   .settings(commonSettings)
   .settings(noPublishSettings)
   .settings(commonJvmSettings)
-  .settings(Dependencies.bench)
   .enablePlugins(JmhPlugin)
-  .dependsOn(core.jvm, parserc.jvm)
+  .dependsOn(core.jvm, atto.jvm, parserc.jvm)
 
 // =================================================================================
 // DateTime library extensions
