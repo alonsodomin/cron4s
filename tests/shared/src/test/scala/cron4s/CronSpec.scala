@@ -87,6 +87,16 @@ object CronSpec extends TableDrivenPropertyChecks {
     AnyNode[DayOfWeek]
   )
 
+  val validExpressions = Table(
+    "expression",
+    "* 5 4 * * *",
+    "* 0 0,12 1 */2 *",
+    "* 5 4 * * sun",
+    "* 0 0,12 1 */2 *",
+    "0 0,5,10,15,20,25,30,35,40,45,50,55 * * * *",
+    "0 1 2-4 * 4,5,6 */3",
+    "1 5 4 * * mon-2,sun"
+  )
 }
 
 trait CronSpec extends Matchers { this: AnyFlatSpec =>
@@ -130,4 +140,14 @@ class ParserCombinatorsCronSpec extends AnyFlatSpec with CronSpec {
 
 class AttoCronSpec extends AnyFlatSpec with CronSpec {
   def parser = atto.Parser
+}
+
+class CronParserComparisonSpec extends AnyFlatSpec with Matchers {
+  import CronSpec._
+
+  "Parser-Combinators and Atto parsers" should "parse valid expressions with the same result" in {
+    forAll(CronSpec.validExpressions) { expr =>
+      parsing.parse(expr) shouldBe atto.Parser.parse(expr)
+    }
+  }
 }
