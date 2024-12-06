@@ -16,12 +16,8 @@
 
 package cron4s
 
-import scala.scalajs.js.annotation.JSExportTopLevel
+package object atto {
 
-/**
-  * The entry point for parsing cron expressions
-  *
-  * @author Antonio Alonso Dominguez
-  */
-@JSExportTopLevel("Cron")
-object Cron extends CronImpl(atto.parser)
+  val parser: Parser = atto.Parser.parse
+
+}
