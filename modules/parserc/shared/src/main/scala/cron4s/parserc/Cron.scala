@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package cron4s
+package cron4s.parserc
+
+import cron4s.{CronImpl, parsing}
 
 import scala.scalajs.js.annotation.JSExportTopLevel
 
@@ -23,5 +25,5 @@ import scala.scalajs.js.annotation.JSExportTopLevel
   *
   * @author Antonio Alonso Dominguez
   */
-@JSExportTopLevel("Cron")
+@JSExportTopLevel("ParserCombinatorCron")
 object Cron extends CronImpl(parsing.parse)

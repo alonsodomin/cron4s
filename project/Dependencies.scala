@@ -48,7 +48,7 @@ object Dependencies {
 
   lazy val atto = Def.settings {
     libraryDependencies ++= Seq(
-      "org.tpolecat" %% "atto-core" % version.atto
+      "org.tpolecat" %%% "atto-core" % version.atto
     )
   }
 
