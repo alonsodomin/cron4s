@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import cron4s.syntax.AllSyntax
-import cron4s.expr.NodeConversions
+package cron4s
 
-package object cron4s extends AllSyntax with NodeConversions {
-  type CronExpr = expr.CronExpr
+import org.scalatest.flatspec.AnyFlatSpec
+
+class ParserCombinatorsCronSpec extends AnyFlatSpec with CronSpec {
+  def parser = parsing.parse
 }
