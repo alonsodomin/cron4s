@@ -60,7 +60,7 @@ object Dependencies {
     libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.1.0" % Provided
   }
 
-  lazy val coreNative = coreJS ++ coreJVM
+  lazy val coreNative = coreJS ++ coreJVM ++ parserc
 
   lazy val testkit = Def.settings {
     libraryDependencies ++= Seq(

@@ -133,21 +133,3 @@ trait CronSpec extends Matchers { this: AnyFlatSpec =>
   }
 
 }
-
-class ParserCombinatorsCronSpec extends AnyFlatSpec with CronSpec {
-  def parser = parsing.parse
-}
-
-class AttoCronSpec extends AnyFlatSpec with CronSpec {
-  def parser = atto.parser
-}
-
-class CronParserComparisonSpec extends AnyFlatSpec with Matchers {
-  import CronSpec._
-
-  "Parser-Combinators and Atto parsers" should "parse valid expressions with the same result" in {
-    forAll(CronSpec.validExpressions) { expr =>
-      parsing.parse(expr) shouldBe atto.parser(expr)
-    }
-  }
-}
