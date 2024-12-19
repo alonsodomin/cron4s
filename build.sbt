@@ -279,10 +279,10 @@ lazy val cron4sJS = (project in file(".js"))
   .settings(commonJsSettings: _*)
   .settings(noPublishSettings)
   .enablePlugins(ScalaJSPlugin)
-  .aggregate(core.js, kernel.js, atto.js, momentjs, circe.js, decline.js, testkit.js, tests.js)
+  .aggregate(core.js, parser.js, atto.js, momentjs, circe.js, decline.js, testkit.js, tests.js)
   .dependsOn(
     core.js,
-    kernel.js,
+    parser.js,
     atto.js,
     momentjs,
     circe.js,
@@ -301,7 +301,7 @@ lazy val cron4sJVM = (project in file(".jvm"))
   .settings(consoleSettings)
   .settings(noPublishSettings)
   .aggregate(
-    kernel.jvm,
+    parser.jvm,
     core.jvm,
     atto.jvm,
     joda,
@@ -357,11 +357,11 @@ lazy val docs = project
 // Main modules
 // =================================================================================
 
-lazy val kernel = (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("modules/kernel"))
+lazy val parser = (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("modules/parser"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
   .settings(
-    name       := "kernel",
-    moduleName := "cron4s-kernel"
+    name       := "parser",
+    moduleName := "cron4s-parser"
   )
   .settings(commonSettings)
   .settings(publishSettings)
@@ -371,7 +371,7 @@ lazy val kernel = (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file
   .jvmSettings(commonJvmSettings)
   .jvmSettings(consoleSettings)
   .jvmSettings(Dependencies.coreJVM)
-  .jvmSettings(mimaSettings("kernel"))
+  .jvmSettings(mimaSettings("parser"))
   .nativeSettings(Dependencies.coreNative)
 
 lazy val core = (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("modules/core"))
@@ -393,7 +393,7 @@ lazy val core = (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("
   .jvmConfigure(_.dependsOn(atto.jvm))
   .nativeSettings(Dependencies.coreNative)
   .nativeConfigure(_.dependsOn(parserc.native))
-  .dependsOn(kernel)
+  .dependsOn(parser)
 
 lazy val parserc =
   (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("modules/parserc"))
@@ -410,7 +410,7 @@ lazy val parserc =
     .jvmSettings(commonJvmSettings)
     .jvmSettings(Dependencies.coreJVM)
     .nativeSettings(Dependencies.coreNative)
-    .dependsOn(kernel)
+    .dependsOn(parser)
 
 lazy val atto = (crossProject(JSPlatform, JVMPlatform) in file("modules/atto"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
@@ -425,7 +425,7 @@ lazy val atto = (crossProject(JSPlatform, JVMPlatform) in file("modules/atto"))
   .jsSettings(Dependencies.coreJS)
   .jvmSettings(commonJvmSettings)
   .jvmSettings(Dependencies.coreJVM)
-  .dependsOn(kernel)
+  .dependsOn(parser)
 
 lazy val testkit =
   (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("modules/testkit"))

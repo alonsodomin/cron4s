@@ -17,11 +17,13 @@
 package cron4s
 package parsing
 
+import cron4s.parser.{ExprTooShort, ParseFailed}
+
 import scala.util.parsing.combinator.Parsers
-import scala.util.parsing.input.{Position, NoPosition}
+import scala.util.parsing.input.{NoPosition, Position}
 
 private[parsing] trait BaseParser extends Parsers {
-  protected def handleError(err: NoSuccess): _root_.cron4s.Error =
+  protected def handleError(err: NoSuccess): _root_.cron4s.parser.Error =
     err.next.pos match {
       case NoPosition => ExprTooShort
       case pos: Position =>

@@ -16,6 +16,8 @@
 
 package cron4s
 
+import cron4s.parser.Parser
+
 import scala.util.Try
 
 private[cron4s] class CronImpl(parser: Parser) {
@@ -40,7 +42,7 @@ private[cron4s] class CronImpl(parser: Parser) {
     */
   @inline
   def parse(e: String): Either[Error, CronExpr] =
-    parser(e).flatMap(validation.validateCron)
+    ParserAdapter.adapt(parser)(e).flatMap(validation.validateCron)
 
   /**
     * Parses the given cron expression into a cron AST using Try as return type

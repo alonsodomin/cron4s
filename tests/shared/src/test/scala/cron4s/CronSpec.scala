@@ -102,7 +102,7 @@ object CronSpec extends TableDrivenPropertyChecks {
 trait CronSpec extends Matchers { this: AnyFlatSpec =>
   import CronSpec._
 
-  def parser: cron4s.Parser
+  def parser: cron4s.parser.Parser
   def cron: CronImpl = new CronImpl(parser)
 
   "Cron" should "not parse an invalid expression" in {
