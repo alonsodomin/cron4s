@@ -24,4 +24,4 @@ import scala.scalajs.js.annotation.JSExportTopLevel
   * @author Antonio Alonso Dominguez
   */
 @JSExportTopLevel("Cron")
-object Cron extends CronImpl(atto.parser)
+object Cron extends CronImpl(atto.Parser)

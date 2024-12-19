@@ -19,12 +19,11 @@ package cron4s.atto
 import _root_.atto.{Parser => AttoParser, _}
 import atto.Atto._
 import cats.implicits._
-import cron4s.CronField._
-import cron4s.CronUnit._
-import cron4s._
-import cron4s.expr._
 
-private object Parser {
+object Parser extends cron4s.parser.Parser {
+
+  import cron4s.parser._
+  import cron4s.parser.Node._
 
   private def oneOrTwoDigitsPositiveInt: AttoParser[Int] = {
 
@@ -60,122 +59,102 @@ private object Parser {
   // ----------------------------------------
 
   // Seconds
-
-  val seconds: AttoParser[ConstNode[Second]] =
-    sexagesimal.map(ConstNode[Second](_))
+  private val seconds: AttoParser[ConstNode] = sexagesimal.map(ConstNode(_))
 
   // Minutes
 
-  val minutes: AttoParser[ConstNode[Minute]] =
-    sexagesimal.map(ConstNode[Minute](_))
+  private val minutes: AttoParser[ConstNode] = sexagesimal.map(ConstNode(_))
 
   // Hours
 
-  val hours: AttoParser[ConstNode[Hour]] =
-    oneOrTwoDigitsPositiveInt.filter(x => (x >= 0) && (x < 24)).map(ConstNode[Hour](_))
+  private val hours: AttoParser[ConstNode] =
+    oneOrTwoDigitsPositiveInt.filter(x => (x >= 0) && (x < 24)).map(ConstNode(_))
 
   // Days Of Month
 
-  val daysOfMonth: AttoParser[ConstNode[DayOfMonth]] =
-    oneOrTwoDigitsPositiveInt.filter(x => (x >= 1) && (x <= 31)).map(ConstNode[DayOfMonth](_))
+  private val daysOfMonth: AttoParser[ConstNode] =
+    oneOrTwoDigitsPositiveInt.filter(x => (x >= 1) && (x <= 31)).map(ConstNode(_))
 
   // Months
 
-  private[this] val numericMonths =
-    oneOrTwoDigitsPositiveInt.filter(x => (x >= 0) && (x <= 12)).map(ConstNode[Month](_))
+  private[this] val numericMonths: AttoParser[ConstNode] =
+    oneOrTwoDigitsPositiveInt.filter(x => (x >= 0) && (x <= 12)).map(ConstNode(_))
 
-  private[this] val textualMonths =
+  private[this] val textualMonths: AttoParser[ConstNode] =
     literal.filter(Months.textValues.contains).map { value =>
       val index = Months.textValues.indexOf(value)
-      ConstNode[Month](index + 1, Some(value))
+      ConstNode(index + 1, Some(value))
     }
 
-  val months: AttoParser[ConstNode[Month]] =
+  private val months: AttoParser[ConstNode] =
     textualMonths | numericMonths
 
   // Days Of Week
 
-  private[this] val numericDaysOfWeek =
-    oneOrTwoDigitsPositiveInt.filter(x => (x >= 0) && (x <= 6)).map(ConstNode[DayOfWeek](_))
+  private[this] val numericDaysOfWeek: AttoParser[ConstNode] =
+    oneOrTwoDigitsPositiveInt.filter(x => (x >= 0) && (x <= 6)).map(ConstNode(_))
 
-  private[this] val textualDaysOfWeek =
+  private[this] val textualDaysOfWeek: AttoParser[ConstNode] =
     literal.filter(DaysOfWeek.textValues.contains).map { value =>
       val index = DaysOfWeek.textValues.indexOf(value)
-      ConstNode[DayOfWeek](index, Some(value))
+      ConstNode(index, Some(value))
     }
 
-  val daysOfWeek: AttoParser[ConstNode[DayOfWeek]] =
+  private val daysOfWeek: AttoParser[ConstNode] =
     textualDaysOfWeek | numericDaysOfWeek
 
   // ----------------------------------------
   // Field-Based Expression Atoms
   // ----------------------------------------
 
-  def each[F <: CronField](implicit unit: CronUnit[F]): AttoParser[EachNode[F]] =
-    asterisk.as(EachNode[F])
+  private def each: AttoParser[EachNode.type] = asterisk.as(EachNode)
 
-  def any[F <: CronField](implicit unit: CronUnit[F]): AttoParser[AnyNode[F]] =
-    questionMark.as(AnyNode[F])
+  private def any: AttoParser[AnyNode.type] = questionMark.as(AnyNode)
 
-  def between[F <: CronField](base: AttoParser[ConstNode[F]])(implicit
-      unit: CronUnit[F]
-  ): AttoParser[BetweenNode[F]] =
+  private def between(base: AttoParser[ConstNode]): AttoParser[BetweenNode] =
     for {
       min <- base <~ hyphen
       max <- base
-    } yield BetweenNode[F](min, max)
+    } yield BetweenNode(min, max)
 
-  def several[F <: CronField](base: AttoParser[ConstNode[F]])(implicit
-      unit: CronUnit[F]
-  ): AttoParser[SeveralNode[F]] = {
-    def compose(b: => AttoParser[EnumerableNode[F]]) =
+  private def several(base: AttoParser[ConstNode]): AttoParser[SeveralNode] = {
+    def compose(b: => AttoParser[EnumerableNode]) =
       sepBy(b, comma)
         .collect {
           case first :: second :: tail => SeveralNode(first, second, tail: _*)
         }
 
-    compose(between(base).map(between2Enumerable) | base.map(const2Enumerable))
+    compose(between(base) | base)
   }
 
-  def every[F <: CronField](base: AttoParser[ConstNode[F]])(implicit
-      unit: CronUnit[F]
-  ): AttoParser[EveryNode[F]] = {
-    def compose(b: => AttoParser[DivisibleNode[F]]) =
+  private def every(base: AttoParser[ConstNode]): AttoParser[EveryNode] = {
+    def compose(b: => AttoParser[DivisibleNode]) =
       ((b <~ slash) ~ oneOrTwoDigitsPositiveInt.filter(_ > 0)).map {
-        case (exp, freq) => EveryNode[F](exp, freq)
+        case (exp, freq) => EveryNode(exp, freq)
       }
-
-    compose(
-      several(base).map(several2Divisible) |
-        between(base).map(between2Divisible) |
-        each[F].map(each2Divisible)
-    )
+    compose(several(base) | between(base) | each)
   }
 
   // ----------------------------------------
   // AST Parsing & Building
   // ----------------------------------------
 
-  def field[F <: CronField](base: AttoParser[ConstNode[F]])(implicit
-      unit: CronUnit[F]
-  ): AttoParser[FieldNode[F]] =
-    every(base).map(every2Field) |
-      several(base).map(several2Field) |
-      between(base).map(between2Field) |
-      base.map(const2Field) |
-      each[F].map(each2Field)
+  private def field(base: AttoParser[ConstNode]): AttoParser[NodeWithoutAny] =
+    every(base) |
+      several(base) |
+      between(base) |
+      base |
+      each
 
-  def fieldWithAny[F <: CronField](base: AttoParser[ConstNode[F]])(implicit
-      unit: CronUnit[F]
-  ): AttoParser[FieldNodeWithAny[F]] =
-    every(base).map(every2FieldWithAny) |
-      several(base).map(several2FieldWithAny) |
-      between(base).map(between2FieldWithAny) |
-      base.map(const2FieldWithAny) |
-      each[F].map(each2FieldWithAny) |
-      any[F].map(any2FieldWithAny)
+  private def fieldWithAny(base: AttoParser[ConstNode]): AttoParser[Node] =
+    every(base) |
+      several(base) |
+      between(base) |
+      base |
+      each |
+      any
 
-  val cron: AttoParser[CronExpr] = for {
+  private val cron: AttoParser[CronExpr] = for {
     sec     <- field(seconds) <~ blank
     min     <- field(minutes) <~ blank
     hour    <- field(hours) <~ blank

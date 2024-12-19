@@ -38,8 +38,8 @@ class ParserBenchmark {
   var cronString: String = _
 
   @Benchmark
-  def parserCombinators() = parsing.parse(cronString)
+  def parserCombinators() = parsing.Parser.parse(cronString)
 
   @Benchmark
-  def attoParser() = atto.parser(cronString)
+  def attoParser() = atto.Parser.parse(cronString)
 }

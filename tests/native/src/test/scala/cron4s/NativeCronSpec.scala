@@ -19,5 +19,5 @@ package cron4s
 import org.scalatest.flatspec.AnyFlatSpec
 
 class ParserCombinatorsCronSpec extends AnyFlatSpec with CronSpec {
-  def parser = parsing.parse
+  def parser = parsing.Parser
 }

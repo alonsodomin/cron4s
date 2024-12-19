@@ -16,10 +16,18 @@
 
 package cron4s
 
+import cron4s.parser.CronExpr
+
 package object parsing {
-  private[cron4s] def parse(e: String): Either[Error, CronExpr] =
-    for {
-      tokens <- CronLexer.tokenize(e)
-      expr   <- CronParser.read(tokens)
-    } yield expr
+
+  object Parser extends cron4s.parser.Parser {
+
+    override def parse(input: String): Either[parser.Error, CronExpr] =
+      for {
+        tokens <- CronLexer.tokenize(input)
+        expr   <- CronParser.read(tokens)
+      } yield expr
+
+  }
+
 }
