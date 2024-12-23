@@ -87,10 +87,23 @@ object CronSpec extends TableDrivenPropertyChecks {
     AnyNode[DayOfWeek]
   )
 
+  val validExpressions = Table(
+    "expression",
+    "* 5 4 * * *",
+    "* 0 0,12 1 */2 *",
+    "* 5 4 * * sun",
+    "* 0 0,12 1 */2 *",
+    "0 0,5,10,15,20,25,30,35,40,45,50,55 * * * *",
+    "0 1 2-4 * 4,5,6 */3",
+    "1 5 4 * * mon-2,sun"
+  )
 }
 
-class CronSpec extends AnyFlatSpec with Matchers {
+trait CronSpec extends Matchers { this: AnyFlatSpec =>
   import CronSpec._
+
+  def parser: cron4s.parser.Parser
+  def cron: CronImpl = new CronImpl(parser)
 
   "Cron" should "not parse an invalid expression" in {
     val _ =
@@ -112,10 +125,11 @@ class CronSpec extends AnyFlatSpec with Matchers {
   it should "parse a valid expression" in {
     val exprStr = ValidExpr.toString
 
-    Cron(exprStr) shouldBe Right(ValidExpr)
+    cron(exprStr) shouldBe Right(ValidExpr)
 
-    Cron.tryParse(exprStr) shouldBe Success(ValidExpr)
+    cron.tryParse(exprStr) shouldBe Success(ValidExpr)
 
-    Cron.unsafeParse(exprStr) shouldBe ValidExpr
+    cron.unsafeParse(exprStr) shouldBe ValidExpr
   }
+
 }
