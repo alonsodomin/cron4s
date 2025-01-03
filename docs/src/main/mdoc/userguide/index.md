@@ -28,7 +28,7 @@ libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s-core" % "{{si
  * Month (1-12)
  * Day Of Week (0-6, where 0 is Monday)
 
-Textual values are also accepted for Day of Month (`"jan"`, `"feb"`, `"mar"`, `"apr"`, `"may"`, `"jun"`, `"jul"`, 
+Textual values are also accepted for Month (`"jan"`, `"feb"`, `"mar"`, `"apr"`, `"may"`, `"jun"`, `"jul"`, 
 `"ago"`, `"sep"`, `"oct"`, `"nov"`, `"dec"`) and Day of Week (`"mon"`, `"tue"`, `"wed"`, `"thu"`, `"fri"`, `"sat"`, 
 `"sun"`).
 
