@@ -24,9 +24,13 @@ libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s-core" % "{{si
  * Seconds
  * Minutes
  * Hour Of Day
- * Day Of Month
- * Month
- * Day Of Week
+ * Day Of Month (1-31)
+ * Month (1-12)
+ * Day Of Week (0-6, where 0 is Monday)
+
+Textual values are also accepted for Month (`"jan"`, `"feb"`, `"mar"`, `"apr"`, `"may"`, `"jun"`, `"jul"`, 
+`"ago"`, `"sep"`, `"oct"`, `"nov"`, `"dec"`) and Day of Week (`"mon"`, `"tue"`, `"wed"`, `"thu"`, `"fri"`, `"sat"`, 
+`"sun"`).
 
 To parse a cron expression into a type that we can work with we will use the `Cron` smart constructor:
 
