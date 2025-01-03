@@ -16,10 +16,23 @@
 
 package cron4s
 
-package object parsing {
-  private[cron4s] def parse(e: String): Either[Error, CronExpr] =
-    for {
-      tokens <- CronLexer.tokenize(e)
-      expr   <- CronParser.read(tokens)
-    } yield expr
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
+
+class ParserCombinatorsCronSpec extends AnyFlatSpec with CronSpec {
+  def parser = parsing.Parser
+}
+
+class AttoCronSpec extends AnyFlatSpec with CronSpec {
+  def parser = atto.Parser
+}
+
+class CronParserComparisonSpec extends AnyFlatSpec with Matchers {
+  import CronSpec._
+
+  "Parser-Combinators and Atto parsers" should "parse valid expressions with the same result" in {
+    forAll(CronSpec.validExpressions) { expr =>
+      parsing.Parser.parse(expr) shouldBe atto.Parser.parse(expr)
+    }
+  }
 }

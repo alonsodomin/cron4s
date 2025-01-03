@@ -91,7 +91,7 @@ object CronLexer extends RegexParsers with BaseParser {
       number | text | hyphen | slash | comma | asterisk | questionMark | blank
     )
 
-  def tokenize(expr: String): Either[_root_.cron4s.Error, List[CronToken]] =
+  def tokenize(expr: String): Either[_root_.cron4s.parser.Error, List[CronToken]] =
     parse(tokens, expr) match {
       case err: NoSuccess     => Left(handleError(err))
       case Success(result, _) => Right(result)

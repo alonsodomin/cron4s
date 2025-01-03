@@ -16,16 +16,11 @@
 
 package cron4s
 
-import scala.scalajs.js.annotation.JSExportTopLevel
+import cron4s.parser.Parser
+
 import scala.util.Try
 
-/**
-  * The entry point for parsing cron expressions
-  *
-  * @author Antonio Alonso Dominguez
-  */
-@JSExportTopLevel("Cron")
-object Cron {
+private[cron4s] class CronImpl(parser: Parser) {
 
   /**
     * Parses the given cron expression into a cron AST using Either as return type. This is a short-hand for
@@ -47,7 +42,7 @@ object Cron {
     */
   @inline
   def parse(e: String): Either[Error, CronExpr] =
-    parsing.parse(e).flatMap(validation.validateCron)
+    ParserAdapter.adapt(parser)(e).flatMap(validation.validateCron)
 
   /**
     * Parses the given cron expression into a cron AST using Try as return type
