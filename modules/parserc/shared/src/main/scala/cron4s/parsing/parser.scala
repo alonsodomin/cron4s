@@ -17,7 +17,7 @@
 package cron4s
 package parsing
 
-import cron4s.expr._
+import cron4s.parser._
 
 import scala.util.parsing.input._
 import scala.util.parsing.combinator._
@@ -31,8 +31,7 @@ class CronTokenReader(tokens: List[CronToken]) extends Reader[CronToken] {
 }
 
 object CronParser extends Parsers with BaseParser {
-  import CronField._
-  import CronUnit._
+  import Node._
   import CronToken._
 
   override type Elem = CronToken
@@ -55,115 +54,94 @@ object CronParser extends Parsers with BaseParser {
 
   // Seconds
 
-  val seconds: Parser[ConstNode[Second]] =
-    sexagesimal.map(ConstNode[Second](_))
+  val seconds: Parser[ConstNode] = sexagesimal.map(ConstNode(_))
 
   // Minutes
 
-  val minutes: Parser[ConstNode[Minute]] =
-    sexagesimal.map(ConstNode[Minute](_))
+  val minutes: Parser[ConstNode] = sexagesimal.map(ConstNode(_))
 
   // Hours
 
-  val hours: Parser[ConstNode[Hour]] =
-    decimal.filter(x => (x >= 0) && (x < 24)).map(ConstNode[Hour](_))
+  val hours: Parser[ConstNode] = decimal.filter(x => (x >= 0) && (x < 24)).map(ConstNode(_))
 
   // Days Of Month
 
-  val daysOfMonth: Parser[ConstNode[DayOfMonth]] =
-    decimal.filter(x => (x >= 1) && (x <= 31)).map(ConstNode[DayOfMonth](_))
+  val daysOfMonth: Parser[ConstNode] = decimal.filter(x => (x >= 1) && (x <= 31)).map(ConstNode(_))
 
   // Months
 
-  private[this] val numericMonths =
-    decimal.filter(_ <= 12).map(ConstNode[Month](_))
+  private[this] val numericMonths = decimal.filter(_ <= 12).map(ConstNode(_))
 
   private[this] val textualMonths =
     literal.filter(Months.textValues.contains).map { value =>
       val index = Months.textValues.indexOf(value)
-      ConstNode[Month](index + 1, Some(value))
+      ConstNode(index + 1, Some(value))
     }
 
-  val months: Parser[ConstNode[Month]] =
+  val months: Parser[ConstNode] =
     textualMonths | numericMonths
 
   // Days Of Week
 
   private[this] val numericDaysOfWeek =
-    decimal.filter(_ < 7).map(ConstNode[DayOfWeek](_))
+    decimal.filter(_ < 7).map(ConstNode(_))
 
   private[this] val textualDaysOfWeek =
     literal.filter(DaysOfWeek.textValues.contains).map { value =>
       val index = DaysOfWeek.textValues.indexOf(value)
-      ConstNode[DayOfWeek](index, Some(value))
+      ConstNode(index, Some(value))
     }
 
-  val daysOfWeek: Parser[ConstNode[DayOfWeek]] =
+  val daysOfWeek: Parser[ConstNode] =
     textualDaysOfWeek | numericDaysOfWeek
 
   // ----------------------------------------
   // Field-Based Expression Atoms
   // ----------------------------------------
 
-  def each[F <: CronField](implicit unit: CronUnit[F]): Parser[EachNode[F]] =
-    accept("*", { case Asterisk => EachNode[F] })
+  def each: Parser[EachNode.type] = accept("*", { case Asterisk => EachNode })
 
-  def any[F <: CronField](implicit unit: CronUnit[F]): Parser[AnyNode[F]] =
-    accept("?", { case QuestionMark => AnyNode[F] })
+  def any: Parser[AnyNode.type] = accept("?", { case QuestionMark => AnyNode })
 
-  def between[F <: CronField](base: Parser[ConstNode[F]])(implicit
-      unit: CronUnit[F]
-  ): Parser[BetweenNode[F]] =
-    ((base <~ Hyphen) ~ base) ^^ { case min ~ max => BetweenNode[F](min, max) }
+  def between(base: Parser[ConstNode]): Parser[BetweenNode] =
+    ((base <~ Hyphen) ~ base) ^^ { case min ~ max => BetweenNode(min, max) }
 
-  def several[F <: CronField](base: Parser[ConstNode[F]])(implicit
-      unit: CronUnit[F]
-  ): Parser[SeveralNode[F]] = {
-    def compose(b: Parser[EnumerableNode[F]]) =
+  def several(base: Parser[ConstNode]): Parser[SeveralNode] = {
+    def compose(b: Parser[EnumerableNode]) =
       repsep(b, Comma)
         .filter(_.length > 1)
-        .map(values => SeveralNode.fromSeq[F](values).get)
+        .map(values => SeveralNode.fromSeq(values).get)
 
-    compose(between(base).map(between2Enumerable) | base.map(const2Enumerable))
+    compose(between(base) | base)
   }
 
-  def every[F <: CronField](base: Parser[ConstNode[F]])(implicit
-      unit: CronUnit[F]
-  ): Parser[EveryNode[F]] = {
-    def compose(b: Parser[DivisibleNode[F]]) =
+  def every(base: Parser[ConstNode]): Parser[EveryNode] = {
+    def compose(b: Parser[DivisibleNode]) =
       ((b <~ Slash) ~ decimal.filter(_ > 0)) ^^ {
-        case exp ~ freq => EveryNode[F](exp, freq)
+        case exp ~ freq => EveryNode(exp, freq)
       }
 
-    compose(
-      several(base).map(several2Divisible) |
-        between(base).map(between2Divisible) |
-        each[F].map(each2Divisible)
-    )
+    compose(several(base) | between(base) | each)
   }
 
   // ----------------------------------------
   // AST Parsing & Building
   // ----------------------------------------
 
-  def field[F <: CronField](base: Parser[ConstNode[F]])(implicit
-      unit: CronUnit[F]
-  ): Parser[FieldNode[F]] =
-    every(base).map(every2Field) |
-      several(base).map(several2Field) |
-      between(base).map(between2Field) |
-      base.map(const2Field) |
-      each[F].map(each2Field)
+  def field(base: Parser[ConstNode]): Parser[NodeWithoutAny] =
+    every(base) |
+      several(base) |
+      between(base) |
+      base |
+      each
 
-  def fieldWithAny[F <: CronField](base: Parser[ConstNode[F]])(implicit
-      unit: CronUnit[F]
-  ): Parser[FieldNodeWithAny[F]] =
-    every(base).map(every2FieldWithAny) |
-      several(base).map(several2FieldWithAny) |
-      between(base).map(between2FieldWithAny) |
-      base.map(const2FieldWithAny) |
-      each[F].map(each2FieldWithAny) |
-      any[F].map(any2FieldWithAny)
+  def fieldWithAny(base: Parser[ConstNode]): Parser[Node] =
+    every(base) |
+      several(base) |
+      between(base) |
+      base |
+      each |
+      any
 
   val cron: Parser[CronExpr] = {
     phrase(
@@ -179,7 +157,7 @@ object CronParser extends Parsers with BaseParser {
     }
   }
 
-  def read(tokens: List[CronToken]): Either[_root_.cron4s.Error, CronExpr] = {
+  def read(tokens: List[CronToken]): Either[_root_.cron4s.parser.Error, CronExpr] = {
     val reader = new CronTokenReader(tokens)
     cron(reader) match {
       case err: NoSuccess   => Left(handleError(err))
