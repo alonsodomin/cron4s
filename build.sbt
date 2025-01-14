@@ -64,7 +64,7 @@ val commonSettings = Def.settings(
   scalacOptions ++= (if (scalaVersion.value.startsWith("2.")) {
                        Seq(
                          "-Xlint:-unused,_"
-                       ),
+                       )
                      } else
                        Seq(
                          "-Wunused:imports",
