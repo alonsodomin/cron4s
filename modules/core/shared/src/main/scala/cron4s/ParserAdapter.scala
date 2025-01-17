@@ -16,7 +16,7 @@
 
 package cron4s
 
-object ParserAdapter {
+private[cron4s] object ParserAdapter {
 
   import cron4s.parser._
   import cron4s.parser.Node._
