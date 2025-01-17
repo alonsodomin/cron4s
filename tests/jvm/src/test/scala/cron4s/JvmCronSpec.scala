@@ -34,9 +34,8 @@ class AttoCronSpec extends AnyFlatSpec with CronSpec {
 class CronParserComparisonSpec extends AnyFlatSpec with Matchers {
   import CronSpec._
 
-  "Parser-Combinators and Atto parsers" should "parse valid expressions with the same result" in {
+  "Parser-Combinators and Atto parsers" should "parse valid expressions with the same result" in
     forAll(CronSpec.validExpressions) { expr =>
       parsing.Parser.parse(expr) shouldBe atto.Parser.parse(expr)
     }
-  }
 }
