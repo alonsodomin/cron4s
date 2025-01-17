@@ -16,10 +16,20 @@
 
 package cron4s
 
-package object parsing {
-  private[cron4s] def parse(e: String): Either[Error, CronExpr] =
-    for {
-      tokens <- CronLexer.tokenize(e)
-      expr   <- CronParser.read(tokens)
-    } yield expr
+import cron4s.parser.Parser
+
+import scala.annotation.nowarn
+import scala.scalajs.js.annotation.JSExportTopLevel
+
+/**
+  * The entry point for parsing cron expressions
+  *
+  * @author Antonio Alonso Dominguez
+  */
+@JSExportTopLevel("Cron")
+@nowarn("cat=deprecation")
+object Cron extends CronImpl(parsing.Parser) {
+
+  def withParser(parser: Parser): CronImpl = new CronImpl(parser)
+
 }

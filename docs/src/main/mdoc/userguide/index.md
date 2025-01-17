@@ -102,3 +102,26 @@ a `NonEmptyList` with all the validation errors that the expression had. To demo
 ```scala mdoc
 failsValidation.swap.foreach { err => err.asInstanceOf[InvalidCron].reason.toList.mkString("\n") }
 ```
+
+## Using a specific parser implementation
+
+Cron4s has two parser implementation. Since 0.8.0, it uses the [Atto](https://tpolecat.github.io/atto/) implementation
+by default for JS and JVM targets and [Scala Parser Combinators](https://github.com/scala/scala-parser-combinators)
+for Native.
+
+You can choose to use the Parser Combinators version by importing cron4s-parserc
+
+```scala
+libraryDependencies += "com.github.alonsodomin.cron4s" %%% "cron4s-parserc" % "{{site.cron4sVersion}}"
+```
+
+Then you need to specify the parser you want
+
+```scala mdoc:invisible
+import scala.annotation.nowarn
+```
+
+```scala mdoc:silent
+@nowarn("cat=deprecation")
+val parser = Cron.withParser(cron4s.parsing.Parser)
+```

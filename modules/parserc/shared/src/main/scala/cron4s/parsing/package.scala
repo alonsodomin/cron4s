@@ -15,21 +15,20 @@
  */
 
 package cron4s
-package parsing
 
-import scala.util.parsing.combinator.Parsers
-import scala.util.parsing.input.{Position, NoPosition}
+import cron4s.parser.CronExpr
 
-private[parsing] trait BaseParser extends Parsers {
-  protected def handleError(err: NoSuccess): _root_.cron4s.Error =
-    err.next.pos match {
-      case NoPosition => ExprTooShort
-      case pos: Position =>
-        val position = err.next.pos.column
-        val found = {
-          if (err.next.atEnd) None
-          else Option(err.next.first.toString).filter(_.nonEmpty)
-        }
-        ParseFailed(err.msg, position, found)
-    }
+package object parsing {
+
+  @deprecated(message = "Parser-Combinator parser in deprecated in favor of atto parser", since = "0.8.0")
+  object Parser extends cron4s.parser.Parser {
+
+    override def parse(input: String): Either[parser.Error, CronExpr] =
+      for {
+        tokens <- CronLexer.tokenize(input)
+        expr   <- CronParser.read(tokens)
+      } yield expr
+
+  }
+
 }

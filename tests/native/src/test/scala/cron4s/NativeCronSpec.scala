@@ -14,33 +14,13 @@
  * limitations under the License.
  */
 
-package cron4s.bench
+package cron4s
 
-import java.util.concurrent.TimeUnit
-import cron4s._
-import org.openjdk.jmh.annotations._
+import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.annotation.nowarn
 
-@State(Scope.Thread)
-@BenchmarkMode(Array(Mode.AverageTime))
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
-class ParserBenchmark {
-  @Param(
-    Array(
-      "10-35 2,4,6 * ? * *",
-      "* 5,10,15,20,25,30,35,40,45,50,55/2 * ? * mon-fri",
-      "10-65 * * * * *",
-      "* */10 5-10 ? * mon-fri",
-      "*/30 10,20,40 5-15,25-35/4 ? 1,3,7,oct-dec sun"
-    )
-  )
-  var cronString: String = _
-
+class ParserCombinatorsCronSpec extends AnyFlatSpec with CronSpec {
   @nowarn("cat=deprecation")
-  @Benchmark
-  def parserCombinators() = parsing.Parser.parse(cronString)
-
-  @Benchmark
-  def attoParser() = atto.Parser.parse(cronString)
+  def parser = parsing.Parser
 }
