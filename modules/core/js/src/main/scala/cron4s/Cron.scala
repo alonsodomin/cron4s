@@ -16,6 +16,8 @@
 
 package cron4s
 
+import cron4s.parser.Parser
+
 import scala.scalajs.js.annotation.JSExportTopLevel
 
 /**
@@ -24,4 +26,8 @@ import scala.scalajs.js.annotation.JSExportTopLevel
   * @author Antonio Alonso Dominguez
   */
 @JSExportTopLevel("Cron")
-object Cron extends CronImpl(atto.Parser)
+object Cron extends CronImpl(atto.Parser) {
+
+  def withParser(parser: Parser): CronImpl = new CronImpl(parser)
+
+}
