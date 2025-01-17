@@ -19,7 +19,10 @@ package cron4s
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
+import scala.annotation.nowarn
+
 class ParserCombinatorsCronSpec extends AnyFlatSpec with CronSpec {
+  @nowarn("cat=deprecation")
   def parser = parsing.Parser
 }
 
@@ -27,6 +30,7 @@ class AttoCronSpec extends AnyFlatSpec with CronSpec {
   def parser = atto.Parser
 }
 
+@nowarn("cat=deprecation")
 class CronParserComparisonSpec extends AnyFlatSpec with Matchers {
   import CronSpec._
 

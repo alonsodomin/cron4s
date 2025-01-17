@@ -16,6 +16,7 @@
 
 package cron4s
 
+import scala.annotation.nowarn
 import scala.scalajs.js.annotation.JSExportTopLevel
 
 /**
@@ -24,4 +25,5 @@ import scala.scalajs.js.annotation.JSExportTopLevel
   * @author Antonio Alonso Dominguez
   */
 @JSExportTopLevel("Cron")
+@nowarn("cat=deprecation")
 object Cron extends CronImpl(parsing.Parser)

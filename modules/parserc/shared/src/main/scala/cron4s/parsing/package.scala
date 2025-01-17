@@ -20,6 +20,7 @@ import cron4s.parser.CronExpr
 
 package object parsing {
 
+  @deprecated(message = "Parser-Combinator parser in deprecated in favor of atto parser", since = "0.8.0")
   object Parser extends cron4s.parser.Parser {
 
     override def parse(input: String): Either[parser.Error, CronExpr] =

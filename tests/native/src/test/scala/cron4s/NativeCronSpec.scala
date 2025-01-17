@@ -18,6 +18,9 @@ package cron4s
 
 import org.scalatest.flatspec.AnyFlatSpec
 
+import scala.annotation.nowarn
+
 class ParserCombinatorsCronSpec extends AnyFlatSpec with CronSpec {
+  @nowarn("cat=deprecation")
   def parser = parsing.Parser
 }

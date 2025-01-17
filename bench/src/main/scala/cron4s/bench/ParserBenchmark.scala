@@ -17,10 +17,10 @@
 package cron4s.bench
 
 import java.util.concurrent.TimeUnit
-
 import cron4s._
-
 import org.openjdk.jmh.annotations._
+
+import scala.annotation.nowarn
 
 @State(Scope.Thread)
 @BenchmarkMode(Array(Mode.AverageTime))
@@ -37,6 +37,7 @@ class ParserBenchmark {
   )
   var cronString: String = _
 
+  @nowarn("cat=deprecation")
   @Benchmark
   def parserCombinators() = parsing.Parser.parse(cronString)
 
