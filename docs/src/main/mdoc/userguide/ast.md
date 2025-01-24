@@ -162,8 +162,8 @@ assert(minutesRange.implies(fixedMinute) == fixedMinute.impliedBy(minutesRange))
 
 It's important to notice that when using either the `implies` or `impliedBy` operation, if the two nodes are not
 parameterized by the same field type, the code won't compile:
- 
-```scala mdoc:fail
+
+```scala //mdoc:fail disabled because it breaks mdoc
 minutesRange.implies(eachSecond)
 ```
 

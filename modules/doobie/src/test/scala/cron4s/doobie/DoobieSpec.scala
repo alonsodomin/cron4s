@@ -81,9 +81,8 @@ class DoobieSpec extends AnyFlatSpec with Matchers {
     loadedMeeting shouldBe standUpMeeting
   }
 
-  it should "throw a SecondaryValidationFailed in case the cron expression is invalid" in {
+  it should "throw a SecondaryValidationFailed in case the cron expression is invalid" in
     assertThrows[SecondaryValidationFailed[CronExpr]] {
       sql"select '0- 0 30 * * ?'".query[CronExpr].unique.transact(xa).unsafeRunSync()
     }
-  }
 }

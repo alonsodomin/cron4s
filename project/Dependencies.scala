@@ -33,13 +33,24 @@ object Dependencies {
 
   lazy val core = Def.settings(
     libraryDependencies ++= Seq(
-      "org.typelevel"          %%% "cats-core"                % version.cats.main,
-      "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parserc
+      "org.typelevel" %%% "cats-core" % version.cats.main
     ),
     libraryDependencies ++= (if (scalaVersion.value.startsWith("2."))
                                Seq("com.chuusai" %%% "shapeless" % version.shapeless)
                              else Seq.empty)
   )
+
+  lazy val parserc = Def.settings {
+    libraryDependencies ++= Seq(
+      "org.scala-lang.modules" %%% "scala-parser-combinators" % version.parserc
+    )
+  }
+
+  lazy val atto = Def.settings {
+    libraryDependencies ++= Seq(
+      "org.tpolecat" %%% "atto-core" % version.atto
+    )
+  }
 
   lazy val coreJS = Def.settings {
     libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % version.scalaJavaTime
@@ -49,7 +60,7 @@ object Dependencies {
     libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.1.0" % Provided
   }
 
-  lazy val coreNative = coreJS ++ coreJVM
+  lazy val coreNative = coreJS ++ coreJVM ++ parserc
 
   lazy val testkit = Def.settings {
     libraryDependencies ++= Seq(
@@ -67,12 +78,6 @@ object Dependencies {
     libraryDependencies ++= Seq(
       "joda-time" % "joda-time"    % version.jodaTime,
       "org.joda"  % "joda-convert" % version.jodaConvert
-    )
-  }
-
-  lazy val bench = Def.settings {
-    libraryDependencies ++= Seq(
-      "org.tpolecat" %% "atto-core" % version.atto
     )
   }
 

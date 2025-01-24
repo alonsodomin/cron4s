@@ -64,7 +64,7 @@ val commonSettings = Def.settings(
   scalacOptions ++= (if (scalaVersion.value.startsWith("2.")) {
                        Seq(
                          "-Xlint:-unused,_"
-                       ),
+                       )
                      } else
                        Seq(
                          "-Wunused:imports",
@@ -279,8 +279,17 @@ lazy val cron4sJS = (project in file(".js"))
   .settings(commonJsSettings: _*)
   .settings(noPublishSettings)
   .enablePlugins(ScalaJSPlugin)
-  .aggregate(core.js, momentjs, circe.js, decline.js, testkit.js, tests.js)
-  .dependsOn(core.js, momentjs, circe.js, decline.js, testkit.js, tests.js % Test)
+  .aggregate(core.js, parser.js, atto.js, momentjs, circe.js, decline.js, testkit.js, tests.js)
+  .dependsOn(
+    core.js,
+    parser.js,
+    atto.js,
+    momentjs,
+    circe.js,
+    decline.js,
+    testkit.js,
+    tests.js % Test
+  )
 
 lazy val cron4sJVM = (project in file(".jvm"))
   .settings(
@@ -291,8 +300,26 @@ lazy val cron4sJVM = (project in file(".jvm"))
   .settings(commonJvmSettings)
   .settings(consoleSettings)
   .settings(noPublishSettings)
-  .aggregate(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm)
-  .dependsOn(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm, tests.jvm % Test)
+  .aggregate(
+    parser.jvm,
+    core.jvm,
+    atto.jvm,
+    joda,
+    doobie,
+    circe.jvm,
+    decline.jvm,
+    testkit.jvm,
+    tests.jvm
+  )
+  .dependsOn(
+    core.jvm,
+    joda,
+    doobie,
+    circe.jvm,
+    decline.jvm,
+    testkit.jvm,
+    tests.jvm % Test
+  )
 
 lazy val cron4sNative = (project in file(".native"))
   .settings(
@@ -301,8 +328,20 @@ lazy val cron4sNative = (project in file(".native"))
   )
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .aggregate(core.native, circe.native, decline.native, testkit.native, tests.native)
-  .dependsOn(core.native, circe.native, decline.native, testkit.native, tests.native % Test)
+  .aggregate(
+    core.native,
+    circe.native,
+    decline.native,
+    testkit.native,
+    tests.native
+  )
+  .dependsOn(
+    core.native,
+    circe.native,
+    decline.native,
+    testkit.native,
+    tests.native % Test
+  )
 
 lazy val docs = project
   .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin, GhpagesPlugin)
@@ -312,11 +351,28 @@ lazy val docs = project
   .settings(commonSettings)
   .settings(noPublishSettings)
   .settings(docSettings)
-  .dependsOn(core.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm)
+  .dependsOn(core.jvm, parserc.jvm, joda, doobie, circe.jvm, decline.jvm, testkit.jvm)
 
 // =================================================================================
 // Main modules
 // =================================================================================
+
+lazy val parser = (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("modules/parser"))
+  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
+  .settings(
+    name       := "parser",
+    moduleName := "cron4s-parser"
+  )
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(Dependencies.core)
+  .jsSettings(commonJsSettings)
+  .jsSettings(Dependencies.coreJS)
+  .jvmSettings(commonJvmSettings)
+  .jvmSettings(consoleSettings)
+  .jvmSettings(Dependencies.coreJVM)
+  .jvmSettings(mimaSettings("parser"))
+  .nativeSettings(Dependencies.coreNative)
 
 lazy val core = (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("modules/core"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
@@ -329,11 +385,47 @@ lazy val core = (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("
   .settings(Dependencies.core)
   .jsSettings(commonJsSettings)
   .jsSettings(Dependencies.coreJS)
+  .jsConfigure(_.dependsOn(atto.js))
   .jvmSettings(commonJvmSettings)
   .jvmSettings(consoleSettings)
   .jvmSettings(Dependencies.coreJVM)
   .jvmSettings(mimaSettings("core"))
+  .jvmConfigure(_.dependsOn(atto.jvm))
   .nativeSettings(Dependencies.coreNative)
+  .nativeConfigure(_.dependsOn(parserc.native))
+  .dependsOn(parser)
+
+lazy val parserc =
+  (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("modules/parserc"))
+    .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
+    .settings(
+      name       := "parserc",
+      moduleName := "cron4s-parserc"
+    )
+    .settings(commonSettings)
+    .settings(publishSettings)
+    .settings(Dependencies.parserc)
+    .jsSettings(commonJsSettings)
+    .jsSettings(Dependencies.coreJS)
+    .jvmSettings(commonJvmSettings)
+    .jvmSettings(Dependencies.coreJVM)
+    .nativeSettings(Dependencies.coreNative)
+    .dependsOn(parser)
+
+lazy val atto = (crossProject(JSPlatform, JVMPlatform) in file("modules/atto"))
+  .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
+  .settings(
+    name       := "atto",
+    moduleName := "cron4s-atto"
+  )
+  .settings(commonSettings)
+  .settings(publishSettings)
+  .settings(Dependencies.atto)
+  .jsSettings(commonJsSettings)
+  .jsSettings(Dependencies.coreJS)
+  .jvmSettings(commonJvmSettings)
+  .jvmSettings(Dependencies.coreJVM)
+  .dependsOn(parser)
 
 lazy val testkit =
   (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("modules/testkit"))
@@ -351,7 +443,7 @@ lazy val testkit =
     .jvmSettings(Dependencies.coreJVM)
     .jvmSettings(mimaSettings("testkit"))
     .nativeSettings(Dependencies.coreNative)
-    .dependsOn(core)
+    .dependsOn(core, parserc)
 
 lazy val tests = (crossProject(JSPlatform, JVMPlatform, NativePlatform) in file("tests"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin)
@@ -376,9 +468,8 @@ lazy val bench = (project in file("bench"))
   .settings(commonSettings)
   .settings(noPublishSettings)
   .settings(commonJvmSettings)
-  .settings(Dependencies.bench)
   .enablePlugins(JmhPlugin)
-  .dependsOn(core.jvm)
+  .dependsOn(core.jvm, parserc.jvm)
 
 // =================================================================================
 // DateTime library extensions
@@ -432,7 +523,7 @@ lazy val circe =
     .jvmSettings(Dependencies.coreJVM)
     .jsSettings(commonJsSettings)
     .nativeSettings(Dependencies.coreNative)
-    .dependsOn(core, testkit % Test)
+    .dependsOn(core, parserc, testkit % Test)
 
 lazy val decline =
   (crossProject(JSPlatform, JVMPlatform, NativePlatform).crossType(CrossType.Pure) in file(
@@ -452,7 +543,7 @@ lazy val decline =
     .jvmSettings(Dependencies.coreJVM)
     .jsSettings(commonJsSettings)
     .nativeSettings(Dependencies.coreNative)
-    .dependsOn(core, testkit % Test)
+    .dependsOn(core, parserc, testkit % Test)
 
 lazy val doobie = (project in file("modules/doobie"))
   .enablePlugins(AutomateHeaderPlugin, ScalafmtPlugin, MimaPlugin)
@@ -467,7 +558,7 @@ lazy val doobie = (project in file("modules/doobie"))
   .settings(mimaSettings("doobie"))
   .settings(Dependencies.doobie)
   .settings(Dependencies.coreJVM)
-  .dependsOn(core.jvm, testkit.jvm % Test)
+  .dependsOn(core.jvm, parserc.jvm, testkit.jvm % Test)
 
 // =================================================================================
 // Utility command aliases

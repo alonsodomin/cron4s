@@ -1,5 +1,16 @@
 # Cron4s Change Log
 
+## 0.8.0
+
+Breaking changes:
+
+* In previous versions, Cron expression parsing was using [Scala Parser Combinators](https://github.com/scala/scala-parser-combinators).
+  Parsing is now achieved using [Atto library](https://tpolecat.github.io/atto/) by default on all targets except Native.
+  Both parsers should behave the same way and the API didn't change. They will be kept in sync for the time being.
+  In case you notice any change in behavior, please open an issue with your input.
+  You can always fall back to the Parser Combinator version by adding `cron4s-parserc` as a dependency of your project and
+  use `Cron.withParser(cron4s.parsing.Parser)` instead of `Cron` instance.
+
 ## 0.6.1
 
 Bug fixes

@@ -15,21 +15,21 @@
  */
 
 package cron4s
-package parsing
 
-import scala.util.parsing.combinator.Parsers
-import scala.util.parsing.input.{Position, NoPosition}
+import cron4s.parser.Parser
 
-private[parsing] trait BaseParser extends Parsers {
-  protected def handleError(err: NoSuccess): _root_.cron4s.Error =
-    err.next.pos match {
-      case NoPosition => ExprTooShort
-      case pos: Position =>
-        val position = err.next.pos.column
-        val found = {
-          if (err.next.atEnd) None
-          else Option(err.next.first.toString).filter(_.nonEmpty)
-        }
-        ParseFailed(err.msg, position, found)
-    }
+import scala.annotation.nowarn
+import scala.scalajs.js.annotation.JSExportTopLevel
+
+/**
+  * The entry point for parsing cron expressions
+  *
+  * @author Antonio Alonso Dominguez
+  */
+@JSExportTopLevel("Cron")
+@nowarn("cat=deprecation")
+object Cron extends CronImpl(parsing.Parser) {
+
+  def withParser(parser: Parser): CronImpl = new CronImpl(parser)
+
 }
