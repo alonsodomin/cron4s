@@ -26,12 +26,12 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 
 import scala.util.{Failure, Success}
 import org.scalatest.prop.TableFor3
+import CronField._
 
 /**
   * Created by alonsodomin on 12/04/2017.
   */
 object CronSpec extends TableDrivenPropertyChecks {
-  import CronField._
 
   final val AllEachExpr  = "* * * * * *"
   final val AnyDaysExpr  = "* * * ? * ?"
@@ -95,7 +95,8 @@ object CronSpec extends TableDrivenPropertyChecks {
     "* 0 0,12 1 */2 *",
     "0 0,5,10,15,20,25,30,35,40,45,50,55 * * * *",
     "0 1 2-4 * 4,5,6 */3",
-    "1 5 4 * * mon-2,sun"
+    "1 5 4 * * mon-2,sun",
+    "0 0 * ? * MON-WED,FRI-SUN"
   )
 }
 
@@ -132,4 +133,20 @@ trait CronSpec extends Matchers { this: AnyFlatSpec =>
     cron.unsafeParse(exprStr) shouldBe ValidExpr
   }
 
+  it should "parse complexe day express" in {
+    val value1 = cron("0 0 * ? * MON-WED,FRI-SUN")
+    value1 shouldBe Right(
+      CronExpr(
+        ConstNode[Second](0),
+        ConstNode[Minute](0),
+        EachNode[Hour],
+        AnyNode[DayOfMonth],
+        EachNode[Month],
+        SeveralNode(
+          BetweenNode[DayOfWeek](ConstNode(0), ConstNode(2)),
+          BetweenNode[DayOfWeek](ConstNode(4), ConstNode(6))
+        )
+      )
+    )
+  }
 }
