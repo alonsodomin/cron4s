@@ -20,6 +20,8 @@ import _root_.atto.{Parser => AttoParser, _}
 import atto.Atto._
 import cats.implicits._
 
+import java.util.Locale
+
 object Parser extends cron4s.parser.Parser {
 
   import cron4s.parser._
@@ -45,7 +47,7 @@ object Parser extends cron4s.parser.Parser {
 
   private val sexagesimal: AttoParser[Int] = oneOrTwoDigitsPositiveInt.filter(x => x >= 0 && x < 60)
 
-  private val literal: AttoParser[String] = takeWhile1(x => x != ' ' && x != '-')
+  private val literal: AttoParser[String] = takeWhile1(x => x != ' ' && x != '-' && x != ',')
 
   private val hyphen: AttoParser[Char]       = elem(_ == '-', "hyphen")
   private val comma: AttoParser[Char]        = elem(_ == ',', "comma")
@@ -95,7 +97,7 @@ object Parser extends cron4s.parser.Parser {
     oneOrTwoDigitsPositiveInt.filter(x => (x >= 0) && (x <= 6)).map(ConstNode(_))
 
   private[this] val textualDaysOfWeek: AttoParser[ConstNode] =
-    literal.filter(DaysOfWeek.textValues.contains).map { value =>
+    literal.map(_.toLowerCase(Locale.US)).filter(DaysOfWeek.textValues.contains).map { value =>
       val index = DaysOfWeek.textValues.indexOf(value)
       ConstNode(index, Some(value))
     }

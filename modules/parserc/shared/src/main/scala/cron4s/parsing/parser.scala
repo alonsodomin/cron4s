@@ -19,6 +19,7 @@ package parsing
 
 import cron4s.parser._
 
+import java.util.Locale
 import scala.util.parsing.input._
 import scala.util.parsing.combinator._
 
@@ -87,7 +88,7 @@ object CronParser extends Parsers with BaseParser {
     decimal.filter(_ < 7).map(ConstNode(_))
 
   private[this] val textualDaysOfWeek =
-    literal.filter(DaysOfWeek.textValues.contains).map { value =>
+    literal.map(_.toLowerCase(Locale.US)).filter(DaysOfWeek.textValues.contains).map { value =>
       val index = DaysOfWeek.textValues.indexOf(value)
       ConstNode(index, Some(value))
     }
