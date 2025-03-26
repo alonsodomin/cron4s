@@ -1,0 +1,28 @@
+version: 2
+updates:
+    - packageecosystem: github-actions
+      directory: /
+      schedule:
+        interval: weekly
+        day: monday
+        time: ""
+        timezone: ""
+      openpullrequests: 0
+      insecureallowed: []
+      versioningstrategy: ""
+      labels:
+        - dependencies
+        - github-actions
+    - packageecosystem: docker
+      directory: /
+      schedule:
+        interval: weekly
+        day: monday
+        time: ""
+        timezone: ""
+      openpullrequests: 0
+      insecureallowed: []
+      versioningstrategy: ""
+      labels:
+        - dependencies
+        - docker
