@@ -25,10 +25,10 @@ import scala.util.parsing.input.{NoPosition, Position}
 private[parsing] trait BaseParser extends Parsers {
   protected def handleError(err: NoSuccess): _root_.cron4s.parser.Error =
     err.next.pos match {
-      case NoPosition => ExprTooShort
+      case NoPosition    => ExprTooShort
       case pos: Position =>
         val position = err.next.pos.column
-        val found = {
+        val found    = {
           if (err.next.atEnd) None
           else Option(err.next.first.toString).filter(_.nonEmpty)
         }

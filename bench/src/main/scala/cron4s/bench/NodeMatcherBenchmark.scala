@@ -34,8 +34,8 @@ import org.openjdk.jmh.annotations._
 class NodeMatcherBenchmark {
   final val ValueToMatch = 30
 
-  val eachNode  = EachNode[CronField.Minute]
-  val constNode = ConstNode[CronField.Minute](30)
+  val eachNode    = EachNode[CronField.Minute]
+  val constNode   = ConstNode[CronField.Minute](30)
   val betweenNode = BetweenNode(
     ConstNode[CronField.Minute](CronUnit.Minutes.min),
     ConstNode[CronField.Minute](CronUnit.Minutes.max)

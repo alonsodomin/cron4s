@@ -78,7 +78,7 @@ trait Enumerated[A] {
         }
 
       val pointer = currentIdx + (step.amount * step.direction.sign)
-      val index = {
+      val index   = {
         val mod = pointer % aRange.size
         if (mod < 0) aRange.size + mod
         else mod

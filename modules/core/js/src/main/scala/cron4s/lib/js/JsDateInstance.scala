@@ -52,7 +52,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       case Hours  => Some(setter(d => d.setUTCHours(d.getUTCHours() + amount)))
       case Days   => Some(setter(d => d.setUTCDate(d.getUTCDate() + amount)))
       case Months => Some(setter(d => d.setUTCMonth(d.getUTCMonth() + amount)))
-      case Weeks =>
+      case Weeks  =>
         Some(setter(d => d.setUTCDate(d.getUTCDate() + (amount * DaysInWeek))))
     }
   }
@@ -64,7 +64,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       case Hour       => dateTime.getUTCHours()
       case DayOfMonth => dateTime.getUTCDate()
       case Month      => dateTime.getUTCMonth() + 1
-      case DayOfWeek =>
+      case DayOfWeek  =>
         val dayOfWeek = {
           val idx = dateTime.getUTCDay() - 1
           if (idx < 0) DaysInWeek + idx
@@ -93,7 +93,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
         case Minute     => setter(_.setUTCMinutes(value))
         case Hour       => setter(_.setUTCHours(value))
         case DayOfMonth => setter(_.setUTCDate(value))
-        case Month =>
+        case Month      =>
           val monthToSet = value - 1
           setter(_.setUTCMonth(monthToSet))
         case DayOfWeek =>

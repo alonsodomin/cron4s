@@ -75,7 +75,7 @@ val commonSettings = Def.settings(
   scalacOptions ++= {
     CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((2, n)) if n == 12 => Seq("-Ypartial-unification")
-      case Some((2, n)) if n > 12 =>
+      case Some((2, n)) if n > 12  =>
         Seq("-Xlint:-byname-implicit", "-Ymacro-annotations")
       case _ => Nil
     }
@@ -88,7 +88,7 @@ val commonSettings = Def.settings(
   autoAPIMappings                := true,
   Test / parallelExecution       := false,
   consoleImports                 := Seq("cron4s._"),
-  console / initialCommands := consoleImports.value
+  console / initialCommands      := consoleImports.value
     .map(s => s"import $s")
     .mkString("\n") + "\n"
 ) ++ CompilerPlugins.All
@@ -205,7 +205,7 @@ lazy val docSettings = Seq(
   micrositeHomepage                      := "https://www.alonsodomin.me/cron4s/",
   micrositeDocumentationUrl              := "/cron4s/api/cron4s/index.html",
   micrositeDocumentationLabelDescription := "API Documentation",
-  micrositeExtraMdFiles := Map(
+  micrositeExtraMdFiles                  := Map(
     file("CHANGELOG.md") -> ExtraMdFileConfig(
       "changelog.md",
       "page",
@@ -220,7 +220,7 @@ lazy val docSettings = Seq(
     if (githubIsWorkflowBuild.value) GitHub4s else GHPagesPlugin
   },
   micrositeGithubToken := sys.env.get("GITHUB_TOKEN"),
-  micrositeConfigYaml := ConfigYml(
+  micrositeConfigYaml  := ConfigYml(
     yamlCustomProperties = Map(
       "cron4sVersion"      -> version.value,
       "circeVersion"       -> Dependencies.version.circe,
@@ -239,8 +239,8 @@ lazy val docSettings = Seq(
     ScalaUnidoc / packageDoc / mappings,
     docsMappingsAPIDir
   ),
-  ghpagesNoJekyll := false,
-  git.remoteRepo  := "https://github.com/alonsodomin/cron4s.git",
+  ghpagesNoJekyll                            := false,
+  git.remoteRepo                             := "https://github.com/alonsodomin/cron4s.git",
   ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(
     core.jvm,
     circe.jvm,

@@ -167,8 +167,8 @@ object Parser extends cron4s.parser.Parser {
 
   def parse(e: String): Either[Error, CronExpr] =
     (phrase(cron).parseOnly(e): @unchecked) match {
-      case ParseResult.Done(_, result) => Right(result)
-      case ParseResult.Fail("", _, _)  => Left(ExprTooShort)
+      case ParseResult.Done(_, result)    => Right(result)
+      case ParseResult.Fail("", _, _)     => Left(ExprTooShort)
       case ParseResult.Fail(rest, _, msg) =>
         val position = e.length() - rest.length() + 1
         Left(ParseFailed(msg, position, Some(rest)))
