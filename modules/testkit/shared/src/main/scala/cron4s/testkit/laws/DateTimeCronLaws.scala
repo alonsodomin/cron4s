@@ -33,7 +33,7 @@ trait DateTimeCronLaws[E, DateTime] {
     val fieldValues =
       e.supportedFields.flatMap(DT.get(dt, _).toOption)
 
-    val exprRanges = e.ranges
+    val exprRanges      = e.ranges
     val supportedRanges =
       DT.supportedFields(dt).flatMap(exprRanges.get)
 
@@ -48,7 +48,7 @@ trait DateTimeCronLaws[E, DateTime] {
     val fieldValues =
       e.supportedFields.flatMap(DT.get(dt, _).toOption)
 
-    val exprRanges = e.ranges
+    val exprRanges      = e.ranges
     val supportedRanges =
       DT.supportedFields(dt).flatMap(exprRanges.get)
 

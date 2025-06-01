@@ -46,7 +46,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
         .recover {
           case InvalidFieldValue(_, _) =>
             val newCarryOver = step.direction match {
-              case Direction.Forward => Math.max(carryOver, step.direction.sign)
+              case Direction.Forward   => Math.max(carryOver, step.direction.sign)
               case Direction.Backwards =>
                 Math.min(carryOver, step.direction.sign)
             }

@@ -79,24 +79,24 @@ trait InputGenerators {
   val secondsOrMinutesSeqGen: Gen[(String, List[Either[String, (Int, Int)]])] =
     sequencedGen(secondsOrMinutesGen, secondsOrMinutesRangeGen)
 
-  val hoursGen: Gen[String] = Gen.choose(0, 23).flatMap(withLeadingZero)
+  val hoursGen: Gen[String]                    = Gen.choose(0, 23).flatMap(withLeadingZero)
   val hoursRangeGen: Gen[(String, (Int, Int))] =
     rangedIntGen(0, 23)
   val hoursSeqGen: Gen[(String, List[Either[String, (Int, Int)]])] =
     sequencedGen(hoursGen, hoursRangeGen)
 
-  val daysOfMonthGen: Gen[String] = Gen.choose(1, 31).flatMap(withLeadingZero)
+  val daysOfMonthGen: Gen[String]                    = Gen.choose(1, 31).flatMap(withLeadingZero)
   val daysOfMonthRangeGen: Gen[(String, (Int, Int))] =
     rangedIntGen(1, 31)
   val daysOfMonthSeqGen: Gen[(String, List[Either[String, (Int, Int)]])] =
     sequencedGen(daysOfMonthGen, daysOfMonthRangeGen)
 
-  val numericMonthsGen: Gen[String] = Gen.choose(1, 12).flatMap(withLeadingZero)
+  val numericMonthsGen: Gen[String]                    = Gen.choose(1, 12).flatMap(withLeadingZero)
   val numericMonthsRangeGen: Gen[(String, (Int, Int))] =
     rangedIntGen(1, 12)
   val numericMonthsSeqGen: Gen[(String, List[Either[String, (Int, Int)]])] =
     sequencedGen(numericMonthsGen, numericMonthsRangeGen)
-  val nameMonthsGen: Gen[String] = Gen.oneOf(Months.textValues)
+  val nameMonthsGen: Gen[String]                           = Gen.oneOf(Months.textValues)
   val namedMonthsRangeGen: Gen[(String, (String, String))] = for {
     start <- Gen.oneOf(Months.textValues)
     end   <- Gen.oneOf(Months.textValues)
@@ -104,7 +104,7 @@ trait InputGenerators {
   val namedMonthsSeqGen: Gen[(String, List[Either[String, (String, String)]])] =
     sequencedGen(nameMonthsGen, namedMonthsRangeGen)
 
-  val numericDaysOfWeekGen: Gen[String] = Gen.choose(0, 6).map(_.toString)
+  val numericDaysOfWeekGen: Gen[String]                    = Gen.choose(0, 6).map(_.toString)
   val numericDaysOfWeekRangeGen: Gen[(String, (Int, Int))] = for {
     start <- Gen.choose(0, 6)
     end   <- Gen.choose(start, 6)
@@ -112,7 +112,7 @@ trait InputGenerators {
   val numericDaysOfWeekSeqGen: Gen[(String, List[Either[String, (Int, Int)]])] =
     sequencedGen(numericDaysOfWeekGen, numericDaysOfWeekRangeGen)
 
-  val namedDaysOfWeekGen: Gen[String] = Gen.oneOf(DaysOfWeek.textValues)
+  val namedDaysOfWeekGen: Gen[String]                          = Gen.oneOf(DaysOfWeek.textValues)
   val namedDaysOfWeekRangeGen: Gen[(String, (String, String))] = for {
     start <- Gen.oneOf(DaysOfWeek.textValues)
     end   <- Gen.oneOf(DaysOfWeek.textValues)

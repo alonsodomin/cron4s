@@ -32,7 +32,7 @@ trait ArbitraryCronField {
   implicit lazy val arbitraryDayOfMonth: Arbitrary[DayOfMonth] = Arbitrary(
     Gen.const(DayOfMonth: DayOfMonth)
   )
-  implicit lazy val arbitraryMonth: Arbitrary[Month] = Arbitrary(Gen.const(Month: Month))
+  implicit lazy val arbitraryMonth: Arbitrary[Month]         = Arbitrary(Gen.const(Month: Month))
   implicit lazy val arbitraryDayOfWeek: Arbitrary[DayOfWeek] = Arbitrary(
     Gen.const(DayOfWeek: DayOfWeek)
   )

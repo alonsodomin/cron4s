@@ -43,7 +43,7 @@ private[cron4s] trait FieldNodeInstances {
           case between: BetweenNode[F] => between.implies(ee)
           case several: SeveralNode[F] => several.implies(ee)
           case every: EveryNode[F]     => every.implies(ee)
-          case null =>
+          case null                    =>
             sys.error("expect RawFieldNode[F] but got null at `FieldExpr[FieldNode,F]#implies`")
         }
 
@@ -98,7 +98,7 @@ private[cron4s] trait EnumerableNodeInstances {
         node.raw match {
           case const: ConstNode[F]     => const.implies(ee)
           case between: BetweenNode[F] => between.implies(ee)
-          case null =>
+          case null                    =>
             sys.error(
               "expect RawEnumerableNode[F] but got null at `FieldExpr[EnumerableNode,F]#implies`"
             )
@@ -131,7 +131,7 @@ private[cron4s] trait DivisibleNodeInstances {
           case each: EachNode[F]       => each.implies(ee)
           case between: BetweenNode[F] => between.implies(ee)
           case several: SeveralNode[F] => several.implies(ee)
-          case null =>
+          case null                    =>
             sys.error(
               "expect DivisibleNode[F] but got null at `FieldExpr[DivisibleNode,F]#implies`"
             )

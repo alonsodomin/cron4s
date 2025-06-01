@@ -31,7 +31,7 @@ trait ArbitratyAnyNode extends NodeGenerators {
   implicit lazy val arbitraryAnyDayOfMonth: Arbitrary[AnyNode[DayOfMonth]] = Arbitrary(
     anyGen[DayOfMonth]
   )
-  implicit lazy val arbitraryAnyMonth: Arbitrary[AnyNode[Month]] = Arbitrary(anyGen[Month])
+  implicit lazy val arbitraryAnyMonth: Arbitrary[AnyNode[Month]]         = Arbitrary(anyGen[Month])
   implicit lazy val arbitraryAnyDayOfWeek: Arbitrary[AnyNode[DayOfWeek]] = Arbitrary(
     anyGen[DayOfWeek]
   )

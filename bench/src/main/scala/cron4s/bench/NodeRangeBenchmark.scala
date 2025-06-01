@@ -46,7 +46,7 @@ class NodeRangeBenchmark {
   // SeveralNode made of constants and ranges, we ensure the arrays have the same number of elements
 
   val severalConstNode: SeveralNode[Minute] = {
-    val stepSize = Minutes.max / 10
+    val stepSize                             = Minutes.max / 10
     val minutes: Seq[EnumerableNode[Minute]] =
       (Minutes.min to Minutes.max by stepSize)
         .map(value => ConstNode[Minute](value))

@@ -24,7 +24,7 @@ import cats.{Eq, Show}
   * @author Antonio Alonso Dominguez
   */
 sealed trait CronField extends Serializable
-object CronField extends CronFieldInstances {
+object CronField       extends CronFieldInstances {
   sealed trait Second extends CronField
   case object Second  extends Second
 

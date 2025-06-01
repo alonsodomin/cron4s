@@ -24,7 +24,7 @@ import cats.data.NonEmptyList
 package object validation {
   def validateCron(expr: CronExpr): Either[InvalidCron, CronExpr] = {
     val dayFieldError = validateDayFields(expr)
-    val fieldErrors = expr.raw match {
+    val fieldErrors   = expr.raw match {
       case (seconds, minutes, hours, daysOfMonth, months, daysOfWeek) =>
         List(
           ops.validate(seconds),

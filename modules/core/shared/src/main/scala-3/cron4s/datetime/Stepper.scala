@@ -44,7 +44,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
         .recover {
           case InvalidFieldValue(_, _) =>
             val newCarryOver = step.direction match {
-              case Direction.Forward => Math.max(carryOver, step.direction.sign)
+              case Direction.Forward   => Math.max(carryOver, step.direction.sign)
               case Direction.Backwards =>
                 Math.min(carryOver, step.direction.sign)
             }
@@ -104,7 +104,7 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
 
       for {
         st @ (resetTime, _, _) <- foldInternalExpr(stepSt, expr.timePart)
-        (_, dt, step) <-
+        (_, dt, step)          <-
           List(
             (step: StepST) => stepNode(step, dom),
             (step: StepST) => stepOverMonth(step, mt)

@@ -33,13 +33,13 @@ private[validation] object ops extends NodeValidatorInstances {
   def validate[F <: CronField](
       node: Validatable[F]
   )(using Enumerated[CronUnit[F]]): List[InvalidField] = node match {
-    case field: EachNode[F]    => summon[NodeValidator[EachNode[F]]].validate(field)
-    case field: AnyNode[F]     => summon[NodeValidator[AnyNode[F]]].validate(field)
-    case field: ConstNode[F]   => summon[NodeValidator[ConstNode[F]]].validate(field)
-    case field: BetweenNode[F] => summon[NodeValidator[BetweenNode[F]]].validate(field)
-    case field: SeveralNode[F] => implicitly[NodeValidator[SeveralNode[F]]].validate(field)
-    case field: EveryNode[F]   => implicitly[NodeValidator[EveryNode[F]]].validate(field)
-    case field: FieldNode[F]   => implicitly[NodeValidator[FieldNode[F]]].validate(field)
+    case field: EachNode[F]         => summon[NodeValidator[EachNode[F]]].validate(field)
+    case field: AnyNode[F]          => summon[NodeValidator[AnyNode[F]]].validate(field)
+    case field: ConstNode[F]        => summon[NodeValidator[ConstNode[F]]].validate(field)
+    case field: BetweenNode[F]      => summon[NodeValidator[BetweenNode[F]]].validate(field)
+    case field: SeveralNode[F]      => implicitly[NodeValidator[SeveralNode[F]]].validate(field)
+    case field: EveryNode[F]        => implicitly[NodeValidator[EveryNode[F]]].validate(field)
+    case field: FieldNode[F]        => implicitly[NodeValidator[FieldNode[F]]].validate(field)
     case field: FieldNodeWithAny[F] =>
       implicitly[NodeValidator[FieldNodeWithAny[F]]].validate(field)
   }

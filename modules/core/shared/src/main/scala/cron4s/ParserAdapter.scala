@@ -28,7 +28,7 @@ private[cron4s] object ParserAdapter {
 
   private def mapError(error: cron4s.parser.Error): cron4s.Error =
     error match {
-      case ExprTooShort => cron4s.ExprTooShort
+      case ExprTooShort   => cron4s.ExprTooShort
       case e: ParseFailed =>
         cron4s.ParseFailed(expected = e.expected, position = e.position, found = e.found)
     }

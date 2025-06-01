@@ -22,8 +22,8 @@ import cron4s.base.{Step, Enumerated}
   * Created by alonsodomin on 23/08/2016.
   */
 private[syntax] class EnumeratedOps[A](self: A, tc: Enumerated[A]) {
-  def max: Int = tc.max(self)
-  def min: Int = tc.min(self)
+  def max: Int                                           = tc.max(self)
+  def min: Int                                           = tc.min(self)
   def step(from: Int, stepSize: Int): Option[(Int, Int)] =
     tc.step(self)(from, stepSize)
   def step(from: Int, step: Step): Option[(Int, Int)] =

@@ -41,7 +41,7 @@ object GithubWorkflow {
           )
         },
       githubWorkflowArtifactUpload := false,
-      githubWorkflowBuild := Seq(
+      githubWorkflowBuild          := Seq(
         WorkflowStep.Sbt(
           List("lint"),
           name = Some("Lint source code")
