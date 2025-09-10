@@ -12,15 +12,15 @@ object Dependencies {
     val atto = "0.9.5"
 
     object cats {
-      val main      = "2.10.0"
+      val main      = "2.13.0"
       val scalatest = "2.1.5"
     }
 
-    val shapeless  = "2.3.11"
-    val discipline = "2.2.0"
-    val decline    = "2.4.1"
-    val circe      = "0.14.8"
-    val parserc    = "2.3.0"
+    val shapeless  = "2.3.13"
+    val discipline = "2.3.0"
+    val decline    = "2.5.0"
+    val circe      = "0.14.14"
+    val parserc    = "2.4.0"
     val doobie     = "0.13.4"
 
     val jodaTime    = "2.10.10"
@@ -28,7 +28,8 @@ object Dependencies {
 
     val momentjs      = "0.10.5"
     val momenttz      = "0.5.31"
-    val scalaJavaTime = "2.5.0"
+    val scalaJavaTime = "2.6.0"
+    val scalacCompat  = "0.1.4"
   }
 
   lazy val core = Def.settings(
@@ -64,9 +65,10 @@ object Dependencies {
 
   lazy val testkit = Def.settings {
     libraryDependencies ++= Seq(
-      "org.typelevel" %%% "cats-laws"            % version.cats.main,
-      "org.typelevel" %%% "cats-testkit"         % version.cats.main,
-      "org.typelevel" %%% "discipline-scalatest" % version.discipline
+      "org.typelevel" %%% "cats-laws"                % version.cats.main,
+      "org.typelevel" %%% "cats-testkit"             % version.cats.main,
+      "org.typelevel" %%% "discipline-scalatest"     % version.discipline,
+      "org.typelevel"  %% "scalac-compat-annotation" % version.scalacCompat
     )
   }
 
