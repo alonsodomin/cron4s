@@ -1,14 +1,15 @@
 # Cron4s
 
 [![Join the chat at https://gitter.im/alonsodomin/cron4s](https://badges.gitter.im/alonsodomin/cron4s.svg)](https://gitter.im/alonsodomin/cron4s?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/alonsodomin/cron4s.svg?branch=master)](https://travis-ci.org/alonsodomin/cron4s)
-[![Scala.js](https://www.scala-js.org/assets/badges/scalajs-1.0.0.svg)](https://www.scala-js.org)
 [![License](http://img.shields.io/:license-Apache%202-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.alonsodomin.cron4s/cron4s-core_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.alonsodomin.cron4s/cron4s-core_2.12)
+[![Build Status](https://github.com/alonsodomin/cron4s/actions/workflows/ci.yml/badge.svg)](https://github.com/alonsodomin/cron4s/actions)
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7580c36bb6ec4f0888d6ac8213340f4d)](https://www.codacy.com/app/alonso-domin/cron4s?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=alonsodomin/cron4s&amp;utm_campaign=Badge_Grade)
+[![cron4s-core Scala version support](https://index.scala-lang.org/alonsodomin/cron4s/cron4s-core/latest-by-scala-version.svg?platform=jvm)](https://index.scala-lang.org/alonsodomin/cron4s/cron4s-core)
+[![cron4s-core Scala version support](https://index.scala-lang.org/alonsodomin/cron4s/cron4s-core/latest-by-scala-version.svg?platform=sjs1)](https://index.scala-lang.org/alonsodomin/cron4s/cron4s-core)
+[![cron4s-core Scala version support](https://index.scala-lang.org/alonsodomin/cron4s/cron4s-core/latest-by-scala-version.svg?platform=native0.4)](https://index.scala-lang.org/alonsodomin/cron4s/cron4s-core)
+
 [![codecov](https://codecov.io/gh/alonsodomin/cron4s/branch/master/graph/badge.svg)](https://codecov.io/gh/alonsodomin/cron4s)
-[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/alonsodomin/cron4s&style=flat)](https://mergify.io)
+[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://api.mergify.com/v1/badges/alonsodomin/cron4s)](https://mergify.com)
 
 Idiomatic Cron expression parsing in Scala and ScalaJS.
 
