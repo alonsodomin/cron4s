@@ -19,7 +19,7 @@ inThisBuild(
     organizationName   := "Antonio Alonso Dominguez",
     description        := "CRON expression parser for Scala",
     startYear          := Some(2017),
-    crossScalaVersions := Seq("2.13.16", "2.12.17", "3.3.7"),
+    crossScalaVersions := Seq("2.13.18", "2.12.17", "3.3.7"),
     homepage           := Some(url("https://github.com/alonsodomin/cron4s")),
     licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt")),
     scmInfo := Some(
@@ -119,7 +119,6 @@ lazy val consoleSettings = Seq(
 )
 
 lazy val publishSettings = Seq(
-  sonatypeProfileName    := "com.github.alonsodomin",
   publishMavenStyle      := true,
   Test / publishArtifact := false,
   // don't include scoverage as a dependency in the pom
