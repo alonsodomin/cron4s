@@ -119,7 +119,6 @@ lazy val consoleSettings = Seq(
 )
 
 lazy val publishSettings = Seq(
-  sonatypeProfileName    := "com.github.alonsodomin",
   publishMavenStyle      := true,
   Test / publishArtifact := false,
   // don't include scoverage as a dependency in the pom
