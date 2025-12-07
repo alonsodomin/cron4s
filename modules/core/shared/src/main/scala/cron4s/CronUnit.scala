@@ -113,5 +113,5 @@ private[cron4s] trait CronUnitInstances extends CronUnits {
   implicit val daysOfWeekInstance: Enumerated[CronUnit[CronField.DayOfWeek]] = enumerated(
     DaysOfWeek
   )
-  implicit val yearsInstance: Enumerated[CronUnit[CronField.Year]]         = enumerated(Years)
+  implicit val yearsInstance: Enumerated[CronUnit[CronField.Year]] = enumerated(Years)
 }

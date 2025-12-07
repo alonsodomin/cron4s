@@ -85,7 +85,7 @@ object CronSpec extends TableDrivenPropertyChecks {
     EachNode[DayOfMonth],
     EachNode[Month],
     AnyNode[DayOfWeek],
-    None,
+    None
   )
 
   val validExpressions = Table(
