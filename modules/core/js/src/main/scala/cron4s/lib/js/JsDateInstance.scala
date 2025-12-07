@@ -54,7 +54,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
       case Months => Some(setter(d => d.setUTCMonth(d.getUTCMonth() + amount)))
       case Weeks  =>
         Some(setter(d => d.setUTCDate(d.getUTCDate() + (amount * DaysInWeek))))
-      case Years => ???
+      case Years => Some(setter(d => d.setFullYear(d.getFullYear() + amount)))
     }
   }
 
@@ -72,6 +72,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
           else idx
         }
         dayOfWeek
+      case Year => dateTime.getFullYear()
     }
 
     Right(value.toInt)
@@ -101,6 +102,7 @@ private[js] final class JsDateInstance extends IsDateTime[Date] {
           val dayToSet = (value % DaysInWeek) + 1
           val offset   = dayToSet - dateTime.getUTCDay()
           setter(d => d.setUTCDate(d.getUTCDate() + offset))
+        case Year => setter(_.setFullYear(value.toDouble))
       }
 
     def assignmentSucceeded(date: Date) =
