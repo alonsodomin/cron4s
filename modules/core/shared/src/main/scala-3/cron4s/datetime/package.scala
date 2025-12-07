@@ -28,11 +28,12 @@ package object datetime {
       expr: DateCronExpr
   ): List[IndexedSeq[Int]] = {
     expr.raw match {
-      case (daysOfMonth, months, daysOfWeek) =>
+      case (daysOfMonth, months, daysOfWeek,year) =>
         List(
           cron4s.expr.ops.range(daysOfMonth),
           cron4s.expr.ops.range(months),
-          cron4s.expr.ops.range(daysOfWeek)
+          cron4s.expr.ops.range(daysOfWeek),
+          cron4s.expr.ops.range(year)
         )
     }
   }
@@ -52,14 +53,15 @@ package object datetime {
       expr: CronExpr
   ): List[IndexedSeq[Int]] = {
     expr.raw match {
-      case (seconds, minutes, hours, daysOfMonth, months, daysOfWeek) =>
+      case (seconds, minutes, hours, daysOfMonth, months, daysOfWeek,year) =>
         List(
           cron4s.expr.ops.range(seconds),
           cron4s.expr.ops.range(minutes),
           cron4s.expr.ops.range(hours),
           cron4s.expr.ops.range(daysOfMonth),
           cron4s.expr.ops.range(months),
-          cron4s.expr.ops.range(daysOfWeek)
+          cron4s.expr.ops.range(daysOfWeek),
+          cron4s.expr.ops.range(year),
         )
     }
   }
@@ -70,7 +72,7 @@ package object datetime {
     CronExpr | TimeCronExpr | DateCronExpr
 
   private[datetime] type FieldSeq =
-    Second *: Minute *: Hour *: DayOfMonth *: Month *: DayOfWeek *: EmptyTuple
+    Second *: Minute *: Hour *: DayOfMonth *: Month *: DayOfWeek *: Year *: EmptyTuple
   val FieldSeq: FieldSeq =
-    Second *: Minute *: Hour *: DayOfMonth *: Month *: DayOfWeek *: EmptyTuple
+    Second *: Minute *: Hour *: DayOfMonth *: Month *: DayOfWeek *: Year *: EmptyTuple
 }

@@ -108,12 +108,15 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       at[StepST, MonthsNode](stepOverMonth)
     implicit def caseDaysOfWeek: Case.Aux[StepST, DaysOfWeekNode, StepST] =
       at[StepST, DaysOfWeekNode](stepOverDayOfWeek)
+    implicit def caseYears: Case.Aux[StepST, YearsNode, StepST] =
+      at[StepST, YearsNode]((step, node) => stepNode(step, node))
   }
 
   object foldInternalExpr extends Poly2 {
     implicit def caseFullExpr: Case.Aux[StepST, CronExpr, Option[(ResetPrevFn, DateTime, Step)]] =
       at[StepST, CronExpr] { (stepSt, expr) =>
-        val dateWithoutDOW = expr.datePart.raw.take(2)
+        // val dateWithoutDOW = expr.datePart.raw.take(2) ::: expr.datePart.raw.drop(3)
+        val dateWithoutDOW = expr.datePart.raw.take(2) //::: expr.datePart.raw.drop(3)
         val daysOfWeekNode = expr.datePart.raw.select[DaysOfWeekNode]
 
         for {

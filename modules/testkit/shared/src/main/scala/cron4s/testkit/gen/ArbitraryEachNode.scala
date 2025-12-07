@@ -35,4 +35,7 @@ trait ArbitraryEachNode extends NodeGenerators {
   implicit lazy val arbitraryEachDayOfWeek: Arbitrary[EachNode[DayOfWeek]] = Arbitrary(
     eachGen[DayOfWeek]
   )
+  implicit lazy val arbitraryEachYear: Arbitrary[EachNode[Year]] = Arbitrary(
+    eachGen[Year]
+  )
 }

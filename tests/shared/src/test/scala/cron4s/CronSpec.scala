@@ -84,7 +84,8 @@ object CronSpec extends TableDrivenPropertyChecks {
     ConstNode[Hour](12),
     EachNode[DayOfMonth],
     EachNode[Month],
-    AnyNode[DayOfWeek]
+    AnyNode[DayOfWeek],
+    None,
   )
 
   val validExpressions = Table(
@@ -145,7 +146,8 @@ trait CronSpec extends Matchers { this: AnyFlatSpec =>
         SeveralNode(
           BetweenNode[DayOfWeek](ConstNode(0), ConstNode(2)),
           BetweenNode[DayOfWeek](ConstNode(4), ConstNode(6))
-        )
+        ),
+        None
       )
     )
   }

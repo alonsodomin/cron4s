@@ -38,6 +38,7 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
       case Days    => dateTime.add(amount, Units.Day)
       case Weeks   => dateTime.add(amount, Units.Week)
       case Months  => dateTime.add(amount, Units.Month)
+      case Years   => dateTime.add(amount, Units.Year)
     })
 
   /**
