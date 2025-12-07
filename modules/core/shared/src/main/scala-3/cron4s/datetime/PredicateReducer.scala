@@ -38,14 +38,15 @@ private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime
         .getOrElse(M.empty[DateTime](dt))
     }
   type Predicatable =
-    SecondsNode | MinutesNode | HoursNode | DaysOfMonthNode | MonthsNode | DaysOfWeekNode | YearsNode
+    SecondsNode | MinutesNode | HoursNode | DaysOfMonthNode | MonthsNode | DaysOfWeekNode |
+      YearsNode
 
   type FromRawable = CronExpr | DateCronExpr | TimeCronExpr
   import CronField._
   def fromRaw(t: FromRawable): List[Predicate[DateTime]] = t match {
     case t: CronExpr =>
       t.raw match {
-        case (seconds, minutes, hours, daysOfMonth, months, daysOfWeek,years) =>
+        case (seconds, minutes, hours, daysOfMonth, months, daysOfWeek, years) =>
           List(
             predicateFor(Second, seconds),
             predicateFor(Minute, minutes),
@@ -53,17 +54,17 @@ private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime
             predicateFor(DayOfMonth, daysOfMonth),
             predicateFor(Month, months),
             predicateFor(DayOfWeek, daysOfWeek),
-            predicateFor(Year, years),
+            predicateFor(Year, years)
           )
       }
     case t: DateCronExpr =>
       t.raw match {
-        case (daysOfMonth, months, daysOfWeek,years) =>
+        case (daysOfMonth, months, daysOfWeek, years) =>
           List(
             predicateFor(DayOfMonth, daysOfMonth),
             predicateFor(Month, months),
             predicateFor(DayOfWeek, daysOfWeek),
-            predicateFor(Year, years),
+            predicateFor(Year, years)
           )
       }
     case t: TimeCronExpr =>

@@ -18,7 +18,6 @@ package cron4s
 
 import org.scalatest.flatspec.AnyFlatSpec
 
-
 class AttoAWSCronSpec extends AnyFlatSpec with AWSCronSpec {
   def parser = atto.AWSEventBridgeScheduleParser
 }

@@ -28,7 +28,7 @@ package object datetime {
       expr: DateCronExpr
   ): List[IndexedSeq[Int]] = {
     expr.raw match {
-      case (daysOfMonth, months, daysOfWeek,year) =>
+      case (daysOfMonth, months, daysOfWeek, year) =>
         List(
           cron4s.expr.ops.range(daysOfMonth),
           cron4s.expr.ops.range(months),
@@ -53,7 +53,7 @@ package object datetime {
       expr: CronExpr
   ): List[IndexedSeq[Int]] = {
     expr.raw match {
-      case (seconds, minutes, hours, daysOfMonth, months, daysOfWeek,year) =>
+      case (seconds, minutes, hours, daysOfMonth, months, daysOfWeek, year) =>
         List(
           cron4s.expr.ops.range(seconds),
           cron4s.expr.ops.range(minutes),
@@ -61,7 +61,7 @@ package object datetime {
           cron4s.expr.ops.range(daysOfMonth),
           cron4s.expr.ops.range(months),
           cron4s.expr.ops.range(daysOfWeek),
-          cron4s.expr.ops.range(year),
+          cron4s.expr.ops.range(year)
         )
     }
   }

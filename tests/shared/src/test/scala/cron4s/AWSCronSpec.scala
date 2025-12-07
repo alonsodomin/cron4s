@@ -117,13 +117,11 @@ trait AWSCronSpec extends Matchers { this: AnyFlatSpec =>
   def parser: cron4s.parser.Parser
   def cron: CronImpl = new CronImpl(parser)
 
-  "Cron" should "parse valid expression" in {
-
-    forAll(validExpressions) { (expr) =>
+  "Cron" should "parse valid expression" in
+    forAll(validExpressions) { expr =>
       val parsed = cron(expr)
       println(parsed)
     }
-  }
 
   "Cron" should "not parse an invalid expression" in {
     val _ =

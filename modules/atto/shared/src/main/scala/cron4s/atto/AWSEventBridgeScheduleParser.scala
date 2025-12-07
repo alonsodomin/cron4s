@@ -27,7 +27,7 @@ import cron4s.parser._
 object AWSEventBridgeScheduleParser extends cron4s.parser.Parser with CronExprParser {
 
   private[atto] val year: AttoParser[ConstNode] = NDigitsPositiveInt(4).flatMap {
-    case n /*if 1970 <= n && n <= 2199 */=> ok(ConstNode(n, None))
+    case n /*if 1970 <= n && n <= 2199 */ => ok(ConstNode(n, None))
     // case _                           =>
     //   err(
     //     "AWS year must be between 1970 and 2199: "
