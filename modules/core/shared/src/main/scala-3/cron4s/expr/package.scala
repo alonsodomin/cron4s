@@ -43,7 +43,7 @@ package object expr {
   type DaysOfMonthNode = FieldNodeWithAny[CronField.DayOfMonth]
   type MonthsNode      = FieldNode[CronField.Month]
   type DaysOfWeekNode  = FieldNodeWithAny[CronField.DayOfWeek]
-  type YearsNode = FieldNode[CronField.Year]
+  type YearsNode       = FieldNode[CronField.Year]
 
   private[cron4s] type RawTimeCronExpr =
     SecondsNode *: MinutesNode *: HoursNode *: EmptyTuple
@@ -51,5 +51,6 @@ package object expr {
     DaysOfMonthNode *: MonthsNode *: DaysOfWeekNode *: YearsNode *: EmptyTuple
 
   private[cron4s] type RawCronExpr =
-    SecondsNode *: MinutesNode *: HoursNode *: DaysOfMonthNode *: MonthsNode *: DaysOfWeekNode *: YearsNode *:  EmptyTuple
+    SecondsNode *: MinutesNode *: HoursNode *: DaysOfMonthNode *: MonthsNode *: DaysOfWeekNode *:
+      YearsNode *: EmptyTuple
 }
