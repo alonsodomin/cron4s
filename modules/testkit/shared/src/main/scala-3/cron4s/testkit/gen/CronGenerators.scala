@@ -40,7 +40,8 @@ trait CronGenerators extends NodeGenerators {
     daysOfMonth <- nodeWithAnyGen[CronField.DayOfMonth]
     months      <- nodeGen[CronField.Month]
     daysOfWeek  <- chooseDaysOfWeek(daysOfMonth)
-  } yield CronExpr(seconds, minutes, hours, daysOfMonth, months, daysOfWeek)
+    year        <- Gen.option(nodeGen[CronField.Year])
+  } yield CronExpr(seconds, minutes, hours, daysOfMonth, months, daysOfWeek, year)
 
   private[this] val timeCronGen: Gen[TimeCronExpr] = for {
     seconds <- nodeGen[CronField.Second]
@@ -52,7 +53,8 @@ trait CronGenerators extends NodeGenerators {
     daysOfMonth <- nodeWithAnyGen[CronField.DayOfMonth]
     months      <- nodeGen[CronField.Month]
     daysOfWeek  <- chooseDaysOfWeek(daysOfMonth)
-  } yield DateCronExpr(daysOfMonth, months, daysOfWeek)
+    year        <- Gen.option(nodeGen[CronField.Year])
+  } yield DateCronExpr(daysOfMonth, months, daysOfWeek, year)
 
   implicit lazy val arbitraryFullCron: Arbitrary[CronExpr] =
     Arbitrary(fullCronGen)

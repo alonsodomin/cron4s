@@ -133,5 +133,5 @@ private[datetime] final class DateCron extends DateTimeCron[DateCronExpr] {
 
   @inline
   val supportedFields: List[CronField] =
-    List(CronField.DayOfMonth, CronField.Month, CronField.DayOfWeek)
+    List(CronField.DayOfMonth, CronField.Month, CronField.DayOfWeek, CronField.Year)
 }

@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
-package cron4s.atto
+package cron4s
 
-object Parser extends QuartzParser
+import org.scalatest.flatspec.AnyFlatSpec
+
+class AttoAWSCronSpec extends AnyFlatSpec with AWSCronSpec {
+  def parser = atto.AWSEventBridgeScheduleParser
+}
