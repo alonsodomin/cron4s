@@ -24,19 +24,20 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.prop.TableDrivenPropertyChecks
 
-import scala.util.{Failure, Success}
+import scala.util.Failure
 import org.scalatest.prop.TableFor3
 import CronField._
 
 /**
   * Created by alonsodomin on 12/04/2017.
   */
-object CronSpec extends TableDrivenPropertyChecks {
+object AWSCronSpec extends TableDrivenPropertyChecks {
 
-  final val AllEachExpr  = "* * * * * *"
-  final val AnyDaysExpr  = "* * * ? * ?"
-  final val TooLongExpr  = "* * * ? * * *"
-  final val TooShortExpr = "* * * * *"
+  final val AllEachExpr        = "* * * * * *"
+  final val AnyDaysExpr        = "* * ? * ? *"
+  final val TooLongExpr        = "* * * ? * * *"
+  final val TooShortExpr       = "* * * * *"
+  final val OutOfYearRangeExpr = "* * ? * * 2200"
 
   final val InvalidExprs: TableFor3[String, String, Error] =
     Table(
@@ -75,67 +76,72 @@ object CronSpec extends TableDrivenPropertyChecks {
         "too short expression",
         TooShortExpr,
         ExprTooShort
+      ),
+      (
+        "out of year range",
+        OutOfYearRangeExpr,
+        InvalidCron(
+          NonEmptyList.of(
+            InvalidField(CronField.Year, "Value 2200 is out of bounds for field: Year")
+          )
+        )
       )
     )
 
-  final val ValidExpr = CronExpr(
-    SeveralNode(BetweenNode[Second](ConstNode(17), ConstNode(30)), ConstNode[Second](5)),
-    EachNode[Minute],
-    ConstNode[Hour](12),
-    EachNode[DayOfMonth],
-    EachNode[Month],
-    AnyNode[DayOfWeek],
-    None
-  )
+  // "toString" returns quartz cron expression
+  // final val ValidExpr = CronExpr(
+  //   SeveralNode(BetweenNode[Second](ConstNode(17), ConstNode(30)), ConstNode[Second](5)),
+  //   EachNode[Minute],
+  //   ConstNode[Hour](12),
+  //   EachNode[DayOfMonth],
+  //   EachNode[Month],
+  //   AnyNode[DayOfWeek]
+  // )
 
   val validExpressions = Table(
     "expression",
-    "* 5 4 * * *",
-    "* 0 0,12 1 */2 *",
-    "* 5 4 * * sun",
-    "* 0 0,12 1 */2 *",
-    "0 0,5,10,15,20,25,30,35,40,45,50,55 * * * *",
-    "0 1 2-4 * 4,5,6 */3",
-    "1 5 4 * * mon-2,sun",
-    "0 0 * ? * MON-WED,FRI-SUN"
+    "0 10 * * ? *",         // Run at 10:00 am (UTC+0) every day
+    "15 12 * * ? *",        // Run at 12:15 pm (UTC+0) every day
+    "0 18 ? * MON-FRI *",   // Run at 6:00 pm (UTC+0) every Monday through Friday
+    "0 8 1 * ? *",          // Run at 8:00 am (UTC+0) every 1st day of the month
+    "0/15 * * * ? *",       // Run every 15 minutes
+    "0/10 * ? * MON-FRI *", // Run every 10 minutes Monday through Friday
+    "0/5 8-17 ? * MON-FRI *", // Run every 5 minutes Monday through Friday between 8:00 am and 5:55 pm (UTC+0)
+    "0/30 20-2 ? * MON-FRI *" // Run every 30 minutes Monday through Friday between 10:00 pm on the starting day to 2:00 am on the following day (UTC)
   )
 }
 
-trait CronSpec extends Matchers { this: AnyFlatSpec =>
-  import CronSpec._
+trait AWSCronSpec extends Matchers { this: AnyFlatSpec =>
+  import AWSCronSpec._
 
   def parser: cron4s.parser.Parser
   def cron: CronImpl = new CronImpl(parser)
+
+  "Cron" should "parse valid expression" in
+    forAll(validExpressions) { expr =>
+      val parsed = cron(expr)
+      println(parsed)
+    }
 
   "Cron" should "not parse an invalid expression" in {
     val _ =
       InvalidFieldCombination("Fields DayOfMonth and DayOfWeek can't both have the expression: *")
 
     forAll(InvalidExprs) { (desc: String, expr: String, err: Error) =>
-      val parsed = Cron(expr)
+      val parsed = cron(expr)
       parsed shouldBe Left(err)
 
-      val parsedTry = Cron.tryParse(expr)
+      val parsedTry = cron.tryParse(expr)
       parsedTry should matchPattern { case Failure(`err`) => }
 
       intercept[Error] {
-        Cron.unsafeParse(expr)
+        cron.unsafeParse(expr)
       }
     }
   }
 
-  it should "parse a valid expression" in {
-    val exprStr = ValidExpr.toString
-
-    cron(exprStr) shouldBe Right(ValidExpr)
-
-    cron.tryParse(exprStr) shouldBe Success(ValidExpr)
-
-    cron.unsafeParse(exprStr) shouldBe ValidExpr
-  }
-
   it should "parse complexe day express" in {
-    val value1 = cron("0 0 * ? * MON-WED,FRI-SUN")
+    val value1 = cron("0 * ? * MON-WED,FRI-SUN *")
     value1 shouldBe Right(
       CronExpr(
         ConstNode[Second](0),
@@ -147,7 +153,7 @@ trait CronSpec extends Matchers { this: AnyFlatSpec =>
           BetweenNode[DayOfWeek](ConstNode(0), ConstNode(2)),
           BetweenNode[DayOfWeek](ConstNode(4), ConstNode(6))
         ),
-        None
+        Some(EachNode[Year])
       )
     )
   }

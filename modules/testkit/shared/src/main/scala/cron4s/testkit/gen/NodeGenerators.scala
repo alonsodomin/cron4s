@@ -63,8 +63,8 @@ trait NodeGenerators extends ArbitraryCronUnits with NodeConversions {
       ev: Enumerated[CronUnit[F]]
   ): Gen[BetweenNode[F]] =
     for {
-      min <- Gen.choose(unit.min, (unit.max / 2) - 1)
-      max <- Gen.choose(unit.max / 2, unit.max)
+      min <- Gen.choose(unit.min, unit.max - 1)
+      max <- Gen.choose(min + 1, unit.max)
     } yield BetweenNode(ConstNode(min), ConstNode(max))
 
   def invalidBetweenGen[F <: CronField](implicit

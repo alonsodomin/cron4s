@@ -29,7 +29,7 @@ sealed trait FieldSelector[A, F <: CronField] {
   type Out[X <: CronField]
 
   // format: off
-  val hlistSelect: (expr:Raw) => Out[F]
+  val hlistSelect: Raw => Out[F]
   // format: on
   def selectFrom(expr: A): Out[F]
 }
@@ -93,7 +93,14 @@ object FieldSelector {
     new DateCronFieldNodeWithAnySelector[DayOfWeek] {
       val hlistSelect = (expr: RawDateCronExpr) => expr._3
     }
-
+  implicit val YearFromCronExpr: FieldSelector[CronExpr, Year] =
+    new FullCronFieldNodeSelector[Year] {
+      val hlistSelect = (expr: RawCronExpr) => expr._7
+    }
+  implicit val YearFromDateExpr: FieldSelector[DateCronExpr, Year] =
+    new DateCronFieldNodeSelector[Year] {
+      val hlistSelect = (expr: RawDateCronExpr) => expr._4
+    }
   // Base classes adding type refinements for the typeclass instances
 
   private[this] abstract class FieldNodeSelector[A, F <: CronField] extends FieldSelector[A, F] {

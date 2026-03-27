@@ -41,12 +41,13 @@ package object expr {
   type DaysOfMonthNode = FieldNodeWithAny[CronField.DayOfMonth]
   type MonthsNode      = FieldNode[CronField.Month]
   type DaysOfWeekNode  = FieldNodeWithAny[CronField.DayOfWeek]
+  type YearsNode       = FieldNode[CronField.Year]
 
   private[cron4s] type RawTimeCronExpr =
     SecondsNode :: MinutesNode :: HoursNode :: HNil
   private[cron4s] type RawDateCronExpr =
-    DaysOfMonthNode :: MonthsNode :: DaysOfWeekNode :: HNil
+    DaysOfMonthNode :: MonthsNode :: DaysOfWeekNode :: YearsNode :: HNil
 
   private[cron4s] type RawCronExpr =
-    SecondsNode :: MinutesNode :: HoursNode :: DaysOfMonthNode :: MonthsNode :: DaysOfWeekNode :: HNil
+    SecondsNode :: MinutesNode :: HoursNode :: DaysOfMonthNode :: MonthsNode :: DaysOfWeekNode :: YearsNode :: HNil
 }
