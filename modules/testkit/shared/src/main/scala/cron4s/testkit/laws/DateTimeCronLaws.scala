@@ -47,7 +47,6 @@ trait DateTimeCronLaws[E, DateTime] {
   def matchAll(e: E, dt: DateTime): IsEq[Boolean] = {
     val fieldValues =
       e.supportedFields.flatMap(DT.get(dt, _).toOption)
-
     val exprRanges      = e.ranges
     val supportedRanges =
       DT.supportedFields(dt).flatMap(exprRanges.get)

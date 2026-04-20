@@ -99,8 +99,8 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       expr: FoldInternalExprable
   ): Option[(ResetPrevFn, DateTime, Step)] = expr match {
     case expr: CronExpr =>
-      val (dom, mt)              = expr.datePart.raw.take(2)
-      val (_, _, daysOfWeekNode) = expr.datePart.raw
+      val (dom, mt)                 = expr.datePart.raw.take(2)
+      val (_, _, daysOfWeekNode, _) = expr.datePart.raw
 
       for {
         st @ (resetTime, _, _) <- foldInternalExpr(stepSt, expr.timePart)
@@ -113,11 +113,12 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       } yield result
     case expr: DateCronExpr =>
       expr.raw match {
-        case (daysOfMonth, month, daysOfWeek) =>
+        case (daysOfMonth, month, daysOfWeek, year) =>
           List(
             (step: StepST) => stepNode(step, daysOfMonth),
             (step: StepST) => stepOverMonth(step, month),
-            (step: StepST) => stepOverDayOfWeek(step, daysOfWeek)
+            (step: StepST) => stepOverDayOfWeek(step, daysOfWeek),
+            (step: StepST) => stepNode(step, year)
           ).foldLeft(stepSt) { case (step, f) => f(step) }
       }
     case expr: TimeCronExpr =>

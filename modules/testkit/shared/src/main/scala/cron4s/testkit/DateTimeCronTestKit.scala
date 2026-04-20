@@ -29,6 +29,6 @@ import cron4s.testkit.gen.CronGenerators
 abstract class DateTimeCronTestKit[DateTime: IsDateTime: Eq]
     extends SlowCron4sLawSuite with DateTimeTestKitBase[DateTime] with CronGenerators {
   checkAll("CronExpr", DateTimeCronTests[CronExpr, DateTime].dateTimeCron)
-  checkAll("TimeCronExpr", DateTimeCronTests[DateCronExpr, DateTime].dateTimeCron)
-  checkAll("DateCronExpr", DateTimeCronTests[TimeCronExpr, DateTime].dateTimeCron)
+  checkAll("TimeCronExpr", DateTimeCronTests[TimeCronExpr, DateTime].dateTimeCron)
+  checkAll("DateCronExpr", DateTimeCronTests[DateCronExpr, DateTime].dateTimeCron)
 }

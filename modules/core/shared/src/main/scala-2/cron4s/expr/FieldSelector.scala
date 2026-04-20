@@ -106,6 +106,16 @@ object FieldSelector {
       implicit val hlistSelect: Lazy[Selector[RawDateCronExpr, FieldNodeWithAny[DayOfWeek]]] =
         Selector[RawDateCronExpr, FieldNodeWithAny[DayOfWeek]]
     }
+  implicit val YearFromCronExpr: FieldSelector[CronExpr, Year] =
+    new FullCronFieldNodeSelector[Year] {
+      implicit val hlistSelect: Lazy[Selector[RawCronExpr, FieldNode[Year]]] =
+        Selector[RawCronExpr, FieldNode[Year]]
+    }
+  implicit val YearFromDateExpr: FieldSelector[DateCronExpr, Year] =
+    new DateCronFieldNodeSelector[Year] {
+      implicit val hlistSelect: Lazy[Selector[RawDateCronExpr, FieldNode[Year]]] =
+        Selector[RawDateCronExpr, FieldNode[Year]]
+    }
 
   // Base classes adding type refinements for the typeclass instances
 

@@ -43,4 +43,7 @@ trait ArbitraryCronUnits {
   implicit lazy val arbitraryDaysOfWeekUnit: Arbitrary[CronUnit[DayOfWeek]] = Arbitrary(
     Gen.const(CronUnit[DayOfWeek])
   )
+  implicit lazy val arbitraryYearsUnit: Arbitrary[CronUnit[Year]] = Arbitrary(
+    Gen.const(CronUnit[Year])
+  )
 }

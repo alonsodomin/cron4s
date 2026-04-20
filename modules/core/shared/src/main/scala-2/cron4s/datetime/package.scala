@@ -51,6 +51,7 @@ package object datetime {
     Coproduct[AnyCron](cron)
 
   private[datetime] type FieldSeq =
-    Second :: Minute :: Hour :: DayOfMonth :: Month :: DayOfWeek :: HNil
-  val FieldSeq: FieldSeq = Second :: Minute :: Hour :: DayOfMonth :: Month :: DayOfWeek :: HNil
+    Second :: Minute :: Hour :: DayOfMonth :: Month :: DayOfWeek :: Year :: HNil
+  val FieldSeq: FieldSeq =
+    Second :: Minute :: Hour :: DayOfMonth :: Month :: DayOfWeek :: Year :: HNil
 }

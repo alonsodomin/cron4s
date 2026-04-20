@@ -41,4 +41,7 @@ trait ArbitrarySeveralNode extends NodeGenerators {
   implicit lazy val arbitrarySeveralDayOfWeek: Arbitrary[SeveralNode[DayOfWeek]] = Arbitrary(
     severalGen[DayOfWeek]
   )
+  implicit lazy val arbitrarySeveralYear: Arbitrary[SeveralNode[Year]] = Arbitrary(
+    severalGen[Year]
+  )
 }

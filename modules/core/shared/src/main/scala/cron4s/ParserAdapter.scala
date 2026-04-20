@@ -40,7 +40,8 @@ private[cron4s] object ParserAdapter {
       hours = mapNode[CronField.Hour](expr.hours),
       daysOfMonth = mapNodeWithAny[CronField.DayOfMonth](expr.daysOfMonth),
       months = mapNode[CronField.Month](expr.months),
-      daysOfWeek = mapNodeWithAny[CronField.DayOfWeek](expr.daysOfWeek)
+      daysOfWeek = mapNodeWithAny[CronField.DayOfWeek](expr.daysOfWeek),
+      year = expr.year.map(mapNode[CronField.Year](_))
     )
   }
 

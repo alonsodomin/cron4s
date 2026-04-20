@@ -49,7 +49,7 @@ object CronUnit extends CronUnitInstances {
     unit
 
   final val All: List[CronUnit[_ <: CronField]] =
-    List(Seconds, Minutes, Hours, DaysOfMonth, Months, DaysOfWeek)
+    List(Seconds, Minutes, Hours, DaysOfMonth, Months, DaysOfWeek, Years)
 }
 
 private[cron4s] trait CronUnits {
@@ -94,6 +94,7 @@ private[cron4s] trait CronUnits {
   implicit case object DaysOfWeek extends AbstractCronUnit[DayOfWeek](DayOfWeek, 0, 6) {
     val textValues = IndexedSeq("mon", "tue", "wed", "thu", "fri", "sat", "sun")
   }
+  implicit case object Years extends AbstractCronUnit[Year](Year, 1970, 2199)
 }
 
 private[cron4s] trait CronUnitInstances extends CronUnits {
@@ -112,4 +113,5 @@ private[cron4s] trait CronUnitInstances extends CronUnits {
   implicit val daysOfWeekInstance: Enumerated[CronUnit[CronField.DayOfWeek]] = enumerated(
     DaysOfWeek
   )
+  implicit val yearsInstance: Enumerated[CronUnit[CronField.Year]] = enumerated(Years)
 }
