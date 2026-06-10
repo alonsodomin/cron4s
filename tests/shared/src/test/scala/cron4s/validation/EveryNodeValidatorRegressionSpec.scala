@@ -38,16 +38,11 @@ class EveryNodeValidatorRegressionSpec extends AnyFlatSpec with Matchers {
     returnedErrors shouldBe List.empty[InvalidField]
   }
 
-  it should "not pass validation if it is not evenly divided" in {
+  it should "pass validation even if the base range size is not evenly divisible by the step" in {
     val eachNode  = EachNode[Second]
     val everyNode = EveryNode[Second](eachNode, 13)
 
-    val expectedError = InvalidField(
-      Second,
-      s"Step '${everyNode.freq}' does not evenly divide the value '${everyNode.base.show}'"
-    )
-
     val returnedErrors = NodeValidator[EveryNode[Second]].validate(everyNode)
-    returnedErrors shouldBe List(expectedError)
+    returnedErrors shouldBe List.empty[InvalidField]
   }
 }
