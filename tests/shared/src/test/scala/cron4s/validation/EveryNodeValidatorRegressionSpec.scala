@@ -16,8 +16,6 @@
 
 package cron4s.validation
 
-import cats.syntax.show._
-
 import cron4s._
 import cron4s.expr.{EachNode, EveryNode}
 
