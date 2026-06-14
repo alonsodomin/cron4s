@@ -28,7 +28,7 @@ object Dependencies {
 
     val momentjs      = "0.10.5"
     val momenttz      = "0.5.31"
-    val scalaJavaTime = "2.6.0"
+    val scalaJavaTime = "2.7.0"
     val scalacCompat  = "0.1.4"
   }
 
