@@ -41,4 +41,7 @@ trait ArbitraryBetweenNode extends NodeGenerators {
   implicit lazy val arbitraryBetweenDayOfWeek: Arbitrary[BetweenNode[DayOfWeek]] = Arbitrary(
     betweenGen[DayOfWeek]
   )
+  implicit lazy val arbitraryBetweenYear: Arbitrary[BetweenNode[Year]] = Arbitrary(
+    betweenGen[Year]
+  )
 }
