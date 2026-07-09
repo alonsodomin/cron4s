@@ -19,7 +19,7 @@ object Dependencies {
     val shapeless  = "2.3.13"
     val discipline = "2.3.0"
     val decline    = "2.6.2"
-    val circe      = "0.14.15"
+    val circe      = "0.14.16"
     val parserc    = "2.4.0"
     val doobie     = "0.13.4"
 
@@ -28,7 +28,7 @@ object Dependencies {
 
     val momentjs      = "0.10.5"
     val momenttz      = "0.5.31"
-    val scalaJavaTime = "2.6.0"
+    val scalaJavaTime = "2.7.0"
     val scalacCompat  = "0.1.4"
   }
 
