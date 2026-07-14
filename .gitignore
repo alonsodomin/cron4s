@@ -99,3 +99,7 @@ build
 .bloop/
 .bsp/
 metals.sbt
+
+# VSCode #
+##########
+.vscode/
