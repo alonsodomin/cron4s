@@ -40,6 +40,7 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
       case DayOfMonth => ChronoField.DAY_OF_MONTH
       case Month      => ChronoField.MONTH_OF_YEAR
       case DayOfWeek  => ChronoField.DAY_OF_WEEK
+      case Year       => ChronoField.YEAR
     }
 
   private[this] def asTemporalUnit[F <: CronField](unit: DateTimeUnit): TemporalUnit =
@@ -50,6 +51,7 @@ private[javatime] final class JavaTemporalInstance[DT <: Temporal] extends IsDat
       case Days    => ChronoUnit.DAYS
       case Months  => ChronoUnit.MONTHS
       case Weeks   => ChronoUnit.WEEKS
+      case Years   => ChronoUnit.YEARS
     }
 
   override def plus(dateTime: DT, amount: Int, unit: DateTimeUnit): Option[DT] =

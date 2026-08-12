@@ -17,6 +17,7 @@
 package cron4s.expr
 
 import shapeless._
+import cron4s.CronField
 
 /**
   * Representation of a valid CRON expression as an AST
@@ -29,9 +30,18 @@ final case class CronExpr(
     hours: HoursNode,
     daysOfMonth: DaysOfMonthNode,
     months: MonthsNode,
-    daysOfWeek: DaysOfWeekNode
+    daysOfWeek: DaysOfWeekNode,
+    year: Option[YearsNode] = None
 ) {
-  private[cron4s] lazy val raw: RawCronExpr = Generic[CronExpr].to(this)
+  private[cron4s] lazy val raw: RawCronExpr =
+    seconds ::
+      minutes ::
+      hours ::
+      daysOfMonth ::
+      months ::
+      daysOfWeek ::
+      year.getOrElse[YearsNode](EachNode[CronField.Year]) ::
+      HNil
 
   /**
     * Time part of the CRON expression
@@ -42,10 +52,12 @@ final case class CronExpr(
     * Date part of the CRON expression
     */
   lazy val datePart: DateCronExpr =
-    DateCronExpr(daysOfMonth, months, daysOfWeek)
+    DateCronExpr(daysOfMonth, months, daysOfWeek, year)
 
-  override lazy val toString: String =
-    raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
+  override lazy val toString: String = year match {
+    case None    => raw.init.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
+    case Some(_) => raw.map(_root_.cron4s.expr.ops.show).toList.mkString(" ")
+  }
 }
 
 object CronExpr extends Cron4sInstances

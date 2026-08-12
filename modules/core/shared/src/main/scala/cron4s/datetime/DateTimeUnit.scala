@@ -27,4 +27,5 @@ object DateTimeUnit {
   case object Days    extends DateTimeUnit
   case object Weeks   extends DateTimeUnit
   case object Months  extends DateTimeUnit
+  case object Years   extends DateTimeUnit
 }
