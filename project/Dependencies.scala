@@ -20,7 +20,7 @@ object Dependencies {
     val discipline = "2.3.0"
     val decline    = "2.6.2"
     val circe      = "0.14.16"
-    val parserc    = "2.4.0"
+    val parserc    = "2.5.0"
     val doobie     = "0.13.4"
 
     val jodaTime    = "2.10.10"
