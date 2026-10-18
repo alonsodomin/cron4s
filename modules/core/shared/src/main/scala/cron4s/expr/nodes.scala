@@ -187,7 +187,7 @@ final class BetweenNode[F <: CronField] private (
     }
 
   override lazy val hashCode: Int =
-    begin.hashCode * 31 + end.hashCode * 31
+    begin.hashCode * 31 + end.hashCode
 
   lazy val range: IndexedSeq[Int] = {
     val min = Math.min(begin.value, end.value)
