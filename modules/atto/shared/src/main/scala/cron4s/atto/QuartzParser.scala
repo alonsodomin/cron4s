@@ -19,7 +19,7 @@ package cron4s.atto
 import _root_.atto.{Parser => AttoParser, _}
 import atto.Atto._
 
-trait QuartzParser extends cron4s.parser.Parser with CronExprParser {
+trait QuartzParser extends UnixParser {
 
   import cron4s.parser._
   import cron4s.parser.Node._
@@ -28,21 +28,6 @@ trait QuartzParser extends cron4s.parser.Parser with CronExprParser {
   // ----------------------------------------
   // AST Parsing & Building
   // ----------------------------------------
-
-  private def field(base: AttoParser[ConstNode]): AttoParser[NodeWithoutAny] =
-    every(base) |
-      several(base) |
-      between(base) |
-      base |
-      each
-
-  private def fieldWithAny(base: AttoParser[ConstNode]): AttoParser[Node] =
-    every(base) |
-      several(base) |
-      between(base) |
-      base |
-      each |
-      any
 
   private def fieldForYear: AttoParser[NodeWithoutAny] = yearsEvery(year) |
     several(year) |
@@ -59,16 +44,12 @@ trait QuartzParser extends cron4s.parser.Parser with CronExprParser {
   }
 
   private val cron: AttoParser[CronExpr] = for {
-    sec     <- field(seconds) <~ blank
-    min     <- field(minutes) <~ blank
-    hour    <- field(hours) <~ blank
-    day     <- fieldWithAny(daysOfMonth) <~ blank
-    month   <- field(months) <~ blank
-    weekDay <- fieldWithAny(daysOfWeek)
-    year    <- opt(blank ~> fieldForYear)
+    nodes <- unixCronNodes
+    (sec, min, hour, day, month, weekDay) = nodes
+    year <- opt(blank ~> fieldForYear)
   } yield CronExpr(sec, min, hour, day, month, weekDay, year)
 
-  def parse(e: String): Either[Error, CronExpr] =
+  override def parse(e: String): Either[Error, CronExpr] =
     (phrase(cron).parseOnly(e): @unchecked) match {
       case ParseResult.Done(_, result)    => Right(result)
       case ParseResult.Fail("", _, _)     => Left(ExprTooShort)

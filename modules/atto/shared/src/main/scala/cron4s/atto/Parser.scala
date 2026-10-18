@@ -16,4 +16,4 @@
 
 package cron4s.atto
 
-object Parser extends QuartzParser
+object Parser extends UnixParser
