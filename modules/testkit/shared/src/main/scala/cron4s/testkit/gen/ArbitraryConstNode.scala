@@ -35,4 +35,5 @@ trait ArbitraryConstNode extends NodeGenerators {
   implicit lazy val arbitraryConstDayOfWeek: Arbitrary[ConstNode[DayOfWeek]] = Arbitrary(
     constGen[DayOfWeek]
   )
+  implicit lazy val arbitraryConstYear: Arbitrary[ConstNode[Year]] = Arbitrary(constGen[Year])
 }

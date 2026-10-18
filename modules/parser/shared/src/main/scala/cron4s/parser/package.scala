@@ -19,6 +19,7 @@ package cron4s
 import cats.data.NonEmptyList
 
 package parser {
+
   trait Parser {
     def parse(input: String): Either[Error, CronExpr]
   }
@@ -43,8 +44,11 @@ package parser {
     sealed trait DayOfWeek extends CronUnit
     case object DayOfWeek  extends DayOfWeek
 
+    sealed trait Year extends CronUnit
+    case object Year  extends Year
+
     final val All: List[CronUnit] =
-      List(Second, Minute, Hour, DayOfMonth, Month, DayOfWeek)
+      List(Second, Minute, Hour, DayOfMonth, Month, DayOfWeek, Year)
   }
 
   sealed trait Node
@@ -140,7 +144,8 @@ package parser {
       hours: Node.NodeWithoutAny,
       daysOfMonth: Node,
       months: Node.NodeWithoutAny,
-      daysOfWeek: Node
+      daysOfWeek: Node,
+      year: Option[Node.NodeWithoutAny] = None
   )
 
   sealed abstract class Error(description: String) extends Exception(description)

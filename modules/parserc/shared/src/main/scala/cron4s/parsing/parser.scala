@@ -144,6 +144,22 @@ object CronParser extends Parsers with BaseParser {
       each |
       any
 
+  private def fieldForYear: Parser[NodeWithoutAny] = yearsEvery(year) |
+    several(year) |
+    between(year) |
+    year |
+    each
+
+  private def yearsEvery(base: Parser[ConstNode]): Parser[EveryNode] = {
+    def compose(b: Parser[DivisibleNode]) =
+      ((b <~ Slash) ~ decimal.filter(_ > 0)) ^^ {
+        case exp ~ freq => EveryNode(exp, freq)
+      }
+    compose(several(base) | between(base) | each)
+  }
+
+  private def year = decimal.map(ConstNode(_))
+
   val cron: Parser[CronExpr] = {
     phrase(
       (field(seconds) <~! blank) ~!
@@ -151,10 +167,11 @@ object CronParser extends Parsers with BaseParser {
         (field(hours) <~! blank) ~!
         (fieldWithAny(daysOfMonth) <~! blank) ~!
         (field(months) <~! blank) ~!
-        (fieldWithAny(daysOfWeek))
+        (fieldWithAny(daysOfWeek)) ~!
+        (blank ~>! fieldForYear).?
     ) ^^ {
-      case sec ~ min ~ hour ~ day ~ month ~ weekDay =>
-        CronExpr(sec, min, hour, day, month, weekDay)
+      case sec ~ min ~ hour ~ day ~ month ~ weekDay ~ maybeYear =>
+        CronExpr(sec, min, hour, day, month, weekDay, maybeYear)
     }
   }
 

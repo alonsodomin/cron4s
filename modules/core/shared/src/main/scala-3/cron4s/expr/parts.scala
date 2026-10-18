@@ -16,21 +16,41 @@
 
 package cron4s.expr
 
-import cats.implicits._
+import cron4s.each2Field
+import cron4s.CronField
+import cron4s.CronField.Year
 
 final case class DateCronExpr(
     daysOfMonth: DaysOfMonthNode,
     months: MonthsNode,
-    daysOfWeek: DaysOfWeekNode
+    daysOfWeek: DaysOfWeekNode,
+    years: Option[YearsNode] = None
 ) {
-  private[cron4s] lazy val raw: RawDateCronExpr = (daysOfMonth, months, daysOfWeek)
+  private[cron4s] lazy val raw: RawDateCronExpr = (
+    daysOfMonth,
+    months,
+    daysOfWeek,
+    years.getOrElse[YearsNode](EachNode[Year])
+  )
 
-  override lazy val toString: String =
-    List(
-      _root_.cron4s.expr.ops.show(daysOfMonth),
-      _root_.cron4s.expr.ops.show(months),
-      _root_.cron4s.expr.ops.show(daysOfWeek)
-    ).mkString(" ")
+  override lazy val toString: String = {
+    val (daysOfMonth, months, daysOfWeek, _) = raw
+    years match {
+      case Some(years) =>
+        List(
+          _root_.cron4s.expr.ops.show(daysOfMonth),
+          _root_.cron4s.expr.ops.show(months),
+          _root_.cron4s.expr.ops.show(daysOfWeek),
+          _root_.cron4s.expr.ops.show(years)
+        ).mkString(" ")
+      case None =>
+        List(
+          _root_.cron4s.expr.ops.show(daysOfMonth),
+          _root_.cron4s.expr.ops.show(months),
+          _root_.cron4s.expr.ops.show(daysOfWeek)
+        ).mkString(" ")
+    }
+  }
 }
 
 object DateCronExpr extends DateCronExprInstances
