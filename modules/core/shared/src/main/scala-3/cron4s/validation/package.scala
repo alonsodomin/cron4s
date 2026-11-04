@@ -25,14 +25,15 @@ package object validation {
   def validateCron(expr: CronExpr): Either[InvalidCron, CronExpr] = {
     val dayFieldError = validateDayFields(expr)
     val fieldErrors   = expr.raw match {
-      case (seconds, minutes, hours, daysOfMonth, months, daysOfWeek) =>
+      case (seconds, minutes, hours, daysOfMonth, months, daysOfWeek, year) =>
         List(
           ops.validate(seconds),
           ops.validate(minutes),
           ops.validate(hours),
           ops.validate(daysOfMonth),
           ops.validate(months),
-          ops.validate(daysOfWeek)
+          ops.validate(daysOfWeek),
+          ops.validate(year)
         ).flatten
     }
 

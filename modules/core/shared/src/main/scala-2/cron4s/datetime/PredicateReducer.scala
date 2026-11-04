@@ -57,6 +57,8 @@ private[datetime] final class PredicateReducer[DateTime](DT: IsDateTime[DateTime
       at[MonthsNode](node => predicateFor(Month, node))
     implicit def caseDaysOfWeek: Case.Aux[DaysOfWeekNode, Predicate[DateTime]] =
       at[DaysOfWeekNode](node => predicateFor(DayOfWeek, node))
+    implicit def caseYear: Case.Aux[YearsNode, Predicate[DateTime]] =
+      at[YearsNode](node => predicateFor(Year, node))
   }
 
   object fromRaw extends Poly1 {

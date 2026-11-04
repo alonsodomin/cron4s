@@ -108,6 +108,8 @@ private[datetime] final class Stepper[DateTime](DT: IsDateTime[DateTime]) {
       at[StepST, MonthsNode](stepOverMonth)
     implicit def caseDaysOfWeek: Case.Aux[StepST, DaysOfWeekNode, StepST] =
       at[StepST, DaysOfWeekNode](stepOverDayOfWeek)
+    implicit def caseYears: Case.Aux[StepST, YearsNode, StepST] =
+      at[StepST, YearsNode]((step, node) => stepNode(step, node))
   }
 
   object foldInternalExpr extends Poly2 {

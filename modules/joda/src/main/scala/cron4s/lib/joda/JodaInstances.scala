@@ -90,6 +90,7 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
       case DateTimeUnit.Days    => Days.days(amount)
       case DateTimeUnit.Months  => Months.months(amount)
       case DateTimeUnit.Weeks   => Weeks.weeks(amount)
+      case DateTimeUnit.Years   => Years.years(amount)
     }
 
   protected def asDateTimeFieldType[F <: CronField](field: F): DateTimeFieldType =
@@ -100,6 +101,7 @@ private[joda] abstract class JodaInstance[DT] extends IsDateTime[DT] {
       case DayOfMonth => DateTimeFieldType.dayOfMonth()
       case Month      => DateTimeFieldType.monthOfYear()
       case DayOfWeek  => DateTimeFieldType.dayOfWeek()
+      case Year       => DateTimeFieldType.year()
     }
 
   protected def isSupported(dateTime: DT, field: DateTimeFieldType): Boolean
