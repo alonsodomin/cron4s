@@ -37,4 +37,6 @@ abstract class IsDateTimeTestKit[DateTime: IsDateTime: Eq](name: String)
   checkAll(s"IsDateTime[$name, DayOfMonth]", IsDateTimeTests[DateTime].dateTime[DayOfMonth])
   checkAll(s"IsDateTime[$name, Month]", IsDateTimeTests[DateTime].dateTime[Month])
   checkAll(s"IsDateTime[$name, DayOfWeek]", IsDateTimeTests[DateTime].dateTime[DayOfWeek])
+  checkAll(s"IsDateTime[$name, Year]", IsDateTimeTests[DateTime].dateTime[Year])
+
 }

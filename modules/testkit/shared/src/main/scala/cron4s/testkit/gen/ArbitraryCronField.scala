@@ -36,4 +36,7 @@ trait ArbitraryCronField {
   implicit lazy val arbitraryDayOfWeek: Arbitrary[DayOfWeek] = Arbitrary(
     Gen.const(DayOfWeek: DayOfWeek)
   )
+  implicit lazy val arbitraryYear: Arbitrary[Year] = Arbitrary(
+    Gen.const(Year: Year)
+  )
 }

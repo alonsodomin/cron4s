@@ -38,6 +38,7 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
       case Days    => dateTime.add(amount, Units.Day)
       case Weeks   => dateTime.add(amount, Units.Week)
       case Months  => dateTime.add(amount, Units.Month)
+      case Years   => dateTime.add(amount, Units.Year)
     })
 
   /**
@@ -71,6 +72,7 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
           else idx
         }
         dayOfWeek
+      case Year => dateTime.year()
     })
 
   /**
@@ -103,6 +105,7 @@ private[momentjs] final class MomentJSInstance extends IsDateTime[Date] {
         case DayOfWeek  =>
           val dayToSet = (value % DaysInWeek) + 1
           setter(_.day(dayToSet.toDouble))
+        case Year => setter(_.year(value.toDouble))
       }
 
     def assignmentSucceeded(date: Date) =
